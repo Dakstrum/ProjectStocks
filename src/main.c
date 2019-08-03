@@ -22,12 +22,13 @@ void StartInputLoop();
 int main(int argc, char **argv) 
 {
 
-    if (!Initialize()) {
+    if (Initialize()) {
 
         StartInputLoop();
 
     }
     CleanUp();
+    return 0;
 
 }
 
@@ -53,7 +54,9 @@ static ALLEGRO_THREAD *audio_thread            = NULL;
 void InitializeThreads() 
 {
 
-
+    rendering_thread = al_create_thread(RenderingEntry, NULL);
+    
+    al_start_thread(rendering_thread);
 
 }
 
