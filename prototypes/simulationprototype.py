@@ -1,5 +1,6 @@
 import time
 import random
+from statistics import mean
 import matplotlib.pyplot as plt
 
 def main():
@@ -13,7 +14,7 @@ def SetUpStocks(end_date):
 
     stocks = []
     for i in range(10):
-        stocks.append(Stocks( 100.0*random.random(), random.randint(1970, 1990), end_date))
+        stocks.append(Stocks( random.randint(1, 200)*random.random(), random.randint(1970, 1990), end_date))
         stocks[i].SimulateStockToElapsedTime()
     plt.plot(stocks[0].prices)
     plt.show()
@@ -22,12 +23,15 @@ class Stocks:
 
     def __init__(self, starting_price, start_date, end_date):
 
-        self.starting_price    = starting_price
-        self.start_date        = time.mktime(time.strptime("1 JAN " + str(start_date), "%d %b %Y"))
-        self.end_date          = time.mktime(time.strptime("1 JAN " + str(end_date), "%d %b %Y"))
-        self.prices            = []
-        self.timestamp         = []
-        self.random_event      = 0
+        self.starting_price           = starting_price
+        self.start_date               = time.mktime(time.strptime("1 JAN " + str(start_date), "%d %b %Y"))
+        self.end_date                 = time.mktime(time.strptime("1 JAN " + str(end_date), "%d %b %Y"))
+        self.prices                   = []
+        self.timestamp                = []
+        self.random_event             = 0
+        self.last_confidence_price    = self.starting_price
+        self.last_confidence_modifier = 0
+        self.last_confidence_time     = self.start_date
 
     
     def SimulateStockToElapsedTime(self):
@@ -42,7 +46,7 @@ class Stocks:
 
         last_price = self.GetLastPrice()
 
-        return last_price + self.GetRandomFluctuations(last_price) + self.GetRandomEvent(last_price) + self.GetConfidence(last_price) + self.GetMisc(last_price) + .1
+        return last_price + self.GetRandomFluctuations(last_price) + self.GetRandomEvent(last_price) + self.GetConfidence(current_time, last_price) + self.GetMisc(last_price)
 
     def GetRandomFluctuations(self, last_price):
 
@@ -54,14 +58,31 @@ class Stocks:
         if self.random_event < 0:
             self.random_event = 0
 
-        if self.random_event >  50:
+        if self.random_event > random.randint(50, 75):
             return last_price*self.GetRandomSign()*random.random()*self.GetRandomEventMagnitude()*.5
 
         return 0
 
-    def GetConfidence(self, last_price):
+    def GetConfidence(self, current_time, last_price):
 
-        return 0
+        three_mounhs_approx = 7889400
+        six_mounths_approx  = 15778800
+        random_time         = random.randint(three_mounhs_approx, six_mounths_approx)
+
+        if current_time - self.last_confidence_time >= random_time:
+            self.last_confidence_time     = current_time
+            self.last_confidence_modifier = self.GetNewConfidenceModifier()
+            self.last_confidence_price    = mean(self.prices)
+
+        return self.last_confidence_modifier
+
+    def GetNewConfidenceModifier(self):
+
+        if mean(self.prices) > self.last_confidence_price:
+            return random.random()
+        else:
+            return -1 * random.random()           
+
 
     def GetMisc(self, last_price):
 
@@ -75,7 +96,7 @@ class Stocks:
         elif rand == 2:
             return 0.5
         else:
-            return 1.0
+            return 0.75
 
     def GetRandomSign(self):
 
