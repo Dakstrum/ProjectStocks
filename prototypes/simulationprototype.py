@@ -6,7 +6,7 @@ def main():
 
     print(time.ctime(time.time()))
     print(time.ctime(time.mktime(time.strptime("30 NOV " + str(2000), "%d %b %Y"))))
-    SetUpStocks(2015)
+    SetUpStocks(1991)
 
 
 def SetUpStocks(end_date):
@@ -15,16 +15,19 @@ def SetUpStocks(end_date):
     for i in range(10):
         stocks.append(Stocks( 100.0*random.random(), random.randint(1970, 1990), end_date))
         stocks[i].SimulateStockToElapsedTime()
+    plt.plot(stocks[0].prices)
+    plt.show()
 
 class Stocks:
 
     def __init__(self, starting_price, start_date, end_date):
 
-        self.starting_price = starting_price
-        self.start_date     = time.mktime(time.strptime("1 JAN " + str(start_date), "%d %b %Y"))
-        self.end_date       = time.mktime(time.strptime("1 JAN " + str(end_date), "%d %b %Y"))
-        self.prices         = []
-        self.timestamp      = []
+        self.starting_price    = starting_price
+        self.start_date        = time.mktime(time.strptime("1 JAN " + str(start_date), "%d %b %Y"))
+        self.end_date          = time.mktime(time.strptime("1 JAN " + str(end_date), "%d %b %Y"))
+        self.prices            = []
+        self.timestamp         = []
+        self.random_event      = 0
 
     
     def SimulateStockToElapsedTime(self):
@@ -39,13 +42,20 @@ class Stocks:
 
         last_price = self.GetLastPrice()
 
-        return last_price + self.GetRandomFluctuations(last_price) + self.GetRandomEvent(last_price) + self.GetConfidence(last_price) + self.GetMisc(last_price)
+        return last_price + self.GetRandomFluctuations(last_price) + self.GetRandomEvent(last_price) + self.GetConfidence(last_price) + self.GetMisc(last_price) + .1
 
     def GetRandomFluctuations(self, last_price):
 
         return self.GetRandomSign()*random.random()
 
     def GetRandomEvent(self, last_price):
+
+        self.random_event += self.GetRandomSign()*random.random() + .1
+        if self.random_event < 0:
+            self.random_event = 0
+
+        if self.random_event >  50:
+            return last_price*self.GetRandomSign()*random.random()*self.GetRandomEventMagnitude()*.5
 
         return 0
 
@@ -56,6 +66,16 @@ class Stocks:
     def GetMisc(self, last_price):
 
         return 0
+
+    def GetRandomEventMagnitude(self):
+
+        rand = random.randint(1, 3)
+        if rand == 1:
+            return 0.25
+        elif rand == 2:
+            return 0.5
+        else:
+            return 1.0
 
     def GetRandomSign(self):
 
