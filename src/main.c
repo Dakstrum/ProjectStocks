@@ -1,9 +1,13 @@
-#include <stdio.h>
+#define ALLEGRO_USE_CONSOLE 1
 
+#include <stdio.h>
 #include <allegro5/allegro.h>
 
+#include "dbaccess.h"
+#include "shared.h"
 #include "controls.h"
 #include "rendering.h"
+#include "simulation.h"
 
 enum InitializeSuccess 
 {
@@ -22,6 +26,7 @@ void StartInputLoop();
 int main(int argc, char **argv) 
 {
 
+    printf("Initialize\n");
     if (Initialize()) {
 
         StartInputLoop();
@@ -41,6 +46,7 @@ enum InitializeSuccess Initialize()
         return FAILURE;
 
     }
+    InitializeDatabases();
     InitializeThreads();
     return SUCCESS;
 
@@ -54,8 +60,10 @@ static ALLEGRO_THREAD *audio_thread            = NULL;
 void InitializeThreads() 
 {
 
-    rendering_thread = al_create_thread(RenderingEntry, NULL);
-    
+    stock_simulation_thread = al_create_thread(StockSimulationEntry, NULL);
+    rendering_thread        = al_create_thread(RenderingEntry, NULL);
+
+    al_start_thread(stock_simulation_thread);
     al_start_thread(rendering_thread);
 
 }
@@ -63,9 +71,13 @@ void InitializeThreads()
 void CleanUpThreads() 
 {
 
+    al_join_thread(stock_simulation_thread, NULL);
+    al_join_thread(rendering_thread, NULL);
+    //al_join_thread(audio_thread, NULL);
+
     al_destroy_thread(stock_simulation_thread);
     al_destroy_thread(rendering_thread);
-    al_destroy_thread(audio_thread);
+    //al_destroy_thread(audio_thread);
 
 }
 

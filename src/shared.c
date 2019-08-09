@@ -1,7 +1,9 @@
+#include <stdio.h>
+#include <stdatomic.h>
 #include <stdbool.h>
+#include <stdarg.h>
 
-static bool should_clean_up = false;
-
+static atomic_bool should_clean_up = false;
 bool ShouldICleanUp() 
 {
 

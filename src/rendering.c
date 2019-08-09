@@ -53,7 +53,6 @@ void RenderingLoop()
 void RenderFrame() 
 {
 
-    //al_rest(0.013);
 
 }
 
