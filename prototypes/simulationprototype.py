@@ -1,10 +1,15 @@
 import time
 import random
+import os
 from statistics import mean
 import matplotlib.pyplot as plt
 
 def main():
 
+    try:
+        os.mkdir("figures")
+    except: 
+        pass
     print(time.ctime(time.time()))
     print(time.ctime(time.mktime(time.strptime("30 NOV " + str(2000), "%d %b %Y"))))
     SetUpStocks(1991)
@@ -12,12 +17,14 @@ def main():
 
 def SetUpStocks(end_date):
 
+    random.seed()
     stocks = []
-    for i in range(10):
+    for i in range(100):
         stocks.append(Stocks( random.randint(1, 200)*random.random(), random.randint(1970, 1990), end_date))
         stocks[i].SimulateStockToElapsedTime()
-    plt.plot(stocks[0].prices)
-    plt.show()
+        plt.plot(stocks[i].prices)
+        plt.savefig("figures/" + str(i) + '.png')
+        plt.clf()
 
 class Stocks:
 
@@ -46,11 +53,11 @@ class Stocks:
 
         last_price = self.GetLastPrice()
 
-        return last_price + self.GetRandomFluctuations(last_price) + self.GetRandomEvent(last_price) + self.GetConfidence(current_time, last_price) + self.GetMisc(last_price)
+        return last_price + self.GetRandomFluctuations(last_price) + self.GetRandomEvent(last_price) #+ self.GetConfidence(current_time, last_price) + self.GetMisc(last_price)
 
     def GetRandomFluctuations(self, last_price):
 
-        return self.GetRandomSign()*random.random()
+        return self.GetRandomSign()*random.random()*last_price*.01
 
     def GetRandomEvent(self, last_price):
 
@@ -58,8 +65,8 @@ class Stocks:
         if self.random_event < 0:
             self.random_event = 0
 
-        if self.random_event > random.randint(50, 75):
-            return last_price*self.GetRandomSign()*random.random()*self.GetRandomEventMagnitude()*.5
+        if self.random_event > random.randint(50, 100):
+            return .05*last_price*self.GetRandomSign()*random.random()*self.GetRandomEventMagnitude()
 
         return 0
 
@@ -74,7 +81,7 @@ class Stocks:
             self.last_confidence_modifier = self.GetNewConfidenceModifier()
             self.last_confidence_price    = mean(self.prices)
 
-        return self.last_confidence_modifier
+        return .1*last_price*self.last_confidence_modifier
 
     def GetNewConfidenceModifier(self):
 
@@ -90,10 +97,10 @@ class Stocks:
 
     def GetRandomEventMagnitude(self):
 
-        rand = random.randint(1, 3)
-        if rand == 1:
+        rand = random.random()
+        if rand >= .2:
             return 0.25
-        elif rand == 2:
+        elif rand >= .05:
             return 0.5
         else:
             return 0.75
