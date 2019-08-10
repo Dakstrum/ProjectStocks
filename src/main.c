@@ -26,7 +26,7 @@ void StartInputLoop();
 int main(int argc, char **argv) 
 {
 
-    printf("Initialize\n");
+    Log("Hello!");
     if (Initialize()) {
 
         StartInputLoop();
