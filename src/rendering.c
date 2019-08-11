@@ -3,6 +3,7 @@
 #include <allegro5/allegro.h>
 
 #include "shared.h"
+#include "dbaccess.h"
 
 void InitializeDisplay();
 void RenderingLoop();
@@ -21,6 +22,8 @@ void *RenderingEntry(ALLEGRO_THREAD *thread, void *arg)
     InitializeDisplay();
     RenderingLoop();
     CleanUpDisplay();
+
+    Log("Quiting Rendering Thread");
 
     return NULL;
 

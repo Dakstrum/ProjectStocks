@@ -3,17 +3,19 @@
 #include <stdbool.h>
 #include <stdarg.h>
 
+#include "dbaccess.h"
+
 static atomic_bool should_clean_up = false;
 bool ShouldICleanUp() 
 {
 
-    return should_clean_up;
+    return atomic_load(&should_clean_up);
 
 }
 
 void SetCleanUpToTrue() 
 {
 
-    should_clean_up = true;
+    atomic_store(&should_clean_up, true);
 
 }

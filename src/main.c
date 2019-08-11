@@ -26,7 +26,6 @@ void StartInputLoop();
 int main(int argc, char **argv) 
 {
 
-    Log("Hello!");
     if (Initialize()) {
 
         StartInputLoop();
