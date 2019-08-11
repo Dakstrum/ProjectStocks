@@ -7,8 +7,9 @@
 #include "log.h"
 #include "shared.h"
 #include "controls.h"
-#include "rendering.h"
 #include "simulation.h"
+#include "rendering.h"
+#include "audio.h"
 
 enum InitializeSuccess 
 {
@@ -62,22 +63,24 @@ void InitializeThreads()
 
     stock_simulation_thread = al_create_thread(StockSimulationEntry, NULL);
     rendering_thread        = al_create_thread(RenderingEntry, NULL);
+    audio_thread            = al_create_thread(AudioEntry, NULL);
 
     al_start_thread(stock_simulation_thread);
     al_start_thread(rendering_thread);
+    al_start_thread(audio_thread);
 
 }
 
-void CleanUpThreads() 
+void CleanUpThreads()
 {
 
     al_join_thread(stock_simulation_thread, NULL);
     al_join_thread(rendering_thread, NULL);
-    //al_join_thread(audio_thread, NULL);
+    al_join_thread(audio_thread, NULL);
 
     al_destroy_thread(stock_simulation_thread);
     al_destroy_thread(rendering_thread);
-    //al_destroy_thread(audio_thread);
+    al_destroy_thread(audio_thread);
 
 }
 

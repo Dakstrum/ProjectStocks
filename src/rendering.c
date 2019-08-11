@@ -24,7 +24,7 @@ void *RenderingEntry(ALLEGRO_THREAD *thread, void *arg)
     CleanUpDisplay();
 
     Log("Quiting Rendering Thread");
-
+    
     return NULL;
 
 }
