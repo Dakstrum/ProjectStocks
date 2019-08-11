@@ -5,7 +5,7 @@
 
 #include "drawlayers.h"
 #include "shared.h"
-#include "dbaccess.h"
+#include "log.h"
 
 void InitializeControls();
 void HandleMouseClicks();
@@ -20,9 +20,6 @@ void StartInputLoop()
     bool should_clean_up;
     while (!(should_clean_up = ShouldICleanUp())) {
 
-        char s[50];
-        sprintf(s, "%d", should_clean_up);
-        Log(s);
         HandleMouseClicks();
 
     }

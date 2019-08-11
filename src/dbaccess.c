@@ -4,40 +4,29 @@
 void SetupMainDB();
 void SetupLogDB();
 
-void Log(const char *str) 
-{
-
-    sqlite3 *db;
-    sqlite3_stmt *res;
-    if (sqlite3_open("log.db", &db) == SQLITE_OK) {
-
-        char *logger = "INSERT INTO LOGS (Log) VALUES (@log);";
-        if (sqlite3_prepare_v2(db, logger, -1, &res, 0) == SQLITE_OK) {
-
-            sqlite3_bind_text(res, sqlite3_bind_parameter_index(res, "@log"), str, -1, 0);
-            sqlite3_step(res);
-
-        }
-
-    }
-    sqlite3_finalize(res);
-    sqlite3_close(db);
-
-}
-
 void InitializeDatabases() 
 {
 
+    sqlite3_shutdown();
+    sqlite3_config(SQLITE_CONFIG_SERIALIZED);
+    sqlite3_initialize();
     SetupMainDB();
     SetupLogDB();
     
+}
+
+void CleanUpDatabases() 
+{
+
+    sqlite3_shutdown();
+
 }
 
 void SetupMainDB() 
 {
 
     sqlite3 *db;
-    if  (!sqlite3_open("blinky.db", &db)) {
+    if  (sqlite3_open_v2("blinky.db", &db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
 
         char *setup =   "CREATE TABLE IF NOT EXISTS COMPANIES(CompanyId INTEGER PRIMARY KEY, CompanyName TEXT NOT NULL, TotalEmployees INT NOT NULL, Category VARCHAR(3) NOT NULL, StocksInMarket UNSIGNED BIG INT, SaveId INT NOT NULL);"
                         "CREATE TABLE IF NOT EXISTS STOCKS(StockId INTEGER PRIMARY KEY, CompanyId INT NOT NULL, Price FLOAT NOT NULL, Time DATETIME NOT NULL);"
@@ -55,7 +44,7 @@ void SetupLogDB()
 {
 
     sqlite3 *db;
-    if  (!sqlite3_open("log.db", &db)) {
+    if  (sqlite3_open_v2("log.db", &db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
 
         char *setup = "CREATE TABLE IF NOT EXISTS LOGS(LogId INTEGER PRIMARY KEY, TimeStamp DATETIME DEFAULT(datetime(CURRENT_TIMESTAMP, 'localtime')), Log TEXT NOT NULL);";
         sqlite3_exec(db, setup, NULL, 0, 0);

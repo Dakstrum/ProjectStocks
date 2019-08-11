@@ -4,6 +4,7 @@
 #include <allegro5/allegro.h>
 
 #include "dbaccess.h"
+#include "log.h"
 #include "shared.h"
 #include "controls.h"
 #include "rendering.h"
@@ -83,6 +84,7 @@ void CleanUpThreads()
 void CleanUp() 
 {
 
+    SetCleanUpDisplay();
     CleanUpThreads();
 
 }

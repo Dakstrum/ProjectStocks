@@ -1,9 +1,9 @@
 #include <stdio.h>
-
+#include <stdbool.h>
 #include <allegro5/allegro.h>
 
 #include "shared.h"
-#include "dbaccess.h"
+#include "log.h"
 
 void InitializeDisplay();
 void RenderingLoop();
@@ -44,7 +44,7 @@ void InitializeDisplay()
 void RenderingLoop() 
 {
 
-    while (!ShouldICleanUp()) {
+    while (!ShouldICleanUpDisplay()) {
 
         RenderFrame();
         HandleWindowEvents();
