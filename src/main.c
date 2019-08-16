@@ -10,6 +10,7 @@
 #include "simulation.h"
 #include "rendering.h"
 #include "audio.h"
+#include "drawlayers.h"
 
 enum InitializeSuccess 
 {
@@ -47,6 +48,7 @@ enum InitializeSuccess Initialize()
         return FAILURE;
 
     }
+    InitializeDrawLayers();
     InitializeDatabases();
     InitializeThreads();
     return SUCCESS;

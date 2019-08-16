@@ -3,42 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-
-typedef enum DrawType 
-{
-
-    MENU = 0,
-    BUTTON,
-    POPUP
-
-} DrawType;
-
-
-typedef struct DrawObject 
-{
-
-    DrawType type;
-    float x;
-    float y;
-    float width;
-    float height;
-    union {
-
-        struct {
-
-            char picture_path[256];
-
-        } menu;
-
-        struct {
-
-            void (*Callback)();
-
-        } button;
-
-    } member;
-
-} DrawObject;
+#include "drawlayers.h"
 
 typedef struct DrawLayer 
 {
@@ -48,9 +13,15 @@ typedef struct DrawLayer
 
 } DrawLayer;
 
-static DrawLayer *draw_layers;
-static unsigned int current_draw_layer = 0;
 
+static DrawLayer *draw_layers;
+static unsigned int num_draw_layers = 0;
+
+void CleanUpLayer(int layer);
+void CleanUpButton(DrawObject *object);
+void CleanUpMenu(DrawObject *object);
+void CleanUpPopUp(DrawObject *object);
+void CleanUpGeneric(DrawObject *object);
 
 bool HandleMouseClick(DrawObject *object, int x, int y);
 bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y);
@@ -65,52 +36,92 @@ void InitializeDrawLayers()
 void HandleMouseClickInButtonAreas(int x, int y) 
 {
 
-    for (int i = 0; i < draw_layers[current_draw_layer].num_objects;i++) {
-
-        if (draw_layers[current_draw_layer].objects[i].type == BUTTON) {
-
-            HandleMouseClick(&draw_layers[current_draw_layer].objects[i], x, y);
-
-        }
-
-    }
+    for (int i = 0; i < draw_layers[num_draw_layers - 1].num_objects;i++)
+        if (draw_layers[num_draw_layers - 1].objects[i].type == BUTTON)
+            HandleMouseClick(&draw_layers[num_draw_layers - 1].objects[i], x, y);
 
 }
 
 bool HandleMouseClick(DrawObject *object, int x, int y) 
 {
 
-    if (IsMouseClickInAreaOfObject(object, x, y)) {
-
+    if (IsMouseClickInAreaOfObject(object, x, y)
         object->member.button.Callback();
-
-    }
 
 }
 
 bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y) 
 {
 
-    if (object->x > x || x > object->x + object->width)
+    Button button = object->member.button;
+    if (button.x > x || x > button.x + button.width)
         return false;
-    if (object->y > y || y > object->y + object->height)
+    if (button.y > y || y > button.y + button.height)
         return false;
 
     return true;
 
 }
 
-void CleanUpLayers() 
+void CleanCurrentLayer() 
 {
 
-    free(draw_layers);
+    CleanUpLayer(num_draw_layers - 1);
+
+}
+
+void CleanUpLayer(int layer) 
+{
+
+    for (int j = 0; j < draw_layers[layer].num_objects; j++)
+        CleanUpGeneric(&draw_layers[layer].objects[j]);
+
+}
+
+void CleanUpGeneric(DrawObject *object) 
+{
+
+    switch (object->type) {
+
+        case MENU:   CleanUpMenu(object);   break;
+        case BUTTON: CleanUpButton(object); break;
+        case POPUP:  CleanUpPopUp(object);  break;
+
+    }
+
+}
+
+void CleanUpButton(DrawObject *object) 
+{
+
+    free(object->member.button.picture_path);
+
+}
+
+void CleanUpMenu(DrawObject *object) 
+{
+
+    for (int i = 0; i < object->member.menu.num_buttons; i++)
+        free(object->member.menu.buttons[i].picture_path);
+
+    free(object->member.menu.buttons);
+
+}
+
+void CleanUpPopUp(DrawObject *object) 
+{
+
+
 
 }
 
 void ClearLayers() 
 {
 
-    CleanUpLayers();
+    for (int i = 0; i < num_draw_layers; i++)
+        CleanUpLayer(i);
+
+    free(draw_layers);
     InitializeDrawLayers();
 
 }
