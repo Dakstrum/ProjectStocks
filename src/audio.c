@@ -33,8 +33,6 @@ void *AudioEntry(ALLEGRO_THREAD *thread, void *arg)
     InitializeSampleAudioFiles();
     InitializeSongInstances();
 
-    Example();
-
     return NULL;
 }
 
@@ -60,13 +58,11 @@ ALLEGRO_SAMPLE_INSTANCE * CreateSongInstance(ALLEGRO_SAMPLE *instance_target)
     return song_instance;   
 }
 
-
 void InitializeSampleAudioFiles()
 {
     song_1 = al_load_sample( "Audio/Music/Song1.wav" );
     song_2 = al_load_sample( "Audio/Music/Song2.wav" );
 }
-
 
 void PlayAudioInstance(ALLEGRO_SAMPLE_INSTANCE *audio_instance, bool *take_over)
 {
@@ -88,21 +84,6 @@ void DestroyAudioInstance(ALLEGRO_SAMPLE_INSTANCE *audio_instance)
 {
     al_destroy_sample_instance(audio_instance);
 }
-
-void Example()
-{
-    PlayAudioInstance(song_1, true); //Plays song_1
-    al_rest(2);
-    PlayAudioInstance(song_2, true); //Plays song_2 and takesover song_1
-    al_rest(3);
-    PlayAudioInstance(song_1, true);
-    al_rest(3);
-
-    DestroyAudioInstance(song_instance);
-
-    return NULL;
-}
-
 
 void CleanUpAudio()
 {
