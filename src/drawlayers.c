@@ -30,6 +30,8 @@ void ClearUpGeneric(DrawObject *object);
 bool HandleMouseClick(DrawObject *object, int x, int y);
 bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y);
 
+void AddDrawObjectToDrawLayer(DrawObject *object);
+
 void DrawSingleLayer(int layer);
 
 void InitializeDrawLayers() 
@@ -143,23 +145,36 @@ void CleanUpMenu(DrawObject *object)
 void CleanUpPopUp(DrawObject *object) 
 {
 
-
-
 }
 
 
 /* SECTION: Add Objects to Current Draw Layer */
-bool AddButtonToDrawLayer(Button *button) 
+bool AddButtonToDrawLayer(DrawObject *object) 
 {
 
     return false;
 
 }
 
-bool AddMenuToDrawLayer(Menu *menu) 
+bool AddMenuToDrawLayer(DrawObject *object) 
 {
 
+    object->member.menu.menu_bitmap = al_load_bitmap(object->member.menu.picture_path);
+    if (object->member.menu.menu_bitmap == NULL)
+        return false;
+
+    AddDrawObjectToDrawLayer(object);
+
     return false;
+
+}
+
+void AddDrawObjectToDrawLayer(DrawObject *object) 
+{
+
+    DrawLayer *layer = &draw_layers[num_draw_layers - 1];
+    layer->objects[layer->num_objects + 1] = *object;
+    layer->num_objects++;
 
 }
 

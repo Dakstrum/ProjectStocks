@@ -62,8 +62,8 @@ void ClearDrawLayers();
 void ClearCurrentDrawLayer();
 void InitializeDrawLayers();
 
-bool AddButtonToDrawLayer(Button *button);
-bool AddMenuToDrawLayer(Menu *menu);
+bool AddButtonToDrawLayer(DrawObject *object);
+bool AddMenuToDrawLayer(DrawObject *object);
 
 void HandleMouseClickInButtonAreas(int x, int y);
 
