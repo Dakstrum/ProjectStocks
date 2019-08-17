@@ -17,14 +17,16 @@ typedef struct DrawLayer
 static DrawLayer *draw_layers;
 static unsigned int num_draw_layers = 0;
 
-void CleanUpLayer(int layer);
+void ClearUpDrawLayer(int layer);
 void CleanUpButton(DrawObject *object);
 void CleanUpMenu(DrawObject *object);
 void CleanUpPopUp(DrawObject *object);
-void CleanUpGeneric(DrawObject *object);
+void ClearUpGeneric(DrawObject *object);
 
 bool HandleMouseClick(DrawObject *object, int x, int y);
 bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y);
+
+void DrawSingleLayer(int layer);
 
 void InitializeDrawLayers() 
 {
@@ -45,7 +47,7 @@ void HandleMouseClickInButtonAreas(int x, int y)
 bool HandleMouseClick(DrawObject *object, int x, int y) 
 {
 
-    if (IsMouseClickInAreaOfObject(object, x, y)
+    if (IsMouseClickInAreaOfObject(object, x, y))
         object->member.button.Callback();
 
 }
@@ -63,22 +65,30 @@ bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y)
 
 }
 
-void CleanCurrentLayer() 
+void CreateNewDrawLayer() 
 {
 
-    CleanUpLayer(num_draw_layers - 1);
+
 
 }
 
-void CleanUpLayer(int layer) 
+void ClearCurrentDrawLayer() 
+{
+
+    ClearUpDrawLayer(num_draw_layers - 1);
+    num_draw_layers--;
+
+}
+
+void ClearUpDrawLayer(int layer) 
 {
 
     for (int j = 0; j < draw_layers[layer].num_objects; j++)
-        CleanUpGeneric(&draw_layers[layer].objects[j]);
+        ClearUpGeneric(&draw_layers[layer].objects[j]);
 
 }
 
-void CleanUpGeneric(DrawObject *object) 
+void ClearUpGeneric(DrawObject *object) 
 {
 
     switch (object->type) {
@@ -88,6 +98,31 @@ void CleanUpGeneric(DrawObject *object)
         case POPUP:  CleanUpPopUp(object);  break;
 
     }
+
+}
+
+void ClearDrawLayers() 
+{
+
+    for (int i = 0; i < num_draw_layers; i++)
+        ClearUpDrawLayer(i);
+
+    free(draw_layers);
+    InitializeDrawLayers();
+
+}
+
+void DrawLayers() 
+{
+
+    for (int i = 0; i < num_draw_layers;i++)
+        DrawSingleLayer(i);
+}
+
+void DrawSingleLayer(int layer) 
+{
+
+    
 
 }
 
@@ -112,16 +147,5 @@ void CleanUpPopUp(DrawObject *object)
 {
 
 
-
-}
-
-void ClearLayers() 
-{
-
-    for (int i = 0; i < num_draw_layers; i++)
-        CleanUpLayer(i);
-
-    free(draw_layers);
-    InitializeDrawLayers();
 
 }

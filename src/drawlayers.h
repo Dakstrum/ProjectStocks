@@ -48,9 +48,12 @@ typedef struct DrawObject
 
 } DrawObject;
 
-void ClearLayers();
-void CleanCurrentLayer();
+void CreateNewDrawLayer();
+void ClearDrawLayers();
+void ClearCurrentDrawLayer();
 void InitializeDrawLayers();
 void HandleMouseClickInButtonAreas(int x, int y);
+
+void DrawLayers();
 
 #endif
