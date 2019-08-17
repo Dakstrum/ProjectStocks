@@ -32,7 +32,9 @@ bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y);
 
 void AddDrawObjectToDrawLayer(DrawObject *object);
 
-void DrawSingleLayer(int layer);
+void DrawSingleLayer(DrawLayer *layer);
+void DrawMenu(Menu *menu);
+void DrawButton(Button *button);
 
 void InitializeDrawLayers() 
 {
@@ -185,12 +187,46 @@ void DrawLayers()
 {
 
     for (int i = 0; i < num_draw_layers;i++)
-        DrawSingleLayer(i);
+        DrawSingleLayer(&draw_layers[i]);
 }
 
-void DrawSingleLayer(int layer) 
+void DrawSingleLayer(DrawLayer *layer) 
 {
 
-    
+    for (int i = 0; i < layer->num_objects; i++) {
+
+        switch (layer->objects[i].type) {
+
+            case MENU:   DrawMenu(&layer->objects[i].member.menu);     break;
+            case BUTTON: DrawButton(&layer->objects[i].member.button); break;
+            case POPUP:   break;
+
+        }
+
+    }
+
+}
+
+void DrawMenu(Menu *menu) 
+{
+
+    ALLEGRO_BITMAP *bitmap = menu->menu_bitmap;
+    float width            = al_get_bitmap_width(bitmap);
+    float height           = al_get_bitmap_height(bitmap);
+    al_draw_scaled_bitmap(bitmap, 0, 0, width, height, menu->x, menu->y, width, height, 0);
+
+}
+
+void DrawButton(Button *button) 
+{
+
+    if (button->button_bitmap == NULL)
+        return;
+
+    ALLEGRO_BITMAP *bitmap = button->button_bitmap;
+    float width            = al_get_bitmap_width(bitmap);
+    float height           = al_get_bitmap_height(bitmap);
+    al_draw_scaled_bitmap(bitmap, 0, 0, width, width, button->x, button->y, width, height, 0);
+
 
 }

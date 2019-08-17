@@ -65,6 +65,8 @@ void InitializeDrawLayers();
 bool AddButtonToDrawLayer(DrawObject *object);
 bool AddMenuToDrawLayer(DrawObject *object);
 
+void DrawLayers();
+
 void HandleMouseClickInButtonAreas(int x, int y);
 
 #endif

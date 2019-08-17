@@ -4,8 +4,9 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 
-#include "shared.h"
 #include "log.h"
+#include "shared.h"
+#include "drawlayers.h"
 
 void InitializeRendering();
 void InitializeDisplay();
@@ -80,6 +81,7 @@ void RenderingLoop()
 void RenderFrame() 
 {
 
+    DrawLayers();
 
 }
 
