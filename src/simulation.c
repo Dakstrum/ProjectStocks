@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_image.h>
 
 #include "shared.h"
 #include "dbaccess.h"

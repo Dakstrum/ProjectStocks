@@ -1,31 +1,48 @@
 #include <stdio.h>
 #include <stdbool.h>
+
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_image.h>
 
 #include "shared.h"
 #include "log.h"
 
+void InitializeRendering();
 void InitializeDisplay();
+void InitializeAddons();
+
 void RenderingLoop();
 void RenderFrame();
+
+void CleanUpRendering();
 void CleanUpDisplay();
+void CleanUpAddons();
+
 void HandleWindowEvents();
 
-static float FPS = 60.0; 
-
+static float FPS                        = 60.0; 
 static ALLEGRO_DISPLAY *display         = NULL;
 static ALLEGRO_TIMER *timer             = NULL;
 static ALLEGRO_EVENT_QUEUE *event_queue = NULL;
+
 void *RenderingEntry(ALLEGRO_THREAD *thread, void *arg) 
 {
 
-    InitializeDisplay();
+    InitializeRendering();
     RenderingLoop();
-    CleanUpDisplay();
+    CleanUpRendering();
 
     Log("Quiting Rendering Thread");
     
     return NULL;
+
+}
+
+void InitializeRendering() 
+{
+
+    InitializeDisplay();
+    InitializeAddons();
 
 }
 
@@ -38,6 +55,13 @@ void InitializeDisplay()
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
 
+
+}
+
+void InitializeAddons() 
+{
+
+    al_init_image_addon();
 
 }
 
@@ -72,10 +96,25 @@ void HandleWindowEvents()
 
 }
 
+void CleanUpRendering() 
+{
+
+    CleanUpDisplay();
+    CleanUpAddons();
+
+}
+
 void CleanUpDisplay() 
 {
 
     al_destroy_display(display);
     al_destroy_event_queue(event_queue);
+
+}
+
+void CleanUpAddons() 
+{
+
+    al_shutdown_image_addon();
 
 }

@@ -3,7 +3,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include <allegro5/allegro.h>
+
 #include "drawlayers.h"
+
+#define MAX_DRAW_LAYERS 10
 
 typedef struct DrawLayer 
 {
@@ -31,7 +35,7 @@ void DrawSingleLayer(int layer);
 void InitializeDrawLayers() 
 {
 
-    draw_layers = malloc(sizeof(DrawLayer) * 10);
+    draw_layers = malloc(sizeof(DrawLayer) * MAX_DRAW_LAYERS);
 
 }
 
@@ -65,10 +69,17 @@ bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y)
 
 }
 
-void CreateNewDrawLayer() 
+/* SECTION: Draw Layer Creation and Cleanup */
+bool CreateNewDrawLayer() 
 {
 
+    if (num_draw_layers + 1 > MAX_DRAW_LAYERS) {
 
+        return false;
+
+    }
+    num_draw_layers++;
+    return true;
 
 }
 
@@ -112,20 +123,6 @@ void ClearDrawLayers()
 
 }
 
-void DrawLayers() 
-{
-
-    for (int i = 0; i < num_draw_layers;i++)
-        DrawSingleLayer(i);
-}
-
-void DrawSingleLayer(int layer) 
-{
-
-    
-
-}
-
 void CleanUpButton(DrawObject *object) 
 {
 
@@ -147,5 +144,38 @@ void CleanUpPopUp(DrawObject *object)
 {
 
 
+
+}
+
+
+/* SECTION: Add Objects to Current Draw Layer */
+bool AddButtonToDrawLayer(Button *button) 
+{
+
+    return false;
+
+}
+
+bool AddMenuToDrawLayer(Menu *menu) 
+{
+
+    return false;
+
+}
+
+
+
+/* SECTION: Drawing functions */
+void DrawLayers() 
+{
+
+    for (int i = 0; i < num_draw_layers;i++)
+        DrawSingleLayer(i);
+}
+
+void DrawSingleLayer(int layer) 
+{
+
+    
 
 }

@@ -1,6 +1,8 @@
 #ifndef DRAWLAYERS_H
 #define DRAWLAYERS_H
 
+
+
 typedef enum DrawType 
 {
 
@@ -19,41 +21,50 @@ typedef struct Button
     float height;
     void (*Callback)();
     char *picture_path;
+    ALLEGRO_BITMAP *button_bitmap;
 
 } Button;
+
+typedef struct Menu {
+
+    float x;
+    float y;
+    float width;
+    float height;
+    char picture_path[256];
+
+    ALLEGRO_BITMAP *menu_bitmap;
+
+    int num_buttons;
+    Button *buttons;
+
+} Menu;
 
 
 typedef struct DrawObject 
 {
 
     DrawType type;
+    bool should_this_be_drawn;
     union {
 
-        struct {
-
-            float x;
-            float y;
-            float width;
-            float height;
-            char picture_path[256];
-
-            int num_buttons;
-            Button *buttons;
-
-        } menu;
-
+        Menu menu;
         Button button;
 
     } member;
 
 } DrawObject;
 
-void CreateNewDrawLayer();
+// Returns true if successful, false otherwise.
+bool CreateNewDrawLayer();
+
 void ClearDrawLayers();
 void ClearCurrentDrawLayer();
 void InitializeDrawLayers();
-void HandleMouseClickInButtonAreas(int x, int y);
 
-void DrawLayers();
+bool AddButtonToDrawLayer(Button *button);
+bool AddMenuToDrawLayer(Menu *menu);
+
+void HandleMouseClickInButtonAreas(int x, int y);
 
 #endif
