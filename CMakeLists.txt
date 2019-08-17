@@ -2,10 +2,12 @@ cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(ProjectStocks)
 
 find_package(SQLite3 REQUIRED)
+
 include_directories(${SQLITE3_INCLUDE_DIRS})
+include_directories(${PROJECT_SOURCE_DIR}/include)
 
 file(GLOB_RECURSE sources ${PROJECT_SOURCE_DIR}/src/*.c)
-file(GLOB_RECURSE headers ${PROJECT_SOURCE_DIR}/src/*h)
+file(GLOB_RECURSE headers ${PROJECT_SOURCE_DIR}/include/*.h)
 
 string(APPEND CMAKE_C_FLAGS " -lm -O3")
 string(APPEND CMAKE_C_FLAGS_DEBUG " -lm")
