@@ -55,12 +55,12 @@ typedef struct DrawObject
 
 } DrawObject;
 
+void InitializeDrawLayers();
 // Returns true if successful, false otherwise.
 bool CreateNewDrawLayer();
 
 void ClearDrawLayers();
 void ClearCurrentDrawLayer();
-void InitializeDrawLayers();
 
 bool AddButtonToDrawLayer(DrawObject *object);
 bool AddMenuToDrawLayer(DrawObject *object);

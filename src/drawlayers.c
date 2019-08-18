@@ -5,6 +5,7 @@
 
 #include <allegro5/allegro.h>
 
+#include "log.h"
 #include "drawlayers.h"
 
 #define MAX_DRAW_LAYERS 10
@@ -35,11 +36,17 @@ void AddDrawObjectToDrawLayer(DrawObject *object);
 void DrawSingleLayer(DrawLayer *layer);
 void DrawMenu(Menu *menu);
 void DrawButton(Button *button);
+void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y);
 
 void InitializeDrawLayers() 
 {
 
     draw_layers = malloc(sizeof(DrawLayer) * MAX_DRAW_LAYERS);
+    for (int i = 0; i < MAX_DRAW_LAYERS; i++) {
+
+        draw_layers[i].num_objects = 0;
+
+    }
 
 }
 
@@ -162,8 +169,12 @@ bool AddMenuToDrawLayer(DrawObject *object)
 {
 
     object->member.menu.menu_bitmap = al_load_bitmap(object->member.menu.picture_path);
-    if (object->member.menu.menu_bitmap == NULL)
+    if (object->member.menu.menu_bitmap == NULL) {
+
+        Log("Could not create menu_bitmap");
         return false;
+
+    }
 
     AddDrawObjectToDrawLayer(object);
 
@@ -175,7 +186,7 @@ void AddDrawObjectToDrawLayer(DrawObject *object)
 {
 
     DrawLayer *layer = &draw_layers[num_draw_layers - 1];
-    layer->objects[layer->num_objects + 1] = *object;
+    layer->objects[layer->num_objects] = *object;
     layer->num_objects++;
 
 }
@@ -210,10 +221,7 @@ void DrawSingleLayer(DrawLayer *layer)
 void DrawMenu(Menu *menu) 
 {
 
-    ALLEGRO_BITMAP *bitmap = menu->menu_bitmap;
-    float width            = al_get_bitmap_width(bitmap);
-    float height           = al_get_bitmap_height(bitmap);
-    al_draw_scaled_bitmap(bitmap, 0, 0, width, height, menu->x, menu->y, width, height, 0);
+    DrawGeneric(menu->menu_bitmap, menu->x, menu->y);
 
 }
 
@@ -223,10 +231,15 @@ void DrawButton(Button *button)
     if (button->button_bitmap == NULL)
         return;
 
-    ALLEGRO_BITMAP *bitmap = button->button_bitmap;
-    float width            = al_get_bitmap_width(bitmap);
-    float height           = al_get_bitmap_height(bitmap);
-    al_draw_scaled_bitmap(bitmap, 0, 0, width, width, button->x, button->y, width, height, 0);
+    DrawGeneric(button->button_bitmap, button->x, button->y);
 
+}
+
+void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y) 
+{
+
+    float width  = al_get_bitmap_width(bitmap);
+    float height = al_get_bitmap_height(bitmap);
+    al_draw_scaled_bitmap(bitmap, 0, 0, width, width, x, y, width, height, 0);
 
 }

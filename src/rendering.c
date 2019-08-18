@@ -6,7 +6,10 @@
 
 #include "log.h"
 #include "shared.h"
+#include "mainmenu.h"
 #include "drawlayers.h"
+#include "rendering.h"
+#include "startup.h"
 
 void InitializeRendering();
 void InitializeDisplay();
@@ -21,10 +24,13 @@ void CleanUpAddons();
 
 void HandleWindowEvents();
 
-static float FPS                        = 60.0; 
-static ALLEGRO_DISPLAY *display         = NULL;
-static ALLEGRO_TIMER *timer             = NULL;
-static ALLEGRO_EVENT_QUEUE *event_queue = NULL;
+static float FPS                         = 60.0; 
+static ALLEGRO_DISPLAY *display          = NULL;
+static ALLEGRO_TIMER *timer              = NULL;
+static ALLEGRO_EVENT_QUEUE *event_queue  = NULL;
+
+static void (*Render)()                  = &StartUpSequence;
+
 
 void *RenderingEntry(ALLEGRO_THREAD *thread, void *arg) 
 {
@@ -56,7 +62,6 @@ void InitializeDisplay()
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
 
-
 }
 
 void InitializeAddons() 
@@ -71,17 +76,11 @@ void RenderingLoop()
 
     while (!ShouldICleanUpDisplay()) {
 
-        RenderFrame();
+        Render();
+        al_flip_display();
         HandleWindowEvents();
 
     }
-
-}
-
-void RenderFrame() 
-{
-
-    DrawLayers();
 
 }
 
@@ -118,5 +117,14 @@ void CleanUpAddons()
 {
 
     al_shutdown_image_addon();
+
+}
+
+void SwitchToRenderingMainMenu() 
+{
+
+    InitializeMainMenu();
+    Render = &RenderMainMenu;
+    Log("MainMenu Initialized");
 
 }
