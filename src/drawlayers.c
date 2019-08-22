@@ -253,7 +253,7 @@ void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y)
 
     float scale_width  = al_get_bitmap_width(bitmap);
     float scale_height = al_get_bitmap_height(bitmap);
-    al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_width, x, y, scale_width, scale_height, 0);
+    al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_height, x, y, scale_width, scale_height, 0);
 
 }
 
@@ -262,6 +262,6 @@ void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width,
 
     float scale_width  = al_get_bitmap_width(bitmap);
     float scale_height = al_get_bitmap_height(bitmap);
-    al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_width, x, y, width, height, 0);
+    al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_height, x, y, width, height, 0);
 
 }
