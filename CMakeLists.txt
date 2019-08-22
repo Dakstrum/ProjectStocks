@@ -14,4 +14,4 @@ string(APPEND CMAKE_C_FLAGS_DEBUG " -lm")
 string(APPEND CMAKE_C_FLAGS_RELEASE " -lm -O3")
 
 add_executable(projectstocks ${sources} ${headers})
-target_link_libraries(projectstocks -lallegro -lallegro_audio -lallegro_acodec -lallegro_image -lsqlite3)
+target_link_libraries(projectstocks -lallegro -lallegro_audio -lallegro_acodec -lallegro_image -lallegro_video -lsqlite3)
