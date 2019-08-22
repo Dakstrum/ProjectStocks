@@ -48,6 +48,8 @@ typedef struct Video {
     float height;
     char video_path[256];
 
+    ALLEGRO_VIDEO *video;
+
 } Video;
 
 
@@ -59,8 +61,9 @@ typedef struct DrawObject
     bool scale_to_entire_screen;
     union {
 
-        Menu menu;
+        Menu   menu;
         Button button;
+        Video  video;
 
     } member;
 

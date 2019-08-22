@@ -7,6 +7,8 @@
 #include "rendering.h"
 #include "log.h"
 
+void CleanUpStartUpSequence();
+
 void InitializeStartUpSequence() 
 {
 
@@ -19,5 +21,12 @@ void StartUpSequence()
 
     Log("STUB: StartUpSequence");
     SwitchToRenderingMainMenu();
+
+}
+
+void CleanUpStartUpSequence() 
+{
+
+
 
 }
