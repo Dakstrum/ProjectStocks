@@ -40,12 +40,23 @@ typedef struct Menu {
 
 } Menu;
 
+typedef struct Video {
+
+    float x;
+    float y;
+    float width;
+    float height;
+    char video_path[256];
+
+} Video;
+
 
 typedef struct DrawObject 
 {
 
     DrawType type;
     bool should_this_be_drawn;
+    bool scale_to_entire_screen;
     union {
 
         Menu menu;
@@ -55,7 +66,7 @@ typedef struct DrawObject
 
 } DrawObject;
 
-void InitializeDrawLayers();
+void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display);
 // Returns true if successful, false otherwise.
 bool CreateNewDrawLayer();
 

@@ -22,6 +22,8 @@ typedef struct DrawLayer
 static DrawLayer *draw_layers;
 static unsigned int num_draw_layers = 0;
 
+static ALLEGRO_DISPLAY *display     = NULL;
+
 void ClearUpDrawLayer(int layer);
 void CleanUpButton(DrawObject *object);
 void CleanUpMenu(DrawObject *object);
@@ -34,13 +36,15 @@ bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y);
 void AddDrawObjectToDrawLayer(DrawObject *object);
 
 void DrawSingleLayer(DrawLayer *layer);
-void DrawMenu(Menu *menu);
+void DrawMenu(Menu *menu, bool fill_screen);
 void DrawButton(Button *button);
 void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y);
+void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width, float height);
 
-void InitializeDrawLayers() 
+void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display) 
 {
 
+    display     = active_display;
     draw_layers = malloc(sizeof(DrawLayer) * MAX_DRAW_LAYERS);
     for (int i = 0; i < MAX_DRAW_LAYERS; i++) {
 
@@ -130,7 +134,7 @@ void ClearDrawLayers()
         ClearUpDrawLayer(i);
 
     free(draw_layers);
-    InitializeDrawLayers();
+    InitializeDrawLayers(display);
 
 }
 
@@ -206,11 +210,15 @@ void DrawSingleLayer(DrawLayer *layer)
 
     for (int i = 0; i < layer->num_objects; i++) {
 
-        switch (layer->objects[i].type) {
+        if (layer->objects[i].should_this_be_drawn) {
 
-            case MENU:   DrawMenu(&layer->objects[i].member.menu);     break;
-            case BUTTON: DrawButton(&layer->objects[i].member.button); break;
-            case POPUP:   break;
+            switch (layer->objects[i].type) {
+
+                case MENU:   DrawMenu(&layer->objects[i].member.menu, layer->objects[i].scale_to_entire_screen);     break;
+                case BUTTON: DrawButton(&layer->objects[i].member.button); break;
+                case POPUP:   break;
+
+            }
 
         }
 
@@ -218,10 +226,15 @@ void DrawSingleLayer(DrawLayer *layer)
 
 }
 
-void DrawMenu(Menu *menu) 
+void DrawMenu(Menu *menu, bool fill_screen) 
 {
 
-    DrawGeneric(menu->menu_bitmap, menu->x, menu->y);
+    if (fill_screen)
+        DrawGenericWithWidth(menu->menu_bitmap, menu->x, menu->y, al_get_display_width(display), al_get_display_height(display));
+    else if (menu->width != 0.0f && menu->height != 0.0f)
+        DrawGenericWithWidth(menu->menu_bitmap, menu->x, menu->y, menu->width, menu->height);
+    else
+        DrawGeneric(menu->menu_bitmap, menu->x, menu->y);
 
 }
 
@@ -238,8 +251,17 @@ void DrawButton(Button *button)
 void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y) 
 {
 
-    float width  = al_get_bitmap_width(bitmap);
-    float height = al_get_bitmap_height(bitmap);
-    al_draw_scaled_bitmap(bitmap, 0, 0, width, width, x, y, width, height, 0);
+    float scale_width  = al_get_bitmap_width(bitmap);
+    float scale_height = al_get_bitmap_height(bitmap);
+    al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_width, x, y, scale_width, scale_height, 0);
+
+}
+
+void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width, float height) 
+{
+
+    float scale_width  = al_get_bitmap_width(bitmap);
+    float scale_height = al_get_bitmap_height(bitmap);
+    al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_width, x, y, width, height, 0);
 
 }

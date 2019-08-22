@@ -9,7 +9,7 @@
 #include "dbaccess.h"
 
 void InitializeAllegroAudio();
-ALLEGRO_SAMPLE_INSTANCE * CreateSongInstance(ALLEGRO_SAMPLE *instance_target);
+ALLEGRO_SAMPLE_INSTANCE * CreateSongInstance(ALLEGRO_SAMPLE_INSTANCE *instance_target);
 void InitializeSongInstances();
 void InitializeSampleAudioFiles();
 void PlayAudioInstance(ALLEGRO_SAMPLE_INSTANCE *audio_instance, bool *take_over);
@@ -24,7 +24,6 @@ ALLEGRO_SAMPLE_INSTANCE *current_playing = NULL;
 void *AudioEntry(ALLEGRO_THREAD *thread, void *arg) 
 {
     InitializeAllegroAudio();
-    InitializeSampleAudioFiles();
     InitializeSongInstances();
 
     return NULL;
@@ -42,7 +41,7 @@ void InitializeSongInstances()
     song_instance = CreateSongInstance(NULL);
 }
 
-ALLEGRO_SAMPLE_INSTANCE * CreateSongInstance(ALLEGRO_SAMPLE *instance_target)
+ALLEGRO_SAMPLE_INSTANCE * CreateSongInstance(ALLEGRO_SAMPLE_INSTANCE *instance_target)
 {
 
     ALLEGRO_SAMPLE_INSTANCE *song_instance = al_create_sample_instance(instance_target);

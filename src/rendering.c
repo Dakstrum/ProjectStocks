@@ -3,6 +3,7 @@
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_video.h>
 
 #include "log.h"
 #include "shared.h"
@@ -57,10 +58,13 @@ void InitializeDisplay()
 {
 
     display     = al_create_display(1920, 1080);
-    event_queue = al_create_event_queue();
     timer       = al_create_timer(1.0/FPS);
+    event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
+    al_start_timer(timer);
+
+    InitializeDrawLayers(display);
 
 }
 
@@ -68,6 +72,7 @@ void InitializeAddons()
 {
 
     al_init_image_addon();
+    al_init_video_addon();
 
 }
 
@@ -93,6 +98,10 @@ void HandleWindowEvents()
 
         SetCleanUpToTrue();
 
+    } else if (event.type == ALLEGRO_EVENT_TIMER) {
+
+        // Log();
+
     }
 
 }
@@ -117,6 +126,7 @@ void CleanUpAddons()
 {
 
     al_shutdown_image_addon();
+    al_shutdown_video_addon();
 
 }
 
