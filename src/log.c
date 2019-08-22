@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdarg.h>
 #include <sqlite3.h>
 
 void Log(const char *str) 
@@ -19,5 +20,18 @@ void Log(const char *str)
     }
     sqlite3_finalize(res);
     sqlite3_close(db);
+
+}
+
+void LogF(const char *str, ...) 
+{
+
+    char buffer[512];
+    va_list args;
+    va_start(args, str);
+    vsprintf(buffer, str, args);
+
+    Log(buffer);
+    va_end(args);
 
 }
