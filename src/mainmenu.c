@@ -11,13 +11,12 @@
 #include "log.h"
 
 static char *main_menu_asset_path = "assets/images/mainmenu/mainmenu.png";
-static DrawObject *main_menu_object;
 
 void InitializeMainMenu() 
 {
 
-    main_menu_object = malloc(sizeof(DrawObject));
-    if (!CreateNewDrawLayer()) {
+    DrawObject *main_menu_object = GetNewDrawObject();
+    if (CreateNewDrawLayer() == -1) {
 
         Log("STUB: MainMenu could not create new draw layer");
         return;
@@ -45,7 +44,5 @@ void RenderMainMenu()
 
 void CleanUpMainMenu() 
 {
-
-    free(main_menu_object);
 
 }

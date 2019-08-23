@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_video.h>
 
 #include "log.h"
 #include "drawlayers.h"
@@ -14,13 +15,13 @@ typedef struct DrawLayer
 {
 
     unsigned int num_objects;
-    DrawObject objects[256];
+    DrawObject *objects[256];
 
 } DrawLayer;
 
 
 static DrawLayer *draw_layers;
-static unsigned int num_draw_layers = 0;
+static unsigned int num_draw_layers = -1;
 
 static ALLEGRO_DISPLAY *display     = NULL;
 
@@ -33,9 +34,10 @@ void ClearUpGeneric(DrawObject *object);
 bool HandleMouseClick(DrawObject *object, int x, int y);
 bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y);
 
-void AddDrawObjectToDrawLayer(DrawObject *object);
+int AddDrawObjectToDrawLayer(DrawObject *object);
 
 void DrawSingleLayer(DrawLayer *layer);
+void DrawObjectOfTypeGen(DrawLayer *layer, int i);
 void DrawMenu(Menu *menu, bool fill_screen);
 void DrawButton(Button *button);
 void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y);
@@ -57,9 +59,9 @@ void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display)
 void HandleMouseClickInButtonAreas(int x, int y) 
 {
 
-    for (int i = 0; i < draw_layers[num_draw_layers - 1].num_objects;i++)
-        if (draw_layers[num_draw_layers - 1].objects[i].type == BUTTON)
-            HandleMouseClick(&draw_layers[num_draw_layers - 1].objects[i], x, y);
+    for (int i = 0; i < draw_layers[num_draw_layers].num_objects;i++)
+        if (draw_layers[num_draw_layers].objects[i]->type == BUTTON)
+            HandleMouseClick(draw_layers[num_draw_layers].objects[i], x, y);
 
 }
 
@@ -85,16 +87,16 @@ bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y)
 }
 
 /* SECTION: Draw Layer Creation and Cleanup */
-bool CreateNewDrawLayer() 
+int CreateNewDrawLayer() 
 {
 
-    if (num_draw_layers + 1 > MAX_DRAW_LAYERS) {
+    if (num_draw_layers + 1 == MAX_DRAW_LAYERS) {
 
-        return false;
+        return -1;
 
     }
     num_draw_layers++;
-    return true;
+    return num_draw_layers;
 
 }
 
@@ -110,7 +112,7 @@ void ClearUpDrawLayer(int layer)
 {
 
     for (int j = 0; j < draw_layers[layer].num_objects; j++)
-        ClearUpGeneric(&draw_layers[layer].objects[j]);
+        ClearUpGeneric(draw_layers[layer].objects[j]);
 
 }
 
@@ -162,36 +164,43 @@ void CleanUpPopUp(DrawObject *object)
 
 
 /* SECTION: Add Objects to Current Draw Layer */
-bool AddButtonToDrawLayer(DrawObject *object) 
+int AddButtonToDrawLayer(DrawObject *object) 
 {
 
-    return false;
+    return -1;
 
 }
 
-bool AddMenuToDrawLayer(DrawObject *object) 
+int AddMenuToDrawLayer(DrawObject *object) 
 {
 
     object->member.menu.menu_bitmap = al_load_bitmap(object->member.menu.picture_path);
     if (object->member.menu.menu_bitmap == NULL) {
 
         Log("Could not create menu_bitmap");
-        return false;
+        return -1;
 
     }
 
-    AddDrawObjectToDrawLayer(object);
-
-    return false;
+    return AddDrawObjectToDrawLayer(object);
 
 }
 
-void AddDrawObjectToDrawLayer(DrawObject *object) 
+int AddVideoToDrawLayer(DrawObject *object) 
 {
 
-    DrawLayer *layer = &draw_layers[num_draw_layers - 1];
-    layer->objects[layer->num_objects] = *object;
+    object->member.video.video = al_open_video(object->member.video.video_path);
+    return AddDrawObjectToDrawLayer(object);
+
+}
+
+int AddDrawObjectToDrawLayer(DrawObject *object) 
+{
+
+    DrawLayer *layer = &draw_layers[num_draw_layers];
+    layer->objects[layer->num_objects] = object;
     layer->num_objects++;
+    return layer->num_objects - 1;
 
 }
 
@@ -201,7 +210,7 @@ void AddDrawObjectToDrawLayer(DrawObject *object)
 void DrawLayers() 
 {
 
-    for (int i = 0; i < num_draw_layers;i++)
+    for (int i = 0; i < num_draw_layers+1;i++)
         DrawSingleLayer(&draw_layers[i]);
 }
 
@@ -209,18 +218,21 @@ void DrawSingleLayer(DrawLayer *layer)
 {
 
     for (int i = 0; i < layer->num_objects; i++) {
+        if (layer->objects[i]->should_this_be_drawn)
+            DrawObjectOfTypeGen(layer, i);
+    }
 
-        if (layer->objects[i].should_this_be_drawn) {
 
-            switch (layer->objects[i].type) {
+}
 
-                case MENU:   DrawMenu(&layer->objects[i].member.menu, layer->objects[i].scale_to_entire_screen);     break;
-                case BUTTON: DrawButton(&layer->objects[i].member.button); break;
-                case POPUP:   break;
+void DrawObjectOfTypeGen(DrawLayer *layer, int i) 
+{
 
-            }
+    switch (layer->objects[i]->type) {
 
-        }
+        case MENU:   DrawMenu(&layer->objects[i]->member.menu, layer->objects[i]->scale_to_entire_screen);     break;
+        case BUTTON: DrawButton(&layer->objects[i]->member.button); break;
+        case POPUP:   break;
 
     }
 
@@ -248,6 +260,11 @@ void DrawButton(Button *button)
 
 }
 
+void DrawVideo(Video *video, bool fill_screen) 
+{
+
+}
+
 void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y) 
 {
 
@@ -263,5 +280,19 @@ void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width,
     float scale_width  = al_get_bitmap_width(bitmap);
     float scale_height = al_get_bitmap_height(bitmap);
     al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_height, x, y, width, height, 0);
+
+}
+
+DrawObject *GetDrawObject(int layer, int object) 
+{
+
+    return draw_layers[layer].objects[object];
+
+}
+
+DrawObject *GetNewDrawObject() 
+{
+
+    return malloc(sizeof(DrawObject));
 
 }

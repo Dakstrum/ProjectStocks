@@ -1,7 +1,7 @@
 #ifndef DRAWLAYERS_H
 #define DRAWLAYERS_H
 
-
+#include <allegro5/allegro_video.h>
 
 typedef enum DrawType 
 {
@@ -71,15 +71,19 @@ typedef struct DrawObject
 
 void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display);
 // Returns true if successful, false otherwise.
-bool CreateNewDrawLayer();
+int CreateNewDrawLayer();
 
 void ClearDrawLayers();
 void ClearCurrentDrawLayer();
 
-bool AddButtonToDrawLayer(DrawObject *object);
-bool AddMenuToDrawLayer(DrawObject *object);
+int AddButtonToDrawLayer(DrawObject *object);
+int AddMenuToDrawLayer(DrawObject *object);
+int AddVideoToDrawLayer(DrawObject *object);
 
 void DrawLayers();
+
+DrawObject *GetNewDrawObject();
+DrawObject *GetDrawObject(int layer, int object);
 
 void HandleMouseClickInButtonAreas(int x, int y);
 
