@@ -38,8 +38,9 @@ int AddDrawObjectToDrawLayer(DrawObject *object);
 
 void DrawSingleLayer(DrawLayer *layer);
 void DrawObjectOfTypeGen(DrawLayer *layer, int i);
-void DrawMenu(Menu *menu, bool fill_screen);
-void DrawButton(Button *button);
+void DrawMenu(DrawObject *object);
+void DrawButton(DrawObject *object);
+void DrawVideo(DrawObject *object);
 void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y);
 void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width, float height);
 
@@ -77,10 +78,9 @@ bool HandleMouseClick(DrawObject *object, int x, int y)
 bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y) 
 {
 
-    Button button = object->member.button;
-    if (button.x > x || x > button.x + button.width)
+    if (object->x > x || x > object->x + object->width)
         return false;
-    if (button.y > y || y > button.y + button.height)
+    if (object->y > y || y > object->y + object->height)
         return false;
 
     return true;
@@ -231,37 +231,37 @@ void DrawObjectOfTypeGen(DrawLayer *layer, int i)
 
     switch (layer->objects[i]->type) {
 
-        case MENU:   DrawMenu(&layer->objects[i]->member.menu, layer->objects[i]->scale_to_entire_screen);     break;
-        case BUTTON: DrawButton(&layer->objects[i]->member.button); break;
+        case MENU:   DrawMenu(layer->objects[i]);     break;
+        case BUTTON: DrawButton(layer->objects[i]); break;
         case POPUP:   break;
 
     }
 
 }
 
-void DrawMenu(Menu *menu, bool fill_screen) 
+void DrawMenu(DrawObject *object) 
 {
 
-    if (fill_screen)
-        DrawGenericWithWidth(menu->menu_bitmap, menu->x, menu->y, al_get_display_width(display), al_get_display_height(display));
-    else if (menu->width != 0.0f && menu->height != 0.0f)
-        DrawGenericWithWidth(menu->menu_bitmap, menu->x, menu->y, menu->width, menu->height);
+    if (object->scale_to_entire_screen)
+        DrawGenericWithWidth(object->member.menu.menu_bitmap, object->x, object->y, al_get_display_width(display), al_get_display_height(display));
+    else if (object->width != 0.0f && object->height != 0.0f)
+        DrawGenericWithWidth(object->member.menu.menu_bitmap, object->x, object->y, object->width, object->height);
     else
-        DrawGeneric(menu->menu_bitmap, menu->x, menu->y);
+        DrawGeneric(object->member.menu.menu_bitmap, object->x, object->y);
 
 }
 
-void DrawButton(Button *button) 
+void DrawButton(DrawObject *object) 
 {
 
-    if (button->button_bitmap == NULL)
+    if (object->member.button.button_bitmap == NULL)
         return;
 
-    DrawGeneric(button->button_bitmap, button->x, button->y);
+    DrawGeneric(object->member.button.button_bitmap, object->x, object->y);
 
 }
 
-void DrawVideo(Video *video, bool fill_screen) 
+void DrawVideo(DrawObject *object) 
 {
 
 }
@@ -291,7 +291,7 @@ DrawObject *GetDrawObject(int layer, int object)
 
 }
 
-DrawObject *GetNewDrawObject() 
+DrawObject *CreateNewDrawObject() 
 {
 
     return malloc(sizeof(DrawObject));

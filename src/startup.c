@@ -11,15 +11,23 @@
 #include "log.h"
 
 static ALLEGRO_VIDEO *startup_video;
-static bool played_video    = false;
-static int video_draw_layer = -1;
+static bool played_video        = false;
+static int video_draw_layer     = -1;
+static char *startup_video_path = "assets/videos/startup/startup.ogv";
 
 void CleanUpStartUpSequence();
 
 void InitializeStartUpSequence() 
 {
 
-    //video_draw_layer = CreateNewDrawLayer();
+    video_draw_layer         = CreateNewDrawLayer();
+    DrawObject *video_object = CreateNewDrawObject();
+    video_object->type       = VIDEO;
+    video_object->scale_to_entire_screen = true;
+    video_object->should_this_be_drawn   = true;
+    video_object->x                      = 0;
+    video_object->y                      = 0;
+    strncpy(video_object->member.video.video_path, startup_video_path , strlen(startup_video_path ));
     //AddVideoToDrawLayer();
     //startup_video = al_open_video("assets/videos/startup/startup.ogv");
     
