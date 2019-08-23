@@ -35,7 +35,6 @@ typedef struct Menu {
 typedef struct Video {
 
     char video_path[256];
-
     ALLEGRO_VIDEO *video;
 
 } Video;
@@ -63,7 +62,6 @@ typedef struct DrawObject
 } DrawObject;
 
 void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display);
-// Returns true if successful, false otherwise.
 int CreateNewDrawLayer();
 
 void ClearDrawLayers();
@@ -71,7 +69,7 @@ void ClearCurrentDrawLayer();
 
 int AddButtonToDrawLayer(DrawObject *object);
 int AddMenuToDrawLayer(DrawObject *object);
-int AddVideoToDrawLayer(DrawObject *object);
+int AddVideoToDrawLayer(DrawObject *object, bool start_video_immediately);
 
 void DrawLayers();
 

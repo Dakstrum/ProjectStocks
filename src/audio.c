@@ -11,6 +11,7 @@
 void InitializeAllegroAudio();
 ALLEGRO_SAMPLE_INSTANCE * CreateSongInstance(ALLEGRO_SAMPLE_INSTANCE *instance_target);
 void InitializeSongInstances();
+void InitializeAllegroMixer();
 void InitializeSampleAudioFiles();
 void PlayAudioInstance(ALLEGRO_SAMPLE_INSTANCE *audio_instance, bool *take_over);
 void StopAudioInstance(ALLEGRO_SAMPLE_INSTANCE *audio_instance);
@@ -35,6 +36,7 @@ void InitializeAllegroAudio()
     al_init_acodec_addon();
     al_reserve_samples(10);
 }
+
 
 void InitializeSongInstances()
 {
@@ -74,5 +76,7 @@ void DestroyAudioInstance(ALLEGRO_SAMPLE_INSTANCE *audio_instance)
 
 void CleanUpAudio()
 {
+
     DestroyAudioInstance(song_instance);
+
 }

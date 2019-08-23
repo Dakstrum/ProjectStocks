@@ -7,6 +7,7 @@
 #include <allegro5/allegro_video.h>
 
 #include "log.h"
+#include "audio.h"
 #include "drawlayers.h"
 
 #define MAX_DRAW_LAYERS 10
@@ -187,10 +188,13 @@ int AddMenuToDrawLayer(DrawObject *object)
 
 }
 
-int AddVideoToDrawLayer(DrawObject *object) 
+int AddVideoToDrawLayer(DrawObject *object, bool start_video_immediately) 
 {
 
     object->member.video.video = al_open_video(object->member.video.video_path);
+    if (start_video_immediately)
+        al_start_video(object->member.video.video, al_get_default_mixer());
+
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -231,9 +235,10 @@ void DrawObjectOfTypeGen(DrawLayer *layer, int i)
 
     switch (layer->objects[i]->type) {
 
-        case MENU:   DrawMenu(layer->objects[i]);     break;
+        case MENU:   DrawMenu(layer->objects[i]);   break;
         case BUTTON: DrawButton(layer->objects[i]); break;
         case POPUP:   break;
+        case VIDEO: DrawVideo(layer->objects[i]);   break;
 
     }
 
@@ -263,6 +268,12 @@ void DrawButton(DrawObject *object)
 
 void DrawVideo(DrawObject *object) 
 {
+
+    if (!al_is_video_playing(object->member.video.video))
+        return;
+
+    if (object->scale_to_entire_screen)
+        DrawGenericWithWidth(al_get_video_frame(object->member.video.video), object->x, object->y, al_get_display_width(display), al_get_display_height(display));
 
 }
 
