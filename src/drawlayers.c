@@ -21,7 +21,7 @@ typedef struct DrawLayer
 
 
 static DrawLayer *draw_layers;
-static unsigned int num_draw_layers = -1;
+static unsigned int current_draw_layer = -1;
 
 static ALLEGRO_DISPLAY *display     = NULL;
 
@@ -53,15 +53,16 @@ void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display)
         draw_layers[i].num_objects = 0;
 
     }
+    current_draw_layer = -1;
 
 }
 
 void HandleMouseClickInButtonAreas(int x, int y) 
 {
 
-    for (int i = 0; i < draw_layers[num_draw_layers].num_objects;i++)
-        if (draw_layers[num_draw_layers].objects[i]->type == BUTTON)
-            HandleMouseClick(draw_layers[num_draw_layers].objects[i], x, y);
+    for (int i = 0; i < draw_layers[current_draw_layer].num_objects;i++)
+        if (draw_layers[current_draw_layer].objects[i]->type == BUTTON)
+            HandleMouseClick(draw_layers[current_draw_layer].objects[i], x, y);
 
 }
 
@@ -90,21 +91,21 @@ bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y)
 int CreateNewDrawLayer() 
 {
 
-    if (num_draw_layers + 1 == MAX_DRAW_LAYERS) {
+    if (current_draw_layer + 1 == MAX_DRAW_LAYERS) {
 
         return -1;
 
     }
-    num_draw_layers++;
-    return num_draw_layers;
+    current_draw_layer++;
+    return current_draw_layer;
 
 }
 
 void ClearCurrentDrawLayer() 
 {
 
-    ClearUpDrawLayer(num_draw_layers - 1);
-    num_draw_layers--;
+    ClearUpDrawLayer(current_draw_layer - 1);
+    current_draw_layer--;
 
 }
 
@@ -132,7 +133,7 @@ void ClearUpGeneric(DrawObject *object)
 void ClearDrawLayers() 
 {
 
-    for (int i = 0; i < num_draw_layers; i++)
+    for (int i = 0; i < current_draw_layer; i++)
         ClearUpDrawLayer(i);
 
     free(draw_layers);
@@ -197,7 +198,7 @@ int AddVideoToDrawLayer(DrawObject *object)
 int AddDrawObjectToDrawLayer(DrawObject *object) 
 {
 
-    DrawLayer *layer = &draw_layers[num_draw_layers];
+    DrawLayer *layer = &draw_layers[current_draw_layer];
     layer->objects[layer->num_objects] = object;
     layer->num_objects++;
     return layer->num_objects - 1;
@@ -210,7 +211,7 @@ int AddDrawObjectToDrawLayer(DrawObject *object)
 void DrawLayers() 
 {
 
-    for (int i = 0; i < num_draw_layers+1;i++)
+    for (int i = 0; i < current_draw_layer+1;i++)
         DrawSingleLayer(&draw_layers[i]);
 }
 
