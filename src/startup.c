@@ -35,7 +35,9 @@ void StartUpSequence()
         InitializeStartUpSequence();
 
     DrawLayers();
-    if (!al_is_video_playing(video_object->member.video.video))
+    if (!al_is_video_playing(video_object->member.video.video)) {
+        ClearDrawLayers();
         SwitchToRenderingMainMenu();
-
+    }
+        
 }

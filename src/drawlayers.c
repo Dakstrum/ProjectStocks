@@ -30,6 +30,7 @@ void ClearUpDrawLayer(int layer);
 void CleanUpButton(DrawObject *object);
 void CleanUpMenu(DrawObject *object);
 void CleanUpPopUp(DrawObject *object);
+void CleanUpVideo(DrawObject *object);
 void ClearUpGeneric(DrawObject *object);
 
 bool HandleMouseClick(DrawObject *object, int x, int y);
@@ -113,8 +114,12 @@ void ClearCurrentDrawLayer()
 void ClearUpDrawLayer(int layer) 
 {
 
-    for (int j = 0; j < draw_layers[layer].num_objects; j++)
+    for (int j = 0; j < draw_layers[layer].num_objects; j++) {
+
         ClearUpGeneric(draw_layers[layer].objects[j]);
+        free(draw_layers[layer].objects[j]);
+
+    }
 
 }
 
@@ -126,6 +131,7 @@ void ClearUpGeneric(DrawObject *object)
         case MENU:   CleanUpMenu(object);   break;
         case BUTTON: CleanUpButton(object); break;
         case POPUP:  CleanUpPopUp(object);  break;
+        case VIDEO:  CleanUpVideo(object);  break;
 
     }
 
@@ -145,7 +151,7 @@ void ClearDrawLayers()
 void CleanUpButton(DrawObject *object) 
 {
 
-    free(object->member.button.picture_path);
+    al_destroy_bitmap(object->member.button.button_bitmap);
 
 }
 
@@ -153,7 +159,7 @@ void CleanUpMenu(DrawObject *object)
 {
 
     for (int i = 0; i < object->member.menu.num_buttons; i++)
-        free(object->member.menu.buttons[i].picture_path);
+        al_destroy_bitmap(object->member.menu.buttons[i].button_bitmap);
 
     free(object->member.menu.buttons);
 
@@ -161,6 +167,15 @@ void CleanUpMenu(DrawObject *object)
 
 void CleanUpPopUp(DrawObject *object) 
 {
+
+    Log("PopUp STUB");
+
+}
+
+void CleanUpVideo(DrawObject *object) 
+{
+
+    al_close_video(object->member.video.video);
 
 }
 
@@ -264,9 +279,6 @@ void DrawMenu(DrawObject *object)
 
 void DrawButton(DrawObject *object) 
 {
-
-    if (object->member.button.button_bitmap == NULL)
-        return;
 
     DrawGeneric(object->member.button.button_bitmap, object->x, object->y);
 
