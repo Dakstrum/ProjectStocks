@@ -28,8 +28,6 @@ void InitializeMainMenu()
     main_menu_object->y                        = 0;
     main_menu_object->scale_to_entire_screen   = true;
     main_menu_object->member.menu.picture_path = main_menu_asset_path;
-    //strncpy(main_menu_object->member.menu.picture_path, main_menu_asset_path, strlen(main_menu_asset_path));
-
     AddMenuToDrawLayer(main_menu_object);
     Log("Created Main Menu Draw Layer");
 

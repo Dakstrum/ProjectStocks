@@ -24,7 +24,6 @@ void InitializeStartUpSequence()
     video_object->x                       = 0;
     video_object->y                       = 0;
     video_object->member.video.video_path = startup_video_path;
-    //strncpy(video_object->member.video.video_path, startup_video_path , strlen(startup_video_path));
     AddVideoToDrawLayer(video_object, true);
     
 }
