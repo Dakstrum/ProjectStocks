@@ -71,8 +71,10 @@ void InitializeDisplay()
 void InitializeAddons() 
 {
 
-    al_init_image_addon();
-    al_init_video_addon();
+    if(!al_init_image_addon())
+        Log("Unable to init image addon");
+    if(!al_init_video_addon())
+        Log("Unable to init video addon");
 
 }
 

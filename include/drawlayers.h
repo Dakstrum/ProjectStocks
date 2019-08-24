@@ -24,7 +24,7 @@ typedef struct Button
 
 typedef struct Menu {
 
-    char picture_path[256];
+    char *picture_path;
     ALLEGRO_BITMAP *menu_bitmap;
 
     int num_buttons;
@@ -34,7 +34,7 @@ typedef struct Menu {
 
 typedef struct Video {
 
-    char video_path[256];
+    char *video_path;
     ALLEGRO_VIDEO *video;
 
 } Video;

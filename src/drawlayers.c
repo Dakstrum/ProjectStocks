@@ -192,6 +192,12 @@ int AddVideoToDrawLayer(DrawObject *object, bool start_video_immediately)
 {
 
     object->member.video.video = al_open_video(object->member.video.video_path);
+    if (object->member.video.video == NULL) {
+
+        LogF("Unable to open %s", object->member.video.video_path);
+        al_rest(1);
+        return -1;
+    }
     if (start_video_immediately)
         al_start_video(object->member.video.video, al_get_default_mixer());
 
@@ -280,6 +286,9 @@ void DrawVideo(DrawObject *object)
 void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y) 
 {
 
+    if (bitmap == NULL)
+        return;
+
     float scale_width  = al_get_bitmap_width(bitmap);
     float scale_height = al_get_bitmap_height(bitmap);
     al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_height, x, y, scale_width, scale_height, 0);
@@ -288,6 +297,9 @@ void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y)
 
 void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width, float height) 
 {
+
+    if (bitmap == NULL)
+        return;
 
     float scale_width  = al_get_bitmap_width(bitmap);
     float scale_height = al_get_bitmap_height(bitmap);
