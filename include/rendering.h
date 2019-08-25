@@ -9,7 +9,11 @@ enum RenderingType
 
 };
 
-void *RenderingEntry(ALLEGRO_THREAD *thread, void *arg);
+void InitializeRendering();
 void SwitchToRenderingMainMenu();
+void HandleRendering();
+void HandleWindowEvents(ALLEGRO_EVENT event);
+void CleanUpRendering();
+ALLEGRO_DISPLAY *GetDisplay();
 
 #endif

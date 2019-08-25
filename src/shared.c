@@ -5,33 +5,18 @@
 
 #include "log.h"
 
-static atomic_bool should_clean_up           = false;
-static atomic_bool should_clean_up_rendering = false;
+static bool should_clean_up = false;
 
 bool ShouldICleanUp() 
 {
 
-    return atomic_load(&should_clean_up);
-
-}
-
-bool ShouldICleanUpDisplay() 
-{
-
-    return atomic_load(&should_clean_up_rendering);
+    return should_clean_up;
 
 }
 
 void SetCleanUpToTrue() 
 {
 
-    atomic_store(&should_clean_up, true);
-
-}
-
-void SetCleanUpDisplay() 
-{
-
-    atomic_store(&should_clean_up_rendering, true);
+    should_clean_up = true;
 
 }

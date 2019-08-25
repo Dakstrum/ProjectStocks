@@ -1,6 +1,7 @@
 #ifndef CONTROLS_H
 #define CONTROLS_H
 
-void StartInputLoop();
+void InitializeControls();
+void HandleInput(ALLEGRO_EVENT event);
 
 #endif

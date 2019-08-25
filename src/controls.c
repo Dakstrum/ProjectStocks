@@ -7,47 +7,34 @@
 #include "shared.h"
 #include "log.h"
 
-void InitializeControls();
-void HandleMouseClicks();
-
-static ALLEGRO_EVENT_QUEUE *event_queue;
-static ALLEGRO_TIMER *timer;
-
-void StartInputLoop() 
-{
-
-    InitializeControls();
-    bool should_clean_up;
-    while (!(should_clean_up = ShouldICleanUp())) {
-
-        HandleMouseClicks();
-
-    }
-    Log("Quiting Input Loop");
-
-}
+void HandleMouseClicks(ALLEGRO_EVENT event);
+void HandleKeyboard(ALLEGRO_EVENT event);
 
 void InitializeControls() 
 {
 
     al_install_mouse();
-    event_queue = al_create_event_queue();
-    timer       = al_create_timer(1.0/144.0);
-
-    al_register_event_source(event_queue, al_get_mouse_event_source());
-    al_register_event_source(event_queue, al_get_timer_event_source(timer));
 
 }
 
-void HandleMouseClicks() 
+void HandleInput(ALLEGRO_EVENT event) 
 {
 
-    ALLEGRO_EVENT event;
-    al_wait_for_event(event_queue, &event);
-    if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && event.mouse.button == 1) {
+    HandleMouseClicks(event);
+    HandleKeyboard(event);
 
+}
+
+void HandleMouseClicks(ALLEGRO_EVENT event) 
+{
+
+    if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && event.mouse.button == 1)
         HandleMouseClickInButtonAreas(event.mouse.x, event.mouse.y);
 
-    }
+}
+
+void HandleKeyboard(ALLEGRO_EVENT event) 
+{
+
 
 }

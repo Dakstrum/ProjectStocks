@@ -12,39 +12,15 @@
 #include "rendering.h"
 #include "startup.h"
 
-void InitializeRendering();
 void InitializeDisplay();
 void InitializeAddons();
-
-void RenderingLoop();
-void RenderFrame();
 
 void CleanUpRendering();
 void CleanUpDisplay();
 void CleanUpAddons();
 
-void HandleWindowEvents();
-
-static float FPS                         = 60.0; 
-static ALLEGRO_DISPLAY *display          = NULL;
-static ALLEGRO_TIMER *timer              = NULL;
-static ALLEGRO_EVENT_QUEUE *event_queue  = NULL;
-
-static void (*Render)()                  = &StartUpSequence;
-
-
-void *RenderingEntry(ALLEGRO_THREAD *thread, void *arg) 
-{
-
-    InitializeRendering();
-    RenderingLoop();
-    CleanUpRendering();
-
-    Log("Quiting Rendering Thread");
-    
-    return NULL;
-
-}
+static void (*Render)()         = &StartUpSequence;
+static ALLEGRO_DISPLAY *display = NULL;
 
 void InitializeRendering() 
 {
@@ -57,13 +33,7 @@ void InitializeRendering()
 void InitializeDisplay() 
 {
 
-    display     = al_create_display(1920, 1080);
-    timer       = al_create_timer(1.0/FPS);
-    event_queue = al_create_event_queue();
-    al_register_event_source(event_queue, al_get_display_event_source(display));
-    al_register_event_source(event_queue, al_get_timer_event_source(timer));
-    al_start_timer(timer);
-
+    display = al_create_display(1920, 1080);
     InitializeDrawLayers(display);
 
 }
@@ -78,33 +48,19 @@ void InitializeAddons()
 
 }
 
-void RenderingLoop() 
+void HandleRendering() 
 {
 
-    while (!ShouldICleanUpDisplay()) {
-
-        Render();
-        al_flip_display();
-        HandleWindowEvents();
-
-    }
+    Render();
+    al_flip_display();
 
 }
 
-void HandleWindowEvents() 
+void HandleWindowEvents(ALLEGRO_EVENT event) 
 {
 
-    ALLEGRO_EVENT event;
-    al_wait_for_event(event_queue, &event);
-    if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-
+    if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
         SetCleanUpToTrue();
-
-    } else if (event.type == ALLEGRO_EVENT_TIMER) {
-
-        // Log();
-
-    }
 
 }
 
@@ -120,7 +76,6 @@ void CleanUpDisplay()
 {
 
     al_destroy_display(display);
-    al_destroy_event_queue(event_queue);
 
 }
 
@@ -139,4 +94,9 @@ void SwitchToRenderingMainMenu()
     Render = &RenderMainMenu;
     Log("MainMenu Initialized");
 
+}
+
+ALLEGRO_DISPLAY *GetDisplay() 
+{
+    return display;
 }
