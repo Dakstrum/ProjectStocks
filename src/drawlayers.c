@@ -11,11 +11,11 @@
 #include "drawlayers.h"
 
 #define MAX_DRAW_LAYERS 10
+#define MAX_OBJECTS_PER_LAYER 256
 
 typedef struct DrawLayer 
 {
 
-    unsigned int num_objects;
     DrawObject *objects[256];
 
 } DrawLayer;
@@ -51,11 +51,6 @@ void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display)
 
     display     = active_display;
     draw_layers = malloc(sizeof(DrawLayer) * MAX_DRAW_LAYERS);
-    for (int i = 0; i < MAX_DRAW_LAYERS; i++) {
-
-        draw_layers[i].num_objects = 0;
-
-    }
     current_draw_layer = -1;
 
 }
@@ -63,17 +58,28 @@ void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display)
 void HandleMouseClickInButtonAreas(int x, int y) 
 {
 
-    for (int i = 0; i < draw_layers[current_draw_layer].num_objects;i++)
-        if (draw_layers[current_draw_layer].objects[i]->type == BUTTON)
-            HandleMouseClick(draw_layers[current_draw_layer].objects[i], x, y);
+    for (int i = 0; i < MAX_OBJECTS_PER_LAYER;i++)
+        if (draw_layers[current_draw_layer].objects[i] != NULL &&  draw_layers[current_draw_layer].objects[i]->type == BUTTON)
+            if (HandleMouseClick(draw_layers[current_draw_layer].objects[i], x, y))
+                break;
+
 
 }
 
 bool HandleMouseClick(DrawObject *object, int x, int y) 
 {
 
-    if (IsMouseClickInAreaOfObject(object, x, y))
-        object->member.button.Callback();
+    if (IsMouseClickInAreaOfObject(object, x, y)) {
+
+        if (object->member.button.Callback != NULL) {
+
+            object->member.button.Callback();
+            return true;
+
+        }
+
+    }
+    return false;
 
 }
 
@@ -114,10 +120,14 @@ void ClearCurrentDrawLayer()
 void ClearUpDrawLayer(int layer) 
 {
 
-    for (int j = 0; j < draw_layers[layer].num_objects; j++) {
+    for (int j = 0; j < MAX_OBJECTS_PER_LAYER; j++) {
 
-        ClearUpGeneric(draw_layers[layer].objects[j]);
-        free(draw_layers[layer].objects[j]);
+        if (draw_layers[layer].objects[j] != NULL) {
+
+            ClearUpGeneric(draw_layers[layer].objects[j]);
+            free(draw_layers[layer].objects[j]);
+
+        }
 
     }
 
@@ -224,10 +234,17 @@ int AddDrawObjectToDrawLayer(DrawObject *object)
 {
 
     DrawLayer *layer = &draw_layers[current_draw_layer];
-    layer->objects[layer->num_objects] = object;
-    layer->num_objects++;
-    return layer->num_objects - 1;
+    for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++) {
 
+        if (layer->objects[i] == NULL) {
+
+            layer->objects[i] = object;
+            return i;
+
+        }
+
+    }
+    return -1;
 }
 
 
@@ -243,11 +260,9 @@ void DrawLayers()
 void DrawSingleLayer(DrawLayer *layer) 
 {
 
-    for (int i = 0; i < layer->num_objects; i++) {
-        if (layer->objects[i]->should_this_be_drawn)
+    for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++) 
+        if (layer->objects[i] != NULL && layer->objects[i]->should_this_be_drawn)
             DrawObjectOfTypeGen(layer, i);
-    }
-
 
 }
 
