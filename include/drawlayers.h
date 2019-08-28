@@ -45,7 +45,6 @@ typedef struct DrawObject
 
     DrawType type;
     bool should_this_be_drawn;
-    bool scale_to_entire_screen;
     float x;
     float y;
     float width;

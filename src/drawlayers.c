@@ -24,7 +24,10 @@ typedef struct DrawLayer
 static DrawLayer *draw_layers;
 static unsigned int current_draw_layer = -1;
 
-static ALLEGRO_DISPLAY *display     = NULL;
+static ALLEGRO_DISPLAY *display = NULL;
+static float scale              = 1.0f;
+
+void SetObjectPointersToNull();
 
 void ClearUpDrawLayer(int layer);
 void CleanUpButton(DrawObject *object);
@@ -52,6 +55,16 @@ void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display)
     display     = active_display;
     draw_layers = malloc(sizeof(DrawLayer) * MAX_DRAW_LAYERS);
     current_draw_layer = -1;
+    SetObjectPointersToNull();
+
+}
+
+void SetObjectPointersToNull() 
+{
+
+    for (int i = 0; i < MAX_DRAW_LAYERS;i++)
+        for (int j = 0;j < MAX_OBJECTS_PER_LAYER; j++)
+            draw_layers[i].objects[j] = NULL;
 
 }
 
@@ -62,7 +75,6 @@ void HandleMouseClickInButtonAreas(int x, int y)
         if (draw_layers[current_draw_layer].objects[i] != NULL &&  draw_layers[current_draw_layer].objects[i]->type == BUTTON)
             if (HandleMouseClick(draw_layers[current_draw_layer].objects[i], x, y))
                 break;
-
 
 }
 
@@ -223,6 +235,7 @@ int AddVideoToDrawLayer(DrawObject *object, bool start_video_immediately)
         al_rest(1);
         return -1;
     }
+    LogF("Adding Video %s to DrawLayer", object->member.video.video_path);
     if (start_video_immediately)
         al_start_video(object->member.video.video, al_get_default_mixer());
 
@@ -283,9 +296,7 @@ void DrawObjectOfTypeGen(DrawLayer *layer, int i)
 void DrawMenu(DrawObject *object) 
 {
 
-    if (object->scale_to_entire_screen)
-        DrawGenericWithWidth(object->member.menu.menu_bitmap, object->x, object->y, al_get_display_width(display), al_get_display_height(display));
-    else if (object->width != 0.0f && object->height != 0.0f)
+    if (object->width != 0.0f && object->height != 0.0f)
         DrawGenericWithWidth(object->member.menu.menu_bitmap, object->x, object->y, object->width, object->height);
     else
         DrawGeneric(object->member.menu.menu_bitmap, object->x, object->y);
@@ -305,8 +316,7 @@ void DrawVideo(DrawObject *object)
     if (!al_is_video_playing(object->member.video.video))
         return;
 
-    if (object->scale_to_entire_screen)
-        DrawGenericWithWidth(al_get_video_frame(object->member.video.video), object->x, object->y, al_get_display_width(display), al_get_display_height(display));
+    DrawGenericWithWidth(al_get_video_frame(object->member.video.video), object->x, object->y, object->width, object->height);
 
 }
 
@@ -330,7 +340,7 @@ void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width,
 
     float scale_width  = al_get_bitmap_width(bitmap);
     float scale_height = al_get_bitmap_height(bitmap);
-    al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_height, x, y, width, height, 0);
+    al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_height, x, y, width * scale, height * scale, 0);
 
 }
 
