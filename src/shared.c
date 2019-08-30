@@ -5,18 +5,25 @@
 
 #include "log.h"
 
-static bool should_clean_up = false;
+static atomic_bool should_clean_up;
+
+void InitializeShared() 
+{
+
+    atomic_store(&should_clean_up, false);
+
+}
 
 bool ShouldICleanUp() 
 {
 
-    return should_clean_up;
+    return atomic_load(&should_clean_up);
 
 }
 
 void SetCleanUpToTrue() 
 {
 
-    should_clean_up = true;
+    atomic_store(&should_clean_up, true);
 
 }

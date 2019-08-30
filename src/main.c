@@ -10,6 +10,7 @@
 #include "simulation.h"
 #include "rendering.h"
 #include "audio.h"
+#include "jsonlayer.h"
 
 enum InitializeSuccess 
 {
@@ -82,6 +83,7 @@ enum InitializeSuccess Initialize()
         return FAILURE;
 
     }
+    InitializeShared();
     InitializeDatabases();
     InitializeThreads();
     InitializeControls();
@@ -106,14 +108,17 @@ void InitializeEventQueue()
 
 static ALLEGRO_THREAD *stock_simulation_thread = NULL;
 static ALLEGRO_THREAD *audio_thread            = NULL;
+static ALLEGRO_THREAD *json_thread             = NULL;
 void InitializeThreads() 
 {
 
     stock_simulation_thread = al_create_thread(StockSimulationEntry, NULL);
     audio_thread            = al_create_thread(AudioEntry, NULL);
+    json_thread             = al_create_thread(JsonEntry, NULL);
 
     al_start_thread(stock_simulation_thread);
     al_start_thread(audio_thread);
+    al_start_thread(json_thread);
 
 }
 
@@ -122,9 +127,11 @@ void CleanUpThreads()
 
     al_join_thread(stock_simulation_thread, NULL);
     al_join_thread(audio_thread, NULL);
+    al_join_thread(json_thread, NULL);
 
     al_destroy_thread(stock_simulation_thread);
     al_destroy_thread(audio_thread);
+    al_destroy_thread(json_thread);
 
 }
 
