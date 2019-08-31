@@ -88,17 +88,45 @@ array_list *GetCompanyArrayList()
 
 }
 
+void LogCompanyValues(int company_index) 
+{
+    Company c = parsed_companies[company_index];
+    LogF("Retrieved CompanyName = %s, IPO = %lf, Category = %s, Description = %s, StartDate = %s, TotalProducts = %d", c.company_name, c.ipo, c.category, c.description, c.start_date, c.total_products);
+
+}
+
+void SetCompanyProducts(int company_index, array_list *products) 
+{
+
+    if (products == NULL)
+        return;
+
+    char buffer[512];
+    parsed_companies[company_index].products       = malloc(sizeof(char *) * products->length);
+    parsed_companies[company_index].total_products = products->length;
+    for (int i = 0; i < products->length; i++) {
+
+        parsed_companies[company_index].products[i] = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/Products/%d/ProductName", company_index, i));
+
+    }
+
+}
+
 void ParseCompanyJsonObject(array_list *companies_list) 
 {
 
     parsed_companies = malloc(sizeof(Company) * companies_list->length);
-    char buffer[511];
+    char buffer[512];
     for (int i = 0; i < companies_list->length; i++) {
 
         parsed_companies[i].company_name = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/CompanyName", i));
         parsed_companies[i].ipo          = GetDoubleFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/IPO", i));
         parsed_companies[i].category     = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/Category", i));
-        
+        parsed_companies[i].description  = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/Description", i));
+        parsed_companies[i].start_date   = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/StartDate", i));
+        SetCompanyProducts(i, GetJsonObjectArray(companies, GetFormattedBuffer(buffer, "/Companies/%d/Products", i)));
+        LogCompanyValues(i);
+
     }
 
 }

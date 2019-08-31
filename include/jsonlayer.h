@@ -11,6 +11,8 @@ typedef struct Company {
     char *start_date;
     char **products;
 
+    int total_products;
+
 } Company;
 
 
