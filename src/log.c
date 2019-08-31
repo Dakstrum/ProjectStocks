@@ -26,7 +26,7 @@ void Log(const char *str)
 void LogF(const char *str, ...) 
 {
 
-    char buffer[512];
+    char buffer[2048];
     va_list args;
     va_start(args, str);
     vsprintf(buffer, str, args);

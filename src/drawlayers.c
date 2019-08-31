@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_font.h>
 #include <allegro5/allegro_video.h>
 
 #include "log.h"
@@ -22,7 +23,7 @@ typedef struct DrawLayer
 
 
 static DrawLayer *draw_layers;
-static unsigned int current_draw_layer = -1;
+static int current_draw_layer = -1;
 
 static ALLEGRO_DISPLAY *display = NULL;
 static float scale              = 1.0f;
@@ -360,6 +361,7 @@ int RemoveDrawObject(DrawObject *object)
         return -1;
     ClearUpGeneric(object);
     free(draw_layers[object->layer_index].objects[object->object_index]);
+    return 0;
 
 }
 

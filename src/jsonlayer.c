@@ -9,6 +9,25 @@
 #include "log.h"
 #include "shared.h"
 #include "jsonlayer.h"
+#include "drawlayers.h"
+
+typedef struct Company {
+
+    char *company_name;
+    char *category;
+    double ipo;
+    
+    char *description;
+    char *start_date;
+    char **products;
+    char **news_articles;
+    char **eavesdropper_messages;
+
+    int total_products;
+    int total_news_articles;
+    int total_eavesdropper_messages;
+
+} Company;
 
 void SetJsonObjectFromFile(json_object **object, const char *file);
 void ParseJsonObjects();
@@ -23,10 +42,11 @@ double GetDoubleFromJsonObject(json_object *object, const char *json_path);
 
 static json_object *companies    = NULL;
 static json_object *draw_objects = NULL;
-
 static Company *parsed_companies = NULL;
 
-void *JsonEntry(ALLEGRO_THREAD *thread, void *arg) 
+static DrawObject *objects       = NULL;
+
+void InitializeJson()
 {
 
     SetJsonObjectFromFile(&companies   , "assets/config/companies.json");
@@ -44,10 +64,6 @@ void SetJsonObjectFromFile(json_object **object, const char *file)
 
         LogF("Error %s", json_util_get_last_err());
         SetCleanUpToTrue();
-
-    } else {
-
-        LogF(json_object_to_json_string(*object));
 
     }
 

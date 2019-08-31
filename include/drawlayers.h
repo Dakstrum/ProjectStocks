@@ -1,6 +1,7 @@
 #ifndef DRAWLAYERS_H
 #define DRAWLAYERS_H
 
+#include <allegro5/allegro_font.h>
 #include <allegro5/allegro_video.h>
 
 typedef enum DrawType 
@@ -18,6 +19,8 @@ typedef struct Text
 {
 
     char *text;
+    ALLEGRO_FONT *font;
+
 
 } Text;
 
