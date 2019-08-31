@@ -34,8 +34,7 @@ void ParseJsonObjects();
 void ParseCompanyJsonObject(array_list *companies_list);
 void ParseJsonDrawObject();
 
-array_list *GetCompanyArrayList();
-
+array_list *GetArrayList(const char *json_path);
 array_list *GetJsonObjectArray(json_object *object, const char *json_path);
 char* GetStringFromJsonObject(json_object *object, const char *json_path);
 double GetDoubleFromJsonObject(json_object *object, const char *json_path);
@@ -75,29 +74,34 @@ void ParseJsonObjects()
     if (companies == NULL || draw_objects == NULL)
         return;
 
-    array_list *companies_list = GetCompanyArrayList();
-
+    array_list *companies_list = GetArrayList("/Companies");
     if (companies_list == NULL)
         return;
     else
         ParseCompanyJsonObject(companies_list);
 
+    array_list *objects_list = GetArrayList("/Objects");
+    if (objects_list == NULL)
+        return;
+    else
+       ParseJsonDrawObject();
+
 }
 
-array_list *GetCompanyArrayList() 
+array_list *GetArrayList(const char *json_path) 
 {
 
-    array_list *companies_list = GetJsonObjectArray(companies, "/Companies");
+    array_list *list = GetJsonObjectArray(companies, json_path);
 
-    if (companies_list == NULL) {
+    if (list == NULL) {
 
-        Log("No companies found in configuration.");
+        LogF("No %d found in configuration.", json_path);
         SetCleanUpToTrue();
 
     } else {
 
-        LogF("Got %d companies", companies_list->length);
-        return companies_list;
+        LogF("Got %d %s", list->length, json_path);
+        return list;
     }
 
     return NULL;
