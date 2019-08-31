@@ -27,3 +27,16 @@ void SetCleanUpToTrue()
     atomic_store(&should_clean_up, true);
 
 }
+
+char *GetFormattedBuffer(char buffer[512], const char *str, ...) 
+{
+
+    va_list args;
+    va_start(args, str);
+    vsprintf(buffer, str, args);
+
+    va_end(args);
+    buffer[511] = '\0';
+    return buffer;
+
+}
