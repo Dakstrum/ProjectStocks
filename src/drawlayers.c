@@ -129,6 +129,18 @@ void ClearCurrentDrawLayer()
 
 }
 
+
+void ClearDrawLayers() 
+{
+
+    for (int i = 0; i < current_draw_layer; i++)
+        ClearUpDrawLayer(i);
+
+    free(draw_layers);
+    InitializeDrawLayers(display);
+
+}
+
 void ClearUpDrawLayer(int layer) 
 {
 
@@ -159,17 +171,6 @@ void ClearUpGeneric(DrawObject *object)
 
 }
 
-void ClearDrawLayers() 
-{
-
-    for (int i = 0; i < current_draw_layer; i++)
-        ClearUpDrawLayer(i);
-
-    free(draw_layers);
-    InitializeDrawLayers(display);
-
-}
-
 void CleanUpButton(DrawObject *object) 
 {
 
@@ -180,10 +181,7 @@ void CleanUpButton(DrawObject *object)
 void CleanUpMenu(DrawObject *object) 
 {
 
-    for (int i = 0; i < object->member.menu.num_buttons; i++)
-        al_destroy_bitmap(object->member.menu.buttons[i].button_bitmap);
-
-    free(object->member.menu.buttons);
+    al_destroy_bitmap(object->member.menu.menu_bitmap);
 
 }
 
@@ -251,8 +249,10 @@ int AddDrawObjectToDrawLayer(DrawObject *object)
 
         if (layer->objects[i] == NULL) {
 
-            layer->objects[i] = object;
-            return i;
+            layer->objects[i]    = object;
+            object->layer_index  = current_draw_layer;
+            object->object_index = i;
+            return 0;
 
         }
 
@@ -348,6 +348,18 @@ DrawObject *GetDrawObject(int layer, int object)
 {
 
     return draw_layers[layer].objects[object];
+
+}
+
+int RemoveDrawObject(DrawObject *object) 
+{
+
+    if (object == NULL)
+        return -1;
+    if (draw_layers[object->layer_index].objects[object->object_index] == NULL)
+        return -1;
+    ClearUpGeneric(object);
+    free(draw_layers[object->layer_index].objects[object->object_index]);
 
 }
 

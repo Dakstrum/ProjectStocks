@@ -9,9 +9,17 @@ typedef enum DrawType
     MENU = 0,
     BUTTON,
     POPUP,
-    VIDEO
+    VIDEO,
+    TEXT
 
 } DrawType;
+
+typedef struct Text 
+{
+
+    char *text;
+
+} Text;
 
 typedef struct Button 
 {
@@ -27,9 +35,6 @@ typedef struct Menu {
     char *picture_path;
     ALLEGRO_BITMAP *menu_bitmap;
 
-    int num_buttons;
-    Button *buttons;
-
 } Menu;
 
 typedef struct Video {
@@ -38,7 +43,6 @@ typedef struct Video {
     ALLEGRO_VIDEO *video;
 
 } Video;
-
 
 typedef struct DrawObject 
 {
@@ -50,11 +54,15 @@ typedef struct DrawObject
     float width;
     float height;
 
+    int layer_index;
+    int object_index;
+
     union {
 
         Menu   menu;
         Button button;
         Video  video;
+        Text   text;
 
     } member;
 
@@ -74,6 +82,7 @@ void DrawLayers();
 
 DrawObject *CreateNewDrawObject();
 DrawObject *GetDrawObject(int layer, int object);
+int RemoveDrawObject(DrawObject *object);
 
 void HandleMouseClickInButtonAreas(int x, int y);
 
