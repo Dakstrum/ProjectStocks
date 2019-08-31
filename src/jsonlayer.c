@@ -1,4 +1,6 @@
 
+#include <stdio.h>
+
 #include <json-c/json.h>
 #include <json-c/json_util.h>
 #include <json-c/json_object.h>
@@ -9,14 +11,19 @@
 #include "jsonlayer.h"
 
 void SetJsonObjectFromFile(json_object **object, const char *file);
-void ParseCompanyJsonObject();
+void ParseJsonObjects();
+void ParseCompanyJsonObject(array_list *companies_list);
 void ParseJsonDrawObject();
 
-array_list *GetJsonObjectArray(json_object *object, const char *json_path);
-const char* GetStringFromJsonObject(json_object *object, const char *json_path);
+array_list *GetCompanyArrayList();
 
-json_object *companies    = NULL;
-json_object *draw_objects = NULL;
+array_list *GetJsonObjectArray(json_object *object, const char *json_path);
+char* GetStringFromJsonObject(json_object *object, const char *json_path);
+
+static json_object *companies    = NULL;
+static json_object *draw_objects = NULL;
+
+static Company *parsed_companies = NULL;
 
 void *JsonEntry(ALLEGRO_THREAD *thread, void *arg) 
 {
@@ -24,8 +31,7 @@ void *JsonEntry(ALLEGRO_THREAD *thread, void *arg)
     SetJsonObjectFromFile(&companies   , "assets/config/companies.json");
     SetJsonObjectFromFile(&draw_objects, "assets/config/drawobjects.json");
     GetStringFromJsonObject(companies, "/Test");
-    ParseCompanyJsonObject();
-    ParseJsonDrawObject();
+    ParseJsonObjects();
 
 }
 
@@ -46,19 +52,52 @@ void SetJsonObjectFromFile(json_object **object, const char *file)
 
 }
 
-void ParseCompanyJsonObject() 
+void ParseJsonObjects() 
 {
 
-    if (companies == NULL)
+    if (companies == NULL || draw_objects == NULL)
         return;
+
+    array_list *companies_list = GetCompanyArrayList();
+
+    if (companies_list == NULL)
+        return;
+    else
+        ParseCompanyJsonObject(companies_list);
+
+}
+
+array_list *GetCompanyArrayList() 
+{
 
     array_list *companies_list = GetJsonObjectArray(companies, "/Companies");
 
-    if (companies_list == NULL) 
-        SetCleanUpToTrue();
-    else
-        LogF("Got companies array of length %d", companies_list->length);
+    if (companies_list == NULL) {
 
+        Log("No companies found in configuration.");
+        SetCleanUpToTrue();
+
+    } else {
+
+        LogF("Got %d companies", companies_list->length);
+        return companies_list;
+    }
+
+    return NULL;
+
+}
+
+void ParseCompanyJsonObject(array_list *companies_list) 
+{
+
+    parsed_companies = malloc(sizeof(Company) * companies_list->length);
+    char buffer[511];
+    for (int i = 0; i < companies_list->length; i++) {
+
+        parsed_companies[i].company_name = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/CompanyName", i));
+        LogF("Company = %s", parsed_companies[i].company_name);
+
+    }
 
 }
 
@@ -84,7 +123,7 @@ array_list *GetJsonObjectArray(json_object *object, const char *json_path)
 
 }
 
-const char* GetStringFromJsonObject(json_object *object, const char *json_path) 
+char* GetStringFromJsonObject(json_object *object, const char *json_path) 
 {
 
     json_object *store_object = NULL;
@@ -96,9 +135,15 @@ const char* GetStringFromJsonObject(json_object *object, const char *json_path)
     if (code != 0)
         LogF("Unable to find %s. Code = %d", json_path, code);
     else
-        return json_object_get_string(store_object);
+        return strdup(json_object_get_string(store_object));
 
     return "";
 
 }
 
+void CleanUpJson() 
+{
+
+    free(parsed_companies);
+
+}
