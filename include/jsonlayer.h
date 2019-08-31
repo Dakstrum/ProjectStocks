@@ -5,15 +5,16 @@ typedef struct Company {
 
     char *company_name;
     char *category;
-    float ipo;
+    double ipo;
     
     char *description;
     char *start_date;
     char **products;
 
-} Companies;
+} Company;
 
 
 void *JsonEntry(ALLEGRO_THREAD *thread, void *arg);
+void CleanUpJson();
 
 #endif

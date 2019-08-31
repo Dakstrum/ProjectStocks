@@ -19,6 +19,7 @@ array_list *GetCompanyArrayList();
 
 array_list *GetJsonObjectArray(json_object *object, const char *json_path);
 char* GetStringFromJsonObject(json_object *object, const char *json_path);
+double GetDoubleFromJsonObject(json_object *object, const char *json_path);
 
 static json_object *companies    = NULL;
 static json_object *draw_objects = NULL;
@@ -95,8 +96,9 @@ void ParseCompanyJsonObject(array_list *companies_list)
     for (int i = 0; i < companies_list->length; i++) {
 
         parsed_companies[i].company_name = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/CompanyName", i));
-        LogF("Company = %s", parsed_companies[i].company_name);
-
+        parsed_companies[i].ipo          = GetDoubleFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/IPO", i));
+        parsed_companies[i].category     = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/Category", i));
+        
     }
 
 }
@@ -138,6 +140,24 @@ char* GetStringFromJsonObject(json_object *object, const char *json_path)
         return strdup(json_object_get_string(store_object));
 
     return "";
+
+}
+
+double GetDoubleFromJsonObject(json_object *object, const char *json_path) 
+{
+
+    json_object *store_object = NULL;
+    
+    if (object == NULL)
+        Log("Object is null");
+
+    int code = json_pointer_get(object, json_path, &store_object);
+    if (code != 0)
+        LogF("Unable to find %s. Code = %d", json_path, code);
+    else
+        return json_object_get_double(store_object);
+
+    return -1;
 
 }
 
