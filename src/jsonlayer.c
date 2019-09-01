@@ -36,7 +36,7 @@ void ParseCompanyJsonObject(array_list *companies_list);
 void ParseJsonDrawObject(array_list *objects_list);
 
 void WithTypeSetDrawObject(char *type, int idx);
-void SetCommonObjectProperties(int object_idx);
+void SetCommonObjectProperties(int idx, char *path);
 void SetMenuObject(int idx);
 void SetVideoObject(int idx);
 void SetButtonObject(int idx);
@@ -175,14 +175,14 @@ void ParseJsonDrawObject(array_list *objects_list)
 
     char buffer[512];
     for (int i = 0; i < objects_list->length; i++)
-        WithTypeSetDrawObject(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Type")), i);
+        WithTypeSetDrawObject(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Type", i)), i);
 
 }
 
 void WithTypeSetDrawObject(char *type, int idx) 
 {
 
-    SetCommonObjectProperties(idx);
+    SetCommonObjectProperties(idx, "");
     if (strcmp(type, "Menu") == 0)
         SetMenuObject(idx);
     else if (strcmp(type, "Video") == 0)
@@ -193,16 +193,25 @@ void WithTypeSetDrawObject(char *type, int idx)
         SetTextObject(idx);
 }
 
-void SetCommonObjectProperties(int idx) 
+void SetCommonObjectProperties(int idx, char *path) 
 {
 
+    char base_path[128];
+    if (path == NULL | path == "")
+        strcpy(base_path, "/Objects/%d/");
+    else
+        strcpy(base_path, path);
+
     char buffer[512];
+    char appended_path[256];
+
     parsed_objects[num_objects].should_this_be_drawn = true;
-    parsed_objects[num_objects].asset_path = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Path"));
-    parsed_objects[num_objects].x          = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/X"));
-    parsed_objects[num_objects].y          = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Y"));
-    parsed_objects[num_objects].width      = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Width"));
-    parsed_objects[num_objects].height     = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Height"));
+    parsed_objects[num_objects].name       = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Name"), idx));
+    parsed_objects[num_objects].asset_path = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Path"), idx));
+    parsed_objects[num_objects].x          = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "X"), idx));
+    parsed_objects[num_objects].y          = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Y"), idx));
+    parsed_objects[num_objects].width      = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Width"), idx));
+    parsed_objects[num_objects].height     = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Height"), idx));
 
 }
 
@@ -234,7 +243,15 @@ void SetButtonObject(int idx)
 void SetMenuButtonObject(int idx, int button_idx) 
 {
 
+    char path[128];
+    SetCommonObjectProperties(idx, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d", idx, button_idx));
 
+    // TODO Set button callback. Requires existing function list to implement.
+    parsed_objects[num_objects].type = BUTTON;
+    parsed_objects[num_objects].x    = (float)(GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/RX", idx, button_idx)) + GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/X", idx)));
+    parsed_objects[num_objects].y    = (float)(GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/RY", idx, button_idx)) + GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Y", idx)));
+
+    num_objects++;
 
 }
 
