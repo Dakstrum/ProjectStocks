@@ -16,7 +16,7 @@ typedef struct Company {
 
     char *company_name;
     char *category;
-    double ipo;
+    float ipo;
     
     char *description;
     char *start_date;
@@ -50,6 +50,7 @@ void CheckAndSetMenuText(int idx);
 array_list *GetArrayList(json_object *object, const char *json_path);
 array_list *GetJsonObjectArray(json_object *object, const char *json_path);
 char* GetStringFromJsonObject(json_object *object, const char *json_path);
+float GetFloatFromJsonObject(json_object *object, const char *json_path);
 double GetDoubleFromJsonObject(json_object *object, const char *json_path);
 
 static json_object *companies     = NULL;
@@ -156,7 +157,7 @@ void ParseCompanyJsonObject(array_list *companies_list)
     for (int i = 0; i < companies_list->length; i++) {
 
         parsed_companies[i].company_name = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/CompanyName", i));
-        parsed_companies[i].ipo          = GetDoubleFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/IPO", i));
+        parsed_companies[i].ipo          = GetFloatFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/IPO", i));
         parsed_companies[i].category     = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/Category", i));
         parsed_companies[i].description  = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/Description", i));
         parsed_companies[i].start_date   = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/StartDate", i));
@@ -208,10 +209,10 @@ void SetCommonObjectProperties(int idx, char *path)
     parsed_objects[num_objects].should_this_be_drawn = true;
     parsed_objects[num_objects].name       = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Name"), idx));
     parsed_objects[num_objects].asset_path = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Path"), idx));
-    parsed_objects[num_objects].x          = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "X"), idx));
-    parsed_objects[num_objects].y          = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Y"), idx));
-    parsed_objects[num_objects].width      = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Width"), idx));
-    parsed_objects[num_objects].height     = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Height"), idx));
+    parsed_objects[num_objects].x          = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "X"), idx));
+    parsed_objects[num_objects].y          = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Y"), idx));
+    parsed_objects[num_objects].width      = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Width"), idx));
+    parsed_objects[num_objects].height     = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Height"), idx));
 
 }
 
@@ -248,8 +249,8 @@ void SetMenuButtonObject(int idx, int button_idx)
 
     // TODO Set button callback. Requires existing function list to implement.
     parsed_objects[num_objects].type = BUTTON;
-    parsed_objects[num_objects].x    = (float)(GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/RX", idx, button_idx)) + GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/X", idx)));
-    parsed_objects[num_objects].y    = (float)(GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/RY", idx, button_idx)) + GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Y", idx)));
+    parsed_objects[num_objects].x    = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/RX", idx, button_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/X", idx));
+    parsed_objects[num_objects].y    = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/RY", idx, button_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Y", idx));
 
     num_objects++;
 
@@ -326,6 +327,13 @@ char* GetStringFromJsonObject(json_object *object, const char *json_path)
 
     return "";
 
+}
+
+float GetFloatFromJsonObject(json_object *object, const char *json_path) 
+{
+
+    return (float)GetDoubleFromJsonObject(object, json_path);
+    
 }
 
 double GetDoubleFromJsonObject(json_object *object, const char *json_path) 
