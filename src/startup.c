@@ -17,14 +17,14 @@ void InitializeStartUpSequence()
 {
 
     CreateNewDrawLayer();
-    video_object                           = CreateNewDrawObject();
-    video_object->type                     = VIDEO;
-    video_object->should_this_be_drawn     = true;
-    video_object->x                        = 0;
-    video_object->y                        = 0;
-    video_object->width                    = 1920;
-    video_object->height                   = 1080;
-    video_object->member.video.video_path  = startup_video_path;
+    video_object                       = CreateNewDrawObject();
+    video_object->type                 = VIDEO;
+    video_object->should_this_be_drawn = true;
+    video_object->x                    = 0;
+    video_object->y                    = 0;
+    video_object->width                = 1920;
+    video_object->height               = 1080;
+    video_object->asset_path           = startup_video_path;
     AddVideoToDrawLayer(video_object, true);
     
 }

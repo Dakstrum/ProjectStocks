@@ -22,13 +22,13 @@ void InitializeMainMenu()
         return;
 
     }
-    main_menu_object->type                     = MENU;
-    main_menu_object->should_this_be_drawn     = true;
-    main_menu_object->x                        = 0;
-    main_menu_object->y                        = 0;
-    main_menu_object->width                    = 1920;
-    main_menu_object->height                   = 1080;
-    main_menu_object->member.menu.picture_path = main_menu_asset_path;
+    main_menu_object->type                 = MENU;
+    main_menu_object->should_this_be_drawn = true;
+    main_menu_object->x                    = 0;
+    main_menu_object->y                    = 0;
+    main_menu_object->width                = 1920;
+    main_menu_object->height               = 1080;
+    main_menu_object->asset_path           = main_menu_asset_path;
 
     AddMenuToDrawLayer(main_menu_object);
     Log("Created Main Menu Draw Layer");

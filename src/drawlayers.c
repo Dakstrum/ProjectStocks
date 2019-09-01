@@ -212,7 +212,7 @@ int AddButtonToDrawLayer(DrawObject *object)
 int AddMenuToDrawLayer(DrawObject *object) 
 {
 
-    object->member.menu.menu_bitmap = al_load_bitmap(object->member.menu.picture_path);
+    object->member.menu.menu_bitmap = al_load_bitmap(object->asset_path);
     if (object->member.menu.menu_bitmap == NULL) {
 
         Log("Could not create menu_bitmap");
@@ -227,14 +227,14 @@ int AddMenuToDrawLayer(DrawObject *object)
 int AddVideoToDrawLayer(DrawObject *object, bool start_video_immediately) 
 {
 
-    object->member.video.video = al_open_video(object->member.video.video_path);
+    object->member.video.video = al_open_video(object->asset_path);
     if (object->member.video.video == NULL) {
 
-        LogF("Unable to open %s", object->member.video.video_path);
+        LogF("Unable to open %s", object->asset_path);
         al_rest(1);
         return -1;
     }
-    LogF("Adding Video %s to DrawLayer", object->member.video.video_path);
+    LogF("Adding Video %s to DrawLayer", object->asset_path);
     if (start_video_immediately)
         al_start_video(object->member.video.video, al_get_default_mixer());
 

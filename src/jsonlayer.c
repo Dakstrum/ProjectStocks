@@ -182,6 +182,7 @@ void ParseJsonDrawObject(array_list *objects_list)
 void WithTypeSetDrawObject(char *type, int idx) 
 {
 
+    SetCommonObjectProperties(idx);
     if (strcmp(type, "Menu") == 0)
         SetMenuObject(idx);
     else if (strcmp(type, "Video") == 0)
@@ -197,20 +198,18 @@ void SetCommonObjectProperties(int idx)
 
     char buffer[512];
     parsed_objects[num_objects].should_this_be_drawn = true;
-    parsed_objects[num_objects].x      = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/X"));
-    parsed_objects[num_objects].y      = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Y"));
-    parsed_objects[num_objects].width  = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Width"));
-    parsed_objects[num_objects].height = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Height"));
+    parsed_objects[num_objects].asset_path = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Path"));
+    parsed_objects[num_objects].x          = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/X"));
+    parsed_objects[num_objects].y          = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Y"));
+    parsed_objects[num_objects].width      = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Width"));
+    parsed_objects[num_objects].height     = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Height"));
 
 }
 
 void SetMenuObject(int idx) 
 {
 
-    char buffer[512];
-    SetCommonObjectProperties(idx);
     parsed_objects[num_objects].type = MENU;
-    parsed_objects[num_objects].member.menu.picture_path = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Path"));
     num_objects++;
 
     CheckAndSetMenuButtons(idx);
@@ -221,6 +220,8 @@ void SetMenuObject(int idx)
 void SetVideoObject(int idx) 
 {
 
+    parsed_objects[num_objects].type = VIDEO;
+    num_objects++;
 
 }
 
@@ -269,7 +270,7 @@ void CheckAndSetMenuText(int idx)
 
     char buffer[512];
     array_list *text_list = GetArrayList(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Text", idx));
-    
+
     if (text_list == NULL)
         return;
 

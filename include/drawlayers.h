@@ -28,21 +28,18 @@ typedef struct Button
 {
 
     void (*Callback)();
-    char *picture_path;
     ALLEGRO_BITMAP *button_bitmap;
 
 } Button;
 
 typedef struct Menu {
 
-    char *picture_path;
     ALLEGRO_BITMAP *menu_bitmap;
 
 } Menu;
 
 typedef struct Video {
 
-    char *video_path;
     ALLEGRO_VIDEO *video;
 
 } Video;
@@ -61,6 +58,7 @@ typedef struct DrawObject
     int object_index;
 
     char *name;
+    char *asset_path;
 
     union {
 
