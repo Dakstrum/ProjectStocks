@@ -245,7 +245,7 @@ void SetMenuButtonObject(int idx, int button_idx)
 {
 
     char path[128];
-    SetCommonObjectProperties(idx, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d", idx, button_idx));
+    SetCommonObjectProperties(idx, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/", idx, button_idx));
 
     // TODO Set button callback. Requires existing function list to implement.
     parsed_objects[num_objects].type = BUTTON;
@@ -333,7 +333,7 @@ float GetFloatFromJsonObject(json_object *object, const char *json_path)
 {
 
     return (float)GetDoubleFromJsonObject(object, json_path);
-    
+
 }
 
 double GetDoubleFromJsonObject(json_object *object, const char *json_path) 
