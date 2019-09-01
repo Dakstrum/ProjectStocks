@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <string.h>
 
 #include <json-c/json.h>
 #include <json-c/json_util.h>
@@ -32,18 +33,32 @@ typedef struct Company {
 void SetJsonObjectFromFile(json_object **object, const char *file);
 void ParseJsonObjects();
 void ParseCompanyJsonObject(array_list *companies_list);
-void ParseJsonDrawObject();
+void ParseJsonDrawObject(array_list *objects_list);
 
-array_list *GetArrayList(const char *json_path);
+void WithTypeSetDrawObject(char *type, int idx);
+void SetCommonObjectProperties(int object_idx);
+void SetMenuObject(int idx);
+void SetVideoObject(int idx);
+void SetButtonObject(int idx);
+void SetTextObject(int idx);
+void SetMenuButtonObject(int idx, int button_idx);
+void SetMenuTextObject(int idx, int button_idx);
+
+void CheckAndSetMenuButtons(int idx);
+void CheckAndSetMenuText(int idx);
+
+array_list *GetArrayList(json_object *object, const char *json_path);
 array_list *GetJsonObjectArray(json_object *object, const char *json_path);
 char* GetStringFromJsonObject(json_object *object, const char *json_path);
 double GetDoubleFromJsonObject(json_object *object, const char *json_path);
 
-static json_object *companies    = NULL;
-static json_object *draw_objects = NULL;
-static Company *parsed_companies = NULL;
+static json_object *companies     = NULL;
+static json_object *draw_objects  = NULL;
+static Company *parsed_companies  = NULL;
+static unsigned int num_companies = 0;
 
-static DrawObject *objects       = NULL;
+static DrawObject *parsed_objects = NULL;
+static unsigned int num_objects   = 0;
 
 void InitializeJson()
 {
@@ -74,24 +89,24 @@ void ParseJsonObjects()
     if (companies == NULL || draw_objects == NULL)
         return;
 
-    array_list *companies_list = GetArrayList("/Companies");
+    array_list *companies_list = GetArrayList(companies, "/Companies");
     if (companies_list == NULL)
         return;
     else
         ParseCompanyJsonObject(companies_list);
 
-    array_list *objects_list = GetArrayList("/Objects");
+    array_list *objects_list = GetArrayList(draw_objects, "/Objects");
     if (objects_list == NULL)
         return;
     else
-       ParseJsonDrawObject();
+       ParseJsonDrawObject(objects_list);
 
 }
 
-array_list *GetArrayList(const char *json_path) 
+array_list *GetArrayList(json_object *object, const char *json_path) 
 {
 
-    array_list *list = GetJsonObjectArray(companies, json_path);
+    array_list *list = GetJsonObjectArray(object, json_path);
 
     if (list == NULL) {
 
@@ -135,6 +150,7 @@ void SetCompanyProducts(int company_index, array_list *products)
 void ParseCompanyJsonObject(array_list *companies_list) 
 {
 
+    num_companies    = companies_list->length;
     parsed_companies = malloc(sizeof(Company) * companies_list->length);
     char buffer[512];
     for (int i = 0; i < companies_list->length; i++) {
@@ -151,11 +167,114 @@ void ParseCompanyJsonObject(array_list *companies_list)
 
 }
 
-void ParseJsonDrawObject() 
+void ParseJsonDrawObject(array_list *objects_list) 
 {
 
-    if (draw_objects == NULL)
+    // TODO PARSE HOW MANY OBJECTS ARE ACTUALLY DEFINED IN JSON FILE
+    parsed_objects = malloc(sizeof(DrawObject) * 1024);
+
+    char buffer[512];
+    for (int i = 0; i < objects_list->length; i++)
+        WithTypeSetDrawObject(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Type")), i);
+
+}
+
+void WithTypeSetDrawObject(char *type, int idx) 
+{
+
+    if (strcmp(type, "Menu") == 0)
+        SetMenuObject(idx);
+    else if (strcmp(type, "Video") == 0)
+        SetVideoObject(idx);
+    else if (strcmp(type, "Button") == 0)
+        SetButtonObject(idx);
+    else if (strcmp(type, "Text") == 0)
+        SetTextObject(idx);
+}
+
+void SetCommonObjectProperties(int idx) 
+{
+
+    char buffer[512];
+    parsed_objects[num_objects].should_this_be_drawn = true;
+    parsed_objects[num_objects].x      = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/X"));
+    parsed_objects[num_objects].y      = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Y"));
+    parsed_objects[num_objects].width  = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Width"));
+    parsed_objects[num_objects].height = (float)GetDoubleFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Height"));
+
+}
+
+void SetMenuObject(int idx) 
+{
+
+    char buffer[512];
+    SetCommonObjectProperties(idx);
+    parsed_objects[num_objects].type = MENU;
+    parsed_objects[num_objects].member.menu.picture_path = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Path"));
+    num_objects++;
+
+    CheckAndSetMenuButtons(idx);
+    CheckAndSetMenuText(idx);
+
+}
+
+void SetVideoObject(int idx) 
+{
+
+
+}
+
+void SetButtonObject(int idx) 
+{
+
+
+}
+
+void SetMenuButtonObject(int idx, int button_idx) 
+{
+
+
+
+}
+
+void CheckAndSetMenuButtons(int idx) 
+{
+
+    char buffer[512];
+    array_list *button_list = GetArrayList(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Buttons", idx));
+
+    if (button_list == NULL)
         return;
+
+    for (int i = 0; i < button_list->length;i++)
+        SetMenuButtonObject(idx, i);
+
+}
+
+void SetTextObject(int idx) 
+{
+
+
+}
+
+void SetMenuTextObject(int idx, int button_idx) 
+{
+
+
+
+}
+
+void CheckAndSetMenuText(int idx) 
+{
+
+    char buffer[512];
+    array_list *text_list = GetArrayList(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Text", idx));
+    
+    if (text_list == NULL)
+        return;
+
+    for (int i = 0; i < text_list->length;i++)
+        SetMenuTextObject(idx, i);
 
 }
 

@@ -60,6 +60,8 @@ typedef struct DrawObject
     int layer_index;
     int object_index;
 
+    char *name;
+
     union {
 
         Menu   menu;
