@@ -12,23 +12,7 @@
 #include "jsonlayer.h"
 #include "drawlayers.h"
 
-typedef struct Company {
-
-    char *company_name;
-    char *category;
-    float ipo;
-    
-    char *description;
-    char *start_date;
-    char **products;
-    char **news_articles;
-    char **eavesdropper_messages;
-
-    int total_products;
-    int total_news_articles;
-    int total_eavesdropper_messages;
-
-} Company;
+#define MAX_PARSED_OBJECTS 1024
 
 void SetJsonObjectFromFile(json_object **object, const char *file);
 void ParseJsonObjects();
@@ -172,7 +156,7 @@ void ParseJsonDrawObject(array_list *objects_list)
 {
 
     // TODO PARSE HOW MANY OBJECTS ARE ACTUALLY DEFINED IN JSON FILE
-    parsed_objects = malloc(sizeof(DrawObject) * 1024);
+    parsed_objects = malloc(sizeof(DrawObject) * MAX_PARSED_OBJECTS);
 
     char buffer[512];
     for (int i = 0; i < objects_list->length; i++)
@@ -358,5 +342,67 @@ void CleanUpJson()
 {
 
     free(parsed_companies);
+    free(parsed_objects);
 
 }
+
+void SetVideoDrawObjectFromJson(DrawObject *draw_object, int object_idx) 
+{
+
+    draw_object->type                 = VIDEO;
+    draw_object->x                    = parsed_objects[object_idx].x;
+    draw_object->y                    = parsed_objects[object_idx].y;
+    draw_object->width                = parsed_objects[object_idx].width;
+    draw_object->height               = parsed_objects[object_idx].height;
+    draw_object->asset_path           = parsed_objects[object_idx].asset_path;
+    draw_object->should_this_be_drawn = parsed_objects[object_idx].should_this_be_drawn;
+
+}
+
+void SetButtonDrawObjectFromJson(DrawObject *draw_object, int object_idx) 
+{
+
+
+}
+
+void SetMenuDrawObjectFromJson(DrawObject *draw_object, int object_idx) 
+{
+
+
+}
+
+void SetTextDrawObjectFromJson(DrawObject *draw_object, int object_idx) 
+{
+
+
+}
+
+DrawObject *CreateDrawObjectFromJson(int object_idx) 
+{
+
+    DrawObject *draw_object = CreateNewDrawObject();
+
+    switch (parsed_objects[object_idx].type) {
+
+        case VIDEO:  SetVideoDrawObjectFromJson(draw_object, object_idx); break;
+        case BUTTON: SetButtonDrawObjectFromJson(draw_object, object_idx); break;
+        case MENU:   SetMenuDrawObjectFromJson(draw_object, object_idx); break;
+        case TEXT:   SetTextDrawObjectFromJson(draw_object, object_idx); break;
+
+    }
+
+    return draw_object;
+
+}
+
+DrawObject *GetDrawObjectFromJson(char *object_name) 
+{
+
+    for (int i = 0; i < MAX_PARSED_OBJECTS; i++)
+        if (parsed_objects[i].name != NULL && strcmp(object_name, parsed_objects[i].name) == 0)
+            return CreateDrawObjectFromJson(i);
+    
+    return NULL;
+
+}
+
