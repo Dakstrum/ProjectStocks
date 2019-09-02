@@ -346,16 +346,23 @@ void CleanUpJson()
 
 }
 
-void SetVideoDrawObjectFromJson(DrawObject *draw_object, int object_idx) 
+void SetCommonDrawObjectPropertiesForGetDrawObject(DrawObject *draw_object, int object_idx) 
 {
 
-    draw_object->type                 = VIDEO;
     draw_object->x                    = parsed_objects[object_idx].x;
     draw_object->y                    = parsed_objects[object_idx].y;
     draw_object->width                = parsed_objects[object_idx].width;
     draw_object->height               = parsed_objects[object_idx].height;
     draw_object->asset_path           = parsed_objects[object_idx].asset_path;
     draw_object->should_this_be_drawn = parsed_objects[object_idx].should_this_be_drawn;
+
+}
+
+void SetVideoDrawObjectFromJson(DrawObject *draw_object, int object_idx) 
+{
+
+    draw_object->type = VIDEO;
+    SetCommonDrawObjectPropertiesForGetDrawObject(draw_object, object_idx);
 
 }
 
@@ -368,6 +375,8 @@ void SetButtonDrawObjectFromJson(DrawObject *draw_object, int object_idx)
 void SetMenuDrawObjectFromJson(DrawObject *draw_object, int object_idx) 
 {
 
+    draw_object->type = MENU;
+    SetCommonDrawObjectPropertiesForGetDrawObject(draw_object, object_idx);
 
 }
 
