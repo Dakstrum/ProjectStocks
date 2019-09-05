@@ -11,7 +11,6 @@
 #include "rendering.h"
 #include "log.h"
 
-static char *startup_video_path = "assets/videos/startup/startup.ogv\0";
 static DrawObject *video_object = NULL;
 
 void InitializeStartUpSequence() 

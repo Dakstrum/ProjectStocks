@@ -4,6 +4,8 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_video.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 
 #include "log.h"
 #include "shared.h"
@@ -45,7 +47,10 @@ void InitializeAddons()
         Log("Unable to init image addon");
     if(!al_init_video_addon())
         Log("Unable to init video addon");
-
+    if (!al_init_font_addon())
+        Log("Unable to init font addon");
+    if (!al_init_ttf_addon())
+        Log("Unable to init ttf addon");
 }
 
 void HandleRendering() 

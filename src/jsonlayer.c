@@ -1,11 +1,11 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include <json-c/json.h>
 #include <json-c/json_util.h>
 #include <json-c/json_object.h>
-#include <allegro5/allegro.h>
 
 #include "log.h"
 #include "shared.h"

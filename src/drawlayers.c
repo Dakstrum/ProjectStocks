@@ -5,6 +5,7 @@
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_video.h>
 
 #include "log.h"
@@ -47,6 +48,7 @@ void DrawObjectOfTypeGen(DrawLayer *layer, int i);
 void DrawMenu(DrawObject *object);
 void DrawButton(DrawObject *object);
 void DrawVideo(DrawObject *object);
+void DrawText(DrawObject *object);
 void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y);
 void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width, float height);
 
@@ -231,7 +233,6 @@ int AddVideoToDrawLayer(DrawObject *object, bool start_video_immediately)
     if (object->member.video.video == NULL) {
 
         LogF("Unable to open %s", object->asset_path);
-        al_rest(1);
         return -1;
     }
     LogF("Adding Video %s to DrawLayer", object->asset_path);
@@ -262,6 +263,24 @@ int AddDrawObjectToDrawLayer(DrawObject *object)
 }
 
 
+int AddTextToDrawLayer(DrawObject *object)
+{
+
+    object->member.text.font  = al_load_ttf_font(object->asset_path, object->member.text.font_size, 0);
+    object->member.text.color = al_map_rgba(object->member.text.r, object->member.text.g, object->member.text.b, object->member.text.a);
+
+    if (object->member.text.font == NULL) {
+
+        LogF("Unable to open font %s", object->asset_path);
+        return -1;
+
+    }
+    LogF("Adding Font %s to DrawLayer", object->asset_path);
+
+    return AddDrawObjectToDrawLayer(object);
+
+}
+
 
 /* SECTION: Drawing functions */
 void DrawLayers() 
@@ -288,7 +307,8 @@ void DrawObjectOfTypeGen(DrawLayer *layer, int i)
         case MENU:   DrawMenu(layer->objects[i]);   break;
         case BUTTON: DrawButton(layer->objects[i]); break;
         case POPUP:   break;
-        case VIDEO: DrawVideo(layer->objects[i]);   break;
+        case VIDEO:  DrawVideo(layer->objects[i]);   break;
+        case TEXT:   DrawText(layer->objects[i]);    break;
 
     }
 
@@ -318,6 +338,13 @@ void DrawVideo(DrawObject *object)
         return;
 
     DrawGenericWithWidth(al_get_video_frame(object->member.video.video), object->x, object->y, object->width, object->height);
+
+}
+
+void DrawText(DrawObject *object) 
+{
+
+    al_draw_text(object->member.text.font, object->member.text.color, object->x, object->y, 0, object->member.text.text);
 
 }
 
