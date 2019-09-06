@@ -344,7 +344,7 @@ void DrawVideo(DrawObject *object)
 void DrawText(DrawObject *object) 
 {
 
-    al_draw_text(object->member.text.font, object->member.text.color, object->x, object->y, 0, object->member.text.text);
+    al_draw_text(object->member.text.font, object->member.text.color, object->x, object->y, 0, object->member.text.content);
 
 }
 

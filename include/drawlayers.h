@@ -18,7 +18,7 @@ typedef enum DrawType
 typedef struct Text 
 {
 
-    char *text;
+    char *content;
     ALLEGRO_COLOR color;
     ALLEGRO_FONT *font;
 

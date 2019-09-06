@@ -34,6 +34,7 @@ void CheckAndSetMenuText(int idx);
 array_list *GetArrayList(json_object *object, const char *json_path);
 array_list *GetJsonObjectArray(json_object *object, const char *json_path);
 char* GetStringFromJsonObject(json_object *object, const char *json_path);
+int GetIntFromJsonObject(json_object *object, const char *json_path);
 float GetFloatFromJsonObject(json_object *object, const char *json_path);
 double GetDoubleFromJsonObject(json_object *object, const char *json_path);
 
@@ -260,10 +261,35 @@ void SetTextObject(int idx)
 
 }
 
-void SetMenuTextObject(int idx, int button_idx) 
+void SetMenuTextObject(int idx, int text_idx) 
 {
 
+    char path[128];
+    parsed_objects[num_objects].type                  = TEXT;
+    parsed_objects[num_objects].x                     = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/RX", idx, text_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/X", idx));
+    parsed_objects[num_objects].y                     = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/RY", idx, text_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Y", idx));
+    parsed_objects[num_objects].member.text.font_size = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/FontSize", idx, text_idx));
+    parsed_objects[num_objects].member.text.content   = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Content", idx, text_idx));
 
+    array_list *colors = GetArrayList(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Color",idx, text_idx));
+    if (colors->length == 4) {
+
+        parsed_objects[num_objects].member.text.r = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Color/0", idx, text_idx));
+        parsed_objects[num_objects].member.text.g = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Color/1", idx, text_idx));
+        parsed_objects[num_objects].member.text.b = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Color/2", idx, text_idx));
+        parsed_objects[num_objects].member.text.a = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Color/3", idx, text_idx));
+
+    } else {
+
+        LogF("Setting Default Colors for /Objects/%d/Text/%d", idx, text_idx);
+        parsed_objects[num_objects].member.text.r = 255;
+        parsed_objects[num_objects].member.text.g = 255;
+        parsed_objects[num_objects].member.text.b = 255;
+        parsed_objects[num_objects].member.text.a = 255;
+
+    }
+
+    num_objects++;
 
 }
 
@@ -310,6 +336,13 @@ char* GetStringFromJsonObject(json_object *object, const char *json_path)
         return strdup(json_object_get_string(store_object));
 
     return "";
+
+}
+
+int GetIntFromJsonObject(json_object *object, const char *json_path) 
+{
+
+    return (int)GetDoubleFromJsonObject(object, json_path);
 
 }
 
@@ -383,6 +416,8 @@ void SetMenuDrawObjectFromJson(DrawObject *draw_object, int object_idx)
 void SetTextDrawObjectFromJson(DrawObject *draw_object, int object_idx) 
 {
 
+    draw_object->type = TEXT;
+    //TODO here
 
 }
 
