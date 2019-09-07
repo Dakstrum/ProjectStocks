@@ -77,6 +77,19 @@ typedef struct DrawObject
 
 } DrawObject;
 
+typedef struct MenuWithChilds 
+{
+
+    DrawObject *menu;
+
+    int num_buttons;
+    int num_text;
+
+    DrawObject **buttons;
+    DrawObject **text;
+
+} MenuWithChilds;
+
 
 void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display);
 int CreateNewDrawLayer();
@@ -86,6 +99,7 @@ void ClearCurrentDrawLayer();
 
 int AddButtonToDrawLayer(DrawObject *object);
 int AddMenuToDrawLayer(DrawObject *object);
+int AddMenuWithChildsToDrawLayer(MenuWithChilds menu_with_childs);
 int AddVideoToDrawLayer(DrawObject *object, bool start_video_immediately);
 int AddTextToDrawLayer(DrawObject *object);
 

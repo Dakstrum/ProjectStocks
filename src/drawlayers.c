@@ -211,6 +211,17 @@ int AddButtonToDrawLayer(DrawObject *object)
 
 }
 
+int AddMenuWithChildsToDrawLayer(MenuWithChilds menu_with_childs) 
+{
+
+    AddMenuToDrawLayer(menu_with_childs.menu);
+    for (int i = 0; i < menu_with_childs.num_buttons;i++)
+        AddButtonToDrawLayer(menu_with_childs.buttons[i]);
+    for (int i = 0; i < menu_with_childs.num_text;i++)
+        AddTextToDrawLayer(menu_with_childs.text[i]);
+
+}
+
 int AddMenuToDrawLayer(DrawObject *object) 
 {
 
