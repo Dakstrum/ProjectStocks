@@ -66,6 +66,8 @@ typedef struct DrawObject
     char *name;
     char *asset_path;
 
+    char *child_of;
+
     union {
 
         Menu   menu;

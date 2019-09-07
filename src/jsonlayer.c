@@ -25,11 +25,11 @@ void SetMenuObject(int idx);
 void SetVideoObject(int idx);
 void SetButtonObject(int idx);
 void SetTextObject(int idx);
-void SetMenuButtonObject(int idx, int button_idx);
-void SetMenuTextObject(int idx, int button_idx);
+void SetMenuButtonObject(int idx, int button_idx, char *child_of);
+void SetMenuTextObject(int idx, int button_idx, char *child_of);
 
-void CheckAndSetMenuButtons(int idx);
-void CheckAndSetMenuText(int idx);
+void CheckAndSetMenuButtons(int idx, char *child_of);
+void CheckAndSetMenuText(int idx, char *child_of);
 
 array_list *GetArrayList(json_object *object, const char *json_path);
 array_list *GetJsonObjectArray(json_object *object, const char *json_path);
@@ -207,8 +207,8 @@ void SetMenuObject(int idx)
     parsed_objects[num_objects].type = MENU;
     num_objects++;
 
-    CheckAndSetMenuButtons(idx);
-    CheckAndSetMenuText(idx);
+    CheckAndSetMenuButtons(idx, parsed_objects[num_objects-1].name);
+    CheckAndSetMenuText(idx, parsed_objects[num_objects-1].name);
 
 }
 
@@ -226,22 +226,23 @@ void SetButtonObject(int idx)
 
 }
 
-void SetMenuButtonObject(int idx, int button_idx) 
+void SetMenuButtonObject(int idx, int button_idx, char *child_of) 
 {
 
     char path[128];
     SetCommonObjectProperties(idx, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/", idx, button_idx));
 
     // TODO Set button callback. Requires existing function list to implement.
-    parsed_objects[num_objects].type = BUTTON;
-    parsed_objects[num_objects].x    = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/RX", idx, button_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/X", idx));
-    parsed_objects[num_objects].y    = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/RY", idx, button_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Y", idx));
+    parsed_objects[num_objects].type     = BUTTON;
+    parsed_objects[num_objects].x        = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/RX", idx, button_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/X", idx));
+    parsed_objects[num_objects].y        = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/RY", idx, button_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Y", idx));
+    parsed_objects[num_objects].child_of = child_of;
 
     num_objects++;
 
 }
 
-void CheckAndSetMenuButtons(int idx) 
+void CheckAndSetMenuButtons(int idx, char *child_of) 
 {
 
     char buffer[512];
@@ -251,7 +252,7 @@ void CheckAndSetMenuButtons(int idx)
         return;
 
     for (int i = 0; i < button_list->length;i++)
-        SetMenuButtonObject(idx, i);
+        SetMenuButtonObject(idx, i, child_of);
 
 }
 
@@ -261,15 +262,17 @@ void SetTextObject(int idx)
 
 }
 
-void SetMenuTextObject(int idx, int text_idx) 
+void SetMenuTextObject(int idx, int text_idx, char *child_of) 
 {
 
     char path[128];
     parsed_objects[num_objects].type                  = TEXT;
+    parsed_objects[num_objects].name                  = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Name", idx, text_idx));
     parsed_objects[num_objects].x                     = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/RX", idx, text_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/X", idx));
     parsed_objects[num_objects].y                     = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/RY", idx, text_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Y", idx));
     parsed_objects[num_objects].member.text.font_size = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/FontSize", idx, text_idx));
     parsed_objects[num_objects].member.text.content   = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Content", idx, text_idx));
+    parsed_objects[num_objects].child_of              = child_of;
 
     array_list *colors = GetArrayList(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Color",idx, text_idx));
     if (colors->length == 4) {
@@ -293,7 +296,7 @@ void SetMenuTextObject(int idx, int text_idx)
 
 }
 
-void CheckAndSetMenuText(int idx) 
+void CheckAndSetMenuText(int idx, char *child_of) 
 {
 
     char buffer[512];
@@ -303,7 +306,7 @@ void CheckAndSetMenuText(int idx)
         return;
 
     for (int i = 0; i < text_list->length;i++)
-        SetMenuTextObject(idx, i);
+        SetMenuTextObject(idx, i, child_of);
 
 }
 
