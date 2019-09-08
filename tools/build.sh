@@ -57,12 +57,15 @@ GetSharedLibs()
 
     elif [ $operating_system == "Linux" ]; then
 
-        for lib in $(readelf -d projectstocks | grep 'Shared library' | awk '{print $5}' | tr -d []); do
+        for lib in $(readelf -d projectstocks | grep 'Shared library' | awk '{print $5}' | tr -d []) "libdumb-0.9.3.so" "libopusfile.so.0" "libjpeg.so.62"; do
 
             #cp -L $(locate $lib | head -n 1) "lib/${lib}"
+
             cp -L "/lib64/${lib}" "lib/${lib}"
 
         done
+        rm lib/libc*
+        rm lib/libm*
 
     fi
 
