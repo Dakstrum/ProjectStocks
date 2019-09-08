@@ -39,6 +39,17 @@ Project stocks is written in C11 and was built to be multiplatform. Want to run 
 - json-c
 - SQLite3
 
+*Binaries built on*
+- Windows 10
+- Fedora 30
 
+*Linux binaries tested against*
+- Fedora 30
+- OpenSUSE Tumbleweed as of 9/8/2019
+- Ubuntu 18.04 LTS
+
+*Unsupported platforms that are built and tested*
+- MacOS High Sierra
+- FreeBSD 12.0
 
 Check out our wiki for helpful documentation on building project stocks.
