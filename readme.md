@@ -26,7 +26,7 @@ Want to see a change make it into our official builds? Create a pull request and
 
 Please note, we build against Windows 10 and Fedora 30. Your changes will need to be compilable and runnable on those two platforms.
 
-### Platforms and dependencies
+### Code and dependencies
 
 Project stocks is written in C11 and was built to be multiplatform. Want to run it on FreeBSD, a raspberry pi or mac osx? Well, as long as you have the following dependencies, you can!
 
@@ -38,6 +38,8 @@ Project stocks is written in C11 and was built to be multiplatform. Want to run 
     - TTF Addon
 - json-c
 - SQLite3
+
+### Platforms
 
 *Binaries built on*
 - Windows 10
