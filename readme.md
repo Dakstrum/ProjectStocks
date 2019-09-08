@@ -24,6 +24,8 @@ Our music and artwork may not be distributed or adapted, either commercial or ot
 
 Want to see a change make it into our official builds? Create a pull request and we'll review your code!
 
+Please note, we build against Windows 10 and Fedora 30. Your changes will need to be compilable and runnable on those two platforms.
+
 ### Platforms and dependencies
 
 Project stocks is written in C11 and was built to be multiplatform. Want to run it on FreeBSD, a raspberry pi or mac osx? Well, as long as you have the following dependencies, you can!
