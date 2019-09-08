@@ -22,7 +22,7 @@ Our music and artwork may not be distributed or adapted, either commercial or ot
 
 ### Contribution
 
-Want to see a change make into our official builds? Create a pull request and we'll review your code!
+Want to see a change make it into our official builds? Create a pull request and we'll review your code!
 
 ### Platforms and dependencies
 
