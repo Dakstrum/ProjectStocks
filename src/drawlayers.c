@@ -222,6 +222,23 @@ int AddMenuWithChildsToDrawLayer(MenuWithChilds menu_with_childs)
 
 }
 
+int AddObjectToDrawLayer(DrawObject *object) 
+{
+
+    switch (object->type) {
+
+        case MENU:   return AddMenuToDrawLayer(object);   break;
+        case BUTTON: return AddButtonToDrawLayer(object); break;
+        case POPUP:                                       break;
+        case VIDEO:  return AddVideoToDrawLayer(object);  break;
+        case TEXT:   return AddTextToDrawLayer(object);   break;
+
+    }
+
+    return -1;
+
+}
+
 int AddMenuToDrawLayer(DrawObject *object) 
 {
 
@@ -237,7 +254,7 @@ int AddMenuToDrawLayer(DrawObject *object)
 
 }
 
-int AddVideoToDrawLayer(DrawObject *object, bool start_video_immediately) 
+int AddVideoToDrawLayer(DrawObject *object) 
 {
 
     object->member.video.video = al_open_video(object->asset_path);
@@ -247,7 +264,7 @@ int AddVideoToDrawLayer(DrawObject *object, bool start_video_immediately)
         return -1;
     }
     LogF("Adding Video %s to DrawLayer", object->asset_path);
-    if (start_video_immediately)
+    if (object->member.video.start_video_immediately)
         al_start_video(object->member.video.video, al_get_default_mixer());
 
     return AddDrawObjectToDrawLayer(object);

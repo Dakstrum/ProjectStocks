@@ -23,7 +23,7 @@ void InitializeMainMenu()
 
     }
     main_menu = GetDrawObjectFromJsonLayer("MainMenu");
-    AddMenuToDrawLayer(main_menu);
+    AddObjectToDrawLayer(main_menu);
     Log("Created Main Menu Draw Layer");
 
 }

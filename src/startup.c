@@ -18,7 +18,8 @@ void InitializeStartUpSequence()
 
     CreateNewDrawLayer();
     video_object = GetDrawObjectFromJsonLayer("StartUpVideo");
-    AddVideoToDrawLayer(video_object, true);
+    video_object->member.video.start_video_immediately = true;
+    AddObjectToDrawLayer(video_object);
     
 }
 

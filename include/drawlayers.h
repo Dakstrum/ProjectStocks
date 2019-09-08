@@ -46,6 +46,7 @@ typedef struct Menu {
 
 typedef struct Video {
 
+    bool start_video_immediately;
     ALLEGRO_VIDEO *video;
 
 } Video;
@@ -99,10 +100,11 @@ int CreateNewDrawLayer();
 void ClearDrawLayers();
 void ClearCurrentDrawLayer();
 
+int AddObjectToDrawLayer(DrawObject *object);
 int AddButtonToDrawLayer(DrawObject *object);
 int AddMenuToDrawLayer(DrawObject *object);
 int AddMenuWithChildsToDrawLayer(MenuWithChilds menu_with_childs);
-int AddVideoToDrawLayer(DrawObject *object, bool start_video_immediately);
+int AddVideoToDrawLayer(DrawObject *object);
 int AddTextToDrawLayer(DrawObject *object);
 
 void DrawLayers();
