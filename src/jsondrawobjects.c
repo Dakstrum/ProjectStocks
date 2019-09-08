@@ -159,12 +159,14 @@ void SetMenuTextObject(int idx, int text_idx, char *child_of)
 
     char path[128];
     parsed_objects[num_objects].type                  = TEXT;
+    parsed_objects[num_objects].asset_path            = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Path", idx, text_idx));
     parsed_objects[num_objects].name                  = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Name", idx, text_idx));
     parsed_objects[num_objects].x                     = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/RX", idx, text_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/X", idx));
     parsed_objects[num_objects].y                     = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/RY", idx, text_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Y", idx));
     parsed_objects[num_objects].member.text.font_size = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/FontSize", idx, text_idx));
     parsed_objects[num_objects].member.text.content   = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Content", idx, text_idx));
     parsed_objects[num_objects].child_of              = child_of;
+    parsed_objects[num_objects].should_this_be_drawn  = true;
 
     array_list *colors = GetArrayList(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Color",idx, text_idx));
     if (colors->length == 4) {
@@ -194,7 +196,7 @@ void CheckAndSetMenuText(int idx, char *child_of)
     char buffer[512];
     array_list *text_list = GetArrayList(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Text", idx));
 
-    if (text_list == NULL)
+    if (text_list == NULL) 
         return;
 
     for (int i = 0; i < text_list->length;i++)
@@ -212,12 +214,14 @@ void CleanUpDrawObjectJson()
 void SetCommonDrawObjectPropertiesForGetDrawObject(DrawObject *draw_object, int object_idx) 
 {
 
+    draw_object->name                 = parsed_objects[object_idx].name;
     draw_object->x                    = parsed_objects[object_idx].x;
     draw_object->y                    = parsed_objects[object_idx].y;
     draw_object->width                = parsed_objects[object_idx].width;
     draw_object->height               = parsed_objects[object_idx].height;
     draw_object->asset_path           = parsed_objects[object_idx].asset_path;
     draw_object->should_this_be_drawn = parsed_objects[object_idx].should_this_be_drawn;
+    draw_object->child_of             = parsed_objects[object_idx].child_of;
 
 }
 
@@ -232,6 +236,7 @@ void SetVideoDrawObjectFromJson(DrawObject *draw_object, int object_idx)
 void SetButtonDrawObjectFromJson(DrawObject *draw_object, int object_idx) 
 {
 
+    Log("STUB SetButtonDrawObjectFromJson called. May cause button related errors");
 
 }
 
@@ -247,7 +252,14 @@ void SetTextDrawObjectFromJson(DrawObject *draw_object, int object_idx)
 {
 
     draw_object->type = TEXT;
-    //TODO here
+    SetCommonDrawObjectPropertiesForGetDrawObject(draw_object, object_idx);
+
+    draw_object->member.text.font_size = parsed_objects[object_idx].member.text.font_size;
+    draw_object->member.text.content   = parsed_objects[object_idx].member.text.content;
+    draw_object->member.text.r         = parsed_objects[object_idx].member.text.r;
+    draw_object->member.text.g         = parsed_objects[object_idx].member.text.g;
+    draw_object->member.text.b         = parsed_objects[object_idx].member.text.b;
+    draw_object->member.text.a         = parsed_objects[object_idx].member.text.a;
 
 }
 
@@ -273,8 +285,9 @@ DrawObject *GetDrawObjectFromDrawObjectJson(char *object_name)
 {
 
     for (int i = 0; i < MAX_PARSED_OBJECTS; i++)
-        if (parsed_objects[i].name != NULL && strcmp(object_name, parsed_objects[i].name) == 0)
+        if (parsed_objects[i].name != NULL && strcmp(object_name, parsed_objects[i].name) == 0) {
             return CreateDrawObjectFromJson(i);
+        }
     
     return NULL;
 
