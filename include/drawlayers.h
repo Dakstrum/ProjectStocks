@@ -103,7 +103,7 @@ void ClearCurrentDrawLayer();
 int AddObjectToDrawLayer(DrawObject *object);
 int AddButtonToDrawLayer(DrawObject *object);
 int AddMenuToDrawLayer(DrawObject *object);
-int AddMenuWithChildsToDrawLayer(MenuWithChilds menu_with_childs);
+int AddMenuWithChildsToDrawLayer(MenuWithChilds *menu_with_childs);
 int AddVideoToDrawLayer(DrawObject *object);
 int AddTextToDrawLayer(DrawObject *object);
 

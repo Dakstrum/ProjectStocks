@@ -285,10 +285,85 @@ DrawObject *GetDrawObjectFromDrawObjectJson(char *object_name)
 {
 
     for (int i = 0; i < MAX_PARSED_OBJECTS; i++)
-        if (parsed_objects[i].name != NULL && strcmp(object_name, parsed_objects[i].name) == 0) {
+        if (parsed_objects[i].name != NULL && strcmp(object_name, parsed_objects[i].name) == 0)
             return CreateDrawObjectFromJson(i);
-        }
     
     return NULL;
+
+}
+
+void ReclaimUnusedSpaceFromMenuWithChilds(MenuWithChilds *menu_with_childs) 
+{
+
+    if (menu_with_childs->num_buttons == 0)
+        free(menu_with_childs->buttons);
+    else
+        menu_with_childs->buttons = realloc(menu_with_childs->buttons, sizeof(DrawObject *) * menu_with_childs->num_buttons);
+
+    if (menu_with_childs->num_text == 0)
+        free(menu_with_childs->text);
+    else
+        menu_with_childs->text = realloc(menu_with_childs->text, sizeof(DrawObject *) * menu_with_childs->num_text);
+
+}
+
+void SetMenuChild(int object_idx, MenuWithChilds *menu_with_childs) 
+{
+
+    switch (parsed_objects[object_idx].type) {
+
+        case BUTTON:
+            if (menu_with_childs->num_buttons = 255) {
+
+                Log("Too many child buttons in menu");
+                return;
+                
+            }
+            menu_with_childs->buttons[menu_with_childs->num_buttons] = CreateDrawObjectFromJson(object_idx); 
+            menu_with_childs->num_buttons++; 
+            break;
+        case TEXT:
+            if (menu_with_childs->num_text = 255) {
+
+                Log("Too many child text in menu");
+                return;
+
+            }
+            menu_with_childs->text[menu_with_childs->num_text] = CreateDrawObjectFromJson(object_idx);
+            menu_with_childs->num_text++; 
+            break;
+
+    }
+
+}
+
+void SetAllMenuChilds(MenuWithChilds *menu_with_childs) 
+{
+
+    for (int i = 0;i < MAX_PARSED_OBJECTS;i++)
+        if (parsed_objects[i].child_of != NULL && strcmp(menu_with_childs->menu->name, parsed_objects[i].child_of) == 0)
+            SetMenuChild(i, menu_with_childs);
+
+}
+
+MenuWithChilds *GetMenuWithChildsFromDrawObjectJson(char *menu_name) 
+{
+
+    DrawObject *menu = GetDrawObjectFromDrawObjectJson(menu_name);
+
+    if (menu == NULL)
+        return NULL;
+
+    MenuWithChilds *menu_with_childs = malloc(sizeof(MenuWithChilds));
+    menu_with_childs->menu           = menu;
+    menu_with_childs->num_buttons    = 0;
+    menu_with_childs->num_text       = 0;
+    menu_with_childs->buttons        = malloc(sizeof(DrawObject *) * 256);
+    menu_with_childs->text           = malloc(sizeof(DrawObject *) * 256);
+
+    SetAllMenuChilds(menu_with_childs);
+    ReclaimUnusedSpaceFromMenuWithChilds(menu_with_childs);
+
+    return menu_with_childs;
 
 }

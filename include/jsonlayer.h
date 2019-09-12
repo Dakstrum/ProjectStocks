@@ -7,5 +7,6 @@ void InitializeJson();
 void CleanUpJson();
 
 DrawObject *GetDrawObjectFromJsonLayer(char *object_name);
+MenuWithChilds *GetMenuWithChildsFromJsonLayer(char *menu_name);
 
 #endif

@@ -10,8 +10,9 @@
 #include "drawlayers.h"
 #include "log.h"
 
-static DrawObject *main_menu    = NULL;
-static DrawObject *version_text = NULL;
+//static DrawObject *main_menu     = NULL;
+//static DrawObject *version_text  = NULL;
+static MenuWithChilds *main_menu = NULL;
 
 void InitializeMainMenu() 
 {
@@ -23,13 +24,10 @@ void InitializeMainMenu()
         return;
 
     }
-    main_menu    = GetDrawObjectFromJsonLayer("MainMenu");
-    version_text = GetDrawObjectFromJsonLayer("Version");
 
-    LogF("Version_text = %s with x = %f, y = %f", version_text->name, version_text->x, version_text->y);
-
-    AddObjectToDrawLayer(main_menu);
-    AddObjectToDrawLayer(version_text);
+    main_menu = GetMenuWithChildsFromJsonLayer("MainMenu");
+    AddMenuWithChildsToDrawLayer(main_menu);
+    
     Log("Created Main Menu Draw Layer");
 
 }
@@ -44,5 +42,7 @@ void RenderMainMenu()
 
 void CleanUpMainMenu() 
 {
+
+    free(main_menu);
 
 }
