@@ -84,8 +84,8 @@ elif [ $1 == "--release" ]; then
 
 else
 
-    echo "Please pass either --debug or --release"
-    exit 1
+    echo "Please specify either --debug or --release next time. Defaulting to --debug"
+    DebugBuild
 
 fi
 
