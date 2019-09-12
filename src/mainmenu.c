@@ -27,8 +27,9 @@ void InitializeMainMenu()
 
     main_menu = GetMenuWithChildsFromJsonLayer("MainMenu");
     AddMenuWithChildsToDrawLayer(main_menu);
-    
+
     Log("Created Main Menu Draw Layer");
+    LogF("Num_text_found = %d", main_menu->num_text);
 
 }
 

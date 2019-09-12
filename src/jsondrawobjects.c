@@ -96,11 +96,12 @@ void SetCommonObjectProperties(int idx, char *path)
 void SetMenuObject(int idx) 
 {
 
+    unsigned int menu_index          = num_objects;
     parsed_objects[num_objects].type = MENU;
     num_objects++;
 
-    CheckAndSetMenuButtons(idx, parsed_objects[num_objects-1].name);
-    CheckAndSetMenuText(idx, parsed_objects[num_objects-1].name);
+    CheckAndSetMenuButtons(idx, parsed_objects[menu_index].name);
+    CheckAndSetMenuText(idx, parsed_objects[menu_index].name);
 
 }
 
@@ -167,6 +168,7 @@ void SetMenuTextObject(int idx, int text_idx, char *child_of)
     parsed_objects[num_objects].member.text.content   = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Content", idx, text_idx));
     parsed_objects[num_objects].child_of              = child_of;
     parsed_objects[num_objects].should_this_be_drawn  = true;
+    LogF("text %s child of %s", parsed_objects[num_objects].name, child_of);
 
     array_list *colors = GetArrayList(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Color",idx, text_idx));
     if (colors->length == 4) {
@@ -313,17 +315,17 @@ void SetMenuChild(int object_idx, MenuWithChilds *menu_with_childs)
     switch (parsed_objects[object_idx].type) {
 
         case BUTTON:
-            if (menu_with_childs->num_buttons = 255) {
+            if (menu_with_childs->num_buttons == 255) {
 
                 Log("Too many child buttons in menu");
                 return;
-                
+
             }
             menu_with_childs->buttons[menu_with_childs->num_buttons] = CreateDrawObjectFromJson(object_idx); 
             menu_with_childs->num_buttons++; 
             break;
         case TEXT:
-            if (menu_with_childs->num_text = 255) {
+            if (menu_with_childs->num_text == 255) {
 
                 Log("Too many child text in menu");
                 return;
@@ -341,8 +343,10 @@ void SetAllMenuChilds(MenuWithChilds *menu_with_childs)
 {
 
     for (int i = 0;i < MAX_PARSED_OBJECTS;i++)
-        if (parsed_objects[i].child_of != NULL && strcmp(menu_with_childs->menu->name, parsed_objects[i].child_of) == 0)
+        if (parsed_objects[i].child_of != NULL && strcmp(menu_with_childs->menu->name, parsed_objects[i].child_of) == 0) {
+            LogF("%s is child of %s", parsed_objects[i].name, parsed_objects[i].child_of);
             SetMenuChild(i, menu_with_childs);
+        }
 
 }
 
