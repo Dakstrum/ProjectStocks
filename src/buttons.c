@@ -24,7 +24,8 @@ void *GetButtonCallback(char *button_name)
     for (int i = 0; i < NUM_CALLBACKS; i++) 
         if (strcmp(button_name, callbacks[i].name) == 0) 
             return callbacks[i].Callback;
-        
+
+    LogF("Unable to find callback for %s", button_name);
     return &StubCallback;
 
 }
@@ -32,6 +33,6 @@ void *GetButtonCallback(char *button_name)
 void StubCallback() 
 {
 
-    Log("STUB: StubCallback");
+    Log("STUB: Button may have not been set correctly StubCallback");
 
 }
