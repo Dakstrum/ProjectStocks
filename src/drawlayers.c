@@ -207,7 +207,10 @@ void CleanUpVideo(DrawObject *object)
 int AddButtonToDrawLayer(DrawObject *object) 
 {
 
-    return -1;
+    if (object->asset_path != NULL)
+        object->member.button.button_bitmap = al_load_bitmap(object->asset_path);
+
+    return AddDrawObjectToDrawLayer(object);
 
 }
 

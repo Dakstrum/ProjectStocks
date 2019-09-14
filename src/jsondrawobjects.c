@@ -7,6 +7,7 @@
 
 #include "log.h"
 #include "shared.h"
+#include "buttons.h"
 #include "jsoncommon.h"
 #include "drawlayers.h"
 
@@ -238,7 +239,9 @@ void SetVideoDrawObjectFromJson(DrawObject *draw_object, int object_idx)
 void SetButtonDrawObjectFromJson(DrawObject *draw_object, int object_idx) 
 {
 
-    Log("STUB SetButtonDrawObjectFromJson called. May cause button related errors");
+    draw_object->type = BUTTON;
+    SetCommonDrawObjectPropertiesForGetDrawObject(draw_object, object_idx);
+    draw_object->member.button.Callback = GetButtonCallback(draw_object->name);
 
 }
 
