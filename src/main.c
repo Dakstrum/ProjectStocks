@@ -112,10 +112,10 @@ static ALLEGRO_THREAD *audio_thread            = NULL;
 void InitializeThreads() 
 {
 
-    stock_simulation_thread = al_create_thread(StockSimulationEntry, NULL);
+    //stock_simulation_thread = al_create_thread(StockSimulationEntry, NULL);
     audio_thread            = al_create_thread(AudioEntry, NULL);
 
-    al_start_thread(stock_simulation_thread);
+    //al_start_thread(stock_simulation_thread);
     al_start_thread(audio_thread);
 
 }
@@ -123,10 +123,10 @@ void InitializeThreads()
 void CleanUpThreads()
 {
 
-    al_join_thread(stock_simulation_thread, NULL);
+    //al_join_thread(stock_simulation_thread, NULL);
     al_join_thread(audio_thread, NULL);
 
-    al_destroy_thread(stock_simulation_thread);
+    //al_destroy_thread(stock_simulation_thread);
     al_destroy_thread(audio_thread);
 
 }

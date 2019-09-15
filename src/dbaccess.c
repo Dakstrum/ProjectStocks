@@ -1,8 +1,16 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include <sqlite3.h>
+
+#include "shared.h"
 
 void SetupMainDB();
 void SetupLogDB();
+
+bool DoesCompanyExist(char *company_name, sqlite3 *db);
+void SetCompanyToActive(char *company_name, sqlite3 *db);
+void InsertNewCompany(char *company_name, double ipo, sqlite3 *db);
+
 
 void InitializeDatabases() 
 {
@@ -58,5 +66,63 @@ void SetupLogDB()
 
     }
     sqlite3_close(db);
+
+}
+
+void InsertAndOrSetCompanyToActive(char *company_name, double ipo) 
+{
+
+    sqlite3 *db;
+    if  (sqlite3_open_v2("blinky.db", &db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
+
+        if (!DoesCompanyExist(company_name, db)) {
+
+            
+
+        }
+
+    }
+    sqlite3_close(db);
+
+}
+
+int FindOutIfCompanyExists(void *exists, int argc, char **argv, char **col_name) 
+{
+
+    if (argc > 0)
+        *((bool *)exists) = true;
+    
+    return 0;
+
+}
+
+bool DoesCompanyExist(char *company_name, sqlite3 *db) 
+{
+
+    bool exists = false;
+
+    char buffer[128];
+    char *temp = GetFormattedBuffer(buffer, "SELECT CompanyId FROM Company WHERE CompanyName=%s;", company_name);
+    sqlite3_exec(db, temp, &FindOutIfCompanyExists, &exists, 0);
+
+    return exists;
+
+}
+
+void SetCompanyToActive(char *company_name, sqlite3 *db) 
+{
+
+    char buffer[128];
+    char *temp = GetFormattedBuffer(buffer, "UPDATE Company SET IsActiveInJson=1 WHERE Company=%s;", company_name);
+    sqlite3_exec(db, temp, NULL, 0, 0);
+
+}
+
+void InsertNewCompany(char *company_name, double ipo, sqlite3 *db) 
+{
+
+    char buffer[256];
+    char *temp = GetFormattedBuffer(buffer, "INSER INTO Company(Ipo, CompanyName, IsActiveInJson) VALUES (%lf, %s, 1)", company_name, ipo);
+    sqlite3_exec(db, temp, NULL, 0, 0);
 
 }
