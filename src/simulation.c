@@ -1,32 +1,71 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <stdatomic.h>
 
 #include <allegro5/allegro.h>
-#include <allegro5/allegro_image.h>
 
+#include "log.h"
 #include "shared.h"
-#include "dbaccess.h"
+#include "account.h"
+#include "jsoncompanies.h"
 
 static time_t current_time  = 0;
 static int years_to_lapse   = 0;
 static int end_year         = 0;
 
-void SetupTables();
-void SimulationLoop();
-void InitializeDatabase();
+static atomic_bool simulation_finished;
+
+
 void CleanupBeforeExit();
+
+void GenerateSimulation();
+void SimulationLoop();
 void IncrementCurrentTimeByHour();
 bool ShouldContinueSimulation();
+
 int GetYearFromBuff(char *buff);
+
+void InitializeSimulation() 
+{
+
+    atomic_store(&simulation_finished, false);
+
+}
+
+void GetSimulationDone() 
+{
+
+    atomic_load(&simulation_finished);
+
+}
 
 void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg) 
 {
 
-    //SimulationLoop();
+    GenerateSimulation();
     CleanupBeforeExit();
 
 }
 
+void SetRandomSeed() 
+{
+
+    if (GetSaveId() != -1 )
+        srand(GetSaveSeed());
+    else
+        srand(time(NULL));
+
+}
+
+void GenerateSimulation()
+{
+
+    SetRandomSeed();
+    SimulationLoop();
+    atomic_store(&simulation_finished, true);
+
+}
 
 void SimulationLoop() 
 {
