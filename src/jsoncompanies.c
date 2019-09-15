@@ -7,6 +7,7 @@
 
 #include "log.h"
 #include "shared.h"
+#include "dbaccess.h"
 #include "jsoncommon.h"
 #include "jsoncompanies.h"
 
@@ -32,6 +33,7 @@ void InitializeCompaniesJson()
 
 void LogCompanyValues(int company_index) 
 {
+    
     Company c = parsed_companies[company_index];
     LogF("Retrieved CompanyName = %s, IPO = %lf, Category = %s, Description = %s, StartDate = %s, TotalProducts = %d", c.company_name, c.ipo, c.category, c.description, c.start_date, c.total_products);
 
@@ -68,7 +70,7 @@ void ParseCompanyJsonObject(array_list *companies_list)
         parsed_companies[i].description  = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/Description", i));
         parsed_companies[i].start_date   = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/StartDate", i));
         SetCompanyProducts(i, GetJsonObjectArray(companies, GetFormattedBuffer(buffer, "/Companies/%d/Products", i)));
-        LogCompanyValues(i);
+        InsertAndOrSetCompanyToActive(parsed_companies[i].company_name, parsed_companies[i].ipo);
 
     }
 

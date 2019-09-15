@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <sqlite3.h>
 
+#include "log.h"
 #include "shared.h"
 
 void SetupMainDB();
@@ -9,7 +10,9 @@ void SetupLogDB();
 
 bool DoesCompanyExist(char *company_name, sqlite3 *db);
 void SetCompanyToActive(char *company_name, sqlite3 *db);
-void InsertNewCompany(char *company_name, double ipo, sqlite3 *db);
+void InsertNewCompany(char *company_name, float ipo, sqlite3 *db);
+
+void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db);
 
 
 void InitializeDatabases() 
@@ -39,8 +42,8 @@ void SetupMainDB()
         char *drop_stocks = "DROP TABLE IF EXISTS Stocks;";
         sqlite3_exec(db, drop_stocks, NULL, 0, 0);
 
-        char *setup =   "CREATE TABLE IF NOT EXISTS Company(CompanyId INTEGER PRIMARY KEY, Ipo DOUBLE NOT NULL, CompanyName VARCHAR(50) NOT NULL, IsActiveInJson INT DEFAULT 0);"
-                        "CREATE TABLE IF NOT EXISTS CompanyMetadata(CompanyMetaId INTEGER PRIMARY KEY, CompanyId INT NOT NULL, TotalEmployees INT NOT NULL, Category VARCHAR(3) NOT NULL, StocksInMarket UNSIGNED BIG INT, SaveId INT NOT NULL);"
+        char *setup =   "CREATE TABLE IF NOT EXISTS Company(CompanyId INTEGER PRIMARY KEY, Ipo DOUBLE NOT NULL, CompanyName VARCHAR(50) NOT NULL, Category VARCHAR(30), IsActiveInJson INT DEFAULT 0);"
+                        "CREATE TABLE IF NOT EXISTS CompanyMetadata(CompanyMetaId INTEGER PRIMARY KEY, CompanyId INT NOT NULL, TotalEmployees INT NOT NULL, StocksInMarket UNSIGNED BIG INT, SaveId INT NOT NULL);"
                         "CREATE TABLE IF NOT EXISTS Stocks(StockId INTEGER PRIMARY KEY, CompanyId INT NOT NULL, Price FLOAT NOT NULL, Time DATETIME NOT NULL);"
                         "CREATE TABLE IF NOT EXISTS Saves(SaveId INTEGER PRIMARY KEY, SaveName TEXT NOT NULL, Money DOUBLE NOT NULL, TimeSpentInGame UNSIGNED BIG INT, RandomSeed UNSIGNED BIG INT);"
                         "CREATE TABLE IF NOT EXISTS OwnedStocks(OwnedStockId INTEGER PRIMARY KEY, SaveId INT NOT NULL, CompanyId INT NOT NULL, HowManyOwned UNSIGNED BIG INT NOT NULL);"
@@ -69,17 +72,16 @@ void SetupLogDB()
 
 }
 
-void InsertAndOrSetCompanyToActive(char *company_name, double ipo) 
+void InsertAndOrSetCompanyToActive(char *company_name, float ipo) 
 {
 
     sqlite3 *db;
     if  (sqlite3_open_v2("blinky.db", &db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
 
-        if (!DoesCompanyExist(company_name, db)) {
-
-            
-
-        }
+        if (!DoesCompanyExist(company_name, db))
+            InsertNewCompany(company_name, ipo, db);
+        
+        SetCompanyToActive(company_name, db);
 
     }
     sqlite3_close(db);
@@ -101,9 +103,9 @@ bool DoesCompanyExist(char *company_name, sqlite3 *db)
 
     bool exists = false;
 
-    char buffer[128];
-    char *temp = GetFormattedBuffer(buffer, "SELECT CompanyId FROM Company WHERE CompanyName=%s;", company_name);
-    sqlite3_exec(db, temp, &FindOutIfCompanyExists, &exists, 0);
+    char buffer[512];
+    char *query = GetFormattedBuffer(buffer, "SELECT CompanyId FROM Company WHERE CompanyName='%s';", company_name);
+    ExecuteQuery(query, &FindOutIfCompanyExists, &exists, db);
 
     return exists;
 
@@ -112,17 +114,30 @@ bool DoesCompanyExist(char *company_name, sqlite3 *db)
 void SetCompanyToActive(char *company_name, sqlite3 *db) 
 {
 
-    char buffer[128];
-    char *temp = GetFormattedBuffer(buffer, "UPDATE Company SET IsActiveInJson=1 WHERE Company=%s;", company_name);
-    sqlite3_exec(db, temp, NULL, 0, 0);
+    char buffer[512];
+    char *query = GetFormattedBuffer(buffer, "UPDATE Company SET IsActiveInJson=1 WHERE CompanyName='%s';", company_name);
+    ExecuteQuery(query, NULL, NULL, db);
 
 }
 
-void InsertNewCompany(char *company_name, double ipo, sqlite3 *db) 
+void InsertNewCompany(char *company_name, float ipo, sqlite3 *db) 
 {
 
-    char buffer[256];
-    char *temp = GetFormattedBuffer(buffer, "INSER INTO Company(Ipo, CompanyName, IsActiveInJson) VALUES (%lf, %s, 1)", company_name, ipo);
-    sqlite3_exec(db, temp, NULL, 0, 0);
+    char *error = NULL;
+
+    char buffer[512];
+    char *query = GetFormattedBuffer(buffer, "INSERT INTO Company (Ipo, CompanyName, IsActiveInJson) VALUES (%f, '%s', 1);", ipo, company_name);
+    ExecuteQuery(query, NULL, NULL, db);
+
+}
+
+void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db) 
+{
+
+    char *error = NULL;
+    sqlite3_exec(db, query, callback, callback_var, &error);
+
+    if (error != NULL)
+        LogF("SQL ERROR %s", error);
 
 }

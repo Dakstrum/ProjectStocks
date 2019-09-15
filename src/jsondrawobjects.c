@@ -169,7 +169,6 @@ void SetMenuTextObject(int idx, int text_idx, char *child_of)
     parsed_objects[num_objects].member.text.content   = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Content", idx, text_idx));
     parsed_objects[num_objects].child_of              = child_of;
     parsed_objects[num_objects].should_this_be_drawn  = true;
-    LogF("text %s child of %s", parsed_objects[num_objects].name, child_of);
 
     array_list *colors = GetArrayList(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Color",idx, text_idx));
     if (colors->length == 4) {
@@ -181,7 +180,6 @@ void SetMenuTextObject(int idx, int text_idx, char *child_of)
 
     } else {
 
-        LogF("Setting Default Colors for /Objects/%d/Text/%d", idx, text_idx);
         parsed_objects[num_objects].member.text.r = 255;
         parsed_objects[num_objects].member.text.g = 255;
         parsed_objects[num_objects].member.text.b = 255;
@@ -346,10 +344,8 @@ void SetAllMenuChilds(MenuWithChilds *menu_with_childs)
 {
 
     for (int i = 0;i < MAX_PARSED_OBJECTS;i++)
-        if (parsed_objects[i].child_of != NULL && strcmp(menu_with_childs->menu->name, parsed_objects[i].child_of) == 0) {
-            LogF("%s is child of %s", parsed_objects[i].name, parsed_objects[i].child_of);
+        if (parsed_objects[i].child_of != NULL && strcmp(menu_with_childs->menu->name, parsed_objects[i].child_of) == 0)
             SetMenuChild(i, menu_with_childs);
-        }
 
 }
 

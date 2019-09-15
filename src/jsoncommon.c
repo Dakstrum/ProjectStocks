@@ -38,7 +38,6 @@ array_list *GetArrayList(json_object *object, const char *json_path)
 
     } else {
 
-        LogF("Got %d %s", list->length, json_path);
         return list;
     }
 
