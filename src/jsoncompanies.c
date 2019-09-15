@@ -80,3 +80,17 @@ void CleanUpComponaniesJson()
     free(parsed_companies);
 
 }
+
+Company *GetAllCompanies() 
+{
+
+    return parsed_companies;
+
+}
+
+unsigned int GetNumCompanies() 
+{
+
+    return num_companies;
+
+}

@@ -3,26 +3,33 @@
 #include <stdbool.h>
 #include <stdatomic.h>
 
+#include <sqlite3.h>
 #include <allegro5/allegro.h>
+
 
 #include "log.h"
 #include "shared.h"
 #include "account.h"
 #include "jsoncompanies.h"
 
-static time_t current_time  = 0;
+static const int HOUR       = 3600;
 static int years_to_lapse   = 0;
 static int end_year         = 0;
 
 static atomic_bool simulation_finished;
+static Company *companies;
+static unsigned int num_companies = 0;
 
+static sqlite3 *persistent_db;
+static char *connection_string;
 
 void CleanupBeforeExit();
 
 void GenerateSimulation();
-void SimulationLoop();
+void SimulationLoop(sqlite3 *db, unsigned int idx);
+void GenerateDataForCompanies();
 void IncrementCurrentTimeByHour();
-bool ShouldContinueSimulation();
+bool ShouldContinueSimulation(unsigned int current_time);
 
 int GetYearFromBuff(char *buff);
 
@@ -58,32 +65,100 @@ void SetRandomSeed()
 
 }
 
+void SetCompanies() 
+{
+
+    companies     = GetAllCompanies();
+    num_companies = GetNumCompanies();
+
+}
+
+int OpenConnectionToSimulationDB(sqlite3 **db) 
+{
+
+    if (sqlite3_open_v2(connection_string, db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE, NULL) != SQLITE_OK) {
+
+        Log("Could not establish connection to blinky.db from simulation");
+        SetCleanUpToTrue();
+        return -1;
+
+    }
+    return 0;
+
+}
+
+void SetSimulationDatabase() 
+{
+
+#if DEBUGGING
+
+    connection_string = "blinky.db";
+    OpenConnectionToSimulationDB(&persistent_db);
+    sqlite3_close(persistent_db);
+
+#else
+
+    connection_string = "file:simdb?mode=memory&cache=shared";
+    if (OpenConnectionToSimulationDB(&persistent_db) == 0) 
+    {
+
+        //TODO create in memory tables
+
+    }
+    // Keep this in memory so do not close.
+
+#endif
+
+}
+
 void GenerateSimulation()
 {
 
+    SetSimulationDatabase();
+
+    if (ShouldICleanUp())
+        return;
+
     SetRandomSeed();
-    SimulationLoop();
+    SetCompanies();
+    GenerateDataForCompanies();
     atomic_store(&simulation_finished, true);
 
 }
 
-void SimulationLoop() 
+void GenerateDataForCompanies() 
 {
 
-    while (ShouldContinueSimulation()) {
+    // Could make multithreaded, but need to use rand_r for thread safety.
+    // Will see how it performs with a single thread.
+    for (unsigned int i = 0;i < num_companies;i++) {
 
-        IncrementCurrentTimeByHour();
+        sqlite3 *db;
+        if (OpenConnectionToSimulationDB(&db) != 0)
+            return;
+
+        sqlite3_exec(db, "BEGIN TRANSACTION", NULL, 0, 0);
+        SimulationLoop(db, i);
+        sqlite3_exec(db, "END TRANSACTION", NULL, 0, 0);
+        sqlite3_close(db);
 
     }
 
 }
 
-void IncrementCurrentTimeByHour() 
+void SimulationLoop(sqlite3 *db, unsigned int idx) 
 {
 
-    current_time += 3600;
+    unsigned int current_time = 0;
+    while (ShouldContinueSimulation(current_time)) {
+
+
+        current_time += HOUR;
+
+    }
 
 }
+
 
 void SetYearLapse(int years_to_lapse) 
 {
@@ -106,7 +181,7 @@ void CleanupBeforeExit()
 
 }
 
-bool ShouldContinueSimulation() 
+bool ShouldContinueSimulation(unsigned int current_time) 
 {
 
     char current_time_buff[100];

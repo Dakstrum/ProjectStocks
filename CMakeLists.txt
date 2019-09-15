@@ -28,6 +28,10 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 file(GLOB_RECURSE sources ${PROJECT_SOURCE_DIR}/src/*.c)
 file(GLOB_RECURSE headers ${PROJECT_SOURCE_DIR}/include/*.h)
 
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DDEBUGGING)
+endif()
+
 string(APPEND CMAKE_C_FLAGS_DEBUG " -lm -O0")
 string(APPEND CMAKE_C_FLAGS_RELEASE " -lm -O2")
 

@@ -26,4 +26,7 @@ void ParseCompanyJsonObject(array_list *companies_list);
 void ParseJsonDrawObject(array_list *objects_list);
 void CleanUpComponaniesJson();
 
+Company *GetAllCompanies();
+unsigned int GetNumCompanies();
+
 #endif
