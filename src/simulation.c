@@ -178,6 +178,7 @@ void SetYearLapse(int years_to_lapse)
 void CleanupBeforeExit() 
 {
 
+    sqlite3_close(persistent_db);
 
 }
 
