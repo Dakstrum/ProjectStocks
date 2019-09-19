@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "log.h"
+#include "mainmenu.h"
 
 void StubCallback();
 

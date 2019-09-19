@@ -413,12 +413,25 @@ DrawObject *GetDrawObject(int layer, int object)
 int RemoveDrawObject(DrawObject *object) 
 {
 
-    if (object == NULL)
+    if (object == NULL) {
+
+        Log("RemoveDrawObject, object = null");
         return -1;
-    if (draw_layers[object->layer_index].objects[object->object_index] == NULL)
+
+    }
+    if (draw_layers[object->layer_index].objects[object->object_index] == NULL) {
+
+        LogF("object with name %s", object->name);
         return -1;
+
+    }
     ClearUpGeneric(object);
-    free(draw_layers[object->layer_index].objects[object->object_index]);
+
+    int layer_index  = object->layer_index;
+    int object_index = object->object_index;
+    free(draw_layers[layer_index].objects[object_index]);
+    draw_layers[layer_index].objects[object_index] = NULL;
+    
     return 0;
 
 }

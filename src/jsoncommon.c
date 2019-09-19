@@ -34,7 +34,7 @@ array_list *GetArrayList(json_object *object, const char *json_path)
     if (list == NULL) {
 
         LogF("No %d found in configuration.", json_path);
-        SetCleanUpToTrue();
+        //SetCleanUpToTrue();
 
     } else {
 
