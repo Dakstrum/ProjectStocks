@@ -11,9 +11,9 @@
 
 //static DrawObject *stocks_menu     = NULL;
 //static DrawObject *version_text  = NULL;
-static MenuWithChilds *stocks_menu = NULL;
+static MenuWithChilds *news_menu = NULL;
 
-void InitializeStocksMenu() 
+void InitializeNewsMenu() 
 { 
     if (CreateNewDrawLayer() == -1) {
 
@@ -22,22 +22,22 @@ void InitializeStocksMenu()
     }
 
 
-    stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
-    AddMenuWithChildsToDrawLayer(stocks_menu);
+    news_menu = GetMenuWithChildsFromJsonLayer("NewsMenu");
+    AddMenuWithChildsToDrawLayer(news_menu);
 
     Log("Created Main Menu Draw Layer");
-    LogF("Num_text_found = %d", stocks_menu->num_text);
+    LogF("Num_text_found = %d", news_menu->num_text);
 
 }
 
 
-void RenderStocksMenu() 
+void RenderNewsMenu() 
 {
     DrawLayers();
 }
 
-void CleanUpStocksMenu() 
+void CleanUpNewsMenu() 
 {
-    free(stocks_menu);
+    free(news_menu);
 }
 

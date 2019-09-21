@@ -11,33 +11,33 @@
 
 //static DrawObject *stocks_menu     = NULL;
 //static DrawObject *version_text  = NULL;
-static MenuWithChilds *stocks_menu = NULL;
+static MenuWithChilds *account_menu = NULL;
 
-void InitializeStocksMenu() 
+void InitializeAccountMenu() 
 { 
     if (CreateNewDrawLayer() == -1) {
 
-        Log("STUB: StocksMenu could not create new draw layer");
+        Log("STUB: account Menu could not create new draw layer");
         return;
     }
 
 
-    stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
-    AddMenuWithChildsToDrawLayer(stocks_menu);
+    account_menu = GetMenuWithChildsFromJsonLayer("AccountMenu");
+    AddMenuWithChildsToDrawLayer(account_menu);
 
     Log("Created Main Menu Draw Layer");
-    LogF("Num_text_found = %d", stocks_menu->num_text);
+    LogF("Num_text_found = %d", account_menu->num_text);
 
 }
 
 
-void RenderStocksMenu() 
+void RenderAccountMenu() 
 {
     DrawLayers();
 }
 
-void CleanUpStocksMenu() 
+void CleanUpAccountMenu() 
 {
-    free(stocks_menu);
+    free(account_menu);
 }
 

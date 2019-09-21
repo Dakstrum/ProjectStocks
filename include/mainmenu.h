@@ -3,6 +3,7 @@
 
 void InitializeMainMenu();
 void RenderMainMenu();
+void ShowStartMenu();
 void ToggleOptionsMenu();
 
 #endif

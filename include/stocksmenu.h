@@ -3,5 +3,6 @@
 
 void InitializeStocksMenu();
 void RenderStocksMenu();
+void ToggleStocksMenu();
 
 #endif

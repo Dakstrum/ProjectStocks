@@ -8,6 +8,7 @@
 #include "jsonlayer.h"
 #include "drawlayers.h"
 #include "log.h"
+#include "stocksmenu.h"
 
 //static DrawObject *main_menu     = NULL;
 //static DrawObject *version_text  = NULL;
@@ -44,9 +45,9 @@ void CleanUpMainMenu()
     free(main_menu);
 }
 
-void ShowStartMenu()
+void InitStartGame()
 {
-
+    InitializeStocksMenu();
 }
 
 void ToggleOptionsMenu()
@@ -54,7 +55,7 @@ void ToggleOptionsMenu()
 
     if (options_menu == NULL) {
 
-        LogF("CURRENT: %d", CreateNewDrawLayer());
+        CreateNewDrawLayer();
         options_menu = GetMenuWithChildsFromJsonLayer("OptionsMenu");
         AddMenuWithChildsToDrawLayer(options_menu);
         
@@ -62,7 +63,7 @@ void ToggleOptionsMenu()
 
         ClearCurrentDrawLayer();
         options_menu = NULL;
-        
+
     }
 
 }
