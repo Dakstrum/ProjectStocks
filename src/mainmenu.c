@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,7 +11,8 @@
 
 //static DrawObject *main_menu     = NULL;
 //static DrawObject *version_text  = NULL;
-static MenuWithChilds *main_menu = NULL;
+static MenuWithChilds *main_menu    = NULL;
+static MenuWithChilds *options_menu = NULL;
 
 void InitializeMainMenu() 
 {
@@ -24,7 +24,7 @@ void InitializeMainMenu()
         return;
 
     }
-
+    
     main_menu = GetMenuWithChildsFromJsonLayer("MainMenu");
     AddMenuWithChildsToDrawLayer(main_menu);
 
@@ -36,14 +36,33 @@ void InitializeMainMenu()
 
 void RenderMainMenu() 
 {
-
     DrawLayers();
-
 }
 
 void CleanUpMainMenu() 
 {
-
     free(main_menu);
+}
+
+void ShowStartMenu()
+{
+
+}
+
+void ToggleOptionsMenu()
+{
+
+    if (options_menu == NULL) {
+
+        LogF("CURRENT: %d", CreateNewDrawLayer());
+        options_menu = GetMenuWithChildsFromJsonLayer("OptionsMenu");
+        AddMenuWithChildsToDrawLayer(options_menu);
+        
+    } else {
+
+        ClearCurrentDrawLayer();
+        options_menu = NULL;
+        
+    }
 
 }

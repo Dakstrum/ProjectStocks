@@ -1,10 +1,21 @@
-
 #include <string.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
 #include "log.h"
+
+#include "shared.h"
+
 #include "mainmenu.h"
 
 void StubCallback();
+
+void MainMenuStartButtonCallBack();
+void MainMenuOptionsButtonCallBack();
+void MainMenuExitButtonCallBack();
+void OptionsMenuExitButtonCallBack();
+
+
 
 typedef struct ButtonCallsbacks 
 {
@@ -14,9 +25,15 @@ typedef struct ButtonCallsbacks
 
 } ButtonCallsbacks;
 
-#define NUM_CALLBACKS 1
+#define NUM_CALLBACKS 5
 static ButtonCallsbacks callbacks[] = {
-    {"STUB", &StubCallback}
+
+    {"STUB",                  &StubCallback},
+    {"StartButton",           &MainMenuStartButtonCallBack},
+    {"OptionsButton",         &MainMenuOptionsButtonCallBack},
+    {"ExitButton",            &MainMenuExitButtonCallBack},
+    {"OptionsMenuExitButton", &OptionsMenuExitButtonCallBack}
+
 };
 
 void *GetButtonCallback(char *button_name) 
@@ -33,7 +50,29 @@ void *GetButtonCallback(char *button_name)
 
 void StubCallback() 
 {
-
     Log("STUB: Button may have not been set correctly StubCallback");
+}
 
+
+//Main Menu Callbacks
+void MainMenuStartButtonCallBack()
+{
+    ShowStartMenu();
+}
+
+void MainMenuOptionsButtonCallBack()
+{
+    ToggleOptionsMenu();
+}
+
+void MainMenuExitButtonCallBack()
+{
+    SetCleanUpToTrue();
+}
+
+//Options Menu Callbacks
+void OptionsMenuExitButtonCallBack()
+{
+    Log("OPTIONSMENUEXITBUTTONCALLBACK");
+    ToggleOptionsMenu();
 }

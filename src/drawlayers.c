@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -127,7 +126,7 @@ int CreateNewDrawLayer()
 void ClearCurrentDrawLayer() 
 {
 
-    ClearUpDrawLayer(current_draw_layer - 1);
+    ClearUpDrawLayer(current_draw_layer);
     current_draw_layer--;
 
 }
@@ -153,6 +152,7 @@ void ClearUpDrawLayer(int layer)
 
             ClearUpGeneric(draw_layers[layer].objects[j]);
             free(draw_layers[layer].objects[j]);
+            draw_layers[layer].objects[j] = NULL;
 
         }
 
@@ -190,7 +190,8 @@ void CleanUpMenu(DrawObject *object)
 
 void CleanUpPopUp(DrawObject *object) 
 {
-
+    
+    LogF("ObjectPOP= %s", object->name);
     Log("PopUp STUB");
 
 }
