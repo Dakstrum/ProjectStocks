@@ -57,7 +57,7 @@ ALLEGRO_BITMAP *GetNewlyAddedBitmapFromCache(char *asset_path)
     bitmap_cache[cache_index].asset_path = asset_path;
     bitmap_cache[cache_index].bitmap     = al_load_bitmap(asset_path);
     cache_index++;
+
     return bitmap_cache[cache_index-1].bitmap;
-
-
+    
 }
