@@ -15,6 +15,7 @@ static MenuWithChilds *stocks_menu = NULL;
 
 void InitializeStocksMenu() 
 { 
+
     if (CreateNewDrawLayer() == -1) {
 
         Log("STUB: StocksMenu could not create new draw layer");
@@ -25,19 +26,20 @@ void InitializeStocksMenu()
     stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
     AddMenuWithChildsToDrawLayer(stocks_menu);
 
-    Log("Created Main Menu Draw Layer");
-    LogF("Num_text_found = %d", stocks_menu->num_text);
-
 }
 
 
 void RenderStocksMenu() 
 {
+
     DrawLayers();
+
 }
 
 void CleanUpStocksMenu() 
 {
+
     free(stocks_menu);
+    
 }
 

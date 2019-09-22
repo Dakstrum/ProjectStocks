@@ -21,16 +21,13 @@ void InitializeMainMenu()
     
     if (CreateNewDrawLayer() == -1) {
 
-        Log("STUB: MainMenu could not create new draw layer");
+        Log("ERROR: MainMenu could not create new draw layer");
         return;
 
     }
     
     main_menu = GetMenuWithChildsFromJsonLayer("MainMenu");
     AddMenuWithChildsToDrawLayer(main_menu);
-
-    Log("Created Main Menu Draw Layer");
-    LogF("Num_text_found = %d", main_menu->num_text);
 
 }
 

@@ -31,15 +31,10 @@ array_list *GetArrayList(json_object *object, const char *json_path)
 
     array_list *list = GetJsonObjectArray(object, json_path);
 
-    if (list == NULL) {
-
+    if (list == NULL)
         LogF("No %d found in configuration.", json_path);
-        //SetCleanUpToTrue();
-
-    } else {
-
+    else
         return list;
-    }
 
     return NULL;
 
@@ -68,11 +63,9 @@ char* GetStringFromJsonObject(json_object *object, const char *json_path)
         Log("Object is null");
 
     int code = json_pointer_get(object, json_path, &store_object);
-    if (code != 0)
-        LogF("Unable to find %s. Code = %d", json_path, code);
-    else
+    if (code == 0)
         return strdup(json_object_get_string(store_object));
-
+        
     return "";
 
 }
@@ -100,11 +93,9 @@ double GetDoubleFromJsonObject(json_object *object, const char *json_path)
         Log("Object is null");
 
     int code = json_pointer_get(object, json_path, &store_object);
-    if (code != 0)
-        LogF("Unable to find %s. Code = %d", json_path, code);
-    else
+    if (code == 0)
         return json_object_get_double(store_object);
-
+        
     return -1;
 
 }

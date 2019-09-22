@@ -14,7 +14,8 @@
 static MenuWithChilds *account_menu = NULL;
 
 void InitializeAccountMenu() 
-{ 
+{
+
     if (CreateNewDrawLayer() == -1) {
 
         Log("STUB: account Menu could not create new draw layer");
@@ -25,19 +26,20 @@ void InitializeAccountMenu()
     account_menu = GetMenuWithChildsFromJsonLayer("AccountMenu");
     AddMenuWithChildsToDrawLayer(account_menu);
 
-    Log("Created Main Menu Draw Layer");
-    LogF("Num_text_found = %d", account_menu->num_text);
-
 }
 
 
 void RenderAccountMenu() 
 {
+
     DrawLayers();
+
 }
 
 void CleanUpAccountMenu() 
 {
+
     free(account_menu);
+    
 }
 

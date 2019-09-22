@@ -308,7 +308,6 @@ int AddTextToDrawLayer(DrawObject *object)
         return -1;
 
     }
-    LogF("Adding Font %s to DrawLayer", object->asset_path);
 
     return AddDrawObjectToDrawLayer(object);
 
