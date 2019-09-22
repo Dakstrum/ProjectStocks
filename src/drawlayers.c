@@ -178,14 +178,14 @@ void ClearUpGeneric(DrawObject *object)
 void CleanUpButton(DrawObject *object) 
 {
 
-    al_destroy_bitmap(object->member.button.button_bitmap);
+    //al_destroy_bitmap(object->member.button.button_bitmap);
 
 }
 
 void CleanUpMenu(DrawObject *object) 
 {
 
-    al_destroy_bitmap(object->member.menu.menu_bitmap);
+    //al_destroy_bitmap(object->member.menu.menu_bitmap);
 
 }
 
@@ -210,7 +210,7 @@ int AddButtonToDrawLayer(DrawObject *object)
 {
 
     if (object->asset_path != NULL)
-        object->member.button.button_bitmap = al_load_bitmap(object->asset_path);
+        object->member.button.button_bitmap = GetBitmapFromCache(object->asset_path);
 
     return AddDrawObjectToDrawLayer(object);
 
@@ -247,7 +247,7 @@ int AddObjectToDrawLayer(DrawObject *object)
 int AddMenuToDrawLayer(DrawObject *object) 
 {
 
-    object->member.menu.menu_bitmap = al_load_bitmap(object->asset_path);
+    object->member.menu.menu_bitmap = GetBitmapFromCache(object->asset_path);
     if (object->member.menu.menu_bitmap == NULL) {
 
         Log("Could not create menu_bitmap");
