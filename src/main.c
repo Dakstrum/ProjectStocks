@@ -5,6 +5,7 @@
 
 #include "dbaccess.h"
 #include "log.h"
+#include "cache.h"
 #include "shared.h"
 #include "controls.h"
 #include "simulation.h"
@@ -83,6 +84,7 @@ enum InitializeSuccess Initialize()
         return FAILURE;
 
     }
+    InitializeCache();
     InitializeShared();
     InitializeDatabases();
     InitializeThreads();
