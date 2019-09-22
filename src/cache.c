@@ -20,7 +20,7 @@ static unsigned int cache_index = 0;
 void InitializeCache() 
 {
 
-    bitmap_cache = malloc(sizeof(Cache *) * cache_sizec);
+    bitmap_cache = malloc(sizeof(Cache *) * cache_size);
 
 }
 
