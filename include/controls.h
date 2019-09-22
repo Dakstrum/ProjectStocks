@@ -3,5 +3,6 @@
 
 void InitializeControls();
 void HandleInput(ALLEGRO_EVENT event);
+void HandlePauseMenu(ALLEGRO_EVENT event);
 
 #endif
