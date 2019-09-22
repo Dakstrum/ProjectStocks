@@ -9,6 +9,7 @@
 
 #include "log.h"
 #include "audio.h"
+#include "cache.h"
 #include "drawlayers.h"
 
 #define MAX_DRAW_LAYERS 10
