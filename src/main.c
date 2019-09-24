@@ -55,7 +55,6 @@ void GameLoop()
 
             HandleInput(event);
             HandleWindowEvents(event);
-            HandlePauseMenu(event);
 
         } else {
 

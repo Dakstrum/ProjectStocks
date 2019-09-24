@@ -9,6 +9,7 @@
 
 void HandleMouseClicks(ALLEGRO_EVENT event);
 void HandleKeyboard(ALLEGRO_EVENT event);
+void HandlePauseMenu(ALLEGRO_EVENT event);
 
 ALLEGRO_KEYBOARD_STATE key_state;
 
@@ -26,6 +27,7 @@ void HandleInput(ALLEGRO_EVENT event)
 
     HandleMouseClicks(event);
     HandleKeyboard(event);
+    HandlePauseMenu(event);
 
 }
 
@@ -43,12 +45,19 @@ void HandleKeyboard(ALLEGRO_EVENT event)
 
 }
 
-void HandlePauseMenu(ALLEGRO_EVENT event)
+void HandlePauseMenu(ALLEGRO_EVENT local_event)
 {
+    
+    ALLEGRO_EVENT_QUEUE *event_queue;
+    //ALLEGRO_EVENT event;
+    //al_wait_for_event(event_queue, &event);
 
-    al_get_keyboard_state(&key_state);
-    if (al_key_down(&key_state, ALLEGRO_KEY_ESCAPE)) {
+    //if (event.type == ALLEGRO_EVENT_KEY_DOWN)
+    //{
+    //    Log("SOEMTHING OPERESS");
+    //    if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
+    //        Log("ASD");
+    //}
+    
 
-        Log("Init Pause Menu");
-    }
 }
