@@ -53,7 +53,7 @@ void GameLoop()
 
         if (event.type != ALLEGRO_EVENT_TIMER) {
 
-            HandleInput(event);
+            HandleInput(event, event_queue);
             HandleWindowEvents(event);
 
         } else {
@@ -102,6 +102,7 @@ void InitializeEventQueue()
     timer       = al_create_timer(1.0/60.0);
     event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_mouse_event_source());
+    al_register_event_source(event_queue, al_get_keyboard_event_source());
     al_register_event_source(event_queue, al_get_display_event_source(GetDisplay()));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_start_timer(timer);
