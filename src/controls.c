@@ -47,9 +47,8 @@ void HandleKeyboard(ALLEGRO_EVENT event)
 void HandlePauseMenu(ALLEGRO_EVENT local_event, ALLEGRO_EVENT_QUEUE *local_event_queue)
 {
 
-    if(local_event.type == ALLEGRO_EVENT_KEY_DOWN && local_event.keyboard.keycode == ALLEGRO_KEY_SPACE) {
+    if(local_event.type == ALLEGRO_EVENT_KEY_DOWN && local_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
         
-        Log("SPACE HIT");
-        ToggleOptionsMenu();
+        TogglePauseMenu();
     }
 }

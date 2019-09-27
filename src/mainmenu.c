@@ -13,7 +13,7 @@
 //static DrawObject *main_menu     = NULL;
 //static DrawObject *version_text  = NULL;
 static MenuWithChilds *main_menu    = NULL;
-static MenuWithChilds *options_menu = NULL;
+
 
 void InitializeMainMenu() 
 {
@@ -45,22 +45,4 @@ void CleanUpMainMenu()
 void InitStartGame()
 {
     InitializeStocksMenu();
-}
-
-void ToggleOptionsMenu()
-{
-
-    if (options_menu == NULL) {
-
-        CreateNewDrawLayer();
-        options_menu = GetMenuWithChildsFromJsonLayer("OptionsMenu");
-        AddMenuWithChildsToDrawLayer(options_menu);
-        
-    } else {
-
-        ClearCurrentDrawLayer();
-        options_menu = NULL;
-
-    }
-
 }

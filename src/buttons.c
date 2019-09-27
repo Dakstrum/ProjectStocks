@@ -10,6 +10,7 @@
 #include "stocksmenu.h"
 #include "newsmenu.h"
 #include "accountmenu.h"
+#include "generalpurposemenus.h"
 
 
 void StubCallback();
@@ -83,7 +84,7 @@ void MainMenuExitButtonCallBack()
     SetCleanUpToTrue();
 }
 
-//Options Menu Callbacks
+//General Purpose Menu Callbacks
 void OptionsMenuExitButtonCallBack()
 {
     ToggleOptionsMenu();

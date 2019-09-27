@@ -9,32 +9,53 @@
 #include "drawlayers.h"
 #include "log.h"
 
-//static DrawObject *stocks_menu     = NULL;
-//static DrawObject *version_text  = NULL;
-static MenuWithChilds *news_menu = NULL;
+static MenuWithChilds *pause_menu   = NULL;
+static MenuWithChilds *options_menu = NULL;
 
-void InitializeGeneralPurposeMenu() 
-{ 
-    if (CreateNewDrawLayer() == -1) {
-
-        Log("STUB: GeneralPurposeMenu could not create new draw layer");
-        return;
-    }
-
-
-    news_menu = GetMenuWithChildsFromJsonLayer("NewsMenu");
-    AddMenuWithChildsToDrawLayer(news_menu);
-
-}
-
-
-void RenderGeneralPurposeMenu() 
+void RenderGeneralPurposeMenus() 
 {
     DrawLayers();
 }
 
 void CleanUpGeneralPurposeMenus() 
 {
-    free(news_menu);
+    free(pause_menu);
+    free(options_menu);
+}
+
+void ToggleOptionsMenu()
+{
+
+    if (options_menu == NULL) {
+
+        CreateNewDrawLayer();
+        options_menu = GetMenuWithChildsFromJsonLayer("OptionsMenu");
+        AddMenuWithChildsToDrawLayer(options_menu);
+        
+    } else {
+
+        ClearCurrentDrawLayer();
+        options_menu = NULL;
+
+    }
+
+}
+
+void TogglePauseMenu()
+{
+
+    if (pause_menu == NULL) {
+
+        CreateNewDrawLayer();
+        pause_menu = GetMenuWithChildsFromJsonLayer("PauseMenu");
+        AddMenuWithChildsToDrawLayer(pause_menu);
+        
+    } else {
+
+        ClearCurrentDrawLayer();
+        pause_menu = NULL;
+
+    }
+
 }
 
