@@ -8,6 +8,7 @@
 #include "jsonlayer.h"
 #include "drawlayers.h"
 #include "log.h"
+#include "shared.h"
 #include "stocksmenu.h"
 #include "generalpurposemenus.h"
 
