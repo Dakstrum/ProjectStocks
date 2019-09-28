@@ -18,6 +18,8 @@ void StubCallback();
 void MainMenuStartButtonCallBack();
 void MainMenuOptionsButtonCallBack();
 void MainMenuExitButtonCallBack();
+void PauseMenuOptionsButtonCallBack();
+void PauseMenuExitButtonCallBack();
 void OptionsMenuExitButtonCallBack();
 void StocksButtonCallBack();
 void NewsButtonCallBack();
@@ -34,13 +36,15 @@ typedef struct ButtonCallsbacks
 
 } ButtonCallsbacks;
 
-#define NUM_CALLBACKS 9
+#define NUM_CALLBACKS 11
 static ButtonCallsbacks callbacks[] = {
 
     {"STUB",                  &StubCallback},
     {"StartButton",           &MainMenuStartButtonCallBack},
     {"OptionsButton",         &MainMenuOptionsButtonCallBack},
     {"ExitButton",            &MainMenuExitButtonCallBack},
+    {"PauseMenuOptionsButton",&PauseMenuOptionsButtonCallBack},
+    {"PauseMenuExitButton",   &PauseMenuExitButtonCallBack},
     {"OptionsMenuExitButton", &OptionsMenuExitButtonCallBack},
     {"StocksButton",          &StocksButtonCallBack},
     {"NewsButton",            &NewsButtonCallBack},
@@ -85,6 +89,16 @@ void MainMenuExitButtonCallBack()
 }
 
 //General Purpose Menu Callbacks
+void PauseMenuOptionsButtonCallBack()
+{
+    ToggleOptionsMenu();
+}
+
+void PauseMenuExitButtonCallBack()
+{
+    SetCleanUpToTrue();
+}
+
 void OptionsMenuExitButtonCallBack()
 {
     ToggleOptionsMenu();

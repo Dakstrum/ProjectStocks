@@ -13,6 +13,8 @@ void HandleMouseClicks(ALLEGRO_EVENT event);
 void HandleKeyboard(ALLEGRO_EVENT event);
 void HandlePauseMenu(ALLEGRO_EVENT local_event, ALLEGRO_EVENT_QUEUE *local_event_queue);
 
+bool DisableEscKey = false;
+
 void InitializeControls() 
 {
 
@@ -46,9 +48,14 @@ void HandleKeyboard(ALLEGRO_EVENT event)
 
 void HandlePauseMenu(ALLEGRO_EVENT local_event, ALLEGRO_EVENT_QUEUE *local_event_queue)
 {
+    if(DisableEscKey)
+    {
 
-    if(local_event.type == ALLEGRO_EVENT_KEY_DOWN && local_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
-        
-        TogglePauseMenu();
+    }
+    else
+    {
+        if(local_event.type == ALLEGRO_EVENT_KEY_DOWN && local_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+            TogglePauseMenu();
+        }
     }
 }
