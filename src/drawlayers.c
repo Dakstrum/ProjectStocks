@@ -210,7 +210,7 @@ int AddButtonToDrawLayer(DrawObject *object)
 {
 
     if (object->asset_path != NULL)
-        object->member.button.button_bitmap = GetBitmapFromCache(object->asset_path);
+        object->member.button.button_bitmap = +BitmapFromCache(object->asset_path);
 
     return AddDrawObjectToDrawLayer(object);
 
@@ -441,5 +441,28 @@ DrawObject *CreateNewDrawObject()
 {
 
     return malloc(sizeof(DrawObject));
+
+}
+
+bool DoesObjectExistInCurrentDrawLayer(char *object_name)
+{
+
+    for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++) {
+
+        DrawObject *object = draw_layers[current_draw_layer].objects[i];
+
+        if (object != NULL && object->name != NULL) {
+
+            if (strcmp(object->name, object_name) == 0) {
+
+                return true;
+
+            }     
+
+        }
+
+    }
+
+    return false;
 
 }

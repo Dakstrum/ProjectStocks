@@ -50,7 +50,7 @@ void HandlePauseMenu(ALLEGRO_EVENT local_event, ALLEGRO_EVENT_QUEUE *local_event
 {
     if(DisableEscKey)
     {
-
+        
     }
     else
     {

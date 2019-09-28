@@ -112,6 +112,7 @@ void DrawLayers();
 DrawObject *CreateNewDrawObject();
 DrawObject *GetDrawObject(int layer, int object);
 int RemoveDrawObject(DrawObject *object);
+bool DoesObjectExistInCurrentDrawLayer(char *object_name);
 
 void HandleMouseClickInButtonAreas(int x, int y);
 
