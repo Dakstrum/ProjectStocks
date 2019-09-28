@@ -9,6 +9,7 @@
 #include "drawlayers.h"
 #include "log.h"
 #include "stocksmenu.h"
+#include "generalpurposemenus.h"
 
 //static DrawObject *main_menu     = NULL;
 //static DrawObject *version_text  = NULL;
@@ -45,4 +46,26 @@ void CleanUpMainMenu()
 void InitStartGame()
 {
     InitializeStocksMenu();
+}
+
+//Menu Button Callbacks
+void MainMenuStartButtonCallBack()
+{
+
+    InitStartGame();
+
+}
+
+void MainMenuOptionsButtonCallBack()
+{
+
+    ToggleOptionsMenu();
+
+}
+
+void MainMenuExitButtonCallBack()
+{
+
+    SetCleanUpToTrue();
+
 }

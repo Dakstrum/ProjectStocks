@@ -8,9 +8,18 @@
 #include "jsonlayer.h"
 #include "drawlayers.h"
 #include "log.h"
+#include "shared.h"
+#include "stocksmenu.h"
+#include "newsmenu.h"
+#include "accountmenu.h"
 
 static MenuWithChilds *pause_menu   = NULL;
 static MenuWithChilds *options_menu = NULL;
+
+char MenusThatDisablePauseMenuFunctionality[] = 
+{
+    "OptionsMenu"
+};
 
 void RenderGeneralPurposeMenus() 
 {
@@ -29,7 +38,7 @@ void ToggleOptionsMenu()
     if (options_menu == NULL) {
 
         CreateNewDrawLayer();
-        options_menu = GetMenuWithChildsFromJsonLayer("OptionsMenu");
+        options_menu = GetMenuWithChildsFromJsonLayer(MenusThatDisablePauseMenuFunctionality);
         AddMenuWithChildsToDrawLayer(options_menu);
         
     } else {
@@ -57,5 +66,59 @@ void TogglePauseMenu()
 
     }
 
+}
+
+//General Purpose Menu Callbacks
+void PauseMenuOptionsButtonCallBack()
+{
+
+    ToggleOptionsMenu();
+
+}
+
+void PauseMenuExitButtonCallBack()
+{
+
+    SetCleanUpToTrue();
+
+}
+
+void OptionsMenuExitButtonCallBack()
+{
+
+    ToggleOptionsMenu();
+
+}
+
+//Navigation Bar Callbacks
+void StocksButtonCallBack()
+{
+
+    ClearCurrentDrawLayer();
+    InitializeStocksMenu();
+
+}
+
+void NewsButtonCallBack()
+{
+    
+    ClearCurrentDrawLayer();
+    InitializeNewsMenu();
+    
+}
+
+void AccountButtonCallBack()
+{
+    
+    ClearCurrentDrawLayer();
+    InitializeAccountMenu();
+    
+}
+
+void EavesdropperButtonCallBack()
+{
+    
+    Log("Eaves");
+    
 }
 
