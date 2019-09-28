@@ -53,7 +53,7 @@ void GameLoop()
 
         if (event.type != ALLEGRO_EVENT_TIMER) {
 
-            HandleInput(event, event_queue);
+            HandleInput(event);
             HandleWindowEvents(event);
 
         } else {

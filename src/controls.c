@@ -8,12 +8,11 @@
 #include "log.h"
 
 #include "mainmenu.h"
+#include "generalpurposemenus.h"
 
 void HandleMouseClicks(ALLEGRO_EVENT event);
 void HandleKeyboard(ALLEGRO_EVENT event);
-void HandlePauseMenu(ALLEGRO_EVENT local_event, ALLEGRO_EVENT_QUEUE *local_event_queue);
-
-bool DisableEscKey = false;
+void HandlePauseMenu(ALLEGRO_EVENT local_event);
 
 void InitializeControls() 
 {
@@ -23,12 +22,12 @@ void InitializeControls()
 
 }
 
-void HandleInput(ALLEGRO_EVENT event, ALLEGRO_EVENT_QUEUE *local_queue) 
+void HandleInput(ALLEGRO_EVENT event) 
 {
 
     HandleMouseClicks(event);
     HandleKeyboard(event);
-    HandlePauseMenu(event, local_queue);
+    HandlePauseMenu(event);
 
 }
 
@@ -46,16 +45,12 @@ void HandleKeyboard(ALLEGRO_EVENT event)
 
 }
 
-void HandlePauseMenu(ALLEGRO_EVENT local_event, ALLEGRO_EVENT_QUEUE *local_event_queue)
+void HandlePauseMenu(ALLEGRO_EVENT local_event)
 {
-    if(DisableEscKey)
-    {
-        
-    }
-    else
-    {
-        if(local_event.type == ALLEGRO_EVENT_KEY_DOWN && local_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+    if(local_event.type == ALLEGRO_EVENT_KEY_DOWN && local_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+        if(!DoesObjectExistInCurrentDrawLayer("OptionsMenu"))
             TogglePauseMenu();
-        }
+   
     }
+
 }
