@@ -17,6 +17,7 @@ static json_object *draw_objects  = NULL;
 static DrawObject *parsed_objects = NULL;
 static unsigned int num_objects   = 0;
 
+void SetParsedObjectsNull();
 void ParseJsonDrawObject(array_list *objects_list);
 void WithTypeSetDrawObject(char *type, int idx);
 void SetCommonObjectProperties(int idx, char *path);
@@ -51,6 +52,7 @@ void ParseJsonDrawObject(array_list *objects_list)
 
     // TODO PARSE HOW MANY OBJECTS ARE ACTUALLY DEFINED IN JSON FILE
     parsed_objects = malloc(sizeof(DrawObject) * MAX_PARSED_OBJECTS);
+    SetParsedObjectsNull();
 
     char buffer[512];
     for (int i = 0; i < objects_list->length; i++)
@@ -70,6 +72,19 @@ void WithTypeSetDrawObject(char *type, int idx)
         SetButtonObject(idx);
     else if (strcmp(type, "Text") == 0)
         SetTextObject(idx);
+}
+
+void SetParsedObjectsNull() 
+{
+
+    for (unsigned int i = 0; i < MAX_PARSED_OBJECTS; i++) {
+
+        parsed_objects[i].name       = NULL;
+        parsed_objects[i].asset_path = NULL;
+        parsed_objects[i].child_of   = NULL;
+
+    }
+
 }
 
 void SetCommonObjectProperties(int idx, char *path) 
@@ -286,6 +301,9 @@ DrawObject *CreateDrawObjectFromJson(int object_idx)
 
 DrawObject *GetDrawObjectFromDrawObjectJson(char *object_name) 
 {
+
+    if (object_name == NULL)
+        return NULL;
 
     for (int i = 0; i < MAX_PARSED_OBJECTS; i++)
         if (parsed_objects[i].name != NULL && strcmp(object_name, parsed_objects[i].name) == 0)

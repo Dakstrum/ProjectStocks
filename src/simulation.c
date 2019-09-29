@@ -14,8 +14,9 @@
 #include "jsoncompanies.h"
 
 static const int HOUR       = 3600;
+static const int DAY        = HOUR * 24;
 static int years_to_lapse   = 0;
-static int end_year         = 2000;
+static int end_year         = 0;
 
 static atomic_bool simulation_finished;
 
@@ -35,7 +36,10 @@ void GenerateDataForCompanies();
 void IncrementCurrentTimeByHour();
 bool ShouldContinueSimulation(long long int current_time);
 
+void SetYearLapse(int years_to_lapse);
 int GetYearFromBuff(char *buff);
+
+float GenerateRandomPriceFluctuation(float last_price, unsigned int *thread_seed);
 
 void InitializeSimulation() 
 {
@@ -120,6 +124,7 @@ void GenerateSimulation()
 
     SetSimulationDatabase();
 
+    SetYearLapse(25);
     if (ShouldICleanUp())
         return;
 
@@ -157,19 +162,33 @@ void GenerateDataForCompanies()
 void SimulationLoop(sqlite3 *db, unsigned int idx) 
 {
 
-    Log("In Simulation loop");
+    int company_id             = companies[idx].company_id;
+    float last_price           = companies[idx].ipo;
+    float price                = 0.0;
     long long int current_time = 0;
     unsigned int thread_seed   = companies[idx].company_id + seed;
 
     char time_buff[128];
     strftime(time_buff, sizeof(time_buff), "%c", localtime(&current_time));
 
-    InsertStockPrice(save_id, companies[idx].company_id, companies[idx].ipo, time_buff, db);
+    InsertStockPrice(save_id, company_id, last_price, time_buff, db);
     while (ShouldContinueSimulation(current_time)) {
 
         current_time += HOUR;
+        price         = last_price + GenerateRandomPriceFluctuation(last_price, &thread_seed);
+        last_price    = price;
+
+        strftime(time_buff, sizeof(time_buff), "%c", localtime(&current_time));
+        InsertStockPrice(save_id, company_id, last_price, time_buff, db);
 
     }
+
+}
+
+float GenerateRandomPriceFluctuation(float last_price, unsigned int *thread_seed) 
+{
+
+    return 0;
 
 }
 
@@ -182,7 +201,7 @@ void SetYearLapse(int years_to_lapse)
     char buff[128];
     time_t start_time = 0;
 
-    strftime(buff, sizeof(buff), "%c", localtime(&start_time));
+    strftime(buff, sizeof(buff), "%Y", localtime(&start_time));
     end_year = GetYearFromBuff(buff) + years_to_lapse;
 
 
@@ -199,15 +218,15 @@ bool ShouldContinueSimulation(long long int current_time)
 {
 
     char current_time_buff[128];
-    strftime(current_time_buff, sizeof(current_time_buff), "%c", localtime(&current_time));
+    strftime(current_time_buff, sizeof(current_time_buff), "%Y", localtime(&current_time));
 
     int current_year = GetYearFromBuff(current_time_buff);
 
     if (current_year >= end_year) {
-        return true;
+        return false;
     }
 
-    return false;
+    return true;
 
 }
 
@@ -215,7 +234,7 @@ int GetYearFromBuff(char *buff)
 {
 
     char year_buff[5];
-    sscanf(buff, "%*s %*s %*s %*s %s", year_buff);
+    sscanf(buff, "%s", year_buff);
     year_buff[4] = '\0';
     return atoi(year_buff);
 
