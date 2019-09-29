@@ -10,14 +10,18 @@
 #include "log.h"
 #include "shared.h"
 #include "account.h"
+#include "dbaccess.h"
 #include "jsoncompanies.h"
 
 static const int HOUR       = 3600;
 static int years_to_lapse   = 0;
-static int end_year         = 0;
+static int end_year         = 2000;
 
 static atomic_bool simulation_finished;
+
 static Company *companies;
+static int save_id                = 0;
+static unsigned int seed          = 0;
 static unsigned int num_companies = 0;
 
 static sqlite3 *persistent_db;
@@ -40,10 +44,10 @@ void InitializeSimulation()
 
 }
 
-void GetSimulationDone() 
+bool GetSimulationDone() 
 {
 
-    atomic_load(&simulation_finished);
+    return atomic_load(&simulation_finished);
 
 }
 
@@ -58,10 +62,10 @@ void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg)
 void SetRandomSeed() 
 {
 
-    if (GetSaveId() != -1 )
-        srand(GetSaveSeed());
+    if (save_id != -1)
+        seed = GetSaveSeed();
     else
-        srand(time(NULL));
+        seed = time(NULL);
 
 }
 
@@ -119,6 +123,7 @@ void GenerateSimulation()
     if (ShouldICleanUp())
         return;
 
+    save_id = GetSaveId();
     SetRandomSeed();
     SetCompanies();
     GenerateDataForCompanies();
@@ -132,6 +137,9 @@ void GenerateDataForCompanies()
     // Could make multithreaded, but need to use rand_r for thread safety.
     // Will see how it performs with a single thread.
     for (unsigned int i = 0;i < num_companies;i++) {
+
+        if (ShouldICleanUp())
+            return;
 
         sqlite3 *db;
         if (OpenConnectionToSimulationDB(&db) != 0)
@@ -149,9 +157,15 @@ void GenerateDataForCompanies()
 void SimulationLoop(sqlite3 *db, unsigned int idx) 
 {
 
+    Log("In Simulation loop");
     long long int current_time = 0;
-    while (ShouldContinueSimulation(current_time)) {
+    unsigned int thread_seed   = companies[idx].company_id + seed;
 
+    char time_buff[128];
+    strftime(time_buff, sizeof(time_buff), "%c", localtime(&current_time));
+
+    InsertStockPrice(save_id, companies[idx].company_id, companies[idx].ipo, time_buff, db);
+    while (ShouldContinueSimulation(current_time)) {
 
         current_time += HOUR;
 
@@ -164,9 +178,8 @@ void SetYearLapse(int years_to_lapse)
 {
 
     years_to_lapse = years_to_lapse + 1; // OFFSET by 1 year to fake the approximate correct amount of time.
-
     
-    char buff[100];
+    char buff[128];
     time_t start_time = 0;
 
     strftime(buff, sizeof(buff), "%c", localtime(&start_time));
@@ -205,5 +218,12 @@ int GetYearFromBuff(char *buff)
     sscanf(buff, "%*s %*s %*s %*s %s", year_buff);
     year_buff[4] = '\0';
     return atoi(year_buff);
+
+}
+
+void InsertCompanyPrice() 
+{
+
+
 
 }

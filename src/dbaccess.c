@@ -41,12 +41,12 @@ void SetupMainDB()
     sqlite3 *db;
     if  (sqlite3_open_v2("blinky.db", &db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
 
-        char *drop_stocks = "DROP TABLE IF EXISTS Stocks;";
+        char *drop_stocks = "DROP TABLE IF EXISTS StockPrices;";
         sqlite3_exec(db, drop_stocks, NULL, 0, 0);
 
         char *setup =   "CREATE TABLE IF NOT EXISTS Company(CompanyId INTEGER PRIMARY KEY, Ipo DOUBLE NOT NULL, CompanyName VARCHAR(50) NOT NULL, Category VARCHAR(30), IsActiveInJson INT DEFAULT 0);"
                         "CREATE TABLE IF NOT EXISTS CompanyMetadata(CompanyMetaId INTEGER PRIMARY KEY, CompanyId INT NOT NULL, TotalEmployees INT NOT NULL, StocksInMarket UNSIGNED BIG INT, SaveId INT NOT NULL);"
-                        "CREATE TABLE IF NOT EXISTS Stocks(StockId INTEGER PRIMARY KEY, CompanyId INT NOT NULL, Price FLOAT NOT NULL, Time DATETIME NOT NULL);"
+                        "CREATE TABLE IF NOT EXISTS StockPrices(StockPriceId INTEGER PRIMARY KEY, SaveId INT NOT NULL,  CompanyId INT NOT NULL, Price FLOAT NOT NULL, Time DATETIME NOT NULL);"
                         "CREATE TABLE IF NOT EXISTS Saves(SaveId INTEGER PRIMARY KEY, SaveName TEXT NOT NULL, Money DOUBLE NOT NULL, TimeSpentInGame UNSIGNED BIG INT, RandomSeed UNSIGNED BIG INT);"
                         "CREATE TABLE IF NOT EXISTS OwnedStocks(OwnedStockId INTEGER PRIMARY KEY, SaveId INT NOT NULL, CompanyId INT NOT NULL, HowManyOwned UNSIGNED BIG INT NOT NULL);"
                         "CREATE TABLE IF NOT EXISTS Transactions(TransactionId INTEGER PRIMARY KEY, CompanyId INT NOT NULL, TransactionAmount DOUBLE NOT NULL, StocksExchanged INT NOT NULL, TransactionTime DATETIME NOT NULL, SaveId INT NOT NULL)";
@@ -160,6 +160,17 @@ int GetCompanyId(char *company_name, sqlite3 *db)
     char buffer[512];
     char *query = GetFormattedBuffer(buffer, "SELECT CompanyId FROM Company WHERE CompanyName='%s'", company_name);
     ExecuteQuery(query, &SetCompanyId, &company_id, db);
+
+    return company_id;
+
+}
+
+void InsertStockPrice(int save_id, int company_id, float stock_price, char *timestamp, sqlite3 *db) 
+{
+
+    char buffer[512];
+    char *query = GetFormattedBuffer(buffer, "INSERT INTO StockPrices (SaveId, CompanyId, Price, Time) VALUES (%d, %d, %f, '%s')", save_id, company_id, stock_price, timestamp);
+    ExecuteQuery(query, NULL, NULL, db);
 
 }
 

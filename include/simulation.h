@@ -2,7 +2,7 @@
 #define STOCKSIMULATION_H
 
 void InitializeSimulation();
-void GetSimulationDone();
+bool GetSimulationDone();
 void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg);
 void SetEndYear(time_t end_year);
 
