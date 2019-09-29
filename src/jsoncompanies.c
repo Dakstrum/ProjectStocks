@@ -70,7 +70,7 @@ void ParseCompanyJsonObject(array_list *companies_list)
         parsed_companies[i].description  = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/Description", i));
         parsed_companies[i].start_date   = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/StartDate", i));
         SetCompanyProducts(i, GetJsonObjectArray(companies, GetFormattedBuffer(buffer, "/Companies/%d/Products", i)));
-        InsertAndOrSetCompanyToActive(parsed_companies[i].company_name, parsed_companies[i].ipo);
+        parsed_companies[i].company_id  = InsertAndOrSetCompanyToActive(parsed_companies[i].company_name, parsed_companies[i].ipo);
 
     }
 

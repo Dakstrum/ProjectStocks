@@ -2,6 +2,6 @@
 #define DBACCESS_H
 
 void InitializeDatabases();
-void InsertAndOrSetCompanyToActive(char *company_name, float ipo);
+int InsertAndOrSetCompanyToActive(char *company_name, float ipo);
 
 #endif

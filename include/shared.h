@@ -5,6 +5,6 @@ void InitializeShared();
 bool ShouldICleanUp();
 void SetCleanUpToTrue();
 
-char *GetFormattedBuffer(char buffer[511], const char *str, ...);
+char *GetFormattedBuffer(char buffer[512], const char *str, ...);
 
 #endif

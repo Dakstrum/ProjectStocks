@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <sqlite3.h>
 
@@ -8,6 +9,7 @@
 void SetupMainDB();
 void SetupLogDB();
 
+int GetCompanyId(char *company_name, sqlite3 *db);
 bool DoesCompanyExist(char *company_name, sqlite3 *db);
 void SetCompanyToActive(char *company_name, sqlite3 *db);
 void InsertNewCompany(char *company_name, float ipo, sqlite3 *db);
@@ -72,8 +74,10 @@ void SetupLogDB()
 
 }
 
-void InsertAndOrSetCompanyToActive(char *company_name, float ipo) 
+int InsertAndOrSetCompanyToActive(char *company_name, float ipo) 
 {
+
+    int company_id = -1;
 
     sqlite3 *db;
     if  (sqlite3_open_v2("blinky.db", &db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
@@ -82,9 +86,12 @@ void InsertAndOrSetCompanyToActive(char *company_name, float ipo)
             InsertNewCompany(company_name, ipo, db);
         
         SetCompanyToActive(company_name, db);
+        company_id = GetCompanyId(company_name, db);
 
     }
     sqlite3_close(db);
+
+    return company_id;
 
 }
 
@@ -123,11 +130,36 @@ void SetCompanyToActive(char *company_name, sqlite3 *db)
 void InsertNewCompany(char *company_name, float ipo, sqlite3 *db) 
 {
 
-    char *error = NULL;
-
     char buffer[512];
     char *query = GetFormattedBuffer(buffer, "INSERT INTO Company (Ipo, CompanyName, IsActiveInJson) VALUES (%f, '%s', 1);", ipo, company_name);
     ExecuteQuery(query, NULL, NULL, db);
+
+}
+
+int SetCompanyId(void *company_id, int argc, char **argv, char **col_name) 
+{
+
+    if (argc == 0) {
+
+        *((int *)company_id) = -1;
+
+    } else {
+
+        *((int *)company_id) = atoi(argv[0]);
+
+    }
+
+    return 0;
+
+}
+
+int GetCompanyId(char *company_name, sqlite3 *db) 
+{
+
+    int company_id;
+    char buffer[512];
+    char *query = GetFormattedBuffer(buffer, "SELECT CompanyId FROM Company WHERE CompanyName='%s'", company_name);
+    ExecuteQuery(query, &SetCompanyId, &company_id, db);
 
 }
 

@@ -29,7 +29,7 @@ void GenerateSimulation();
 void SimulationLoop(sqlite3 *db, unsigned int idx);
 void GenerateDataForCompanies();
 void IncrementCurrentTimeByHour();
-bool ShouldContinueSimulation(unsigned int current_time);
+bool ShouldContinueSimulation(long long int current_time);
 
 int GetYearFromBuff(char *buff);
 
@@ -149,7 +149,7 @@ void GenerateDataForCompanies()
 void SimulationLoop(sqlite3 *db, unsigned int idx) 
 {
 
-    unsigned int current_time = 0;
+    long long int current_time = 0;
     while (ShouldContinueSimulation(current_time)) {
 
 
@@ -182,10 +182,10 @@ void CleanupBeforeExit()
 
 }
 
-bool ShouldContinueSimulation(unsigned int current_time) 
+bool ShouldContinueSimulation(long long int current_time) 
 {
 
-    char current_time_buff[100];
+    char current_time_buff[128];
     strftime(current_time_buff, sizeof(current_time_buff), "%c", localtime(&current_time));
 
     int current_year = GetYearFromBuff(current_time_buff);
