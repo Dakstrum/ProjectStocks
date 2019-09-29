@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdatomic.h>
 #include <stdbool.h>
 #include <stdarg.h>
@@ -37,6 +38,22 @@ char *GetFormattedBuffer(char buffer[512], const char *str, ...)
 
     va_end(args);
     buffer[511] = '\0';
+    return buffer;
+
+}
+
+char *GetFormattedPointer(const char *str, ...) 
+{
+    // NEEDS TO BE FREED, so be sure to free the return.
+    char *buffer = malloc(sizeof(char) * 512);
+
+    va_list args;
+    va_start(args, str);
+    vsprintf(buffer, str, args);
+    va_end(args);
+    
+    buffer[511] = '\0';
+
     return buffer;
 
 }

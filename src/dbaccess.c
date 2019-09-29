@@ -109,10 +109,7 @@ bool DoesCompanyExist(char *company_name, sqlite3 *db)
 {
 
     bool exists = false;
-
-    char buffer[512];
-    char *query = GetFormattedBuffer(buffer, "SELECT CompanyId FROM Company WHERE CompanyName='%s';", company_name);
-    ExecuteQuery(query, &FindOutIfCompanyExists, &exists, db);
+    ExecuteQuery(GetFormattedPointer("SELECT CompanyId FROM Company WHERE CompanyName='%s';", company_name), &FindOutIfCompanyExists, &exists, db);
 
     return exists;
 
@@ -121,33 +118,24 @@ bool DoesCompanyExist(char *company_name, sqlite3 *db)
 void SetCompanyToActive(char *company_name, sqlite3 *db) 
 {
 
-    char buffer[512];
-    char *query = GetFormattedBuffer(buffer, "UPDATE Company SET IsActiveInJson=1 WHERE CompanyName='%s';", company_name);
-    ExecuteQuery(query, NULL, NULL, db);
+    ExecuteQuery(GetFormattedPointer("UPDATE Company SET IsActiveInJson=1 WHERE CompanyName='%s';", company_name), NULL, NULL, db);
 
 }
 
 void InsertNewCompany(char *company_name, float ipo, sqlite3 *db) 
 {
 
-    char buffer[512];
-    char *query = GetFormattedBuffer(buffer, "INSERT INTO Company (Ipo, CompanyName, IsActiveInJson) VALUES (%f, '%s', 1);", ipo, company_name);
-    ExecuteQuery(query, NULL, NULL, db);
+    ExecuteQuery(GetFormattedPointer("INSERT INTO Company (Ipo, CompanyName, IsActiveInJson) VALUES (%f, '%s', 1);", ipo, company_name), NULL, NULL, db);
 
 }
 
 int SetCompanyId(void *company_id, int argc, char **argv, char **col_name) 
 {
 
-    if (argc == 0) {
-
+    if (argc == 0)
         *((int *)company_id) = -1;
-
-    } else {
-
+    else
         *((int *)company_id) = atoi(argv[0]);
-
-    }
 
     return 0;
 
@@ -157,9 +145,7 @@ int GetCompanyId(char *company_name, sqlite3 *db)
 {
 
     int company_id;
-    char buffer[512];
-    char *query = GetFormattedBuffer(buffer, "SELECT CompanyId FROM Company WHERE CompanyName='%s'", company_name);
-    ExecuteQuery(query, &SetCompanyId, &company_id, db);
+    ExecuteQuery(GetFormattedPointer("SELECT CompanyId FROM Company WHERE CompanyName='%s'", company_name), &SetCompanyId, &company_id, db);
 
     return company_id;
 
@@ -168,9 +154,7 @@ int GetCompanyId(char *company_name, sqlite3 *db)
 void InsertStockPrice(int save_id, int company_id, float stock_price, char *timestamp, sqlite3 *db) 
 {
 
-    char buffer[512];
-    char *query = GetFormattedBuffer(buffer, "INSERT INTO StockPrices (SaveId, CompanyId, Price, Time) VALUES (%d, %d, %f, '%s')", save_id, company_id, stock_price, timestamp);
-    ExecuteQuery(query, NULL, NULL, db);
+    ExecuteQuery(GetFormattedPointer("INSERT INTO StockPrices (SaveId, CompanyId, Price, Time) VALUES (%d, %d, %f, '%s')", save_id, company_id, stock_price, timestamp), NULL, NULL, db);
 
 }
 
@@ -180,7 +164,10 @@ void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), voi
     char *error = NULL;
     sqlite3_exec(db, query, callback, callback_var, &error);
 
-    if (error != NULL)
-        LogF("SQL ERROR %s", error);
+    if (error != NULL) {
+        LogF("SQL ERROR %s, query = %s", error, query);
+    }
+
+    free(query);
 
 }
