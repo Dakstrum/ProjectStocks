@@ -25,6 +25,10 @@ void StocksButtonCallBack();
 void NewsButtonCallBack();
 void AccountButtonCallBack();
 void EavesdropperButtonCallBack();
+void MainMenuGitHubButtonCallBack();
+void MainMenuTwitterButtonCallBack();
+void MainMenuYoutubeButtonCallBack();
+void MainMenuWebsiteButtonCallBack();
 
 
 
@@ -36,7 +40,7 @@ typedef struct ButtonCallsbacks
 
 } ButtonCallsbacks;
 
-#define NUM_CALLBACKS 11
+#define NUM_CALLBACKS 15
 static ButtonCallsbacks callbacks[] = {
 
     {"STUB",                  &StubCallback},
@@ -49,7 +53,11 @@ static ButtonCallsbacks callbacks[] = {
     {"StocksButton",          &StocksButtonCallBack},
     {"NewsButton",            &NewsButtonCallBack},
     {"AccountButton",         &AccountButtonCallBack},
-    {"EavesdroppperButton",   &EavesdropperButtonCallBack}
+    {"EavesdroppperButton",   &EavesdropperButtonCallBack},
+    {"GitHubButton",          &MainMenuGitHubButtonCallBack},
+    {"TwitterButton",         &MainMenuTwitterButtonCallBack},
+    {"YoutubeButton",         &MainMenuYoutubeButtonCallBack},
+    {"WebsiteButton",         &MainMenuWebsiteButtonCallBack}
 
 
 };
