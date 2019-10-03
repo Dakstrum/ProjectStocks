@@ -11,6 +11,8 @@
 #include "stocksmenu.h"
 #include "generalpurposemenus.h"
 
+#include "opener.h"
+
 //static DrawObject *main_menu     = NULL;
 //static DrawObject *version_text  = NULL;
 static MenuWithChilds *main_menu    = NULL;
@@ -67,5 +69,33 @@ void MainMenuExitButtonCallBack()
 {
 
     SetCleanUpToTrue();
+
+}
+
+void MainMenuGitHubButtonCallBack()
+{
+    al_rest(0.9);
+    opener("https://github.com");
+
+}
+
+void MainMenuTwitterButtonCallBack()
+{
+
+    opener("https://twitter.com/DSectorStudios");
+
+}
+
+void MainMenuYoutubeButtonCallBack()
+{
+
+    opener("https://www.youtube.com/channel/UCIW4bSzn44v08ttyRMT5z2w");
+
+}
+
+void MainMenuWebsiteButtonCallBack()
+{
+
+    opener("https://www.darksectorstudios.com");
 
 }

@@ -13,6 +13,8 @@
 #include "newsmenu.h"
 #include "accountmenu.h"
 
+#include "opener.h"
+
 static MenuWithChilds *pause_menu   = NULL;
 static MenuWithChilds *options_menu = NULL;
 
@@ -34,7 +36,6 @@ void CleanUpGeneralPurposeMenus()
 
 void ToggleOptionsMenu()
 {
-
     if (options_menu == NULL) {
 
         CreateNewDrawLayer();
