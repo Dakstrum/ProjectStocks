@@ -52,7 +52,7 @@ char *GetFormattedPointer(const char *str, ...)
     vsprintf(buffer, str, args);
     va_end(args);
     
-    buffer[511] = '\0';
+    buffer[2047] = '\0';
 
     return buffer;
 
