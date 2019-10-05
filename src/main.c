@@ -26,7 +26,7 @@ static ALLEGRO_TIMER *timer;
 
 enum InitializeSuccess Initialize();
 void GameLoop();
-void InitializeThreads();
+void InitializeGameThreads();
 void InitializeEventQueue();
 ALLEGRO_EVENT WaitForEvent();
 void CleanUp();
@@ -84,6 +84,7 @@ enum InitializeSuccess Initialize()
         return FAILURE;
 
     }
+    InitializeLogging();
     InitializeCache();
     InitializeShared();
     InitializeDatabases();
@@ -91,7 +92,7 @@ enum InitializeSuccess Initialize()
     InitializeRendering();
     InitializeEventQueue();
     InitializeJson();
-    InitializeThreads();
+    InitializeGameThreads();
     return SUCCESS;
 
 }
@@ -112,7 +113,7 @@ void InitializeEventQueue()
 
 static ALLEGRO_THREAD *stock_simulation_thread = NULL;
 static ALLEGRO_THREAD *audio_thread            = NULL;
-void InitializeThreads() 
+void InitializeGameThreads() 
 {
 
     stock_simulation_thread = al_create_thread(StockSimulationEntry, NULL);
@@ -123,7 +124,7 @@ void InitializeThreads()
 
 }
 
-void CleanUpThreads()
+void CleanUpGameThreads()
 {
 
     al_join_thread(stock_simulation_thread, NULL);
@@ -139,7 +140,7 @@ void CleanUp()
 
     al_destroy_event_queue(event_queue);
     CleanUpRendering();
-    CleanUpThreads();
+    CleanUpGameThreads();
 
 }
 

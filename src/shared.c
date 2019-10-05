@@ -45,7 +45,7 @@ char *GetFormattedBuffer(char buffer[512], const char *str, ...)
 char *GetFormattedPointer(const char *str, ...) 
 {
     // NEEDS TO BE FREED, so be sure to free the return.
-    char *buffer = malloc(sizeof(char) * 512);
+    char *buffer = malloc(sizeof(char) * 2048);
 
     va_list args;
     va_start(args, str);

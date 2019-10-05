@@ -164,9 +164,8 @@ void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), voi
     char *error = NULL;
     sqlite3_exec(db, query, callback, callback_var, &error);
 
-    if (error != NULL) {
+    if (error != NULL)
         LogF("SQL ERROR %s, query = %s", error, query);
-    }
 
     free(query);
 
