@@ -10,8 +10,7 @@
 #include "log.h"
 #include "stocksmenu.h"
 #include "generalpurposemenus.h"
-
-#include "opener.h"
+#include "linkopener.h"
 
 //static DrawObject *main_menu     = NULL;
 //static DrawObject *version_text  = NULL;
@@ -74,28 +73,28 @@ void MainMenuExitButtonCallBack()
 
 void MainMenuGitHubButtonCallBack()
 {
-    al_rest(0.9);
-    opener("https://github.com");
+
+    OpenLink("www.github.com");
 
 }
 
 void MainMenuTwitterButtonCallBack()
 {
 
-    opener("https://twitter.com/DSectorStudios");
+    OpenLink("https://twitter.com/DSectorStudios");
 
 }
 
 void MainMenuYoutubeButtonCallBack()
 {
 
-    opener("https://www.youtube.com/channel/UCIW4bSzn44v08ttyRMT5z2w");
+    OpenLink("https://www.youtube.com/channel/UCIW4bSzn44v08ttyRMT5z2w");
 
 }
 
 void MainMenuWebsiteButtonCallBack()
 {
 
-    opener("https://www.darksectorstudios.com");
+    OpenLink("https://www.darksectorstudios.com");
 
 }
