@@ -200,5 +200,6 @@ void *LoggingEntry(ALLEGRO_THREAD *thread, void *arg)
         ResetQueue();
 
     }
+    return NULL;
 
 }

@@ -91,7 +91,7 @@ void SetCommonObjectProperties(int idx, char *path)
 {
 
     char base_path[128];
-    if (path == NULL | path == "")
+    if (path == NULL || strcmp(path, "") == 0)
         strcpy(base_path, "/Objects/%d/");
     else
         strcpy(base_path, path);

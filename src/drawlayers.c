@@ -225,6 +225,8 @@ int AddMenuWithChildsToDrawLayer(MenuWithChilds *menu_with_childs)
     for (int i = 0; i < menu_with_childs->num_text;i++)
         AddTextToDrawLayer(menu_with_childs->text[i]);
 
+    return 0;
+
 }
 
 int AddObjectToDrawLayer(DrawObject *object) 

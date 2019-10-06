@@ -32,7 +32,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DDEBUGGING)
 endif()
 
-string(APPEND CMAKE_C_FLAGS_DEBUG " -lm -O0")
+string(APPEND CMAKE_C_FLAGS_DEBUG " -lm -O0 -Wall")
 string(APPEND CMAKE_C_FLAGS_RELEASE " -lm -O2")
 
 add_executable(projectstocks ${sources} ${headers})

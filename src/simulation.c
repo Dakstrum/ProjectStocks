@@ -14,8 +14,6 @@
 #include "jsoncompanies.h"
 
 static const int HOUR       = 3600;
-static const int DAY        = HOUR * 24;
-static int years_to_lapse   = 0;
 static int end_year         = 0;
 
 static atomic_bool simulation_finished;
@@ -60,6 +58,7 @@ void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg)
 
     GenerateSimulation();
     CleanupBeforeExit();
+    return NULL;
 
 }
 
@@ -237,12 +236,5 @@ int GetYearFromBuff(char *buff)
     sscanf(buff, "%s", year_buff);
     year_buff[4] = '\0';
     return atoi(year_buff);
-
-}
-
-void InsertCompanyPrice() 
-{
-
-
 
 }
