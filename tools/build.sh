@@ -49,7 +49,9 @@ GetSharedLibs()
 
         declare msys_path="C:/msys64/mingw64/bin/"
         for dll in "allegro_acodec-5.2.dll" "allegro_audio-5.2.dll" "allegro_font-5.2.dll" "allegro_image-5.2.dll" "allegro_ttf-5.2.dll" "allegro_video-5.2.dll" "allegro-5.2.dll" "libdumb.dll" \
-                   "libFLAC-8.dll" "libjson-c-4.dll" "libogg-0.dll" "libopenal-1.dll" "libopus-0.dll" "libopusfile-0.dll" "libsqlite3-0.dll" "libtheoradec-1.dll" "libvorbis-0.dll" "libvorbisfile-3.dll" "libpng16-16.dll" "libwebp-7.dll"; do
+                   "libFLAC-8.dll" "libjson-c-4.dll" "libogg-0.dll" "libopenal-1.dll" "libopus-0.dll" "libopusfile-0.dll" "libsqlite3-0.dll" "libtheoradec-1.dll" "libvorbis-0.dll" "libvorbisfile-3.dll" \
+                   "libpng16-16.dll" "libwebp-7.dll" "libgcc_s_seh-1.dll" "libstdc++-6.dll" "libjpeg-8.dll" "libfreetype-6.dll" "libwinpthread-1.dll" "zlib1.dll" "libbz2-1.dll" "libharfbuzz-0.dll" \
+                   "libgraphite2.dll" "libglib-2.0-0.dll" "libpcre-1.dll" "libintl-8.dll" "libiconv-2.dll"; do
 
             cp "${msys_path}${dll}" $build_dir
 
