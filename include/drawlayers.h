@@ -11,7 +11,8 @@ typedef enum DrawType
     BUTTON,
     POPUP,
     VIDEO,
-    TEXT
+    TEXT,
+    GRAPH
 
 } DrawType;
 
@@ -51,6 +52,25 @@ typedef struct Video {
 
 } Video;
 
+typedef struct Point {
+
+    int x;
+    int y;
+
+} Point;
+
+typedef struct Graph {
+
+    Point *points;
+
+    ALLEGRO_COLOR color;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char a;
+
+} Graph;
+
 typedef struct DrawObject 
 {
 
@@ -75,6 +95,7 @@ typedef struct DrawObject
         Button button;
         Video  video;
         Text   text;
+        Graph graph;
 
     } member;
 

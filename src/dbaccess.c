@@ -13,9 +13,7 @@ int GetCompanyId(char *company_name, sqlite3 *db);
 bool DoesCompanyExist(char *company_name, sqlite3 *db);
 void SetCompanyToActive(char *company_name, sqlite3 *db);
 void InsertNewCompany(char *company_name, float ipo, sqlite3 *db);
-
 void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db);
-
 
 void InitializeDatabases() 
 {
@@ -32,6 +30,20 @@ void CleanUpDatabases()
 {
 
     sqlite3_shutdown();
+
+}
+
+int OpenConnection(sqlite3 **db) 
+{
+
+    if (sqlite3_open_v2("blinky.db", db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE, NULL) != SQLITE_OK) {
+
+        Log("Could not establish connection to blinky.db from simulation");
+        SetCleanUpToTrue();
+        return -1;
+
+    }
+    return 0;
 
 }
 
