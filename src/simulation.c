@@ -54,7 +54,6 @@ void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg)
 {
 
     GenerateSimulation();
-    CleanupBeforeExit();
     return NULL;
 
 }
@@ -160,11 +159,6 @@ void SetYearLapse(int years_to_lapse)
     strftime(buff, sizeof(buff), "%Y", localtime(&start_time));
     end_year = GetYearFromBuff(buff) + years_to_lapse;
 
-
-}
-
-void CleanupBeforeExit() 
-{
 
 }
 

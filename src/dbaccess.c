@@ -141,6 +141,33 @@ void InsertNewCompany(char *company_name, float ipo, sqlite3 *db)
 
 }
 
+int SetCompanyPrices(void *prices, int argc, char **argv, char **col_name) {
+
+    //float **retrieved_prices = 
+
+    return 0;
+
+}
+
+float *GetStockPricesBetweenRange(char *company_name, char *start_time, char *end_time) 
+{
+
+    float *prices = NULL;
+
+    sqlite3 *db;
+    if (OpenConnection(&db) != 0)
+        return NULL;
+
+    ExecuteQuery(GetFormattedPointer("SELECT SP.Price FROM StockPrices SP" 
+                        "INNER JOIN Company C ON C.CompanyId=SP.CompanyId AND C.CompanyName='%s'"
+                        "WHERE SP.Time BETWEEN '%s' AND '%s'", company_name, start_time, end_time), &SetCompanyPrices, (void *)&prices, db);
+
+    sqlite3_close(db);
+
+    return prices;
+
+}
+
 int SetCompanyId(void *company_id, int argc, char **argv, char **col_name) 
 {
 
