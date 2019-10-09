@@ -78,12 +78,19 @@ ALLEGRO_EVENT WaitForEvent()
 enum InitializeSuccess Initialize() 
 {
 
+#if DEBUGGING
+
+    al_set_config_value(al_get_system_config(), "trace", "level", "debug");
+
+#endif
+
     if (!al_init()) {
 
         fprintf(stderr, "failed to initialize allegro");
         return FAILURE;
 
     }
+
     InitializeLogging();
     InitializeCache();
     InitializeShared();
@@ -141,6 +148,7 @@ void CleanUp()
     al_destroy_event_queue(event_queue);
     CleanUpRendering();
     CleanUpGameThreads();
+    al_uninstall_system();
 
 }
 
