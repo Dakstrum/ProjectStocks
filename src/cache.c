@@ -20,8 +20,9 @@ static unsigned int cache_index = 0;
 void InitializeCache() 
 {
 
-    bitmap_cache = malloc(sizeof(Cache *) * cache_size);
-
+    bitmap_cache = malloc(sizeof(Cache) * cache_size);
+    for (int i = 0; i < cache_size; i++)
+        bitmap_cache[i].asset_path = NULL;
 }
 
 ALLEGRO_BITMAP *GetBitmapFromCache(char *asset_path) 
