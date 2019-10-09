@@ -40,7 +40,7 @@ typedef struct ButtonCallsbacks
 
 } ButtonCallsbacks;
 
-#define NUM_CALLBACKS 15
+#define NUM_CALLBACKS 14
 static ButtonCallsbacks callbacks[] = {
 
     {"STUB",                  &StubCallback},
@@ -53,7 +53,6 @@ static ButtonCallsbacks callbacks[] = {
     {"StocksButton",          &StocksButtonCallBack},
     {"NewsButton",            &NewsButtonCallBack},
     {"AccountButton",         &AccountButtonCallBack},
-    {"EavesdroppperButton",   &EavesdropperButtonCallBack},
     {"GitHubButton",          &MainMenuGitHubButtonCallBack},
     {"TwitterButton",         &MainMenuTwitterButtonCallBack},
     {"YoutubeButton",         &MainMenuYoutubeButtonCallBack},
