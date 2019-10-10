@@ -1,21 +1,31 @@
 #!/bin/sh
 
 declare build_dir=""
-declare operating_system="$(expr substr $(uname -s) 1 10)"
+declare operating_system=""
+
+if [ "$(uname -s)" == "Darwin" ]; then
+
+	operating_system="Darwin"
+
+else
+
+	operating_system="$(expr substr $(uname -s) 1 10)"
+
+fi
 
 echo "Detected operating system = ${operating_system}"
 DebugBuild() 
 {
 
 
-    build_dir="build-debug-$(date +'%m-%d-%Y')"
+    build_dir="debug-build-$(date +'%m-%d-%Y')"
     mkdir $build_dir
 
     if [ $operating_system == "MINGW64_NT" ]; then
 
         cmake .. -G "MinGW Makefiles" -DCMAKE_SH="CMAKE_SH-NOTFOUND" -DCMAKE_INSTALL_PREFIX="/mingw64/bin" -DCMAKE_BUILD_TYPE=Debug
 
-    elif [ $operating_system == "Linux" ]; then
+    elif [ $operating_system == "Linux" ] || [ $operating_system == "Darwin" ]; then
 
         echo "cmake"
         cmake .. -DCMAKE_BUILD_TYPE=Debug
@@ -27,14 +37,14 @@ DebugBuild()
 ReleaseBuild() 
 {
 
-    build_dir="build-release-$(date +'%m-%d-%Y')"
+    build_dir="release-build-$(date +'%m-%d-%Y')"
     mkdir $build_dir
 
     if [ $operating_system == "MINGW64_NT" ]; then
 
         cmake .. -G "MinGW Makefiles" -DCMAKE_SH="CMAKE_SH-NOTFOUND" -DCMAKE_INSTALL_PREFIX="/mingw64/bin" -DCMAKE_BUILD_TYPE=Release
 
-    elif [ $operating_system == "Linux" ]; then
+    elif [ $operating_system == "Linux" ] || [ $operating_system == "Darwin" ]; then
 
         cmake .. -DCMAKE_BUILD_TYPE=Release
 
@@ -72,8 +82,12 @@ GetSharedLibs()
     fi
 
 }
+if [ $# -eq 0 ]; then
 
-if [ $1 == "--debug" ]; then
+	echo "Defaulting to --debug build"
+	DebugBuild
+
+elif [ $1 == "--debug" ]; then
 
     echo "Building debug version"
     DebugBuild
@@ -84,18 +98,13 @@ elif [ $1 == "--release" ]; then
     echo "Building release version"
     ReleaseBuild
 
-else
-
-    echo "Please specify either --debug or --release next time. Defaulting to --debug"
-    DebugBuild
-
 fi
 
 if [ $operating_system == "MINGW64_NT" ]; then
 
     mingw32-make -j2
 
-elif [ $operating_system == "Linux" ]; then
+elif [ $operating_system == "Linux" ] || [ $operating_system == "Darwin" ]; then
 
     make -j2
 
@@ -114,4 +123,8 @@ elif [ $operating_system == "Linux" ]; then
 
 fi
 
-cp -r assets $build_dir
+if [ $operating_system == "MINGW64_NT" ] || [ $operating_system == "Linux" ]; then
+
+	cp -r assets $build_dir
+
+fi
