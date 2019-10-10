@@ -59,7 +59,7 @@ void MainMenuStartButtonCallBack()
 
 void MainMenuOptionsButtonCallBack()
 {
-
+    
     ToggleOptionsMenu();
 
 }

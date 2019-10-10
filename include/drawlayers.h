@@ -51,6 +51,15 @@ typedef struct Video {
 
 } Video;
 
+
+typedef struct PopUp {
+
+    ALLEGRO_BITMAP *popup_bitmap;
+    int current_time;
+    int end_time;
+
+} PopUp;
+
 typedef struct DrawObject 
 {
 
@@ -73,6 +82,7 @@ typedef struct DrawObject
 
         Menu   menu;
         Button button;
+        PopUp popup;
         Video  video;
         Text   text;
 
