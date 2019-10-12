@@ -343,6 +343,7 @@ int AddDrawObjectToDrawLayer(DrawObject *object)
 
     }
     return -1;
+    
 }
 
 
@@ -370,6 +371,7 @@ void DrawLayers()
 
     for (int i = 0; i < current_draw_layer+1;i++)
         DrawSingleLayer(&draw_layers[i]);
+
 }
 
 void DrawSingleLayer(DrawLayer *layer) 
