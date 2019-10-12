@@ -16,10 +16,10 @@ typedef struct Queue
 
 } Queue;
 
-static Queue *queue                = NULL;
-static unsigned int max_queue_size = 128;
-static unsigned int queue_pointer  = 0;
-static ALLEGRO_MUTEX *log_mutex    = NULL;
+static Queue *queue                      = NULL;
+static const unsigned int max_queue_size = 128;
+static unsigned int queue_pointer        = 0;
+static ALLEGRO_MUTEX *log_mutex          = NULL;
 
 static ALLEGRO_THREAD *queue_thread = NULL;
 

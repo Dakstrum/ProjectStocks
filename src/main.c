@@ -6,6 +6,7 @@
 #include "dbaccess.h"
 #include "log.h"
 #include "cache.h"
+#include "graph.h"
 #include "shared.h"
 #include "controls.h"
 #include "simulation.h"
@@ -92,6 +93,7 @@ enum InitializeSuccess Initialize()
     }
 
     InitializeLogging();
+    InitializeGraphQueue();
     InitializeCache();
     InitializeShared();
     InitializeDatabases();

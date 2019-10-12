@@ -4,6 +4,7 @@
 #include <sqlite3.h>
 
 #include "log.h"
+#include "dbaccess.h"
 #include "shared.h"
 
 void SetupMainDB();
@@ -141,14 +142,6 @@ void InsertNewCompany(char *company_name, float ipo, sqlite3 *db)
 
 }
 
-typedef struct StockPrices {
-
-    float *prices;
-    unsigned int index;
-    unsigned int size;
-
-} StockPrices;
-
 int SetCompanyPrices(void *prices, int argc, char **argv, char **col_name) {
 
     StockPrices *prices_temp = (StockPrices *)prices;
@@ -170,27 +163,27 @@ int SetCompanyPrices(void *prices, int argc, char **argv, char **col_name) {
 
 }
 
-float *GetStockPricesBetweenRange(char *company_name, char *start_time, char *end_time) 
+StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, char *end_time) 
 {
 
-    StockPrices prices;
-    prices.prices = malloc(sizeof(float) * 128);
-    prices.index  = 0;
-    prices.size   = 128;
+    StockPrices *prices = malloc(sizeof(StockPrices));
+    prices->prices      = malloc(sizeof(float) * 128);
+    prices->index       = 0;
+    prices->size        = 128;
 
     sqlite3 *db;
     if (OpenConnection(&db) != 0)
-        return NULL;
+        return prices;
 
     ExecuteQuery(GetFormattedPointer("SELECT SP.Price FROM StockPrices SP" 
                         " INNER JOIN Company C ON C.CompanyId=SP.CompanyId AND C.CompanyName='%s' "
-                        " WHERE SP.Time BETWEEN '%s' AND '%s' ", company_name, start_time, end_time), &SetCompanyPrices, &prices, db);
+                        " WHERE SP.Time BETWEEN '%s' AND '%s' ", company_name, start_time, end_time), &SetCompanyPrices, prices, db);
 
     sqlite3_close(db);
 
-    prices.prices = realloc(prices.prices, sizeof(float) * prices.index);
-    LogF("Prices size = %d", prices.index);
-    return prices.prices;
+    prices->prices = realloc(prices->prices, sizeof(float) * prices->index);
+    LogF("Prices size = %d", prices->index);
+    return prices;
 
 }
 
