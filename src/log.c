@@ -63,8 +63,6 @@ void InsertMessage(sqlite3 *db, int queue_message_idx)
 void WriteQueue() 
 {
 
-    al_lock_mutex(log_mutex);
-
     sqlite3 *db;
     if (sqlite3_open_v2("log.db", &db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE, NULL) != SQLITE_OK)
         return;
@@ -76,8 +74,6 @@ void WriteQueue()
 
     sqlite3_exec(db, "END TRANSACTION", NULL, 0, 0);
     sqlite3_close(db);
-
-    al_unlock_mutex(log_mutex);
 
 }
 
@@ -196,8 +192,12 @@ void *LoggingEntry(ALLEGRO_THREAD *thread, void *arg)
     while (!ShouldICleanUp()) {
 
         al_rest(0.5);
+        al_lock_mutex(log_mutex);
+
         WriteQueue();
         ResetQueue();
+        
+        al_unlock_mutex(log_mutex);
 
     }
     return NULL;

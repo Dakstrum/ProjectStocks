@@ -74,7 +74,7 @@ int RequestForGraph(char *name, char *timespan, int height, int width)
     if (name == NULL || timespan == NULL)
         return queue_index;
 
-    // Potentially could lock for x > 200ms
+    // Potentially could lock for x > 200ms since it gets lock when graph data is read
     // Look here to graph related lag. There is no al_mutex_trylock;
     al_lock_mutex(queue_mutex);
 
@@ -111,7 +111,6 @@ void SetGraphData(char *name, char *start_time, char *end_time)
 void SetGraphInformationFromQueue() 
 {
 
-    al_lock_mutex(queue_mutex);
     for (unsigned int i = 0; i < max_queue_size; i++) {
 
         if (graph_queue[i].name != NULL && graph_queue[i].retrieved == false) {
@@ -122,14 +121,13 @@ void SetGraphInformationFromQueue()
         }
 
     }
-    al_unlock_mutex(queue_mutex);
 
 }
 
 void ClearNoLongerUsedGraphInformation() 
 {
 
-    al_lock_mutex(queue_mutex);
+    
     for (unsigned int i = 0; i < max_queue_size; i++) {
 
         if (graph_queue[i].stocks != NULL && (graph_queue[i].can_delete == true || graph_queue[i].delete_timeout <= time(NULL))) {
@@ -141,7 +139,6 @@ void ClearNoLongerUsedGraphInformation()
         }
 
     }
-    al_unlock_mutex(queue_mutex);
 
 }
 
@@ -151,8 +148,12 @@ void *GraphEntry(ALLEGRO_THREAD *thread, void *arg)
     while (!ShouldICleanUp()) {
 
         al_rest(1);
+        al_lock_mutex(queue_mutex);
+
         SetGraphInformationFromQueue();
         ClearNoLongerUsedGraphInformation();
+
+        al_unlock_mutex(queue_mutex);
 
     }
 
