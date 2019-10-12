@@ -1,4 +1,5 @@
 
+#include <time.h>
 #include <stdbool.h>
 
 #include <allegro5/allegro.h>
@@ -19,6 +20,8 @@ typedef struct GraphQueue {
 
     bool can_delete;
     bool retrieved;
+
+    time_t delete_timeout;
 
 } GraphQueue;
 
@@ -66,12 +69,34 @@ void InitializeGraphQueue()
 int RequestForGraph(char *name, char *timespan, int height, int width) 
 {
 
+    unsigned int queue_index = -1;
+
     if (name == NULL || timespan == NULL)
-        return -1;
+        return queue_index;
 
+    // Potentially could lock for x > 200ms
+    // Look here to graph related lag. There is no al_mutex_trylock;
+    al_lock_mutex(queue_mutex);
 
+    for (unsigned int i = 0; i < max_queue_size;i++) {
 
-    return -1;
+        if (graph_queue[i].name == NULL) {
+
+            graph_queue[i].name           = name;
+            graph_queue[i].timespan       = timespan;
+            graph_queue[i].height         = height;
+            graph_queue[i].width          = width;
+            graph_queue[i].delete_timeout = time(NULL) + 60;
+            queue_index = i;
+            break;
+
+        }
+
+    }
+
+    al_unlock_mutex(queue_mutex);
+
+    return queue_index;
 
 }
 
@@ -105,10 +130,9 @@ void ClearNoLongerUsedGraphInformation()
 {
 
     al_lock_mutex(queue_mutex);
-
     for (unsigned int i = 0; i < max_queue_size; i++) {
 
-        if (graph_queue[i].stocks != NULL && graph_queue[i].can_delete == true) {
+        if (graph_queue[i].stocks != NULL && (graph_queue[i].can_delete == true || graph_queue[i].delete_timeout <= time(NULL))) {
 
             free(graph_queue[i].stocks->prices);
             free(graph_queue[i].stocks);
@@ -117,7 +141,6 @@ void ClearNoLongerUsedGraphInformation()
         }
 
     }
-
     al_unlock_mutex(queue_mutex);
 
 }
