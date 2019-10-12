@@ -14,11 +14,13 @@
 
 #define MAX_DRAW_LAYERS 10
 #define MAX_OBJECTS_PER_LAYER 256
+#define MAX_MENU_WITH_CHILDS_PER_LAYER 64
 
 typedef struct DrawLayer 
 {
 
-    DrawObject *objects[256];
+    DrawObject *objects[MAX_OBJECTS_PER_LAYER];
+    MenuWithChilds *menu_with_childs[MAX_MENU_WITH_CHILDS_PER_LAYER];
 
 } DrawLayer;
 
@@ -66,9 +68,15 @@ void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display)
 void SetObjectPointersToNull() 
 {
 
-    for (int i = 0; i < MAX_DRAW_LAYERS;i++)
+    for (int i = 0; i < MAX_DRAW_LAYERS;i++) {
+
         for (int j = 0;j < MAX_OBJECTS_PER_LAYER; j++)
             draw_layers[i].objects[j] = NULL;
+
+        for (int j = 0;j < MAX_MENU_WITH_CHILDS_PER_LAYER; j++)
+            draw_layers[i].menu_with_childs[j] = NULL;
+
+    }
 
 }
 
@@ -160,6 +168,19 @@ void ClearUpDrawLayer(int layer)
 
     }
 
+    for (int j = 0;j < MAX_MENU_WITH_CHILDS_PER_LAYER;j++) {
+
+        if (draw_layers[layer].menu_with_childs[j] != NULL) {
+
+            free(draw_layers[layer].menu_with_childs[j]->buttons);
+            free(draw_layers[layer].menu_with_childs[j]->text);
+            free(draw_layers[layer].menu_with_childs[j]);
+            draw_layers[layer].menu_with_childs[j] = NULL;
+
+        }
+
+    }
+
 }
 
 void ClearUpGeneric(DrawObject *object) 
@@ -225,14 +246,32 @@ int AddButtonToDrawLayer(DrawObject *object)
 
 }
 
+void StoreMenuWithChildsRefOnDrawLayer(MenuWithChilds *menu_with_childs) 
+{
+
+    menu_with_childs->draw_layer = current_draw_layer;
+    for (int i = 0; i < MAX_MENU_WITH_CHILDS_PER_LAYER;i++) {
+
+        if (draw_layers[current_draw_layer].menu_with_childs[i] == NULL) {
+
+            draw_layers[current_draw_layer].menu_with_childs[i] = menu_with_childs;
+            break;
+            
+        }
+
+    }
+
+}
+
 int AddMenuWithChildsToDrawLayer(MenuWithChilds *menu_with_childs) 
 {
 
-    AddMenuToDrawLayer(menu_with_childs->menu);
+    StoreMenuWithChildsRefOnDrawLayer(menu_with_childs);
+    AddObjectToDrawLayer(menu_with_childs->menu);
     for (int i = 0; i < menu_with_childs->num_buttons;i++)
-        AddButtonToDrawLayer(menu_with_childs->buttons[i]);
+        AddObjectToDrawLayer(menu_with_childs->buttons[i]);
     for (int i = 0; i < menu_with_childs->num_text;i++)
-        AddTextToDrawLayer(menu_with_childs->text[i]);
+        AddObjectToDrawLayer(menu_with_childs->text[i]);
 
     return 0;
 

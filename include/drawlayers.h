@@ -109,6 +109,8 @@ typedef struct MenuWithChilds
     int num_buttons;
     int num_text;
 
+    int draw_layer;
+
     DrawObject **buttons;
     DrawObject **text;
 

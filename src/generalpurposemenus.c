@@ -43,9 +43,6 @@ void ToggleOptionsMenu()
     } else {
 
         ClearCurrentDrawLayer();
-        free(options_menu->buttons);
-        free(options_menu->text);
-        free(options_menu);
         options_menu = NULL;
 
     }
