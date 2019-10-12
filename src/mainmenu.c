@@ -34,9 +34,9 @@ void InitializeMainMenu()
 
 }
 
-
 void RenderMainMenu() 
 {
+    ToggleOptionsMenu();
     DrawLayers();
 }
 

@@ -28,6 +28,9 @@ void InitializeCache()
 ALLEGRO_BITMAP *GetBitmapFromCache(char *asset_path) 
 {
 
+    if (asset_path == NULL || strcmp(asset_path,"") == 0)
+        return NULL;
+
     for (int i = 0; i < cache_index; i++) {
 
         if (strcmp(asset_path, bitmap_cache[i].asset_path) == 0)

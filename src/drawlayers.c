@@ -36,6 +36,7 @@ void CleanUpButton(DrawObject *object);
 void CleanUpMenu(DrawObject *object);
 void CleanUpPopUp(DrawObject *object);
 void CleanUpVideo(DrawObject *object);
+void CleanUpText(DrawObject *object);
 void ClearUpGeneric(DrawObject *object);
 
 bool HandleMouseClick(DrawObject *object, int x, int y);
@@ -170,6 +171,7 @@ void ClearUpGeneric(DrawObject *object)
         case BUTTON: CleanUpButton(object); break;
         case POPUP:  CleanUpPopUp(object);  break;
         case VIDEO:  CleanUpVideo(object);  break;
+        case TEXT:   CleanUpText(object);   break;
 
     }
 
@@ -201,6 +203,13 @@ void CleanUpVideo(DrawObject *object)
 {
 
     al_close_video(object->member.video.video);
+
+}
+
+void CleanUpText(DrawObject *object) 
+{
+
+    al_destroy_font(object->member.text.font);
 
 }
 
