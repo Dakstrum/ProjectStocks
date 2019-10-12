@@ -230,7 +230,7 @@ void CleanUpVideo(DrawObject *object)
 void CleanUpText(DrawObject *object) 
 {
 
-    al_destroy_font(object->member.text.font);
+    //al_destroy_font(object->member.text.font);
 
 }
 
@@ -256,7 +256,7 @@ void StoreMenuWithChildsRefOnDrawLayer(MenuWithChilds *menu_with_childs)
 
             draw_layers[current_draw_layer].menu_with_childs[i] = menu_with_childs;
             break;
-            
+
         }
 
     }
@@ -349,7 +349,7 @@ int AddDrawObjectToDrawLayer(DrawObject *object)
 int AddTextToDrawLayer(DrawObject *object)
 {
 
-    object->member.text.font  = al_load_ttf_font(object->asset_path, object->member.text.font_size, 0);
+    object->member.text.font  = GetFontFromCache(object->asset_path, object->member.text.font_size);
     object->member.text.color = al_map_rgba(object->member.text.r, object->member.text.g, object->member.text.b, object->member.text.a);
 
     if (object->member.text.font == NULL) {
