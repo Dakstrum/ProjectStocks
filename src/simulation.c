@@ -124,7 +124,7 @@ void SimulationLoop(sqlite3 *db, unsigned int idx)
     unsigned int thread_seed   = companies[idx].company_id + seed;
 
     char time_buff[128];
-    strftime(time_buff, sizeof(time_buff), "%c", localtime(&current_time));
+    strftime(time_buff, sizeof(time_buff), "%Y-%m-%d %H:%M:%S", localtime(&current_time));
 
     InsertStockPrice(save_id, company_id, last_price, time_buff, db);
     while (ShouldContinueSimulation(current_time)) {
@@ -133,7 +133,7 @@ void SimulationLoop(sqlite3 *db, unsigned int idx)
         price         = last_price + GenerateRandomPriceFluctuation(last_price, &thread_seed);
         last_price    = price;
 
-        strftime(time_buff, sizeof(time_buff), "%c", localtime(&current_time));
+        strftime(time_buff, sizeof(time_buff), "%Y-%m-%d %H:%M:%S", localtime(&current_time));
         InsertStockPrice(save_id, company_id, last_price, time_buff, db);
 
     }
