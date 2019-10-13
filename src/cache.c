@@ -25,11 +25,11 @@ typedef struct FontCache {
 ALLEGRO_BITMAP *GetNewlyAddedBitmapFromCache(char *asset_path);
 
 static BitmapCache *bitmap_cache;
-static unsigned int bitmap_cache_size  = 1;
+static unsigned int bitmap_cache_size  = 256;
 static unsigned int bitmap_cache_index = 0;
 
 static FontCache *font_cache;
-static unsigned int font_cache_size  = 1;
+static unsigned int font_cache_size  = 256;
 static unsigned int font_cache_index = 0;
 
 void InitializeCache() 
