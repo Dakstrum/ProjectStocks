@@ -12,10 +12,10 @@ static atomic_long game_time;
 static atomic_long game_time_dt;
 static atomic_bool pause_game_time;
 
-void InitAccountGametime() 
+void InitAccount() 
 {
 
-    atomic_store(&game_time, 0);
+    atomic_store(&game_time, 86400);
     atomic_store(&game_time_dt, 2);
     atomic_store(&pause_game_time, false);
 
@@ -43,7 +43,7 @@ void TogglePauseGameTime()
 
 }
 
-long int GetGameTime() 
+time_t GetGameTime() 
 {
 
     return atomic_load(&game_time);

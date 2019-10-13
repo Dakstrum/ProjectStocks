@@ -1,6 +1,7 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
 
+void InitAccount();
 // UpdateSaveRecord();
 // GetAllSaves();
 // SetSaveToLoad(int save_id);
@@ -15,6 +16,6 @@ int GetSaveId();
 void TogglePauseGameTime();
 void SetGameTime(time_t time_to_set);
 
-long int GetGameTime();
+time_t GetGameTime();
 
 #endif

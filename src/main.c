@@ -13,6 +13,7 @@
 #include "rendering.h"
 #include "audio.h"
 #include "jsonlayer.h"
+#include "account.h"
 
 enum InitializeSuccess 
 {
@@ -93,7 +94,7 @@ enum InitializeSuccess Initialize()
     }
 
     InitializeLogging();
-    InitializeGraphQueue();
+    InitializeGraphCaching();
     InitializeCache();
     InitializeShared();
     InitializeDatabases();
@@ -101,6 +102,7 @@ enum InitializeSuccess Initialize()
     InitializeRendering();
     InitializeEventQueue();
     InitializeJson();
+    InitAccount();
     InitializeGameThreads();
     return SUCCESS;
 

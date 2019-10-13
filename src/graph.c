@@ -6,8 +6,11 @@
 
 #include "log.h"
 #include "shared.h"
+#include "account.h"
 #include "drawlayers.h"
 #include "dbaccess.h"
+#include "simulation.h"
+#include "jsoncompanies.h"
 
 typedef struct GraphQueue {
 
@@ -26,135 +29,199 @@ typedef struct GraphQueue {
 
 } GraphQueue;
 
-static GraphQueue *graph_queue           = NULL;
-static const unsigned int max_queue_size = 16;
+typedef struct GraphCacheElement {
 
-static ALLEGRO_THREAD *queue_thread      = NULL;
-static ALLEGRO_MUTEX  *queue_mutex       = NULL;
+    char *timespan;
+    StockPrices *stocks;
+
+} GraphCacheElement;
+
+typedef struct GraphCache {
+
+    char **company_names;
+    GraphCacheElement **elements;
+
+} GraphCache;
+
+
+typedef struct TimeSpan 
+{
+
+    char *timespan;
+    const time_t diff;
+
+} TimeSpan;
+
+#define NUM_TIMESPANS 11
+
+// 1 day, 3 days, 1 week, 2 weeks, 1 month, 3 months, 6 months, 1 year, 2 years, 5 years, all time
+//static const char *timespans[NUM_TIMESPANS] = {"1 day", "3 days", "1 week", "2 weeks", "1 month", "3 months", "6 months", "1 year", "2 years", "5 years", "all time"};
+
+static const TimeSpan timespans[] = {
+    {"1 day", 86400},
+    {"3 days", 259200},
+    {"1 week", 604800},
+    {"2 weeks", 1209600},
+    {"1 month", 2419200},
+    {"3 months", 7257600},
+    {"6 months", 14515200},
+    {"1 year", 29030400},
+    {"2 years", 58060800},
+    {"5 years", 145152000},
+    {"all time", -1}
+};
+
+static GraphCache graph_cache;
+
+
+static ALLEGRO_THREAD *graph_cache_thread      = NULL;
+static ALLEGRO_MUTEX  *graph_cache_mutex       = NULL;
+static Company *companies                      = NULL;
+static unsigned int num_companies              = 0;
 
 void *GraphEntry(ALLEGRO_THREAD *thread, void *arg);
 
-void ResetGraphQueueAtIndex(unsigned int i) 
+void InitializeGraphCaching() 
 {
 
-    graph_queue[i].stocks     = NULL;
-    graph_queue[i].name       = NULL;
-    graph_queue[i].timespan   = NULL;
-    graph_queue[i].can_delete = false;
-    graph_queue[i].retrieved  = false;
+    graph_cache_mutex  = al_create_mutex();
+    graph_cache_thread = al_create_thread(&GraphEntry, NULL);
+    al_start_thread(graph_cache_thread);
 
 }
 
-void ResetGraphQueue() 
+void UpdateGraphCache() 
 {
 
-    for (unsigned int i = 0; i < max_queue_size; i++)
-        ResetGraphQueueAtIndex(i);
+    // TODO
 
 }
 
-
-void InitializeGraphQueue() 
+time_t GetTimeDiff(time_t a_time, time_t diff) 
 {
 
-    graph_queue  = malloc(sizeof(GraphQueue) * max_queue_size);
-
-    ResetGraphQueue();
-
-    queue_mutex  = al_create_mutex();
-    queue_thread = al_create_thread(&GraphEntry, NULL);
-    al_start_thread(queue_thread);
+    time_t temp = a_time - diff;
+    if (temp < 0)
+        temp = 0;
+    
+    return temp;
 
 }
 
-int RequestForGraph(char *name, char *timespan, int height, int width) 
+char *GetTimeString(char buffer[128], time_t a_time) 
 {
 
-    unsigned int queue_index = -1;
+    strftime(buffer, 128, "%Y-%m-%d %H:%M:%S", localtime(&a_time));
+    LogF("time string = %s", buffer);
+    return buffer;
 
-    if (name == NULL || timespan == NULL)
-        return queue_index;
+}
 
-    // Potentially could lock for x > 200ms since it gets lock when graph data is read
-    // Look here to graph related lag. There is no al_mutex_trylock;
-    al_lock_mutex(queue_mutex);
+char *GetTimeSpanDiff(char buffer[128], time_t a_time, const char *timespan) 
+{
 
-    for (unsigned int i = 0; i < max_queue_size;i++) {
+    for (unsigned int i = 0; i < NUM_TIMESPANS; i++) {
 
-        if (graph_queue[i].name == NULL) {
+        if (strcmp(timespan, timespans[i].timespan) == 0) {
 
-            graph_queue[i].name           = name;
-            graph_queue[i].timespan       = timespan;
-            graph_queue[i].height         = height;
-            graph_queue[i].width          = width;
-            graph_queue[i].delete_timeout = time(NULL) + 60;
-            queue_index = i;
+            if (timespans[i].diff != -1)
+                return GetTimeString(buffer, GetTimeDiff(a_time, timespans[i].diff));
+            else
+                return GetTimeString(buffer, 0);
+
+        }
+
+    }
+    return NULL;
+
+}
+
+void GenerateNewGraphCache() 
+{
+
+    time_t current_time = GetGameTime();
+    char current_time_buff[128];
+    char temp_time_buff[128];
+
+    GetTimeString(current_time_buff, current_time);
+    LogF("Current game time = %s", current_time_buff);
+
+    for (unsigned int i = 0; i < num_companies; i++) {
+
+        for (unsigned int j = 0; j < NUM_TIMESPANS;j++) {
+
+            graph_cache.elements[i][j].stocks = GetStockPricesBetweenRange(graph_cache.company_names[i], GetTimeSpanDiff(temp_time_buff, current_time, graph_cache.elements[i][j].timespan), current_time_buff);
+
+        }
+
+    }
+
+}
+
+void WaitForSimulation() 
+{
+
+    while (!ShouldICleanUp()) {
+
+        if (GetSimulationDone())
             break;
 
-        }
-
-    }
-
-    al_unlock_mutex(queue_mutex);
-
-    return queue_index;
-
-}
-
-
-void SetGraphData(char *name, char *start_time, char *end_time) 
-{
-
-    GetStockPricesBetweenRange("WeBeHard", "1969-12-31 18:00:00", "1970-01-01 18:00:00");
-
-}
-
-void SetGraphInformationFromQueue() 
-{
-
-    for (unsigned int i = 0; i < max_queue_size; i++) {
-
-        if (graph_queue[i].name != NULL && graph_queue[i].retrieved == false) {
-
-            graph_queue[i].stocks    = GetStockPricesBetweenRange(graph_queue[i].name, "1969-12-31 18:00:00", "1970-01-01 18:00:00");
-            graph_queue[i].retrieved = true;
-
-        }
+        al_rest(1.0);
 
     }
 
 }
 
-void ClearNoLongerUsedGraphInformation() 
+void InitializeGraphCache() 
 {
 
-    
-    for (unsigned int i = 0; i < max_queue_size; i++) {
+    WaitForSimulation();
+    if (ShouldICleanUp())
+        return;
 
-        if (graph_queue[i].stocks != NULL && (graph_queue[i].can_delete == true || graph_queue[i].delete_timeout <= time(NULL))) {
+    companies                 = GetAllCompanies();
+    num_companies             = GetNumCompanies();
+    graph_cache.company_names = malloc(sizeof(char *) * num_companies);
+    graph_cache.elements      = malloc(sizeof(GraphCacheElement *) * num_companies);
+    for (unsigned int i = 0; i < num_companies;i++) {
 
-            free(graph_queue[i].stocks->prices);
-            free(graph_queue[i].stocks);
-            ResetGraphQueueAtIndex(i);
+        graph_cache.elements[i] = malloc(sizeof(GraphCacheElement) * NUM_TIMESPANS);
+        for (unsigned int j = 0; j < NUM_TIMESPANS; j++) {
+
+            graph_cache.elements[i][j].timespan = timespans[j].timespan;
+            graph_cache.elements[i][j].stocks    = NULL;
 
         }
+        graph_cache.company_names[i] = companies[i].company_name;
+        LogF("graph cache name set = %s", graph_cache.company_names[i]);
 
     }
+
+    GenerateNewGraphCache();
 
 }
 
 void *GraphEntry(ALLEGRO_THREAD *thread, void *arg) 
 {
 
+    InitializeGraphCache();
+
+    time_t cache_time = GetGameTime();
+    time_t current_game_time;
     while (!ShouldICleanUp()) {
 
         al_rest(1);
-        al_lock_mutex(queue_mutex);
+        current_game_time = GetGameTime();
+        
+        if (current_game_time != cache_time) {
 
-        SetGraphInformationFromQueue();
-        ClearNoLongerUsedGraphInformation();
+            cache_time = current_game_time;
+            GenerateNewGraphCache();
+            al_lock_mutex(graph_cache_mutex);
+            UpdateGraphCache();
+            al_unlock_mutex(graph_cache_mutex);
 
-        al_unlock_mutex(queue_mutex);
+        }
 
     }
 
