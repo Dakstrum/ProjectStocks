@@ -6,6 +6,7 @@
 
 #include "log.h"
 #include "shared.h"
+#include "drawlayers.h"
 #include "dbaccess.h"
 
 typedef struct GraphQueue {

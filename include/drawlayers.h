@@ -63,6 +63,9 @@ typedef struct Graph {
 
     Point *points;
 
+    unsigned int num_points;
+    char *timespan;
+
     ALLEGRO_COLOR color;
     unsigned char r;
     unsigned char g;

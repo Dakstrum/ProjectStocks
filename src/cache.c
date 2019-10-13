@@ -25,11 +25,11 @@ typedef struct FontCache {
 ALLEGRO_BITMAP *GetNewlyAddedBitmapFromCache(char *asset_path);
 
 static BitmapCache *bitmap_cache;
-static unsigned int bitmap_cache_size  = 256;
+static unsigned int bitmap_cache_size  = 1;
 static unsigned int bitmap_cache_index = 0;
 
 static FontCache *font_cache;
-static unsigned int font_cache_size  = 256;
+static unsigned int font_cache_size  = 1;
 static unsigned int font_cache_index = 0;
 
 void InitializeCache() 
@@ -62,15 +62,22 @@ ALLEGRO_BITMAP *GetBitmapFromCache(char *asset_path)
 
 }
 
+void IncreaseCacheSize(int cache_index, unsigned int *cache_size, int size_of_cache_struct, void *cache)
+{
+
+    if (cache_index + 1 < *cache_size)
+        return;
+
+    *cache_size += 256;
+    cache = realloc(cache, size_of_cache_struct * *(cache_size));
+    Log("Increased cache");
+
+}
+
 void IncreaseBitmapCacheSizeIfNeeded() 
 {
 
-    if (bitmap_cache_index + 1 < bitmap_cache_size)
-        return;
-
-    bitmap_cache_size += 256;
-    bitmap_cache = realloc(bitmap_cache, sizeof(BitmapCache *) * bitmap_cache_size);
-    Log("Increase bitmap_cache");
+    IncreaseCacheSize(bitmap_cache_index, &bitmap_cache_size, sizeof(BitmapCache *), (void *)bitmap_cache);
 
 }
 
@@ -91,12 +98,7 @@ ALLEGRO_BITMAP *GetNewlyAddedBitmapFromCache(char *asset_path)
 void IncreaseFontCacheSizeIfNeeded() 
 {
 
-    if (font_cache_index + 1 < font_cache_size)
-        return;
-
-    font_cache_size += 256;
-    font_cache = realloc(font_cache, sizeof(FontCache *) * font_cache_size);
-    Log("Increase font_cache");
+    IncreaseCacheSize(font_cache_index, &font_cache_size, sizeof(FontCache *), (void *)font_cache);
 
 }
 
