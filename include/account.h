@@ -12,4 +12,9 @@ int GetSaveId();
 // GetAllTransactionsForCompany(int company_id);
 // 
 
+void TogglePauseGameTime();
+void SetGameTime(time_t time_to_set);
+
+long int GetGameTime();
+
 #endif
