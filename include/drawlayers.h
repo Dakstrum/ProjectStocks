@@ -1,6 +1,5 @@
 #ifndef DRAWLAYERS_H
 #define DRAWLAYERS_H
-
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_video.h>
 
@@ -82,7 +81,7 @@ typedef struct DrawObject
 
         Menu   menu;
         Button button;
-        PopUp popup;
+        PopUp  popup;
         Video  video;
         Text   text;
 

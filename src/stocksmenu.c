@@ -8,6 +8,7 @@
 #include "jsonlayer.h"
 #include "drawlayers.h"
 #include "log.h"
+#include "cache.h"
 
 //static DrawObject *stocks_menu     = NULL;
 //static DrawObject *version_text  = NULL;
@@ -22,9 +23,25 @@ void InitializeStocksMenu()
         return;
     }
 
+    //temp
+    DrawObject *object = CreateNewDrawObject();
+    object->type = POPUP;
+    object->should_this_be_drawn = true;
+    object->x = 0;
+    object->y = 0;
+
+    object->width = 400;
+    object->height = 400;
+    
+    object->asset_path = "assets/images/stocksmenu/stocksmenu.png";
+    object->member.popup.current_time = 1;
+    object->member.popup.end_time = 180;
 
     stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
+
     AddMenuWithChildsToDrawLayer(stocks_menu);
+    AddObjectToDrawLayer(object);
+    //end temp
 
 }
 
