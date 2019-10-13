@@ -54,9 +54,6 @@ typedef struct TimeSpan
 
 #define NUM_TIMESPANS 11
 
-// 1 day, 3 days, 1 week, 2 weeks, 1 month, 3 months, 6 months, 1 year, 2 years, 5 years, all time
-//static const char *timespans[NUM_TIMESPANS] = {"1 day", "3 days", "1 week", "2 weeks", "1 month", "3 months", "6 months", "1 year", "2 years", "5 years", "all time"};
-
 static const TimeSpan timespans[] = {
     {"1 day", 86400},
     {"3 days", 259200},
@@ -71,8 +68,8 @@ static const TimeSpan timespans[] = {
     {"all time", -1}
 };
 
-static GraphCache graph_cache;
-
+static GraphCache exclusive_graph_cache;
+static GraphCache threaded_graph_cache;
 
 static ALLEGRO_THREAD *graph_cache_thread      = NULL;
 static ALLEGRO_MUTEX  *graph_cache_mutex       = NULL;
@@ -93,7 +90,20 @@ void InitializeGraphCaching()
 void UpdateGraphCache() 
 {
 
-    // TODO
+    for (unsigned int i = 0; i < num_companies; i++) {
+
+        for (unsigned int j = 0; j < NUM_TIMESPANS;j++) {
+
+            if (threaded_graph_cache.elements[i][j].stocks != NULL)
+                free(threaded_graph_cache.elements[i][j].stocks->prices);
+            threaded_graph_cache.elements[i][j].stocks->size   = exclusive_graph_cache.elements[i][j].stocks->size;
+            threaded_graph_cache.elements[i][j].stocks->prices = malloc(sizeof(float) * threaded_graph_cache.elements[i][j].stocks->size);
+            for (unsigned int k = 0; k < exclusive_graph_cache.elements[i][j].stocks->size; k++)
+                threaded_graph_cache.elements[i][j].stocks->prices[k] = exclusive_graph_cache.elements[i][j].stocks->prices[k];
+
+        }
+
+    }
 
 }
 
@@ -112,7 +122,6 @@ char *GetTimeString(char buffer[128], time_t a_time)
 {
 
     strftime(buffer, 128, "%Y-%m-%d %H:%M:%S", localtime(&a_time));
-    LogF("time string = %s", buffer);
     return buffer;
 
 }
@@ -144,13 +153,14 @@ void GenerateNewGraphCache()
     char temp_time_buff[128];
 
     GetTimeString(current_time_buff, current_time);
-    LogF("Current game time = %s", current_time_buff);
 
     for (unsigned int i = 0; i < num_companies; i++) {
 
         for (unsigned int j = 0; j < NUM_TIMESPANS;j++) {
 
-            graph_cache.elements[i][j].stocks = GetStockPricesBetweenRange(graph_cache.company_names[i], GetTimeSpanDiff(temp_time_buff, current_time, graph_cache.elements[i][j].timespan), current_time_buff);
+            if (exclusive_graph_cache.elements[i][j].stocks != NULL)
+                free(exclusive_graph_cache.elements[i][j].stocks->prices);
+            exclusive_graph_cache.elements[i][j].stocks = GetStockPricesBetweenRange(exclusive_graph_cache.company_names[i], GetTimeSpanDiff(temp_time_buff, current_time, exclusive_graph_cache.elements[i][j].timespan), current_time_buff);
 
         }
 
@@ -172,6 +182,26 @@ void WaitForSimulation()
 
 }
 
+void SetInitialCache(GraphCache *cache) 
+{
+
+    cache->company_names = malloc(sizeof(char *) * num_companies);
+    cache->elements      = malloc(sizeof(GraphCacheElement *) * num_companies);
+    for (unsigned int i = 0; i < num_companies;i++) {
+
+        cache->elements[i] = malloc(sizeof(GraphCacheElement) * NUM_TIMESPANS);
+        for (unsigned int j = 0; j < NUM_TIMESPANS; j++) {
+
+            cache->elements[i][j].timespan = timespans[j].timespan;
+            cache->elements[i][j].stocks    = NULL;
+
+        }
+        cache->company_names[i] = companies[i].company_name;
+
+    }
+
+}
+
 void InitializeGraphCache() 
 {
 
@@ -179,23 +209,14 @@ void InitializeGraphCache()
     if (ShouldICleanUp())
         return;
 
-    companies                 = GetAllCompanies();
-    num_companies             = GetNumCompanies();
-    graph_cache.company_names = malloc(sizeof(char *) * num_companies);
-    graph_cache.elements      = malloc(sizeof(GraphCacheElement *) * num_companies);
-    for (unsigned int i = 0; i < num_companies;i++) {
+    companies     = GetAllCompanies();
+    num_companies = GetNumCompanies();
 
-        graph_cache.elements[i] = malloc(sizeof(GraphCacheElement) * NUM_TIMESPANS);
-        for (unsigned int j = 0; j < NUM_TIMESPANS; j++) {
+    SetInitialCache(&exclusive_graph_cache);
 
-            graph_cache.elements[i][j].timespan = timespans[j].timespan;
-            graph_cache.elements[i][j].stocks    = NULL;
-
-        }
-        graph_cache.company_names[i] = companies[i].company_name;
-        LogF("graph cache name set = %s", graph_cache.company_names[i]);
-
-    }
+    al_lock_mutex(graph_cache_mutex);
+    SetInitialCache(&threaded_graph_cache);
+    al_unlock_mutex(graph_cache_mutex);
 
     GenerateNewGraphCache();
 
