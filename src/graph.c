@@ -87,6 +87,19 @@ void InitializeGraphCaching()
 
 }
 
+DrawObject *GetGraphDrawObject(char *company_name, char *timespan, int width, int height) 
+{
+
+    al_lock_mutex(graph_cache_mutex);
+
+    // TODO
+
+    al_unlock_mutex(graph_cache_mutex);
+
+    return NULL;
+
+}
+
 void UpdateGraphCache() 
 {
 
@@ -96,8 +109,10 @@ void UpdateGraphCache()
 
             if (threaded_graph_cache.elements[i][j].stocks != NULL)
                 free(threaded_graph_cache.elements[i][j].stocks->prices);
+
             threaded_graph_cache.elements[i][j].stocks->size   = exclusive_graph_cache.elements[i][j].stocks->size;
             threaded_graph_cache.elements[i][j].stocks->prices = malloc(sizeof(float) * threaded_graph_cache.elements[i][j].stocks->size);
+            
             for (unsigned int k = 0; k < exclusive_graph_cache.elements[i][j].stocks->size; k++)
                 threaded_graph_cache.elements[i][j].stocks->prices[k] = exclusive_graph_cache.elements[i][j].stocks->prices[k];
 

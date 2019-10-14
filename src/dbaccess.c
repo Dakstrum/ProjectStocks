@@ -182,7 +182,6 @@ StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, ch
     sqlite3_close(db);
 
     prices->prices = realloc(prices->prices, sizeof(float) * prices->index);
-    LogF("Prices size = %d", prices->index);
     return prices;
 
 }
