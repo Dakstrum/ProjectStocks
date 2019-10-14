@@ -24,8 +24,6 @@ void CleanUpAddons();
 static void (*Render)()         = &StartUpSequence;
 static ALLEGRO_DISPLAY *display = NULL;
 
-int refresh_rate;
-
 void InitializeRendering() 
 {
 
@@ -38,12 +36,8 @@ void InitializeDisplay()
 {
 
     display = al_create_display(1920, 1080);
-    refresh_rate = al_get_display_refresh_rate(display);
-    LogF("REFFFF= %d", refresh_rate);
     InitializeDrawLayers(display);
     
-    
-
 }
 
 void InitializeAddons() 

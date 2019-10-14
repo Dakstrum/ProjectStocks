@@ -27,6 +27,7 @@ enum InitializeSuccess
 
 static ALLEGRO_EVENT_QUEUE *event_queue;
 static ALLEGRO_TIMER *timer;
+static ALLEGRO_DISPLAY_MODE mode;
 
 enum InitializeSuccess Initialize();
 void GameLoop();
@@ -106,14 +107,16 @@ enum InitializeSuccess Initialize()
     InitializeJson();
     InitAccount();
     InitializeGameThreads();
+
     return SUCCESS;
 
 }
 
 void InitializeEventQueue() 
 {
-    timer       = al_create_timer(1.0/refresh_rate);
-    LogF("ref = %d", refresh_rate);
+
+    al_get_display_mode(0, &mode);
+    timer       = al_create_timer(1.0/mode.refresh_rate);
     event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_mouse_event_source());
     al_register_event_source(event_queue, al_get_keyboard_event_source());
