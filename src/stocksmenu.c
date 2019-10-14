@@ -30,10 +30,10 @@ void InitializeStocksMenu()
     object->x = 0;
     object->y = 0;
 
-    object->width = 400;
-    object->height = 400;
+    object->width = 1920;
+    object->height = 1080;
     
-    object->asset_path = "assets/images/stocksmenu/stocksmenu.png";
+    object->asset_path = "assets/images/generalpurposemenus/popups/genericpopup.png";
     object->member.popup.current_time = 1;
     object->member.popup.end_time = 180;
 
