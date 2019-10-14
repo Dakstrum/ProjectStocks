@@ -15,5 +15,6 @@ void HandleRendering();
 void HandleWindowEvents(ALLEGRO_EVENT event);
 void CleanUpRendering();
 ALLEGRO_DISPLAY *GetDisplay();
+int refresh_rate;
 
 #endif
