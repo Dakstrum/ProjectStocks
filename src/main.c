@@ -15,6 +15,8 @@
 #include "jsonlayer.h"
 #include "account.h"
 
+#include "windows.h"
+
 enum InitializeSuccess 
 {
 
@@ -25,6 +27,7 @@ enum InitializeSuccess
 
 static ALLEGRO_EVENT_QUEUE *event_queue;
 static ALLEGRO_TIMER *timer;
+static int refresh_rate;
 
 enum InitializeSuccess Initialize();
 void GameLoop();
@@ -34,6 +37,7 @@ ALLEGRO_EVENT WaitForEvent();
 void CleanUp();
 void CleanUpThreads();
 void StartInputLoop();
+void GetRefreshRateOfMonitor();
 
 int main(int argc, char **argv) 
 {
@@ -110,8 +114,9 @@ enum InitializeSuccess Initialize()
 
 void InitializeEventQueue() 
 {
+    GetRefreshRateOfMonitor();
 
-    timer       = al_create_timer(1.0/60.0);
+    timer       = al_create_timer(1.0/refresh_rate);
     event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_mouse_event_source());
     al_register_event_source(event_queue, al_get_keyboard_event_source());
@@ -154,5 +159,14 @@ void CleanUp()
     CleanUpGameThreads();
     al_uninstall_system();
 
+}
+
+void GetRefreshRateOfMonitor() //Im aware this is only for windows. Im looking into it
+{
+    DEVMODE* monitorProperties = NULL;
+    monitorProperties = (DEVMODE*)malloc(sizeof(DEVMODE));
+    EnumDisplaySettingsA(NULL, ENUM_CURRENT_SETTINGS, monitorProperties);
+    LogF("ref = %d", monitorProperties->dmDisplayFrequency);
+    refresh_rate = monitorProperties->dmDisplayFrequency;
 }
 
