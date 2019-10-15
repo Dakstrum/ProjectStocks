@@ -316,15 +316,27 @@ DrawObject *GetDrawObjectFromDrawObjectJson(char *object_name)
 void ReclaimUnusedSpaceFromMenuWithChilds(MenuWithChilds *menu_with_childs) 
 {
 
-    if (menu_with_childs->num_buttons == 0)
+    if (menu_with_childs->num_buttons == 0) {
+
         free(menu_with_childs->buttons);
-    else
+        menu_with_childs->buttons = NULL;
+    }
+    else{
+
         menu_with_childs->buttons = realloc(menu_with_childs->buttons, sizeof(DrawObject *) * menu_with_childs->num_buttons);
 
-    if (menu_with_childs->num_text == 0)
+    }
+
+    if (menu_with_childs->num_text == 0){
+
         free(menu_with_childs->text);
-    else
+        menu_with_childs->text = NULL;
+    }
+    else{
+
         menu_with_childs->text = realloc(menu_with_childs->text, sizeof(DrawObject *) * menu_with_childs->num_text);
+        
+    }
 
 }
 
