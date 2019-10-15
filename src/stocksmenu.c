@@ -36,13 +36,13 @@ void InitializeStocksMenu()
     object->asset_path = "assets/images/generalpurposemenus/popups/genericpopup.png";
     object->member.popup.current_time = 1;
     object->member.popup.end_time = 180;
+    //end temp
 
     stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
 
     AddMenuWithChildsToDrawLayer(stocks_menu);
-    AddObjectToDrawLayer(object);
-    //end temp
-
+    AddObjectToDrawLayer(object); //<-temp
+    
 }
 
 
