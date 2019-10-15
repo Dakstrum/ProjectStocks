@@ -320,8 +320,8 @@ void ReclaimUnusedSpaceFromMenuWithChilds(MenuWithChilds *menu_with_childs)
 
         free(menu_with_childs->buttons);
         menu_with_childs->buttons = NULL;
-    }
-    else{
+        
+    } else{
 
         menu_with_childs->buttons = realloc(menu_with_childs->buttons, sizeof(DrawObject *) * menu_with_childs->num_buttons);
 
@@ -331,11 +331,11 @@ void ReclaimUnusedSpaceFromMenuWithChilds(MenuWithChilds *menu_with_childs)
 
         free(menu_with_childs->text);
         menu_with_childs->text = NULL;
-    }
-    else{
+
+    } else{
 
         menu_with_childs->text = realloc(menu_with_childs->text, sizeof(DrawObject *) * menu_with_childs->num_text);
-        
+
     }
 
 }
