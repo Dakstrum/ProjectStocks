@@ -115,7 +115,9 @@ enum InitializeSuccess Initialize()
 void InitializeEventQueue() 
 {
 
-    al_get_display_mode(0, &mode);
+    LogF("Display modes found = %d", al_get_num_display_modes());
+    if (al_get_display_mode(al_get_num_display_modes()-1, &mode) == NULL)
+        Log("Could not get display mode");
     timer       = al_create_timer(1.0/mode.refresh_rate);
     event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_mouse_event_source());
@@ -124,6 +126,7 @@ void InitializeEventQueue()
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_start_timer(timer);
 
+    LogF("refresh detected as %d", mode.refresh_rate);
 }
 
 
