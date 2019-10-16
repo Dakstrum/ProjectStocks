@@ -87,12 +87,40 @@ void InitializeGraphCaching()
 
 }
 
+int GetCompanyIndex(char *company_name) 
+{
+
+    for (unsigned int i = 0; i < num_companies; i++)
+        if (strcmp(company_name, threaded_graph_cache.company_names[i]) == 0)
+            return i;
+
+    return -1;
+
+}
+
+int GetTimeSpanIndex(int company_index, char *timespan) 
+{
+
+    for (unsigned int i = 0; i < NUM_TIMESPANS; i++)
+        if (strcmp(timespan, threaded_graph_cache.elements[company_index][i].timespan) == 0)
+            return i;
+
+    return -1;
+
+}
+
 DrawObject *GetGraphDrawObject(char *company_name, char *timespan, int width, int height) 
 {
 
     al_lock_mutex(graph_cache_mutex);
 
-    // TODO
+    int company_index;
+    if ((company_index = GetCompanyIndex(company_name)) == -1)
+        return NULL;
+
+    int timespan_index;
+    if ((timespan_index = GetTimeSpanIndex(company_index, timespan)) == -1)
+        return NULL;
 
     al_unlock_mutex(graph_cache_mutex);
 
@@ -175,6 +203,7 @@ void GenerateNewGraphCache()
 
             if (exclusive_graph_cache.elements[i][j].stocks != NULL)
                 free(exclusive_graph_cache.elements[i][j].stocks->prices);
+
             exclusive_graph_cache.elements[i][j].stocks = GetStockPricesBetweenRange(exclusive_graph_cache.company_names[i], GetTimeSpanDiff(temp_time_buff, current_time, exclusive_graph_cache.elements[i][j].timespan), current_time_buff);
 
         }
