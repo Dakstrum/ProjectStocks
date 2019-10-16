@@ -138,25 +138,26 @@ DrawObject *GetGraphDrawObject(char *company_name, char *timespan, int width, in
 
 }
 
+void UpdateGraphCacheElement(unsigned int i, unsigned int j) 
+{
+
+    if (threaded_graph_cache.elements[i][j].stocks != NULL)
+        free(threaded_graph_cache.elements[i][j].stocks->prices);
+
+    threaded_graph_cache.elements[i][j].stocks->size   = exclusive_graph_cache.elements[i][j].stocks->size;
+    threaded_graph_cache.elements[i][j].stocks->prices = malloc(sizeof(float) * threaded_graph_cache.elements[i][j].stocks->size);
+    
+    for (unsigned int k = 0; k < exclusive_graph_cache.elements[i][j].stocks->size; k++)
+        threaded_graph_cache.elements[i][j].stocks->prices[k] = exclusive_graph_cache.elements[i][j].stocks->prices[k];
+
+}
+
 void UpdateGraphCache() 
 {
 
-    for (unsigned int i = 0; i < num_companies; i++) {
-
-        for (unsigned int j = 0; j < NUM_TIMESPANS;j++) {
-
-            if (threaded_graph_cache.elements[i][j].stocks != NULL)
-                free(threaded_graph_cache.elements[i][j].stocks->prices);
-
-            threaded_graph_cache.elements[i][j].stocks->size   = exclusive_graph_cache.elements[i][j].stocks->size;
-            threaded_graph_cache.elements[i][j].stocks->prices = malloc(sizeof(float) * threaded_graph_cache.elements[i][j].stocks->size);
-            
-            for (unsigned int k = 0; k < exclusive_graph_cache.elements[i][j].stocks->size; k++)
-                threaded_graph_cache.elements[i][j].stocks->prices[k] = exclusive_graph_cache.elements[i][j].stocks->prices[k];
-
-        }
-
-    }
+    for (unsigned int i = 0; i < num_companies; i++)
+        for (unsigned int j = 0; j < NUM_TIMESPANS;j++)
+            UpdateGraphCacheElement(i, j);
 
 }
 
