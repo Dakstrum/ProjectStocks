@@ -124,5 +124,4 @@ int RemoveDrawObject(DrawObject *object);
 bool DoesObjectExistInCurrentDrawLayer(char *object_name);
 
 void HandleMouseClickInButtonAreas(int x, int y);
-
 #endif
