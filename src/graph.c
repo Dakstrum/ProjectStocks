@@ -130,11 +130,19 @@ DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points)
 
 }
 
-void SetGraphPoints(DrawObject *graph, StockPrices *stocks) 
+void SetGraphPoints(DrawObject *object, StockPrices *stocks) 
 {
 
-    float point_width_diff  = (float)graph->width / stocks->num_prices;
-    float point_height_diff = MaxMinDiff(stocks->prices, stocks->num_prices)/graph->height;
+    float point_width_diff  = (float)object->width / stocks->num_prices;
+    float min_price         = MinF(stocks->prices, stocks->num_prices);
+    float max_min_price_diff = MaxMinDiff(stocks->prices, stocks->num_prices);
+
+    for (unsigned int i = 0; i < stocks->num_prices;i++) {
+
+        object->graph.points[i].x = point_width_diff*i;
+        object->graph.points[i].y = ((stocks->prices[i] - min_price)/(max_min_price_diff))*object->height;
+
+    }
 
 }
 
