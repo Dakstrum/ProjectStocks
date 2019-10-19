@@ -6,7 +6,7 @@
 typedef struct StockPrices {
 
     float *prices;
-    unsigned int index;
+    unsigned int num_prices;
     unsigned int size;
 
 } StockPrices;

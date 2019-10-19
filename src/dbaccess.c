@@ -149,15 +149,15 @@ int SetCompanyPrices(void *prices, int argc, char **argv, char **col_name) {
     if (argc == 0 )
         return 0;
 
-    if (prices_temp->index == prices_temp->size){
+    if (prices_temp->num_prices == prices_temp->size){
 
         prices_temp->size  += 128;
         prices_temp->prices = realloc(prices_temp->prices, sizeof(float) * prices_temp->size);
 
     }
 
-    prices_temp->prices[prices_temp->index] = (float)atof(argv[0]);
-    prices_temp->index++;
+    prices_temp->prices[prices_temp->num_prices] = (float)atof(argv[0]);
+    prices_temp->num_prices++;
 
     return 0;
 
@@ -168,7 +168,7 @@ StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, ch
 
     StockPrices *prices = malloc(sizeof(StockPrices));
     prices->prices      = malloc(sizeof(float) * 128);
-    prices->index       = 0;
+    prices->num_prices  = 0;
     prices->size        = 128;
 
     sqlite3 *db;
@@ -181,7 +181,7 @@ StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, ch
 
     sqlite3_close(db);
 
-    prices->prices = realloc(prices->prices, sizeof(float) * prices->index);
+    prices->prices = realloc(prices->prices, sizeof(float) * prices->num_prices);
     return prices;
 
 }
