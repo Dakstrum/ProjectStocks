@@ -130,12 +130,20 @@ DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points)
 
 }
 
+void SetGraphPoints(DrawObject *graph, StockPrices *stocks) 
+{
+
+    //int point_width_diff  = graph->width / stocks->num_prices;
+    //int point_max_height  = 
+
+}
+
 DrawObject *GetConstructedGraphDrawObject(int company_index, int timespan_index, int width, int height) 
 {
 
-    int num_fluctuations = threaded_graph_cache.elements[company_index][timespan_index].stocks->num_prices;
-    int num_points       = num_fluctuations / width;
-    DrawObject *object   = GetBasicGraphDrawObject(width, height, num_points);
+    StockPrices *stocks  = threaded_graph_cache.elements[company_index][timespan_index].stocks;
+    DrawObject *object   = GetBasicGraphDrawObject(width, height, stocks->num_prices);
+    SetGraphPoints(object, stocks);
 
     return object;
 
