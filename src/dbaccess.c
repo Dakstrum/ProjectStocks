@@ -254,14 +254,6 @@ char *GetStockPricesBetweenRangeQuery(char *company_name, char *start_time, char
 
 }
 
-/*
-
-GetFormattedPointer("SELECT SP.Price FROM StockPrices SP" 
-                        " INNER JOIN Company C ON C.CompanyId=SP.CompanyId AND C.CompanyName='%s' "
-                        " WHERE SP.Time BETWEEN '%s' AND '%s' ", company_name, start_time, end_time)
-
-*/
-
 StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, char *end_time, TimeSpan timespan) 
 {
 
