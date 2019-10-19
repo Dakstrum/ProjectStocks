@@ -353,3 +353,11 @@ void *GraphEntry(ALLEGRO_THREAD *thread, void *arg)
     return NULL;
 
 }
+
+void CleanUpGraph() 
+{
+
+    al_join_thread(graph_cache_thread, NULL);
+    al_destroy_thread(graph_cache_thread);
+
+}

@@ -184,6 +184,9 @@ void CleanUpLogging()
     al_destroy_mutex(log_mutex);
     free(queue);
 
+    al_join_thread(queue_thread, NULL);
+    al_destroy_thread(queue_thread);
+
 }
 
 void *LoggingEntry(ALLEGRO_THREAD *thread, void *arg) 

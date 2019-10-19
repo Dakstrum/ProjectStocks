@@ -9,4 +9,6 @@ void LogF(const char *str, ...);
 void LogNoQueue(const char *str);
 void LogFNoQueue(const char *str, ...);
 
+void CleanUpLogging();
+
 #endif
