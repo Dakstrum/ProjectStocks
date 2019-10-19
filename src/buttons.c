@@ -25,7 +25,6 @@ void OptionsMenuExitButtonCallBack();
 void StocksButtonCallBack();
 void NewsButtonCallBack();
 void AccountButtonCallBack();
-void EavesdropperButtonCallBack();
 void MainMenuGitHubButtonCallBack();
 void MainMenuTwitterButtonCallBack();
 void MainMenuYoutubeButtonCallBack();

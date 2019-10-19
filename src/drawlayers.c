@@ -267,7 +267,7 @@ int AddPopUpToDrawLayer(DrawObject *object)
 {
 
     if (object->asset_path != NULL)
-        object->member.popup.popup_bitmap = GetBitmapFromCache(object->asset_path);
+        object->popup.popup_bitmap = GetBitmapFromCache(object->asset_path);
 
     return AddDrawObjectToDrawLayer(object);
 
@@ -412,14 +412,14 @@ void DrawObjectOfTypeGen(DrawLayer *layer, int i)
 void DrawPopUp(DrawObject *object)
 {
 
-    if(object->member.popup.current_time >= object->member.popup.end_time) {
+    if(object->popup.current_time >= object->popup.end_time) {
 
         RemoveDrawObject(object);
 
     } else {
         
-        DrawGenericWithWidth(object->member.popup.popup_bitmap, object->x, object->y, object->width, object->height);
-        object->member.popup.current_time++;
+        DrawGenericWithWidth(object->popup.popup_bitmap, object->x, object->y, object->width, object->height);
+        object->popup.current_time++;
 
     }
 

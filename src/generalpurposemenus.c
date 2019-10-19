@@ -124,10 +124,3 @@ void AccountButtonCallBack()
     
 }
 
-void EavesdropperButtonCallBack()
-{
-    
-    Log("Eaves");
-    
-}
-

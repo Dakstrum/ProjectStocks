@@ -47,8 +47,8 @@ void DisplayTempPopUp()
     popup_object->height = 1080;
     
     popup_object->asset_path = "assets/images/generalpurposemenus/popups/genericpopup.png";
-    popup_object->member.popup.current_time = 1;
-    popup_object->member.popup.end_time     = 180;
+    popup_object->popup.current_time = 1;
+    popup_object->popup.end_time     = 180;
     AddObjectToDrawLayer(popup_object);
 }
 
