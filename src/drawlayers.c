@@ -216,8 +216,6 @@ void CleanUpMenu(DrawObject *object)
 void CleanUpPopUp(DrawObject *object) 
 {
     
-    LogF("ObjectPOP= %s", object->name);
-    Log("PopUp STUB");
 
 }
 
