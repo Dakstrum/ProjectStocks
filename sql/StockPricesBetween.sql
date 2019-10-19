@@ -1,4 +1,28 @@
 
+
+
+
+/*
+
+    Good for 2 years and 5 years.
+
+*/
+DROP TABLE IF EXISTS TEMP;
+CREATE TABLE TEMP (Name VARCHAR(10), HourVal INTEGER, DayVal INTEGER);
+INSERT INTO TEMP (Name, HourVal, DayVal) VALUES ('After', strftime('%H', '1995-01-01 00:00:00'), strftime('%d', '1995-01-01 00:00:00'));
+SELECT 
+    SP.Price,
+    SP.Time
+FROM 
+    StockPrices SP 
+INNER JOIN 
+    Company C ON C.CompanyId = SP.CompanyId AND C.CompanyName = 'WeBeHard'
+WHERE 
+        SP.Time BETWEEN '1969-12-31 18:00:00' AND '1995-01-01 00:00:00'
+    AND strftime('%H', SP.Time) = (SELECT HourVal FROM TEMP WHERE Name='After' LIMIT 1)
+    AND strftime('%d', SP.Time) = (SELECT DayVal FROM TEMP WHERE Name='After' LIMIT 1);
+
+
 /*
 Approximate Method. Relatively Fast
 
