@@ -133,8 +133,8 @@ DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points)
 void SetGraphPoints(DrawObject *graph, StockPrices *stocks) 
 {
 
-    //int point_width_diff  = graph->width / stocks->num_prices;
-    //int point_max_height  = 
+    float point_width_diff  = (float)graph->width / stocks->num_prices;
+    float point_height_diff = MaxMinDiff(stocks->prices, stocks->num_prices)/graph->height;
 
 }
 

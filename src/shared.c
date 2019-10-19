@@ -57,3 +57,39 @@ char *GetFormattedPointer(const char *str, ...)
     return buffer;
 
 }
+
+
+float MaxF(float *array, unsigned int size) 
+{
+
+    float max = 0;
+    for (unsigned int i = 0;i < size;i++) {
+
+        if (max < array[i])
+            max = array[i];
+
+    }
+    return max;
+
+}
+
+float MinF(float *array, unsigned int size) 
+{
+
+    float min = 0;
+    for (unsigned int i = 0;i < size;i++) {
+
+        if (min > array[i])
+            min = array[i];
+
+    }
+    return min;
+
+}
+
+float MaxMinDiff(float *array, unsigned int size) 
+{
+
+    return MaxF(array, size) - MinF(array, size);
+    
+}
