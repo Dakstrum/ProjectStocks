@@ -32,21 +32,24 @@ void InitializeStocksMenu()
 
 }
 
+
+
 void DisplayTempPopUp()
 {
-    static DrawObject *object = CreateNewDrawObject();
-    object->type = POPUP;
-    object->should_this_be_drawn = true;
-    object->x = 0;
-    object->y = 0;
+    DrawObject *popup_object = CreateNewDrawObject();
 
-    object->width  = 1920;
-    object->height = 1080;
+    popup_object->type = POPUP;
+    popup_object->should_this_be_drawn = true;
+    popup_object->x = 0;
+    popup_object->y = 0;
+
+    popup_object->width  = 1920;
+    popup_object->height = 1080;
     
-    object->asset_path = "assets/images/generalpurposemenus/popups/genericpopup.png";
-    object->member.popup.current_time = 1;
-    object->member.popup.end_time     = 180;
-    //AddObjectToDrawLayer(object);
+    popup_object->asset_path = "assets/images/generalpurposemenus/popups/genericpopup.png";
+    popup_object->member.popup.current_time = 1;
+    popup_object->member.popup.end_time     = 180;
+    AddObjectToDrawLayer(popup_object);
 }
 
 
