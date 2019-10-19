@@ -12,6 +12,7 @@
 #include "stocksmenu.h"
 #include "newsmenu.h"
 #include "accountmenu.h"
+#include "mainmenu.h"
 
 static MenuWithChilds *pause_menu   = NULL;
 static MenuWithChilds *options_menu = NULL;
@@ -68,6 +69,15 @@ void TogglePauseMenu()
 }
 
 //General Purpose Menu Callbacks
+void PauseMenuMainMenuButtonCallBack()
+{
+
+    pause_menu = NULL;
+    ClearDrawLayers();
+    InitializeMainMenu();
+
+}
+
 void PauseMenuOptionsButtonCallBack()
 {
 

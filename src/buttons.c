@@ -18,6 +18,7 @@ void StubCallback();
 void MainMenuStartButtonCallBack();
 void MainMenuOptionsButtonCallBack();
 void MainMenuExitButtonCallBack();
+void PauseMenuMainMenuButtonCallBack();
 void PauseMenuOptionsButtonCallBack();
 void PauseMenuExitButtonCallBack();
 void OptionsMenuExitButtonCallBack();
@@ -43,21 +44,21 @@ typedef struct ButtonCallsbacks
 #define NUM_CALLBACKS 15
 static ButtonCallsbacks callbacks[] = {
 
-    {"STUB",                  &StubCallback},
-    {"StartButton",           &MainMenuStartButtonCallBack},
-    {"OptionsButton",         &MainMenuOptionsButtonCallBack},
-    {"ExitButton",            &MainMenuExitButtonCallBack},
-    {"PauseMenuOptionsButton",&PauseMenuOptionsButtonCallBack},
-    {"PauseMenuExitButton",   &PauseMenuExitButtonCallBack},
-    {"OptionsMenuExitButton", &OptionsMenuExitButtonCallBack},
-    {"StocksButton",          &StocksButtonCallBack},
-    {"NewsButton",            &NewsButtonCallBack},
-    {"AccountButton",         &AccountButtonCallBack},
-    {"EavesdroppperButton",   &EavesdropperButtonCallBack},
-    {"GitHubButton",          &MainMenuGitHubButtonCallBack},
-    {"TwitterButton",         &MainMenuTwitterButtonCallBack},
-    {"YoutubeButton",         &MainMenuYoutubeButtonCallBack},
-    {"WebsiteButton",         &MainMenuWebsiteButtonCallBack}
+    {"STUB",                    &StubCallback},
+    {"StartButton",             &MainMenuStartButtonCallBack},
+    {"OptionsButton",           &MainMenuOptionsButtonCallBack},
+    {"ExitButton",              &MainMenuExitButtonCallBack},
+    {"PauseMenuMainMenuButton", &PauseMenuMainMenuButtonCallBack},
+    {"PauseMenuOptionsButton",  &PauseMenuOptionsButtonCallBack},
+    {"PauseMenuExitButton",     &PauseMenuExitButtonCallBack},
+    {"OptionsMenuExitButton",   &OptionsMenuExitButtonCallBack},
+    {"StocksButton",            &StocksButtonCallBack},
+    {"NewsButton",              &NewsButtonCallBack},
+    {"AccountButton",           &AccountButtonCallBack},
+    {"GitHubButton",            &MainMenuGitHubButtonCallBack},
+    {"TwitterButton",           &MainMenuTwitterButtonCallBack},
+    {"YoutubeButton",           &MainMenuYoutubeButtonCallBack},
+    {"WebsiteButton",           &MainMenuWebsiteButtonCallBack}
 
 
 };

@@ -50,6 +50,7 @@ void DrawSingleLayer(DrawLayer *layer);
 void DrawObjectOfTypeGen(DrawLayer *layer, int i);
 void DrawMenu(DrawObject *object);
 void DrawButton(DrawObject *object);
+void DrawPopUp(DrawObject *object);
 void DrawVideo(DrawObject *object);
 void DrawText(DrawObject *object);
 void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y);
@@ -260,6 +261,16 @@ void StoreMenuWithChildsRefOnDrawLayer(MenuWithChilds *menu_with_childs)
         }
 
     }
+}
+
+int AddPopUpToDrawLayer(DrawObject *object)
+{
+
+    if (object->asset_path != NULL)
+        object->member.popup.popup_bitmap = GetBitmapFromCache(object->asset_path);
+
+    return AddDrawObjectToDrawLayer(object);
+
 
 }
 
@@ -284,7 +295,7 @@ int AddObjectToDrawLayer(DrawObject *object)
 
         case MENU:   return AddMenuToDrawLayer(object);   break;
         case BUTTON: return AddButtonToDrawLayer(object); break;
-        case POPUP:                                       break;
+        case POPUP:  return AddPopUpToDrawLayer(object);  break;
         case VIDEO:  return AddVideoToDrawLayer(object);  break;
         case TEXT:   return AddTextToDrawLayer(object);   break;
 
@@ -369,7 +380,7 @@ int AddTextToDrawLayer(DrawObject *object)
 void DrawLayers() 
 {
 
-    for (int i = 0; i < current_draw_layer+1;i++)
+    for (int i = 0; i < current_draw_layer+1; i++)
         DrawSingleLayer(&draw_layers[i]);
 
 }
@@ -390,9 +401,25 @@ void DrawObjectOfTypeGen(DrawLayer *layer, int i)
 
         case MENU:   DrawMenu(layer->objects[i]);   break;
         case BUTTON: DrawButton(layer->objects[i]); break;
-        case POPUP:   break;
-        case VIDEO:  DrawVideo(layer->objects[i]);   break;
-        case TEXT:   DrawText(layer->objects[i]);    break;
+        case POPUP:  DrawPopUp(layer->objects[i]);   break;
+        case VIDEO:  DrawVideo(layer->objects[i]);  break;
+        case TEXT:   DrawText(layer->objects[i]);   break;
+
+    }
+
+}
+
+void DrawPopUp(DrawObject *object)
+{
+
+    if(object->member.popup.current_time >= object->member.popup.end_time) {
+
+        RemoveDrawObject(object);
+
+    } else {
+        
+        DrawGenericWithWidth(object->member.popup.popup_bitmap, object->x, object->y, object->width, object->height);
+        object->member.popup.current_time++;
 
     }
 
