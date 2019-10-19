@@ -3,6 +3,8 @@
 
 #include <sqlite3.h>
 
+#include "graph.h"
+
 typedef struct StockPrices {
 
     float *prices;
@@ -16,6 +18,6 @@ int OpenConnection(sqlite3 **db);
 
 int InsertAndOrSetCompanyToActive(char *company_name, float ipo);
 void InsertStockPrice(int save_id, int company_id, float stock_price, char *timestamp, sqlite3 *db);
-StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, char *end_time);
+StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, char *end_time, TimeSpan timespan);
 
 #endif

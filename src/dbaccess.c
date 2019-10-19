@@ -4,6 +4,7 @@
 #include <sqlite3.h>
 
 #include "log.h"
+#include "graph.h"
 #include "dbaccess.h"
 #include "shared.h"
 
@@ -163,7 +164,105 @@ int SetCompanyPrices(void *prices, int argc, char **argv, char **col_name) {
 
 }
 
-StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, char *end_time) 
+char *GetStockPricesBetweenRangeHourly(char *company_name, char *start_time, char *end_time) 
+{
+
+    return GetFormattedPointer(
+        "SELECT SP.Price FROM StockPrices SP "
+        "INNER JOIN Company C ON C.CompanyId = SP.CompanyId AND C.CompanyName = '%s' "
+        "WHERE SP.Time BETWEEN '%s' AND '%s' "
+        , company_name, start_time, end_time);
+
+}
+
+char *GetStockPricesBetweenRangeDays(char *company_name, char *start_time, char *end_time) 
+{
+
+    return GetFormattedPointer(
+        "SELECT SP.Price FROM StockPrices SP "
+        "INNER JOIN Company C ON C.CompanyId = SP.CompanyId AND C.CompanyName = '%s' "
+        "WHERE SP.Time BETWEEN '%s' AND '%s' "
+        "AND (SP.StockPriceId - 1) %% 24 = 0 "
+        , company_name, start_time, end_time);
+
+}
+
+char *GetStockPricesBetweenRangeWeekly(char *company_name, char *start_time, char *end_time) 
+{
+
+    return GetFormattedPointer(
+        "SELECT SP.Price FROM StockPrices SP "
+        "INNER JOIN Company C ON C.CompanyId = SP.CompanyId AND C.CompanyName = '%s' "
+        "WHERE SP.Time BETWEEN '%s' AND '%s' "
+        "AND (SP.StockPriceId - 1) %% 168 = 0 "
+        , company_name, start_time, end_time);
+
+}
+
+char *GetStockPricesBetweenRangeMonthly(char *company_name, char *start_time, char *end_time) 
+{
+
+    return GetFormattedPointer(
+        "DROP TABLE IF EXISTS TEMP; "
+        "CREATE TABLE TEMP (Name VARCHAR(10), HourVal INTEGER, DayVal INTEGER); "
+        "INSERT INTO TEMP (Name, HourVal, DayVal) VALUES ('After', strftime('%%H', '%s'), strftime('%%d', '%s')); "
+        "SELECT SP.Price FROM StockPrices SP "
+        "INNER JOIN Company C ON C.CompanyId = SP.CompanyId AND C.CompanyName = '%s' "
+        "WHERE SP.Time BETWEEN '%s' AND '%s' "
+        "AND strftime('%%H', SP.Time) = (SELECT HourVal FROM TEMP WHERE Name='After' LIMIT 1) "
+        "AND strftime('%%d', SP.Time) = (SELECT DayVal FROM TEMP WHERE Name='After' LIMIT 1); "
+        , end_time, end_time, company_name, start_time, end_time);
+
+}
+
+char *GetStockPricesBetweenRangeSixMonths(char *company_name, char *start_time, char *end_time) 
+{
+
+    return GetFormattedPointer(
+        "DROP TABLE IF EXISTS TEMP; "
+        "CREATE TABLE TEMP (Name VARCHAR(10), MonthVal INTEGER, HourVal INTEGER, DayVal INTEGER); "
+        "INSERT INTO TEMP (Name, MonthVal, HourVal, DayVal) VALUES ('After',strftime('%%m', '%s'),  strftime('%%H', '%s'), strftime('%%d', '%s')); "
+        "SELECT SP.Price FROM StockPrices SP "
+        "INNER JOIN Company C ON C.CompanyId = SP.CompanyId AND C.CompanyName = '%s' "
+        "WHERE SP.Time BETWEEN '%s' AND '%s' "
+        "AND strftime('%%H', SP.Time) = (SELECT HourVal FROM TEMP WHERE Name='After' LIMIT 1) "
+        "AND strftime('%%d', SP.Time) = (SELECT DayVal FROM TEMP WHERE Name='After' LIMIT 1) "
+        "AND ABS(strftime('%%m', SP.Time) - (SELECT MonthVal FROM TEMP WHERE Name='After' LIMIT 1)) IN (0, 6); "
+        , end_time, end_time, end_time, company_name, start_time, end_time);
+
+}
+
+char *GetStockPricesBetweenRangeQuery(char *company_name, char *start_time, char *end_time, TimeSpan timespan) 
+{
+
+    switch (timespan) {
+
+        case ONE_DAY:
+        case THREE_DAYS:   return GetStockPricesBetweenRangeHourly(company_name, start_time, end_time); break;
+        case ONE_WEEK:
+        case TWO_WEEKS:
+        case ONE_MONTH:    return GetStockPricesBetweenRangeDays(company_name, start_time, end_time); break;
+        case THREE_MONTHS:
+        case SIX_MONTHS:
+        case ONE_YEAR:     return GetStockPricesBetweenRangeWeekly(company_name, start_time, end_time); break;
+        case TWO_YEARS:
+        case FIVE_YEARS:   return GetStockPricesBetweenRangeMonthly(company_name, start_time, end_time); break;
+        case ALL_TIME:     return GetStockPricesBetweenRangeSixMonths(company_name, start_time, end_time); break;
+
+    }
+    return NULL;
+
+}
+
+/*
+
+GetFormattedPointer("SELECT SP.Price FROM StockPrices SP" 
+                        " INNER JOIN Company C ON C.CompanyId=SP.CompanyId AND C.CompanyName='%s' "
+                        " WHERE SP.Time BETWEEN '%s' AND '%s' ", company_name, start_time, end_time)
+
+*/
+
+StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, char *end_time, TimeSpan timespan) 
 {
 
     StockPrices *prices = malloc(sizeof(StockPrices));
@@ -175,9 +274,7 @@ StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, ch
     if (OpenConnection(&db) != 0)
         return prices;
 
-    ExecuteQuery(GetFormattedPointer("SELECT SP.Price FROM StockPrices SP" 
-                        " INNER JOIN Company C ON C.CompanyId=SP.CompanyId AND C.CompanyName='%s' "
-                        " WHERE SP.Time BETWEEN '%s' AND '%s' ", company_name, start_time, end_time), &SetCompanyPrices, prices, db);
+    ExecuteQuery(GetStockPricesBetweenRangeQuery(company_name, start_time, end_time, timespan), &SetCompanyPrices, prices, db);
 
     sqlite3_close(db);
 

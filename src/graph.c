@@ -224,7 +224,7 @@ void GenerateNewGraphCache()
                 free(exclusive_graph_cache.elements[i][j].stocks->prices);
 
             timespan = GetTimeSpanDiff(temp_time_buff, current_time, exclusive_graph_cache.elements[i][j].timespan);
-            exclusive_graph_cache.elements[i][j].stocks = GetStockPricesBetweenRange(exclusive_graph_cache.company_names[i], timespan, current_time_buff);
+            exclusive_graph_cache.elements[i][j].stocks = GetStockPricesBetweenRange(exclusive_graph_cache.company_names[i], timespan, current_time_buff, exclusive_graph_cache.elements[i][j].timespan);
 
         }
 
