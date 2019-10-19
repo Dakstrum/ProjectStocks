@@ -5,6 +5,7 @@
 #include <allegro5/allegro.h>
 
 #include "log.h"
+#include "graph.h"
 #include "shared.h"
 #include "account.h"
 #include "drawlayers.h"
@@ -31,7 +32,7 @@ typedef struct GraphQueue {
 
 typedef struct GraphCacheElement {
 
-    char *timespan;
+    TimeSpan timespan;
     StockPrices *stocks;
 
 } GraphCacheElement;
@@ -43,29 +44,27 @@ typedef struct GraphCache {
 
 } GraphCache;
 
-
-typedef struct TimeSpan 
+typedef struct TimeSpanWithDiff 
 {
 
-    char *timespan;
+    TimeSpan timespan;
     const time_t diff;
 
-} TimeSpan;
+} TimeSpanWithDiff;
 
 #define NUM_TIMESPANS 11
-
-static const TimeSpan timespans[] = {
-    {"1 day", 86400},
-    {"3 days", 259200},
-    {"1 week", 604800},
-    {"2 weeks", 1209600},
-    {"1 month", 2419200},
-    {"3 months", 7257600},
-    {"6 months", 14515200},
-    {"1 year", 29030400},
-    {"2 years", 58060800},
-    {"5 years", 145152000},
-    {"all time", -1}
+static const TimeSpanWithDiff timespans[] = {
+    {ONE_DAY     , 86400},
+    {THREE_DAYS  , 259200},
+    {ONE_WEEK    , 604800},
+    {TWO_WEEKS   , 1209600},
+    {ONE_MONTH   , 2419200},
+    {THREE_MONTHS, 7257600},
+    {SIX_MONTHS  , 14515200},
+    {ONE_YEAR    , 29030400},
+    {TWO_YEARS   , 58060800},
+    {FIVE_YEARS  , 145152000},
+    {ALL_TIME    , -1}
 };
 
 static GraphCache exclusive_graph_cache;
@@ -98,14 +97,14 @@ int GetCompanyIndex(char *company_name)
 
 }
 
-int GetTimeSpanIndex(int company_index, char *timespan) 
+int GetTimeSpanIndex(int company_index, TimeSpan timespan) 
 {
 
     if (company_index == -1)
         return -1;
 
     for (unsigned int i = 0; i < NUM_TIMESPANS; i++)
-        if (strcmp(timespan, threaded_graph_cache.elements[company_index][i].timespan) == 0)
+        if (timespan == threaded_graph_cache.elements[company_index][i].timespan)
             return i;
 
     return -1;
@@ -126,7 +125,7 @@ DrawObject *GetConstructedGraphDrawObject(int company_index, int timespan_index,
 
 }
 
-DrawObject *GetGraphDrawObject(char *company_name, char *timespan, int width, int height) 
+DrawObject *GetGraphDrawObject(char *company_name, TimeSpan timespan, int width, int height) 
 {
 
     DrawObject *graph_object = NULL;
@@ -188,12 +187,12 @@ char *GetTimeString(char buffer[128], time_t a_time)
 
 }
 
-char *GetTimeSpanDiff(char buffer[128], time_t a_time, const char *timespan) 
+char *GetTimeSpanDiff(char buffer[128], time_t a_time, TimeSpan timespan) 
 {
 
     for (unsigned int i = 0; i < NUM_TIMESPANS; i++) {
 
-        if (strcmp(timespan, timespans[i].timespan) == 0) {
+        if (timespan == timespans[i].timespan) {
 
             if (timespans[i].diff != -1)
                 return GetTimeString(buffer, GetTimeDiff(a_time, timespans[i].diff));
