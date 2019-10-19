@@ -111,17 +111,33 @@ int GetTimeSpanIndex(int company_index, TimeSpan timespan)
 
 }
 
+DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points) 
+{
+
+    DrawObject *object           = CreateNewDrawObject();
+    object->type                 = GRAPH;
+    object->width                = width;
+    object->height               = height;
+    object->should_this_be_drawn = true;
+    object->name                 = NULL;
+    object->asset_path           = NULL;
+    object->child_of             = NULL;
+
+    object->member.graph.num_points = (unsigned int)num_points;
+    object->member.graph.points     = malloc(sizeof(Point) * num_points);
+
+    return object;
+
+}
+
 DrawObject *GetConstructedGraphDrawObject(int company_index, int timespan_index, int width, int height) 
 {
 
-    /*
-    int num_fluctuations = threaded_graph_cache.elements[company_index][timespan_index].stocks->size;
+    int num_fluctuations = threaded_graph_cache.elements[company_index][timespan_index].stocks->num_prices;
+    int num_points       = num_fluctuations / width;
+    DrawObject *object   = GetBasicGraphDrawObject(width, height, num_points);
 
-    if (num_fluctuations > )
-
-    int points           = num_fluctuations / width;*/
-
-    return NULL;
+    return object;
 
 }
 
