@@ -9,6 +9,7 @@
 #include "drawlayers.h"
 #include "log.h"
 #include "cache.h"
+#include "graph.h"
 
 
 static MenuWithChilds *stocks_menu = NULL;
@@ -29,6 +30,13 @@ void InitializeStocksMenu()
     stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
     AddMenuWithChildsToDrawLayer(stocks_menu);
     DisplayTempPopUp();
+
+    DrawObject *graph = GetGraphDrawObject("WeBeHard", ONE_DAY, 961, 373);
+    if (graph != NULL) {
+        graph->x = 415;
+        graph->y = 234;
+        AddObjectToDrawLayer(graph);
+    }
 
 }
 

@@ -6,6 +6,7 @@
 #include <allegro5/allegro_video.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include<allegro5/allegro_primitives.h>
 
 #include "log.h"
 #include "shared.h"
@@ -51,6 +52,8 @@ void InitializeAddons()
         Log("Unable to init font addon");
     if (!al_init_ttf_addon())
         Log("Unable to init ttf addon");
+    if (!al_init_primitives_addon())
+        Log("Unable to init primitives addon");
 }
 
 void HandleRendering() 
@@ -89,6 +92,9 @@ void CleanUpAddons()
 
     al_shutdown_image_addon();
     al_shutdown_video_addon();
+    al_shutdown_font_addon();
+    al_shutdown_ttf_addon();
+    al_shutdown_primitives_addon();
 
 }
 

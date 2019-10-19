@@ -3,6 +3,7 @@
 #include <stdatomic.h>
 #include <stdbool.h>
 #include <stdarg.h>
+#include <float.h>
 
 #include "log.h"
 
@@ -76,7 +77,7 @@ float MaxF(float *array, unsigned int size)
 float MinF(float *array, unsigned int size) 
 {
 
-    float min = 0;
+    float min = FLT_MAX;
     for (unsigned int i = 0;i < size;i++) {
 
         if (min > array[i])

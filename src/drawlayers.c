@@ -6,6 +6,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_video.h>
+#include<allegro5/allegro_primitives.h>
 
 #include "log.h"
 #include "audio.h"
@@ -53,6 +54,7 @@ void DrawButton(DrawObject *object);
 void DrawPopUp(DrawObject *object);
 void DrawVideo(DrawObject *object);
 void DrawText(DrawObject *object);
+void DrawGraph(DrawObject *object);
 void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y);
 void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width, float height);
 
@@ -245,6 +247,26 @@ int AddButtonToDrawLayer(DrawObject *object)
 
 }
 
+
+
+int AddPopUpToDrawLayer(DrawObject *object)
+{
+
+    if (object->asset_path != NULL)
+        object->popup.popup_bitmap = GetBitmapFromCache(object->asset_path);
+
+    return AddDrawObjectToDrawLayer(object);
+
+
+}
+
+int AddGraphToDrawLayer(DrawObject *object) 
+{
+
+    return AddDrawObjectToDrawLayer(object);
+
+}
+
 void StoreMenuWithChildsRefOnDrawLayer(MenuWithChilds *menu_with_childs) 
 {
 
@@ -259,17 +281,6 @@ void StoreMenuWithChildsRefOnDrawLayer(MenuWithChilds *menu_with_childs)
         }
 
     }
-}
-
-int AddPopUpToDrawLayer(DrawObject *object)
-{
-
-    if (object->asset_path != NULL)
-        object->popup.popup_bitmap = GetBitmapFromCache(object->asset_path);
-
-    return AddDrawObjectToDrawLayer(object);
-
-
 }
 
 int AddMenuWithChildsToDrawLayer(MenuWithChilds *menu_with_childs) 
@@ -296,6 +307,7 @@ int AddObjectToDrawLayer(DrawObject *object)
         case POPUP:  return AddPopUpToDrawLayer(object);  break;
         case VIDEO:  return AddVideoToDrawLayer(object);  break;
         case TEXT:   return AddTextToDrawLayer(object);   break;
+        case GRAPH:  return AddGraphToDrawLayer(object);  break;
 
     }
 
@@ -399,12 +411,29 @@ void DrawObjectOfTypeGen(DrawLayer *layer, int i)
 
         case MENU:   DrawMenu(layer->objects[i]);   break;
         case BUTTON: DrawButton(layer->objects[i]); break;
-        case POPUP:  DrawPopUp(layer->objects[i]);   break;
+        case POPUP:  DrawPopUp(layer->objects[i]);  break;
         case VIDEO:  DrawVideo(layer->objects[i]);  break;
         case TEXT:   DrawText(layer->objects[i]);   break;
+        case GRAPH:  DrawGraph(layer->objects[i]);   break;
 
     }
 
+}
+
+void DrawGraph(DrawObject *object) 
+{
+
+    float x = object->x;
+    float y = object->y;
+    float y_start_point = object->y + object->height;
+    Point *points = object->graph.points;
+    ALLEGRO_COLOR color = al_map_rgba(255, 255, 255, 255);
+    for (unsigned int i = 0;i < object->graph.num_points - 1;i++) {
+
+        al_draw_line(x + points[i].x, y_start_point - points[i].y, x + points[i+1].x, y_start_point - points[i+1].y, color ,1);
+
+    }
+    
 }
 
 void DrawPopUp(DrawObject *object)

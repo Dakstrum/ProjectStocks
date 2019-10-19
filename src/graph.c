@@ -133,8 +133,8 @@ DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points)
 void SetGraphPoints(DrawObject *object, StockPrices *stocks) 
 {
 
-    float point_width_diff  = (float)object->width / stocks->num_prices;
-    float min_price         = MinF(stocks->prices, stocks->num_prices);
+    float point_width_diff   = (float)object->width / stocks->num_prices;
+    float min_price          = MinF(stocks->prices, stocks->num_prices);
     float max_min_price_diff = MaxMinDiff(stocks->prices, stocks->num_prices);
 
     for (unsigned int i = 0; i < stocks->num_prices;i++) {
@@ -150,6 +150,8 @@ DrawObject *GetConstructedGraphDrawObject(int company_index, int timespan_index,
 {
 
     StockPrices *stocks  = threaded_graph_cache.elements[company_index][timespan_index].stocks;
+    if (stocks == NULL)
+        return NULL;
     DrawObject *object   = GetBasicGraphDrawObject(width, height, stocks->num_prices);
     SetGraphPoints(object, stocks);
 
@@ -181,7 +183,9 @@ void UpdateGraphCacheElement(unsigned int i, unsigned int j)
 
     if (threaded_graph_cache.elements[i][j].stocks != NULL)
         free(threaded_graph_cache.elements[i][j].stocks->prices);
-
+    else 
+        threaded_graph_cache.elements[i][j].stocks = malloc(sizeof(StockPrices));
+    
     threaded_graph_cache.elements[i][j].stocks->num_prices = exclusive_graph_cache.elements[i][j].stocks->num_prices;
     threaded_graph_cache.elements[i][j].stocks->size       = exclusive_graph_cache.elements[i][j].stocks->size;
     threaded_graph_cache.elements[i][j].stocks->prices     = malloc(sizeof(float) * threaded_graph_cache.elements[i][j].stocks->size);
@@ -252,8 +256,12 @@ void GenerateNewGraphCache()
 
         for (unsigned int j = 0; j < NUM_TIMESPANS;j++) {
 
-            if (exclusive_graph_cache.elements[i][j].stocks != NULL)
+            if (exclusive_graph_cache.elements[i][j].stocks != NULL) {
+
                 free(exclusive_graph_cache.elements[i][j].stocks->prices);
+                free(exclusive_graph_cache.elements[i][j].stocks);
+
+            }
 
             timespan = GetTimeSpanDiff(temp_time_buff, current_time, exclusive_graph_cache.elements[i][j].timespan);
             exclusive_graph_cache.elements[i][j].stocks = GetStockPricesBetweenRange(exclusive_graph_cache.company_names[i], timespan, current_time_buff, exclusive_graph_cache.elements[i][j].timespan);
@@ -323,7 +331,7 @@ void *GraphEntry(ALLEGRO_THREAD *thread, void *arg)
 
     InitializeGraphCache();
 
-    time_t cache_time = GetGameTime();
+    time_t cache_time = 0;
     time_t current_game_time;
     while (!ShouldICleanUp()) {
 

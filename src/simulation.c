@@ -143,7 +143,7 @@ void SimulationLoop(sqlite3 *db, unsigned int idx)
 float GenerateRandomPriceFluctuation(float last_price, unsigned int *thread_seed) 
 {
 
-    return 0;
+    return (1+rand()%2);
 
 }
 
