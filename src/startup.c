@@ -18,7 +18,7 @@ void InitializeStartUpSequence()
 
     CreateNewDrawLayer();
     video_object = GetDrawObjectFromJsonLayer("StartUpVideo");
-    video_object->member.video.start_video_immediately = true;
+    video_object->video.start_video_immediately = true;
     AddObjectToDrawLayer(video_object);
     
 }
@@ -30,7 +30,7 @@ void StartUpSequence()
         InitializeStartUpSequence();
 
     DrawLayers();
-    if (!al_is_video_playing(video_object->member.video.video)) {
+    if (!al_is_video_playing(video_object->video.video)) {
         ClearDrawLayers();
         SwitchToRenderingMainMenu();
     }

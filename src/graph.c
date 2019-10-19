@@ -123,8 +123,8 @@ DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points)
     object->asset_path           = NULL;
     object->child_of             = NULL;
 
-    object->member.graph.num_points = (unsigned int)num_points;
-    object->member.graph.points     = malloc(sizeof(Point) * num_points);
+    object->graph.num_points = (unsigned int)num_points;
+    object->graph.points     = malloc(sizeof(Point) * num_points);
 
     return object;
 

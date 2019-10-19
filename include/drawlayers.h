@@ -99,7 +99,7 @@ typedef struct DrawObject
         Text   text;
         Graph graph;
 
-    } member;
+    };
 
 } DrawObject;
 

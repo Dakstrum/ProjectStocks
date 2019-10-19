@@ -95,9 +95,9 @@ bool HandleMouseClick(DrawObject *object, int x, int y)
 
     if (IsMouseClickInAreaOfObject(object, x, y)) {
 
-        if (object->member.button.Callback != NULL) {
+        if (object->button.Callback != NULL) {
 
-            object->member.button.Callback();
+            object->button.Callback();
             return true;
 
         }
@@ -201,14 +201,14 @@ void ClearUpGeneric(DrawObject *object)
 void CleanUpButton(DrawObject *object) 
 {
 
-    //al_destroy_bitmap(object->member.button.button_bitmap);
+    //al_destroy_bitmap(object->button.button_bitmap);
 
 }
 
 void CleanUpMenu(DrawObject *object) 
 {
 
-    //al_destroy_bitmap(object->member.menu.menu_bitmap);
+    //al_destroy_bitmap(object->menu.menu_bitmap);
 
 }
 
@@ -223,14 +223,14 @@ void CleanUpPopUp(DrawObject *object)
 void CleanUpVideo(DrawObject *object) 
 {
 
-    al_close_video(object->member.video.video);
+    al_close_video(object->video.video);
 
 }
 
 void CleanUpText(DrawObject *object) 
 {
 
-    //al_destroy_font(object->member.text.font);
+    //al_destroy_font(object->text.font);
 
 }
 
@@ -240,7 +240,7 @@ int AddButtonToDrawLayer(DrawObject *object)
 {
 
     if (object->asset_path != NULL)
-        object->member.button.button_bitmap = GetBitmapFromCache(object->asset_path);
+        object->button.button_bitmap = GetBitmapFromCache(object->asset_path);
 
     return AddDrawObjectToDrawLayer(object);
 
@@ -297,8 +297,8 @@ int AddObjectToDrawLayer(DrawObject *object)
 int AddMenuToDrawLayer(DrawObject *object) 
 {
 
-    object->member.menu.menu_bitmap = GetBitmapFromCache(object->asset_path);
-    if (object->member.menu.menu_bitmap == NULL) {
+    object->menu.menu_bitmap = GetBitmapFromCache(object->asset_path);
+    if (object->menu.menu_bitmap == NULL) {
 
         Log("Could not create menu_bitmap");
         return -1;
@@ -312,15 +312,15 @@ int AddMenuToDrawLayer(DrawObject *object)
 int AddVideoToDrawLayer(DrawObject *object) 
 {
 
-    object->member.video.video = al_open_video(object->asset_path);
-    if (object->member.video.video == NULL) {
+    object->video.video = al_open_video(object->asset_path);
+    if (object->video.video == NULL) {
 
         LogF("Unable to open %s", object->asset_path);
         return -1;
     }
     LogF("Adding Video %s to DrawLayer", object->asset_path);
-    if (object->member.video.start_video_immediately)
-        al_start_video(object->member.video.video, al_get_default_mixer());
+    if (object->video.start_video_immediately)
+        al_start_video(object->video.video, al_get_default_mixer());
 
     return AddDrawObjectToDrawLayer(object);
 
@@ -350,10 +350,10 @@ int AddDrawObjectToDrawLayer(DrawObject *object)
 int AddTextToDrawLayer(DrawObject *object)
 {
 
-    object->member.text.font  = GetFontFromCache(object->asset_path, object->member.text.font_size);
-    object->member.text.color = al_map_rgba(object->member.text.r, object->member.text.g, object->member.text.b, object->member.text.a);
+    object->text.font  = GetFontFromCache(object->asset_path, object->text.font_size);
+    object->text.color = al_map_rgba(object->text.r, object->text.g, object->text.b, object->text.a);
 
-    if (object->member.text.font == NULL) {
+    if (object->text.font == NULL) {
 
         LogF("Unable to open font %s", object->asset_path);
         return -1;
@@ -402,33 +402,33 @@ void DrawMenu(DrawObject *object)
 {
 
     if (object->width != 0.0f && object->height != 0.0f)
-        DrawGenericWithWidth(object->member.menu.menu_bitmap, object->x, object->y, object->width, object->height);
+        DrawGenericWithWidth(object->menu.menu_bitmap, object->x, object->y, object->width, object->height);
     else
-        DrawGeneric(object->member.menu.menu_bitmap, object->x, object->y);
+        DrawGeneric(object->menu.menu_bitmap, object->x, object->y);
 
 }
 
 void DrawButton(DrawObject *object) 
 {
 
-    DrawGeneric(object->member.button.button_bitmap, object->x, object->y);
+    DrawGeneric(object->button.button_bitmap, object->x, object->y);
 
 }
 
 void DrawVideo(DrawObject *object) 
 {
 
-    if (!al_is_video_playing(object->member.video.video))
+    if (!al_is_video_playing(object->video.video))
         return;
 
-    DrawGenericWithWidth(al_get_video_frame(object->member.video.video), object->x, object->y, object->width, object->height);
+    DrawGenericWithWidth(al_get_video_frame(object->video.video), object->x, object->y, object->width, object->height);
 
 }
 
 void DrawText(DrawObject *object) 
 {
 
-    al_draw_text(object->member.text.font, object->member.text.color, object->x, object->y, 0, object->member.text.content);
+    al_draw_text(object->text.font, object->text.color, object->x, object->y, 0, object->text.content);
 
 }
 
