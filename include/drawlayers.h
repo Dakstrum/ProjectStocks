@@ -1,7 +1,12 @@
 #ifndef DRAWLAYERS_H
 #define DRAWLAYERS_H
+
+#include <time.h>
+
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_video.h>
+
+#include "shared.h"
 
 typedef enum DrawType 
 {
@@ -60,6 +65,9 @@ typedef struct Point {
 
 typedef struct Graph {
 
+    char *company;
+    TimeSpan timespan;
+
     Point *points;
 
     unsigned int num_points;
@@ -69,6 +77,8 @@ typedef struct Graph {
     unsigned char g;
     unsigned char b;
     unsigned char a;
+
+    time_t next_refresh;
 
 } Graph;
 

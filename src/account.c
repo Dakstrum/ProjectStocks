@@ -12,12 +12,19 @@ static atomic_long game_time;
 static atomic_long game_time_dt;
 static atomic_bool pause_game_time;
 
+static ALLEGRO_THREAD *account_thread = NULL;
+
+void *AccountEntry(ALLEGRO_THREAD *thread, void *arg);
+
 void InitAccount() 
 {
 
-    atomic_store(&game_time, 86400);
+    atomic_store(&game_time, 0);
     atomic_store(&game_time_dt, 2);
     atomic_store(&pause_game_time, false);
+
+    //account_thread = al_create_thread(&AccountEntry, NULL);
+    //al_start_thread(account_thread);
 
 }
 

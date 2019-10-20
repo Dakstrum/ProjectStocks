@@ -11,6 +11,7 @@
 #include "log.h"
 #include "audio.h"
 #include "cache.h"
+#include "graph.h"
 #include "drawlayers.h"
 
 #define MAX_DRAW_LAYERS 10
@@ -414,24 +415,45 @@ void DrawObjectOfTypeGen(DrawLayer *layer, int i)
         case POPUP:  DrawPopUp(layer->objects[i]);  break;
         case VIDEO:  DrawVideo(layer->objects[i]);  break;
         case TEXT:   DrawText(layer->objects[i]);   break;
-        case GRAPH:  DrawGraph(layer->objects[i]);   break;
+        case GRAPH:  DrawGraph(layer->objects[i]);  break;
 
     }
+
+}
+
+DrawObject *PollForNewGraphObject(DrawObject *object) 
+{
+
+    if (object->graph.next_refresh <= time(NULL)) {
+
+        DrawObject *graph_object = GetGraphDrawObject(object->graph.company, object->graph.timespan, object->width, object->height);
+        draw_layers[object->layer_index].objects[object->object_index] = graph_object;
+        graph_object->x            = object->x;
+        graph_object->y            = object->y;
+        graph_object->layer_index  = object->layer_index;
+        graph_object->object_index = object->object_index;
+
+        free(object->graph.points);
+        free(object);
+        
+        return graph_object;
+
+    }
+    return object;
 
 }
 
 void DrawGraph(DrawObject *object) 
 {
 
+    object = PollForNewGraphObject(object);
+
     float x = object->x;
     float y_start_point = object->y + object->height;
     Point *points = object->graph.points;
     ALLEGRO_COLOR color = al_map_rgba(255, 255, 255, 255);
-    for (unsigned int i = 0;i < object->graph.num_points - 1;i++) {
-
+    for (unsigned int i = 0;i < object->graph.num_points - 1;i++)
         al_draw_line(x + points[i].x, y_start_point - points[i].y, x + points[i+1].x, y_start_point - points[i+1].y, color , 2);
-
-    }
 
 }
 

@@ -123,8 +123,9 @@ DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points)
     object->asset_path           = NULL;
     object->child_of             = NULL;
 
-    object->graph.num_points = (unsigned int)num_points;
-    object->graph.points     = malloc(sizeof(Point) * num_points);
+    object->graph.next_refresh = time(NULL) + 3;
+    object->graph.num_points   = (unsigned int)num_points;
+    object->graph.points       = malloc(sizeof(Point) * num_points);
 
     return object;
 
@@ -173,6 +174,13 @@ DrawObject *GetGraphDrawObject(char *company_name, TimeSpan timespan, int width,
         graph_object = GetConstructedGraphDrawObject(company_index, timespan_index, width, height);
 
     al_unlock_mutex(graph_cache_mutex);
+
+    if (graph_object != NULL) {
+
+        graph_object->graph.company  = company_name;
+        graph_object->graph.timespan = timespan;
+
+    }
 
     return graph_object;
 
