@@ -442,11 +442,19 @@ void DrawButton(DrawObject *object)
 
 void DrawVideo(DrawObject *object) 
 {
-
     if (!al_is_video_playing(object->video.video))
         return;
 
-    DrawGenericWithWidth(al_get_video_frame(object->video.video), object->x, object->y, object->width, object->height);
+    if (object->video.is_repeating) {
+
+        DrawGenericWithWidth(al_get_video_frame(object->video.video), object->x, object->y, object->width, object->height);
+    }
+    else
+    {
+        DrawGenericWithWidth(al_get_video_frame(object->video.video), object->x, object->y, object->width, object->height);
+    }
+
+    
 
 }
 

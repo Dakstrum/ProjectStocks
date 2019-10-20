@@ -9,6 +9,7 @@
 #include "drawlayers.h"
 #include "log.h"
 #include "cache.h"
+#include "startup.h"
 
 
 static MenuWithChilds *stocks_menu = NULL;
@@ -24,7 +25,7 @@ void InitializeStocksMenu()
         Log("STUB: StocksMenu could not create new draw layer");
         return;
     }
-
+    LoadingSequence();
 
     stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
     AddMenuWithChildsToDrawLayer(stocks_menu);

@@ -46,6 +46,7 @@ typedef struct Menu {
 
 typedef struct Video {
 
+    bool is_repeating;
     bool start_video_immediately;
     ALLEGRO_VIDEO *video;
 
