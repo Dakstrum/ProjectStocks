@@ -19,13 +19,11 @@ void DisplayTempPopUp();
 void InitializeStocksMenu() 
 { 
     
-
     if (CreateNewDrawLayer() == -1) {
 
         Log("STUB: StocksMenu could not create new draw layer");
         return;
     }
-    LoadingSequence();
 
     stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
     AddMenuWithChildsToDrawLayer(stocks_menu);
@@ -37,6 +35,7 @@ void InitializeStocksMenu()
 
 void DisplayTempPopUp()
 {
+
     DrawObject *popup_object = CreateNewDrawObject();
 
     popup_object->type = POPUP;
@@ -51,8 +50,8 @@ void DisplayTempPopUp()
     popup_object->popup.current_time = 1;
     popup_object->popup.end_time     = 180;
     AddObjectToDrawLayer(popup_object);
-}
 
+}
 
 void RenderStocksMenu() 
 {

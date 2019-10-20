@@ -11,8 +11,9 @@
 #include "rendering.h"
 #include "log.h"
 
-static DrawObject *video_object = NULL;
+static DrawObject *video_object   = NULL;
 static DrawObject *loading_object = NULL;
+bool is_done_loading = false;
 
 void InitializeStartUpSequence() 
 {
@@ -27,7 +28,6 @@ void InitializeStartUpSequence()
 
 void InitializeLoadingSequence() 
 {
-
 
     CreateNewDrawLayer();
     loading_object = GetDrawObjectFromJsonLayer("LoadingVideo");
@@ -59,8 +59,19 @@ void LoadingSequence()
 
     DrawLayers();
     if (!al_is_video_playing(loading_object->video.video)) {
-        ClearDrawLayers();
-        SwitchToRenderingMainMenu();
-    }
+
+        if(is_done_loading) {
+
+            ClearDrawLayers();
+            SwitchToRenderingStocksMenu();
+
+        } else {
+
+            ClearDrawLayers();
+            InitializeLoadingSequence();
+
+        }
         
+    }  
+
 }

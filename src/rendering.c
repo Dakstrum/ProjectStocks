@@ -13,6 +13,7 @@
 #include "drawlayers.h"
 #include "rendering.h"
 #include "startup.h"
+#include "stocksmenu.h"
 
 void InitializeDisplay();
 void InitializeAddons();
@@ -101,7 +102,26 @@ void SwitchToRenderingMainMenu()
 
 }
 
+void SwitchToLoadingScreen()
+{
+
+    Render = &LoadingSequence;
+    Log("Loading Initialized");
+
+}
+
+void SwitchToRenderingStocksMenu()
+{
+
+    InitializeStocksMenu();
+    Render = &RenderStocksMenu;
+    Log("Stocks Menu Initialized");
+
+}
+
 ALLEGRO_DISPLAY *GetDisplay() 
 {
+
     return display;
+
 }

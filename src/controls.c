@@ -48,6 +48,9 @@ void HandleKeyboard(ALLEGRO_EVENT event)
 void HandlePauseMenu(ALLEGRO_EVENT local_event)
 {
     if(local_event.type == ALLEGRO_EVENT_KEY_DOWN && local_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+        if(DoesObjectExistInCurrentDrawLayer("LoadingVideo"))
+            return;
+
         if(!DoesObjectExistInCurrentDrawLayer("OptionsMenu"))
             TogglePauseMenu();
    

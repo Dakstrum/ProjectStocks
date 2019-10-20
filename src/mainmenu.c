@@ -12,11 +12,9 @@
 #include "stocksmenu.h"
 #include "generalpurposemenus.h"
 #include "linkopener.h"
+#include "rendering.h"
 
-//static DrawObject *main_menu     = NULL;
-//static DrawObject *version_text  = NULL;
 static MenuWithChilds *main_menu    = NULL;
-
 
 void InitializeMainMenu() 
 {
@@ -44,16 +42,11 @@ void CleanUpMainMenu()
     free(main_menu);
 }
 
-void InitStartGame()
-{
-    InitializeStocksMenu();
-}
-
 //Menu Button Callbacks
 void MainMenuStartButtonCallBack()
 {
-
-    InitStartGame();
+    
+    SwitchToLoadingScreen();
 
 }
 
