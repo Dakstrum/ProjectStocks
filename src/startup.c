@@ -12,8 +12,8 @@
 #include "log.h"
 
 static DrawObject *video_object   = NULL;
-static DrawObject *loading_object = NULL;
-bool is_done_loading = false;
+DrawObject *loading_object = NULL;
+bool is_done_loading = true;
 
 void InitializeStartUpSequence() 
 {
@@ -55,7 +55,10 @@ void LoadingSequence()
 {
 
     if (loading_object == NULL)
+    {   
+        ClearDrawLayers();
         InitializeLoadingSequence();
+    }
 
     DrawLayers();
     if (!al_is_video_playing(loading_object->video.video)) {
@@ -67,9 +70,9 @@ void LoadingSequence()
 
         } else {
 
-            ClearDrawLayers();
+            RemoveDrawObject(loading_object);
             InitializeLoadingSequence();
-
+            
         }
         
     }  

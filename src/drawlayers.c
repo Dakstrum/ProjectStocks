@@ -327,7 +327,7 @@ int AddVideoToDrawLayer(DrawObject *object)
         LogF("Unable to open %s", object->asset_path);
         return -1;
     }
-    LogF("Adding Video %s to DrawLayer", object->asset_path);
+    
     if (object->video.start_video_immediately)
         al_start_video(object->video.video, al_get_default_mixer());
 
