@@ -166,7 +166,7 @@ void LogF(const char *str, ...)
 void ResetQueue() 
 {
 
-    for (int i = 0; i < max_queue_size; i++) {
+    for (int i = 0; i < queue_pointer; i++) {
 
         if (queue[i].message != NULL)
             free(queue[i].message);
