@@ -29,6 +29,8 @@ void MainMenuGitHubButtonCallBack();
 void MainMenuTwitterButtonCallBack();
 void MainMenuYoutubeButtonCallBack();
 void MainMenuWebsiteButtonCallBack();
+void StocksSellButtonCallBack();
+void StocksBuyButtonCallBack();
 
 
 
@@ -40,24 +42,27 @@ typedef struct ButtonCallsbacks
 
 } ButtonCallsbacks;
 
-#define NUM_CALLBACKS 15
+#define NUM_CALLBACKS 17
 static ButtonCallsbacks callbacks[] = {
 
-    {"STUB",                    &StubCallback},
-    {"StartButton",             &MainMenuStartButtonCallBack},
-    {"OptionsButton",           &MainMenuOptionsButtonCallBack},
-    {"ExitButton",              &MainMenuExitButtonCallBack},
-    {"PauseMenuMainMenuButton", &PauseMenuMainMenuButtonCallBack},
-    {"PauseMenuOptionsButton",  &PauseMenuOptionsButtonCallBack},
-    {"PauseMenuExitButton",     &PauseMenuExitButtonCallBack},
-    {"OptionsMenuExitButton",   &OptionsMenuExitButtonCallBack},
-    {"StocksButton",            &StocksButtonCallBack},
-    {"NewsButton",              &NewsButtonCallBack},
-    {"AccountButton",           &AccountButtonCallBack},
-    {"GitHubButton",            &MainMenuGitHubButtonCallBack},
-    {"TwitterButton",           &MainMenuTwitterButtonCallBack},
-    {"YoutubeButton",           &MainMenuYoutubeButtonCallBack},
-    {"WebsiteButton",           &MainMenuWebsiteButtonCallBack}
+    {"STUB",                               &StubCallback},
+    {"StartButton",                        &MainMenuStartButtonCallBack},
+    {"OptionsButton",                      &MainMenuOptionsButtonCallBack},
+    {"ExitButton",                         &MainMenuExitButtonCallBack},
+    {"PauseMenuMainMenuButton",            &PauseMenuMainMenuButtonCallBack},
+    {"PauseMenuOptionsButton",             &PauseMenuOptionsButtonCallBack},
+    {"PauseMenuExitButton",                &PauseMenuExitButtonCallBack},
+    {"OptionsMenuExitButton",              &OptionsMenuExitButtonCallBack},
+    {"StocksButton",                       &StocksButtonCallBack},
+    {"NewsButton",                         &NewsButtonCallBack},
+    {"AccountButton",                      &AccountButtonCallBack},
+    {"GitHubButton",                       &MainMenuGitHubButtonCallBack},
+    {"TwitterButton",                      &MainMenuTwitterButtonCallBack},
+    {"YoutubeButton",                      &MainMenuYoutubeButtonCallBack},
+    {"WebsiteButton",                      &MainMenuWebsiteButtonCallBack},
+    {"ToggleTransactionSellButton",        &StocksSellButtonCallBack},
+    {"ToggleTransactionBuyButton",         &StocksBuyButtonCallBack}
+
 
 
 };

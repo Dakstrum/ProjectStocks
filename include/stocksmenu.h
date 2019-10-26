@@ -4,5 +4,7 @@
 void InitializeStocksMenu();
 void RenderStocksMenu();
 void ToggleStocksMenu();
+void ToggleSellTransactionMenu();
+void ToggleBuyTransactionMenu();
 
 #endif

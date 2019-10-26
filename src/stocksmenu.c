@@ -13,7 +13,9 @@
 #include "startup.h"
 
 
-static MenuWithChilds *stocks_menu = NULL;
+static MenuWithChilds *stocks_menu           = NULL;
+static MenuWithChilds *sell_transaction_menu = NULL;
+static MenuWithChilds *buy_transaction_menu  = NULL;
 
 void DisplayTempPopUp();
 
@@ -65,6 +67,42 @@ void RenderStocksMenu()
 {
 
     DrawLayers();
+
+}
+
+void StocksSellButtonCallBack()
+{
+
+    if (sell_transaction_menu == NULL) {
+
+        CreateNewDrawLayer();
+        sell_transaction_menu = GetMenuWithChildsFromJsonLayer("SellTransactionMenu");
+        AddMenuWithChildsToDrawLayer(sell_transaction_menu);
+        
+    } else {
+
+        ClearCurrentDrawLayer();
+        sell_transaction_menu = NULL;
+
+    }
+
+}
+
+void StocksBuyButtonCallBack()
+{
+
+    if (buy_transaction_menu == NULL) {
+
+        CreateNewDrawLayer();
+        buy_transaction_menu = GetMenuWithChildsFromJsonLayer("BuyTransactionMenu");
+        AddMenuWithChildsToDrawLayer(buy_transaction_menu);
+        
+    } else {
+
+        ClearCurrentDrawLayer();
+        buy_transaction_menu = NULL;
+
+    }
 
 }
 
