@@ -1,6 +1,7 @@
 
 #include <time.h>
 #include <stdbool.h>
+#include <stdatomic.h>
 
 #include <allegro5/allegro.h>
 
@@ -75,11 +76,21 @@ static ALLEGRO_MUTEX  *graph_cache_mutex       = NULL;
 static Company *companies                      = NULL;
 static unsigned int num_companies              = 0;
 
+static atomic_bool graph_cache_ready;
+
 void *GraphEntry(ALLEGRO_THREAD *thread, void *arg);
+
+bool IsGraphCacheReady() 
+{
+
+    return atomic_load(&graph_cache_ready);
+
+}
 
 void InitializeGraphCaching() 
 {
 
+    atomic_store(&graph_cache_ready, false);
     graph_cache_mutex  = al_create_mutex();
     graph_cache_thread = al_create_thread(&GraphEntry, NULL);
     al_start_thread(graph_cache_thread);
@@ -338,6 +349,8 @@ void *GraphEntry(ALLEGRO_THREAD *thread, void *arg)
 {
 
     InitializeGraphCache();
+    UpdateGraphCache();
+    atomic_store(&graph_cache_ready, true);
 
     time_t cache_time = 0;
     time_t current_game_time;

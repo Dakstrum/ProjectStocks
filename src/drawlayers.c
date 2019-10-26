@@ -493,6 +493,13 @@ void DrawButton(DrawObject *object)
 void DrawVideo(DrawObject *object) 
 {
 
+    if (!al_is_video_playing(object->video.video) && object->video.should_repeat) {
+
+        al_seek_video(object->video.video, 0.0);
+        al_set_video_playing(object->video.video, true);
+
+    }
+
     DrawGenericWithWidth(al_get_video_frame(object->video.video), object->x, object->y, object->width, object->height);
     
 }

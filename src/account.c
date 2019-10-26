@@ -19,12 +19,12 @@ void *AccountEntry(ALLEGRO_THREAD *thread, void *arg);
 void InitAccount() 
 {
 
-    atomic_store(&game_time, 0);
+    atomic_store(&game_time, 3600);
     atomic_store(&game_time_dt, 2);
     atomic_store(&pause_game_time, false);
 
-    //account_thread = al_create_thread(&AccountEntry, NULL);
-    //al_start_thread(account_thread);
+    account_thread = al_create_thread(&AccountEntry, NULL);
+    al_start_thread(account_thread);
 
 }
 

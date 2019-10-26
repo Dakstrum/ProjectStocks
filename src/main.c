@@ -106,6 +106,7 @@ enum InitializeSuccess Initialize()
     InitializeEventQueue();
     InitializeJson();
     InitAccount();
+    InitializeSimulation();
     InitializeGameThreads();
 
     return SUCCESS;

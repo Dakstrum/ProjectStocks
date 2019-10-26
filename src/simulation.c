@@ -36,17 +36,17 @@ int GetYearFromBuff(char *buff);
 
 float GenerateRandomPriceFluctuation(float last_price, unsigned int *thread_seed);
 
-void InitializeSimulation() 
-{
-
-    atomic_store(&simulation_finished, false);
-
-}
-
 bool GetSimulationDone() 
 {
 
     return atomic_load(&simulation_finished);
+
+}
+
+void InitializeSimulation() 
+{
+
+    atomic_store(&simulation_finished, false);
 
 }
 
@@ -88,7 +88,6 @@ void GenerateSimulation()
     SetCompanies();
     GenerateDataForCompanies();
     atomic_store(&simulation_finished, true);
-
 }
 
 void GenerateDataForCompanies() 
