@@ -39,7 +39,9 @@ void RenderAccountMenu()
 void CleanUpAccountMenu() 
 {
 
-    free(account_menu);
+    if (account_menu != NULL)
+        free(account_menu);
+    account_menu = NULL;
     
 }
 

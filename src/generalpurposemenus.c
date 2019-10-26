@@ -29,8 +29,12 @@ void RenderGeneralPurposeMenus()
 
 void CleanUpGeneralPurposeMenus() 
 {
-    free(pause_menu);
-    free(options_menu);
+    if (pause_menu != NULL)
+        free(pause_menu);
+    if (options_menu != NULL)
+        free(options_menu);
+    pause_menu   = NULL;
+    options_menu = NULL;
 }
 
 void ToggleOptionsMenu()

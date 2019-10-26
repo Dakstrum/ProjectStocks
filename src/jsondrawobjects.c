@@ -223,7 +223,9 @@ void CheckAndSetMenuText(int idx, char *child_of)
 void CleanUpDrawObjectJson() 
 {
 
-    free(parsed_objects);
+    if (parsed_objects != NULL)
+        free(parsed_objects);
+    parsed_objects = NULL;
 
 }
 

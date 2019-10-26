@@ -109,7 +109,9 @@ void StocksBuyButtonCallBack()
 void CleanUpStocksMenu() 
 {
 
-    free(stocks_menu);
+    if (stocks_menu != NULL)
+        free(stocks_menu);
+    stocks_menu = NULL;
     
 }
 

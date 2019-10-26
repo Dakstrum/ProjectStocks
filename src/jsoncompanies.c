@@ -78,8 +78,9 @@ void ParseCompanyJsonObject(array_list *companies_list)
 
 void CleanUpComponaniesJson() 
 {
-
-    free(parsed_companies);
+    if (parsed_companies != NULL)
+        free(parsed_companies);
+    parsed_companies = NULL;
 
 }
 

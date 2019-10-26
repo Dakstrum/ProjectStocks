@@ -15,8 +15,6 @@
 #include "jsonlayer.h"
 #include "account.h"
 
-#include "windows.h"
-
 enum InitializeSuccess 
 {
 
