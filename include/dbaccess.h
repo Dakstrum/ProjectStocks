@@ -14,7 +14,10 @@ typedef struct StockPrices {
 } StockPrices;
 
 void InitializeDatabases();
-int OpenConnection(sqlite3 **db);
+int OpenConnection(sqlite3 **db, char *connection_string);
+
+char *MemoryConnection();
+char *DefaultConnection();
 
 int InsertAndOrSetCompanyToActive(char *company_name, float ipo);
 void InsertStockPrice(int save_id, int company_id, float stock_price, char *timestamp, sqlite3 *db);

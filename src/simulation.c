@@ -96,7 +96,7 @@ void GenerateDataForCompanies()
     // Could make multithreaded, but need to use rand_r for thread safety.
     // Will see how it performs with a single thread.
     sqlite3 *db;
-    if (OpenConnection(&db) != 0)
+    if (OpenConnection(&db, MemoryConnection()) != 0)
         return;
 
     for (unsigned int i = 0;i < num_companies;i++) {

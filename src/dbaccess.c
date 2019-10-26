@@ -35,12 +35,26 @@ void CleanUpDatabases()
 
 }
 
-int OpenConnection(sqlite3 **db) 
+char *MemoryConnection() 
 {
 
-    if (sqlite3_open_v2("blinky.db", db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE, NULL) != SQLITE_OK) {
+    return "file:simdb?mode=memory&cache=shared";
 
-        Log("Could not establish connection to blinky.db from simulation");
+}
+
+char *DefaultConnection() 
+{
+
+    return "blinky.db";
+
+}
+
+int OpenConnection(sqlite3 **db, char *connection_string) 
+{
+
+    if (sqlite3_open_v2(connection_string, db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE, NULL) != SQLITE_OK) {
+
+        LogF("Could not establish connection to %s", connection_string);
         SetCleanUpToTrue();
         return -1;
 
@@ -49,29 +63,58 @@ int OpenConnection(sqlite3 **db)
 
 }
 
+int OpenConnectionCreate(sqlite3 **db, char *connection_string) 
+{
+
+    if  (sqlite3_open_v2(connection_string, db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, NULL) != SQLITE_OK) {
+
+        LogF("Could not establish connection to %s for creation or write/read access.", connection_string);
+        SetCleanUpToTrue();
+        return -1;
+
+    }
+    return 0;
+
+}
+
+void SetUpDB(sqlite3 **db, char *connection_string) 
+{
+
+    if (OpenConnectionCreate(db, connection_string) == -1)
+        return;
+
+    char *error       = NULL;
+    char *drop_stocks = "DROP TABLE IF EXISTS StockPrices;";
+    sqlite3_exec(*db, drop_stocks, NULL, 0, NULL);
+
+    char *setup =   "CREATE TABLE IF NOT EXISTS Company(CompanyId INTEGER PRIMARY KEY, Ipo DOUBLE NOT NULL, CompanyName VARCHAR(50) NOT NULL, Category VARCHAR(30), IsActiveInJson INT DEFAULT 0);"
+                    "CREATE TABLE IF NOT EXISTS CompanyMetadata(CompanyMetaId INTEGER PRIMARY KEY, CompanyId INT NOT NULL, TotalEmployees INT NOT NULL, StocksInMarket UNSIGNED BIG INT, SaveId INT NOT NULL);"
+                    "CREATE TABLE IF NOT EXISTS StockPrices(StockPriceId INTEGER PRIMARY KEY, SaveId INT NOT NULL,  CompanyId INT NOT NULL, Price FLOAT NOT NULL, Time DATETIME NOT NULL);"
+                    "CREATE TABLE IF NOT EXISTS Saves(SaveId INTEGER PRIMARY KEY, SaveName TEXT NOT NULL, Money DOUBLE NOT NULL, TimeSpentInGame UNSIGNED BIG INT, RandomSeed UNSIGNED BIG INT);"
+                    "CREATE TABLE IF NOT EXISTS OwnedStocks(OwnedStockId INTEGER PRIMARY KEY, SaveId INT NOT NULL, CompanyId INT NOT NULL, HowManyOwned UNSIGNED BIG INT NOT NULL);"
+                    "CREATE TABLE IF NOT EXISTS Transactions(TransactionId INTEGER PRIMARY KEY, CompanyId INT NOT NULL, TransactionAmount DOUBLE NOT NULL, StocksExchanged INT NOT NULL, TransactionTime DATETIME NOT NULL, SaveId INT NOT NULL)";
+    sqlite3_exec(*db, setup, NULL, 0, &error);
+    if (error != NULL)
+        LogF("Error setting up db %s with %s", connection_string, error);
+
+    char *set_all_companies_to_inactive = "UPDATE Company SET IsActiveInJson=0;";
+    sqlite3_exec(*db, set_all_companies_to_inactive, NULL, 0, 0);
+
+}
+
 void SetupMainDB() 
 {
 
-    sqlite3 *db;
-    if  (sqlite3_open_v2("blinky.db", &db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
-
-        char *drop_stocks = "DROP TABLE IF EXISTS StockPrices;";
-        sqlite3_exec(db, drop_stocks, NULL, 0, 0);
-
-        char *setup =   "CREATE TABLE IF NOT EXISTS Company(CompanyId INTEGER PRIMARY KEY, Ipo DOUBLE NOT NULL, CompanyName VARCHAR(50) NOT NULL, Category VARCHAR(30), IsActiveInJson INT DEFAULT 0);"
-                        "CREATE TABLE IF NOT EXISTS CompanyMetadata(CompanyMetaId INTEGER PRIMARY KEY, CompanyId INT NOT NULL, TotalEmployees INT NOT NULL, StocksInMarket UNSIGNED BIG INT, SaveId INT NOT NULL);"
-                        "CREATE TABLE IF NOT EXISTS StockPrices(StockPriceId INTEGER PRIMARY KEY, SaveId INT NOT NULL,  CompanyId INT NOT NULL, Price FLOAT NOT NULL, Time DATETIME NOT NULL);"
-                        "CREATE TABLE IF NOT EXISTS Saves(SaveId INTEGER PRIMARY KEY, SaveName TEXT NOT NULL, Money DOUBLE NOT NULL, TimeSpentInGame UNSIGNED BIG INT, RandomSeed UNSIGNED BIG INT);"
-                        "CREATE TABLE IF NOT EXISTS OwnedStocks(OwnedStockId INTEGER PRIMARY KEY, SaveId INT NOT NULL, CompanyId INT NOT NULL, HowManyOwned UNSIGNED BIG INT NOT NULL);"
-                        "CREATE TABLE IF NOT EXISTS Transactions(TransactionId INTEGER PRIMARY KEY, CompanyId INT NOT NULL, TransactionAmount DOUBLE NOT NULL, StocksExchanged INT NOT NULL, TransactionTime DATETIME NOT NULL, SaveId INT NOT NULL)";
-        sqlite3_exec(db, setup, NULL, 0, 0);
-
-        char *set_all_companies_to_inactive = "UPDATE Company SET IsActiveInJson=0;";
-        sqlite3_exec(db, set_all_companies_to_inactive, NULL, 0, 0);
-
-    }
+    sqlite3 *db = NULL;
+    SetUpDB(&db, DefaultConnection());
     sqlite3_close(db);
 
+
+    sqlite3 *persistent_memory_db = NULL;
+    SetUpDB(&persistent_memory_db, MemoryConnection());
+    if (persistent_memory_db == NULL)
+        Log("Persistent memory never set");
+    
 }
 
 void SetupLogDB() 
@@ -94,7 +137,7 @@ int InsertAndOrSetCompanyToActive(char *company_name, float ipo)
     int company_id = -1;
 
     sqlite3 *db;
-    if  (sqlite3_open_v2("blinky.db", &db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
+    if  (OpenConnection(&db, DefaultConnection()) == 0) {
 
         if (!DoesCompanyExist(company_name, db))
             InsertNewCompany(company_name, ipo, db);
@@ -263,7 +306,7 @@ StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, ch
     prices->size        = 128;
 
     sqlite3 *db;
-    if (OpenConnection(&db) != 0)
+    if (OpenConnection(&db, MemoryConnection()) != 0)
         return prices;
 
     ExecuteQuery(GetStockPricesBetweenRangeQuery(company_name, start_time, end_time, timespan), &SetCompanyPrices, prices, db);
