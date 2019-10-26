@@ -32,8 +32,15 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DDEBUGGING)
 endif()
 
-string(APPEND CMAKE_C_FLAGS_DEBUG " -lm -O0 -Wall")
-string(APPEND CMAKE_C_FLAGS_RELEASE " -lm -O2")
+if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    string(APPEND CMAKE_C_FLAGS_DEBUG " -O0 -Wall -fno-omit-frame-pointer -fsanitize=address")
+    string(APPEND CMAKE_C_FLAGS_RELEASE " -O2")
+else()
+    string(APPEND CMAKE_C_FLAGS_DEBUG " -lm -O0 -Wall")
+    string(APPEND CMAKE_C_FLAGS_RELEASE " -lm -O2")
+endif()
+
+
 
 add_executable(projectstocks ${sources} ${headers})
 
