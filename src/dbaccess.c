@@ -166,6 +166,13 @@ void SetupLogDB()
         char *setup = "CREATE TABLE IF NOT EXISTS LOGS(LogId INTEGER PRIMARY KEY, TimeStamp DATETIME DEFAULT(datetime(CURRENT_TIMESTAMP, 'localtime')), Log TEXT NOT NULL);";
         sqlite3_exec(db, setup, NULL, 0, 0);
 
+#if DEBUGGING
+
+        char *delete_contents = "DELETE FROM LOGS;";
+        sqlite3_exec(db, delete_contents, NULL, 0, 0);
+
+#endif
+
     }
     sqlite3_close(db);
 

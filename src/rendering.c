@@ -104,7 +104,6 @@ void SwitchToRenderingMainMenu()
 
     InitializeMainMenu();
     Render = &RenderMainMenu;
-    Log("MainMenu Initialized");
 
 }
 
@@ -112,7 +111,6 @@ void SwitchToLoadingScreen()
 {
 
     Render = &LoadingSequence;
-    Log("Loading Initialized");
 
 }
 
@@ -121,7 +119,6 @@ void SwitchToRenderingStocksMenu()
 
     InitializeStocksMenu();
     Render = &RenderStocksMenu;
-    Log("Stocks Menu Initialized");
 
 }
 

@@ -118,9 +118,18 @@ void InitializeEventQueue()
 {
 
     LogF("Display modes found = %d", al_get_num_display_modes());
-    if (al_get_display_mode(al_get_num_display_modes()-1, &mode) == NULL)
-        Log("Could not get display mode");
-    timer       = al_create_timer(1.0/mode.refresh_rate);
+    if (al_get_display_mode(al_get_num_display_modes()-1, &mode) == NULL) {
+
+        Log("Could not get display mode. Defaulting to 60hz");
+        timer = al_create_timer(1.0/60.0);
+
+    } else {
+
+        timer = al_create_timer(1.0/mode.refresh_rate);
+        LogF("refresh detected as %dhz", mode.refresh_rate);
+
+    }
+    
     event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_mouse_event_source());
     al_register_event_source(event_queue, al_get_keyboard_event_source());
@@ -128,7 +137,6 @@ void InitializeEventQueue()
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_start_timer(timer);
 
-    LogF("refresh detected as %d", mode.refresh_rate);
 }
 
 
