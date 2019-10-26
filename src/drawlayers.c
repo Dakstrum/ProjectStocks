@@ -87,6 +87,9 @@ void SetObjectPointersToNull()
 void HandleMouseClickInButtonAreas(int x, int y) 
 {
 
+    if (current_draw_layer < 0)
+        return;
+    
     for (int i = 0; i < MAX_OBJECTS_PER_LAYER;i++)
         if (draw_layers[current_draw_layer].objects[i] != NULL &&  draw_layers[current_draw_layer].objects[i]->type == BUTTON)
             if (HandleMouseClick(draw_layers[current_draw_layer].objects[i], x, y))
