@@ -38,7 +38,7 @@ void ToggleOptionsMenu()
     if (options_menu == NULL) {
 
         CreateNewDrawLayer();
-        options_menu = GetMenuWithChildsFromJsonLayer(MenusThatDisablePauseMenuFunctionality);
+        options_menu = GetMenuWithChildsFromJsonLayer("OptionsMenu");
         AddMenuWithChildsToDrawLayer(options_menu);
         
     } else {

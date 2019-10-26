@@ -11,6 +11,8 @@ enum RenderingType
 
 void InitializeRendering();
 void SwitchToRenderingMainMenu();
+void SwitchToLoadingScreen();
+void SwitchToRenderingStocksMenu();
 void HandleRendering();
 void HandleWindowEvents(ALLEGRO_EVENT event);
 void CleanUpRendering();

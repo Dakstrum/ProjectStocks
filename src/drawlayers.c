@@ -340,7 +340,7 @@ int AddVideoToDrawLayer(DrawObject *object)
         LogF("Unable to open %s", object->asset_path);
         return -1;
     }
-    LogF("Adding Video %s to DrawLayer", object->asset_path);
+    
     if (object->video.start_video_immediately)
         al_start_video(object->video.video, al_get_default_mixer());
 
@@ -493,11 +493,8 @@ void DrawButton(DrawObject *object)
 void DrawVideo(DrawObject *object) 
 {
 
-    if (!al_is_video_playing(object->video.video))
-        return;
-
     DrawGenericWithWidth(al_get_video_frame(object->video.video), object->x, object->y, object->width, object->height);
-
+    
 }
 
 void DrawText(DrawObject *object) 
