@@ -14,6 +14,7 @@ typedef struct StockPrices {
 } StockPrices;
 
 void InitializeDatabases();
+void CopyPersistentToMemory();
 int OpenConnection(sqlite3 **db, char *connection_string);
 
 char *MemoryConnection();

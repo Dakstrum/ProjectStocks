@@ -77,6 +77,46 @@ int OpenConnectionCreate(sqlite3 **db, char *connection_string)
 
 }
 
+void BeginInMemoryBackup(sqlite3 *persistent, sqlite3 *memory)
+{
+
+    sqlite3_backup *backup;
+    if ((backup = sqlite3_backup_init(memory, "main", persistent, "main")) != NULL) {
+
+        sqlite3_backup_step(backup, -1);
+        sqlite3_backup_finish(backup);
+
+    } else {
+
+        LogF("Backup error: %s", sqlite3_errmsg(memory));
+        SetCleanUpToTrue();
+
+    }
+
+}
+
+void CopyPersistentToMemory() 
+{
+
+    sqlite3 *persistent;
+    sqlite3 *memory;
+
+    if (OpenConnection(&persistent, DefaultConnection()) == -1)
+        return;
+    if (OpenConnection(&memory, MemoryConnection()) == -1) {
+
+        sqlite3_close(persistent);
+        return;
+
+    }
+
+    BeginInMemoryBackup(persistent, memory);
+
+    sqlite3_close(persistent);
+    sqlite3_close(memory);
+
+}
+
 void SetUpDB(sqlite3 **db, char *connection_string) 
 {
 

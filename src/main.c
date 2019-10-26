@@ -105,6 +105,7 @@ enum InitializeSuccess Initialize()
     InitializeRendering();
     InitializeEventQueue();
     InitializeJson();
+    CopyPersistentToMemory();
     InitAccount();
     InitializeSimulation();
     InitializeGameThreads();
