@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdarg.h>
 #include <float.h>
+#include <time.h>
 
 #include "log.h"
 
@@ -93,4 +94,36 @@ float MaxMinDiff(float *array, unsigned int size)
 
     return MaxF(array, size) - MinF(array, size);
     
+}
+
+long GetMillDiff(struct timespec *t1, struct timespec *t2) 
+{
+
+    return labs( (t1->tv_sec * 1e3 + t1->tv_nsec / 1e6) - (t2->tv_sec * 1e3 - t2->tv_nsec / 1e6) );
+
+}
+
+struct timespec GetCurrentTime() 
+{
+
+    struct timespec current_time;
+    clock_gettime(CLOCK_MONOTONIC, &current_time);
+    return current_time;
+
+}
+
+struct timespec GetOffsetTime(long offset_in_milli)
+{
+
+    struct timespec offset_time = GetCurrentTime();
+
+    long seconds = offset_in_milli / 1000;
+    long milli   = offset_in_milli % 1000;
+
+    // TODO Doesn't account for overflows;
+    offset_time.tv_sec + seconds;
+    offset_time.tv_nsec + (milli * 1e6);
+
+    return offset_time;
+
 }

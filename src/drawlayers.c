@@ -251,13 +251,86 @@ int AddButtonToDrawLayer(DrawObject *object)
 
 }
 
+void PopupSetUpAnimation(void *gen_object)
+{
+    DrawObject *object = (DrawObject *)gen_object;
+    object->popup.dy   = -(float)(object->popup.current_y - object->y)/(object->popup.diff_time_left_to_animate);
 
+}
+
+void PopupSetDownAnimation(void *gen_object)
+{
+
+    DrawObject *object = (DrawObject *)gen_object;
+    object->popup.dy   = (float)(object->y - object->popup.current_y)/(object->popup.diff_time_left_to_animate);
+
+}
+
+void PopupSetLeftAnimation(void *gen_object)
+{
+
+    DrawObject *object = (DrawObject *)gen_object;
+    object->popup.dx   = -(float)(object->popup.current_x - object->x)/(object->popup.diff_time_left_to_animate);
+
+}
+
+void PopupSetRightAnimation(void *gen_object)
+{
+
+    DrawObject *object = (DrawObject *)gen_object;
+    object->popup.dx   = (float)(object->x - object->popup.current_x)/(object->popup.diff_time_left_to_animate);
+    
+}
+
+void PopupSetInitialPositionAndAnimationFunction(DrawObject *object)
+{
+
+    object->popup.dx        = 0;
+    object->popup.dy        = 0;
+    object->popup.current_x = object->x;
+    object->popup.current_y = object->y;
+    int display_width       = al_get_display_width(display);
+    int display_height      = al_get_display_height(display);
+
+    if (strcmp(object->popup.direction,  "Up") == 0) {
+
+        object->popup.current_y = display_height;
+        object->popup.set_dx_dy = &PopupSetUpAnimation;
+
+    } else if (strcmp(object->popup.direction, "Down") == 0) {
+
+        object->popup.current_y = -object->height;
+        object->popup.set_dx_dy = &PopupSetDownAnimation;
+
+    } else if (strcmp(object->popup.direction, "Left") == 0) {
+
+        object->popup.current_x = display_width;
+        object->popup.set_dx_dy = &PopupSetLeftAnimation;
+
+    } else if (strcmp(object->popup.direction, "Right") == 0) {
+
+        object->popup.current_x = -object->width;
+        object->popup.set_dx_dy = &PopupSetRightAnimation;
+
+    }
+
+}
 
 int AddPopUpToDrawLayer(DrawObject *object)
 {
 
     if (object->asset_path != NULL)
         object->popup.popup_bitmap = GetBitmapFromCache(object->asset_path);
+
+    object->popup.intro_animate_time        = GetOffsetTime(object->popup.diff_time_to_animate);
+    object->popup.outro_animate_time        = GetOffsetTime(object->popup.diff_time_to_animate*2 + object->popup.diff_time_to_stay);
+    object->popup.stay_time                 = GetOffsetTime(object->popup.diff_time_to_animate + object->popup.diff_time_to_stay);
+    object->popup.done_intro_animation      = false;
+    object->popup.done_staying              = false;
+    object->popup.diff_time_left_to_animate = object->popup.diff_time_to_animate;
+    object->popup.diff_time_left_to_stay    = object->popup.diff_time_to_stay;
+
+    PopupSetInitialPositionAndAnimationFunction(object);
 
     return AddDrawObjectToDrawLayer(object);
 
@@ -451,9 +524,9 @@ void DrawGraph(DrawObject *object)
 
     object = PollForNewGraphObject(object);
 
-    float x = object->x;
+    float x             = object->x;
     float y_start_point = object->y + object->height;
-    Point *points = object->graph.points;
+    Point *points       = object->graph.points;
     ALLEGRO_COLOR color = al_map_rgba(255, 255, 255, 255);
     for (unsigned int i = 0;i < object->graph.num_points - 1;i++)
         al_draw_line(x + points[i].x, y_start_point - points[i].y, x + points[i+1].x, y_start_point - points[i+1].y, color , 2);
@@ -463,7 +536,16 @@ void DrawGraph(DrawObject *object)
 void DrawPopUp(DrawObject *object)
 {
 
-    if(object->popup.current_time >= object->popup.end_time) {
+    struct timespec current_time = GetCurrentTime();
+
+    if (!object->popup.done_intro_animation) {
+
+        
+
+    }
+
+/*
+    if (object->popup.current_time >= object->popup.end_time) {
 
         RemoveDrawObject(object);
 
@@ -473,6 +555,7 @@ void DrawPopUp(DrawObject *object)
         object->popup.current_time++;
 
     }
+    */
 
 }
 

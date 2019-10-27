@@ -1,6 +1,8 @@
 #ifndef SHARED_H
 #define SHARED_H
 
+#include <time.h>
+
 typedef enum TimeSpan {
 
     ONE_DAY = 0,
@@ -27,5 +29,9 @@ char *GetFormattedPointer(const char *str, ...);
 float MaxF(float *array, unsigned int size);
 float MinF(float *array, unsigned int size);
 float MaxMinDiff(float *array, unsigned int size);
+
+long GetMillDiff(struct timespec *t1, struct timespec *t2);
+struct timespec GetCurrentTime();
+struct timespec GetOffsetTime(long offset_in_milli);
 
 #endif

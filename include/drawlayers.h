@@ -86,8 +86,26 @@ typedef struct Graph {
 typedef struct PopUp {
 
     ALLEGRO_BITMAP *popup_bitmap;
-    int current_time;
-    int end_time;
+    long diff_time_to_animate;
+    long diff_time_to_stay;
+
+    long diff_time_left_to_animate;
+    long diff_time_left_to_stay;
+
+    struct timespec stay_time;
+    struct timespec intro_animate_time;
+    struct timespec outro_animate_time;
+
+    int current_x;
+    int current_y;
+    float dx;
+    float dy;
+
+    bool done_intro_animation;
+    bool done_staying;
+
+    char *direction;
+    void (*set_dx_dy)(void *);
 
 } PopUp;
 
