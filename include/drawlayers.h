@@ -92,20 +92,23 @@ typedef struct PopUp {
     long diff_time_left_to_animate;
     long diff_time_left_to_stay;
 
-    struct timespec stay_time;
-    struct timespec intro_animate_time;
-    struct timespec outro_animate_time;
+    struct timespec last_animation_time;
+    struct timespec last_stay_time;
 
-    int current_x;
-    int current_y;
+    float start_x;
+    float start_y;
+    float current_x;
+    float current_y;
     float dx;
     float dy;
 
     bool done_intro_animation;
+    bool done_outro_animation;
     bool done_staying;
 
     char *direction;
-    void (*set_dx_dy)(void *);
+    void (*set_dx_dy)(void *, int, int);
+    void (*set_dx_dy_reverse)(void *, int, int);
 
 } PopUp;
 

@@ -99,7 +99,7 @@ float MaxMinDiff(float *array, unsigned int size)
 long GetMillDiff(struct timespec *t1, struct timespec *t2) 
 {
 
-    return labs( (t1->tv_sec * 1e3 + t1->tv_nsec / 1e6) - (t2->tv_sec * 1e3 - t2->tv_nsec / 1e6) );
+    return labs( ((t1->tv_sec * 1e3) + (t1->tv_nsec / 1e6)) - ((t2->tv_sec * 1e3) + (t2->tv_nsec / 1e6)) );
 
 }
 
@@ -121,8 +121,8 @@ struct timespec GetOffsetTime(long offset_in_milli)
     long milli   = offset_in_milli % 1000;
 
     // TODO Doesn't account for overflows;
-    offset_time.tv_sec + seconds;
-    offset_time.tv_nsec + (milli * 1e6);
+    offset_time.tv_sec  += seconds;
+    offset_time.tv_nsec += (milli * 1e6);
 
     return offset_time;
 

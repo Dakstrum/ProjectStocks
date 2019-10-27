@@ -251,34 +251,34 @@ int AddButtonToDrawLayer(DrawObject *object)
 
 }
 
-void PopupSetUpAnimation(void *gen_object)
+void PopupSetUpDy(void *gen_object, int x, int y)
 {
     DrawObject *object = (DrawObject *)gen_object;
-    object->popup.dy   = -(float)(object->popup.current_y - object->y)/(object->popup.diff_time_left_to_animate);
+    object->popup.dy   = -(float)(object->popup.current_y - y)/(object->popup.diff_time_left_to_animate);
 
 }
 
-void PopupSetDownAnimation(void *gen_object)
+void PopupSetDownDy(void *gen_object, int x,  int y)
 {
 
     DrawObject *object = (DrawObject *)gen_object;
-    object->popup.dy   = (float)(object->y - object->popup.current_y)/(object->popup.diff_time_left_to_animate);
+    object->popup.dy   = (float)(y - object->popup.current_y)/(object->popup.diff_time_left_to_animate);
 
 }
 
-void PopupSetLeftAnimation(void *gen_object)
+void PopupSetLeftDx(void *gen_object, int x, int y)
 {
 
     DrawObject *object = (DrawObject *)gen_object;
-    object->popup.dx   = -(float)(object->popup.current_x - object->x)/(object->popup.diff_time_left_to_animate);
+    object->popup.dx   = -(float)(object->popup.current_x - x)/(object->popup.diff_time_left_to_animate);
 
 }
 
-void PopupSetRightAnimation(void *gen_object)
+void PopupSetRightDx(void *gen_object, int x, int y)
 {
 
     DrawObject *object = (DrawObject *)gen_object;
-    object->popup.dx   = (float)(object->x - object->popup.current_x)/(object->popup.diff_time_left_to_animate);
+    object->popup.dx   = (float)(x - object->popup.current_x)/(object->popup.diff_time_left_to_animate);
     
 }
 
@@ -287,32 +287,39 @@ void PopupSetInitialPositionAndAnimationFunction(DrawObject *object)
 
     object->popup.dx        = 0;
     object->popup.dy        = 0;
-    object->popup.current_x = object->x;
-    object->popup.current_y = object->y;
+    object->popup.current_x = (float)object->x;
+    object->popup.current_y = (float)object->y;
     int display_width       = al_get_display_width(display);
     int display_height      = al_get_display_height(display);
 
-    if (strcmp(object->popup.direction,  "Up") == 0) {
+    if (strcmp(object->popup.direction, "Up") == 0) {
 
-        object->popup.current_y = display_height;
-        object->popup.set_dx_dy = &PopupSetUpAnimation;
+        object->popup.current_y         = display_height;
+        object->popup.set_dx_dy         = &PopupSetUpDy;
+        object->popup.set_dx_dy_reverse = &PopupSetDownDy;
 
     } else if (strcmp(object->popup.direction, "Down") == 0) {
 
-        object->popup.current_y = -object->height;
-        object->popup.set_dx_dy = &PopupSetDownAnimation;
+        object->popup.current_y         = -object->height;
+        object->popup.set_dx_dy         = &PopupSetDownDy;
+        object->popup.set_dx_dy_reverse = &PopupSetUpDy;
 
     } else if (strcmp(object->popup.direction, "Left") == 0) {
 
-        object->popup.current_x = display_width;
-        object->popup.set_dx_dy = &PopupSetLeftAnimation;
+        object->popup.current_x         = display_width;
+        object->popup.set_dx_dy         = &PopupSetLeftDx;
+        object->popup.set_dx_dy_reverse = &PopupSetRightDx;
 
     } else if (strcmp(object->popup.direction, "Right") == 0) {
 
-        object->popup.current_x = -object->width;
-        object->popup.set_dx_dy = &PopupSetRightAnimation;
+        object->popup.current_x         = -object->width;
+        object->popup.set_dx_dy         = &PopupSetRightDx;
+        object->popup.set_dx_dy_reverse = &PopupSetLeftDx;
 
     }
+
+    object->popup.start_x = object->popup.current_x;
+    object->popup.start_y = object->popup.current_y;
 
 }
 
@@ -322,10 +329,9 @@ int AddPopUpToDrawLayer(DrawObject *object)
     if (object->asset_path != NULL)
         object->popup.popup_bitmap = GetBitmapFromCache(object->asset_path);
 
-    object->popup.intro_animate_time        = GetOffsetTime(object->popup.diff_time_to_animate);
-    object->popup.outro_animate_time        = GetOffsetTime(object->popup.diff_time_to_animate*2 + object->popup.diff_time_to_stay);
-    object->popup.stay_time                 = GetOffsetTime(object->popup.diff_time_to_animate + object->popup.diff_time_to_stay);
+    object->popup.last_animation_time       = GetCurrentTime();
     object->popup.done_intro_animation      = false;
+    object->popup.done_outro_animation      = false;
     object->popup.done_staying              = false;
     object->popup.diff_time_left_to_animate = object->popup.diff_time_to_animate;
     object->popup.diff_time_left_to_stay    = object->popup.diff_time_to_stay;
@@ -533,29 +539,72 @@ void DrawGraph(DrawObject *object)
 
 }
 
-void DrawPopUp(DrawObject *object)
+void MovePopUp(DrawObject *object, void (*set_dx_dy)(void *, int, int), bool reversed, bool *done)
 {
 
     struct timespec current_time = GetCurrentTime();
+    long dt_milli                = GetMillDiff(&current_time, &object->popup.last_animation_time);
+
+    if (dt_milli == 0)
+        return;
+
+    object->popup.diff_time_left_to_animate -= dt_milli;
+    if (object->popup.diff_time_left_to_animate > 0) {
+
+        object->popup.last_animation_time = current_time;
+        if (!reversed)
+            set_dx_dy(object, object->x, object->y);
+        else
+            set_dx_dy(object, object->popup.start_x, object->popup.start_y);
+
+        object->popup.current_x += object->popup.dx * dt_milli;
+        object->popup.current_y += object->popup.dy * dt_milli;
+
+    } else {
+
+        *done = true;
+        object->popup.diff_time_left_to_animate = object->popup.diff_time_to_animate;
+
+    }
+
+}
+
+void WaitPopUp(DrawObject *object)
+{
+
+    struct timespec current_time = GetCurrentTime();
+    if (GetMillDiff(&current_time, &object->popup.last_stay_time) >= object->popup.diff_time_to_stay)
+        object->popup.done_staying = true;
+
+}
+
+void DrawPopUp(DrawObject *object)
+{
 
     if (!object->popup.done_intro_animation) {
 
-        
+        MovePopUp(object, object->popup.set_dx_dy, false, &object->popup.done_intro_animation);
+        if (object->popup.done_intro_animation)
+            object->popup.last_stay_time = GetCurrentTime();
 
-    }
+    } else if (!object->popup.done_staying) {
 
-/*
-    if (object->popup.current_time >= object->popup.end_time) {
+        WaitPopUp(object);
+        if (object->popup.done_staying)
+            object->popup.last_animation_time = GetCurrentTime();
 
-        RemoveDrawObject(object);
+    } else if (!object->popup.done_outro_animation) {
+
+        MovePopUp(object, object->popup.set_dx_dy_reverse, true, &object->popup.done_outro_animation);
 
     } else {
-        
-        DrawGenericWithWidth(object->popup.popup_bitmap, object->x, object->y, object->width, object->height);
-        object->popup.current_time++;
+
+        RemoveDrawObject(object);
+        return;
 
     }
-    */
+
+    DrawGenericWithWidth(object->popup.popup_bitmap, (int)object->popup.current_x, (int)object->popup.current_y, object->width, object->height);
 
 }
 

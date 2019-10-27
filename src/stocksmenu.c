@@ -60,7 +60,7 @@ void DisplayTempPopUp()
     popup_object->height = 1080;
     
     popup_object->asset_path                 = "assets/images/generalpurposemenus/popups/genericpopup.png";
-    popup_object->popup.diff_time_to_animate = 500;
+    popup_object->popup.diff_time_to_animate = 1000;
     popup_object->popup.diff_time_to_stay    = 2000;
     popup_object->popup.direction            = "Up";
     AddObjectToDrawLayer(popup_object);
