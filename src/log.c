@@ -16,10 +16,12 @@ typedef struct Queue
 
 } Queue;
 
-static Queue *queue                      = NULL;
-static const unsigned int max_queue_size = 128;
-static unsigned int queue_pointer        = 0;
-static ALLEGRO_MUTEX *log_mutex          = NULL;
+static Queue *queue                         = NULL;
+static Queue *exclusive_queue               = NULL;
+static const unsigned int max_queue_size    = 128;
+static unsigned int queue_pointer           = 0;
+static unsigned int exclusive_queue_pointer = 0;
+static ALLEGRO_MUTEX *log_mutex             = NULL;
 
 static ALLEGRO_THREAD *queue_thread = NULL;
 
@@ -38,9 +40,12 @@ void InitializeLogging()
 
     }
 
-    queue = malloc(sizeof(Queue) * max_queue_size);
-    for (int i = 0;i < max_queue_size; i++)
-        queue[i].message = NULL;
+    queue           = malloc(sizeof(Queue) * max_queue_size);
+    exclusive_queue = malloc(sizeof(Queue) * max_queue_size);
+    for (int i = 0;i < max_queue_size; i++) {
+        queue[i].message           = NULL;
+        exclusive_queue[i].message = NULL;
+    }
 
     queue_thread = al_create_thread(&LoggingEntry, NULL);
     al_start_thread(queue_thread);
@@ -50,13 +55,13 @@ void InitializeLogging()
 void InsertMessage(sqlite3 *db, int queue_message_idx) 
 {
 
-    if (queue[queue_message_idx].message == NULL)
+    if (exclusive_queue[queue_message_idx].message == NULL)
         return;
 
     char *error = NULL;
-    sqlite3_exec(db, queue[queue_message_idx].message, NULL, NULL, &error);
+    sqlite3_exec(db, exclusive_queue[queue_message_idx].message, NULL, NULL, &error);
     if (error != NULL)
-        LogFNoQueue("SQL ERROR %s, query = %s", error, queue[queue_message_idx].message);
+        LogFNoQueue("SQL ERROR %s, query = %s", error, exclusive_queue[queue_message_idx].message);
 
 }
 
@@ -69,7 +74,7 @@ void WriteQueue()
 
     sqlite3_exec(db, "BEGIN TRANSACTION", NULL, 0, 0);
 
-    for (int i = 0; i < queue_pointer; i++)
+    for (int i = 0; i < exclusive_queue_pointer; i++)
         InsertMessage(db, i);
 
     sqlite3_exec(db, "END TRANSACTION", NULL, 0, 0);
@@ -81,9 +86,9 @@ void LogNoQueue(const char *str)
 {
 
     sqlite3 *db;
-    sqlite3_stmt *res;
     if (sqlite3_open_v2("log.db", &db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
 
+        sqlite3_stmt *res;
         char *logger = "INSERT INTO LOGS (Log) VALUES (@log);";
         if (sqlite3_prepare_v2(db, logger, -1, &res, 0) == SQLITE_OK) {
 
@@ -91,9 +96,9 @@ void LogNoQueue(const char *str)
             sqlite3_step(res);
 
         }
+        sqlite3_finalize(res);
 
     }
-    sqlite3_finalize(res);
     sqlite3_close(db);
 
 }
@@ -177,6 +182,23 @@ void ResetQueue()
 
 }
 
+void ResetExclusiveQueue()
+{
+
+    for (int i = 0; i < exclusive_queue_pointer;i++) {
+
+        if (exclusive_queue[i].message != NULL) { 
+
+            free(exclusive_queue[i].message);
+            exclusive_queue[i].message = NULL;
+
+        }
+
+    }
+    exclusive_queue_pointer = 0;
+
+}
+
 void CleanUpLogging() 
 {
 
@@ -189,18 +211,34 @@ void CleanUpLogging()
 
 }
 
+void TransferQueue()
+{
+
+    ResetExclusiveQueue();
+
+    al_lock_mutex(log_mutex);
+
+    for (int i = 0; i < queue_pointer;i++) {
+
+        exclusive_queue[i].message = queue[i].message;
+        queue[i].message           = NULL;
+
+    }
+    exclusive_queue_pointer = queue_pointer;
+    queue_pointer           = 0;
+
+    al_unlock_mutex(log_mutex);
+
+}
+
 void *LoggingEntry(ALLEGRO_THREAD *thread, void *arg) 
 {
 
     while (!ShouldICleanUp()) {
 
         al_rest(0.5);
-        al_lock_mutex(log_mutex);
-
+        TransferQueue();
         WriteQueue();
-        ResetQueue();
-        
-        al_unlock_mutex(log_mutex);
 
     }
     return NULL;
