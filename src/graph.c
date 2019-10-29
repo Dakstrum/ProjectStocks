@@ -266,13 +266,14 @@ void GenerateNewGraphCache()
 
     time_t current_time = GetGameTime();
     char current_time_buff[128];
-    char temp_time_buff[128];
-
     GetTimeString(current_time_buff, current_time);
-
-    char *timespan = NULL;
+    
+    // Might be useful for more companies
+    #pragma omp parallel for
     for (unsigned int i = 0; i < num_companies; i++) {
 
+        char temp_time_buff[128];
+        char *timespan = NULL;
         for (unsigned int j = 0; j < NUM_TIMESPANS;j++) {
 
             if (exclusive_graph_cache.elements[i][j].stocks != NULL) {
@@ -281,7 +282,6 @@ void GenerateNewGraphCache()
                 free(exclusive_graph_cache.elements[i][j].stocks);
 
             }
-
             timespan = GetTimeSpanDiff(temp_time_buff, current_time, exclusive_graph_cache.elements[i][j].timespan);
             exclusive_graph_cache.elements[i][j].stocks = GetStockPricesBetweenRange(exclusive_graph_cache.company_names[i], timespan, current_time_buff, exclusive_graph_cache.elements[i][j].timespan);
 

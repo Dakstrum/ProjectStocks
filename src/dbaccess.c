@@ -237,8 +237,11 @@ int SetCompanyPrices(void *prices, int argc, char **argv, char **col_name) {
 
     StockPrices *prices_temp = (StockPrices *)prices;
 
-    if (argc == 0 )
-        return 0;
+    if (argc == 0)
+        return -1;
+
+    if (prices_temp == NULL)
+        return -2;
 
     if (prices_temp->num_prices == prices_temp->size){
 
