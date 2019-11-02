@@ -13,20 +13,28 @@
 #include "dbaccess.h"
 #include "jsoncompanies.h"
 
-static const int HOUR       = 3600;
-static int end_year         = 0;
+typedef struct Sim {
+
+    Company *companies;
+    StockPrices *prices;
+
+    unsigned int num_companies;
+
+} Sim;
+
+
+static const int HOUR = 3600;
+static int end_year   = 0;
 
 static atomic_bool simulation_finished;
 
-static Company *companies;
-static int save_id                = 0;
-static unsigned int seed          = 0;
-static unsigned int num_companies = 0;
+static Sim sim_data;
+static int save_id       = 0;
+static unsigned int seed = 0;
 
 void CleanupBeforeExit();
 
-void GenerateSimulation();
-void SimulationLoop(sqlite3 *db, unsigned int idx);
+void SimulationLoop(unsigned int idx);
 void GenerateDataForCompanies();
 void IncrementCurrentTimeByHour();
 bool ShouldContinueSimulation(long long int current_time);
@@ -50,14 +58,6 @@ void InitializeSimulation()
 
 }
 
-void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg) 
-{
-
-    GenerateSimulation();
-    return NULL;
-
-}
-
 void SetRandomSeed() 
 {
 
@@ -71,61 +71,68 @@ void SetRandomSeed()
 void SetCompanies() 
 {
 
-    companies     = GetAllCompanies();
-    num_companies = GetNumCompanies();
+    sim_data.companies     = GetAllCompanies();
+    sim_data.num_companies = GetNumCompanies();
+    sim_data.prices        = malloc(sizeof(StockPrices) * sim_data.num_companies);
+
+    for (int i = 0; i < sim_data.num_companies;i++) {
+
+        sim_data.prices[i].prices     = malloc(sizeof(float) * 128);
+        sim_data.prices[i].size       = 128;
+        sim_data.prices[i].num_prices = 0;
+
+    }
 
 }
 
-void GenerateSimulation()
+void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg) 
 {
 
     SetYearLapse(25);
-    if (ShouldICleanUp())
-        return;
-
     save_id = GetSaveId();
     SetRandomSeed();
     SetCompanies();
     GenerateDataForCompanies();
     atomic_store(&simulation_finished, true);
+
+    return NULL;
+
 }
 
 void GenerateDataForCompanies() 
 {
 
-    // Could make multithreaded, but need to use rand_r for thread safety.
-    // Will see how it performs with a single thread.
-    sqlite3 *db;
-    if (OpenConnection(&db, MemoryConnection()) != 0)
-        return;
-
-    for (unsigned int i = 0;i < num_companies;i++) {
-
-        if (ShouldICleanUp())
-            return;
-
-        sqlite3_exec(db, "BEGIN TRANSACTION", NULL, 0, 0);
-        SimulationLoop(db, i);
-        sqlite3_exec(db, "END TRANSACTION", NULL, 0, 0);
-
-    }
-    sqlite3_close(db);
+    for (unsigned int i = 0;i < sim_data.num_companies;i++)
+        SimulationLoop(i);
 
 }
 
-void SimulationLoop(sqlite3 *db, unsigned int idx) 
+void StoreStockPrice(unsigned int idx, float price)
 {
 
-    int company_id             = companies[idx].company_id;
-    float last_price           = companies[idx].ipo;
+    if (sim_data.prices[idx].num_prices == sim_data.prices[idx].size) {
+
+        sim_data.prices[idx].size  += 128;
+        sim_data.prices[idx].prices = realloc(sim_data.prices[idx].prices, sizeof(float) * sim_data.prices[idx].size);
+
+    }
+    sim_data.prices[idx].prices[sim_data.prices[idx].num_prices] = price;
+    sim_data.prices[idx].num_prices++;
+
+}
+
+void SimulationLoop(unsigned int idx) 
+{
+
+    float last_price           = sim_data.companies[idx].ipo;
     float price                = 0.0;
     long long int current_time = 0;
-    unsigned int thread_seed   = companies[idx].company_id + seed;
+    unsigned int thread_seed   = sim_data.companies[idx].company_id + seed;
 
     char time_buff[128];
     strftime(time_buff, sizeof(time_buff), "%Y-%m-%d %H:%M:%S", localtime(&current_time));
 
-    InsertStockPrice(save_id, company_id, last_price, time_buff, db);
+    StoreStockPrice(idx, last_price);
     while (ShouldContinueSimulation(current_time)) {
 
         current_time += HOUR;
@@ -133,7 +140,7 @@ void SimulationLoop(sqlite3 *db, unsigned int idx)
         last_price    = price;
 
         strftime(time_buff, sizeof(time_buff), "%Y-%m-%d %H:%M:%S", localtime(&current_time));
-        InsertStockPrice(save_id, company_id, last_price, time_buff, db);
+        StoreStockPrice(idx, price);
 
     }
 
