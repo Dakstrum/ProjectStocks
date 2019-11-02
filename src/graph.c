@@ -108,20 +108,6 @@ int GetCompanyIndex(char *company_name)
 
 }
 
-int GetTimeSpanIndex(int company_index, TimeSpan timespan) 
-{
-
-    if (company_index == -1)
-        return -1;
-
-    for (unsigned int i = 0; i < NUM_TIMESPANS; i++)
-        if (timespan == threaded_graph_cache.elements[company_index][i].timespan)
-            return i;
-
-    return -1;
-
-}
-
 DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points) 
 {
 
@@ -179,10 +165,9 @@ DrawObject *GetGraphDrawObject(char *company_name, TimeSpan timespan, int width,
     al_lock_mutex(graph_cache_mutex);
 
     int company_index  = GetCompanyIndex(company_name);
-    int timespan_index = company_index == -1 ? -1 : GetTimeSpanIndex(company_index, timespan);
 
-    if (company_index != -1 && timespan_index != -1)
-        graph_object = GetConstructedGraphDrawObject(company_index, timespan_index, width, height);
+    if (company_index != -1)
+        graph_object = GetConstructedGraphDrawObject(company_index, (int)timespan, width, height);
 
     al_unlock_mutex(graph_cache_mutex);
 
