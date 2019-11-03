@@ -233,7 +233,7 @@ StockPrices *GetStockPricesFromNowUntil(char *company_name, time_t span)
     InitialStockPrice(prices);
     for (int i = 0; i < sim_data.prices[company_idx].num_prices;i++) {
 
-        if (current_time > sim_data.prices[company_idx].times[i])
+        if (sim_data.prices[company_idx].times[i] > current_time)
             break;
 
         if (sim_data.prices[company_idx].times[i] >= previous_time || sim_data.prices[company_idx].times[i] <= current_time)
