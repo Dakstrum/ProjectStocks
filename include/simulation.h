@@ -4,7 +4,7 @@
 #include "shared.h"
 
 void InitializeSimulation();
-bool GetSimulationDone();
+bool IsSimulationDone();
 void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg);
 void SetEndYear(time_t end_year);
 

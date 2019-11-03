@@ -95,7 +95,6 @@ enum InitializeSuccess Initialize()
     }
 
     InitializeLogging();
-    InitializeGraphCaching();
     InitializeCache();
     InitializeShared();
     InitializeDatabases();
@@ -168,7 +167,6 @@ void CleanUp()
     al_destroy_event_queue(event_queue);
     CleanUpRendering();
     CleanUpLogging();
-    CleanUpGraph();
     CleanUpGameThreads();
     al_uninstall_system();
 

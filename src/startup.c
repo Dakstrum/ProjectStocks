@@ -6,7 +6,7 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_video.h>
 
-#include "graph.h"
+#include "simulation.h"
 #include "jsonlayer.h"
 #include "drawlayers.h"
 #include "rendering.h"
@@ -62,7 +62,7 @@ void LoadingSequence()
 
     DrawLayers();
 
-    if (IsGraphCacheReady()) {
+    if (IsSimulationDone()) {
 
         ClearDrawLayers();
         SwitchToRenderingStocksMenu();

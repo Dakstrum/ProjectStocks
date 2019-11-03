@@ -44,7 +44,7 @@ int GetYearFromBuff(char *buff);
 
 float GenerateRandomPriceFluctuation(float last_price, unsigned int *thread_seed);
 
-bool GetSimulationDone() 
+bool IsSimulationDone() 
 {
 
     return atomic_load(&simulation_finished);
