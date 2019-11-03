@@ -44,7 +44,7 @@ bool ShouldContinueSimulation(long long int current_time);
 void SetYearLapse(int years_to_lapse);
 int GetYearFromBuff(char *buff);
 
-float GenerateRandomPriceFluctuation(float last_price, unsigned int *thread_seed);
+float GenerateRandomPriceFluctuation(float last_price);
 
 bool IsSimulationDone() 
 {
@@ -118,7 +118,6 @@ void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg)
 void GenerateDataForCompanies() 
 {
 
-    #pragma omp parallel for
     for (unsigned int i = 0;i < sim_data.num_companies;i++)
         SimulationLoop(i);
 
@@ -146,19 +145,14 @@ void SimulationLoop(unsigned int idx)
     float last_price           = sim_data.companies[idx].ipo;
     float price                = 0.0;
     long long int current_time = 0;
-    unsigned int thread_seed   = sim_data.companies[idx].company_id + seed;
 
-    char time_buff[128];
-    strftime(time_buff, sizeof(time_buff), "%Y-%m-%d %H:%M:%S", localtime(&current_time));
-
+    srand(sim_data.companies[idx].company_id + seed);
     StoreStockPrice(&sim_data.prices[idx], last_price, current_time);
     while (ShouldContinueSimulation(current_time)) {
 
         current_time += HOUR;
-        price         = last_price + GenerateRandomPriceFluctuation(last_price, &thread_seed);
+        price         = last_price + GenerateRandomPriceFluctuation(last_price);
         last_price    = price;
-
-        strftime(time_buff, sizeof(time_buff), "%Y-%m-%d %H:%M:%S", localtime(&current_time));
         StoreStockPrice(&sim_data.prices[idx], price, current_time);
 
     }
@@ -166,7 +160,7 @@ void SimulationLoop(unsigned int idx)
 
 }
 
-float GenerateRandomPriceFluctuation(float last_price, unsigned int *thread_seed) 
+float GenerateRandomPriceFluctuation(float last_price) 
 {
 
     return (1+rand()%2);
