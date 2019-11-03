@@ -529,10 +529,13 @@ void DrawGraph(DrawObject *object)
 {
 
     object = PollForNewGraphObject(object);
+    Point *points       = object->graph.points;
+
+    if (points == NULL || object->graph.num_points == 0)
+        return;
 
     float x             = object->x;
     float y_start_point = object->y + object->height;
-    Point *points       = object->graph.points;
     ALLEGRO_COLOR color = al_map_rgba(255, 255, 255, 255);
     for (unsigned int i = 0;i < object->graph.num_points - 1;i++)
         al_draw_line(x + points[i].x, y_start_point - points[i].y, x + points[i+1].x, y_start_point - points[i+1].y, color , 2);

@@ -68,6 +68,25 @@ void SetRandomSeed()
 
 }
 
+void InitialStockPrice(StockPrices *prices)
+{
+
+    prices->prices     = malloc(sizeof(float)  * 128);
+    prices->times      = malloc(sizeof(time_t) * 128);
+    prices->size       = 128;
+    prices->num_prices = 0;
+
+}
+
+void ReclaimUnusedStockPriceMemory(StockPrices *prices) 
+{
+
+    prices->size = prices->num_prices;
+    prices->prices = realloc(prices->prices, sizeof(float) * prices->size);
+    prices->times  = realloc(prices->times, sizeof(time_t) * prices->size);
+
+}
+
 void SetCompanies() 
 {
 
@@ -75,13 +94,8 @@ void SetCompanies()
     sim_data.num_companies = GetNumCompanies();
     sim_data.prices        = malloc(sizeof(StockPrices) * sim_data.num_companies);
 
-    for (int i = 0; i < sim_data.num_companies;i++) {
-
-        sim_data.prices[i].prices     = malloc(sizeof(float) * 128);
-        sim_data.prices[i].size       = 128;
-        sim_data.prices[i].num_prices = 0;
-
-    }
+    for (int i = 0; i < sim_data.num_companies;i++)
+        InitialStockPrice(&sim_data.prices[i]);
 
 }
 
@@ -102,22 +116,25 @@ void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg)
 void GenerateDataForCompanies() 
 {
 
+    #pragma omp parallel for
     for (unsigned int i = 0;i < sim_data.num_companies;i++)
         SimulationLoop(i);
 
 }
 
-void StoreStockPrice(unsigned int idx, float price)
+void StoreStockPrice(StockPrices *prices, float price, time_t timestamp)
 {
 
-    if (sim_data.prices[idx].num_prices == sim_data.prices[idx].size) {
+    if (prices->num_prices == prices->size) {
 
-        sim_data.prices[idx].size  += 128;
-        sim_data.prices[idx].prices = realloc(sim_data.prices[idx].prices, sizeof(float) * sim_data.prices[idx].size);
+        prices->size  += 128;
+        prices->prices = realloc(prices->prices, sizeof(float)  * prices->size);
+        prices->times  = realloc(prices->times,  sizeof(time_t) * prices->size);
 
     }
-    sim_data.prices[idx].prices[sim_data.prices[idx].num_prices] = price;
-    sim_data.prices[idx].num_prices++;
+    prices->prices[prices->num_prices] = price;
+    prices->times[prices->num_prices]  = timestamp;
+    prices->num_prices++;
 
 }
 
@@ -132,7 +149,7 @@ void SimulationLoop(unsigned int idx)
     char time_buff[128];
     strftime(time_buff, sizeof(time_buff), "%Y-%m-%d %H:%M:%S", localtime(&current_time));
 
-    StoreStockPrice(idx, last_price);
+    StoreStockPrice(&sim_data.prices[idx], last_price, current_time);
     while (ShouldContinueSimulation(current_time)) {
 
         current_time += HOUR;
@@ -140,9 +157,10 @@ void SimulationLoop(unsigned int idx)
         last_price    = price;
 
         strftime(time_buff, sizeof(time_buff), "%Y-%m-%d %H:%M:%S", localtime(&current_time));
-        StoreStockPrice(idx, price);
+        StoreStockPrice(&sim_data.prices[idx], price, current_time);
 
     }
+    ReclaimUnusedStockPriceMemory(&sim_data.prices[idx]);
 
 }
 
@@ -174,13 +192,7 @@ bool ShouldContinueSimulation(long long int current_time)
     char current_time_buff[128];
     strftime(current_time_buff, sizeof(current_time_buff), "%Y", localtime(&current_time));
 
-    int current_year = GetYearFromBuff(current_time_buff);
-
-    if (current_year >= end_year) {
-        return false;
-    }
-
-    return true;
+    return GetYearFromBuff(current_time_buff) < end_year;
 
 }
 
@@ -191,5 +203,45 @@ int GetYearFromBuff(char *buff)
     sscanf(buff, "%s", year_buff);
     year_buff[4] = '\0';
     return atoi(year_buff);
+
+}
+
+int GetCompanySimIndex(char *company_name)
+{
+
+    for (int i = 0; i < sim_data.num_companies;i++)
+        if (strcmp(company_name, sim_data.companies[i].company_name) == 0)
+            return i;
+
+    return -1;
+
+}
+
+StockPrices *GetStockPricesFromNowUntil(char *company_name, time_t span)
+{
+
+    int company_idx = GetCompanySimIndex(company_name);
+    if (company_idx == -1)
+        return NULL;
+
+    time_t current_time  = GetGameTime();
+    time_t previous_time = current_time - span;
+    if (previous_time < 0)
+        previous_time = 0;
+
+    StockPrices *prices = malloc(sizeof(StockPrices));
+    InitialStockPrice(prices);
+    for (int i = 0; i < sim_data.prices[company_idx].num_prices;i++) {
+
+        if (current_time > sim_data.prices[company_idx].times[i])
+            break;
+
+        if (sim_data.prices[company_idx].times[i] >= previous_time || sim_data.prices[company_idx].times[i] <= current_time)
+            StoreStockPrice(prices,sim_data.prices[company_idx].prices[i], sim_data.prices[company_idx].times[i]);
+
+    }
+    ReclaimUnusedStockPriceMemory(prices);
+
+    return prices;
 
 }

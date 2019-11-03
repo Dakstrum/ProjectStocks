@@ -4,14 +4,7 @@
 #include <sqlite3.h>
 
 #include "graph.h"
-
-typedef struct StockPrices {
-
-    float *prices;
-    unsigned int num_prices;
-    unsigned int size;
-
-} StockPrices;
+#include "shared.h"
 
 void InitializeDatabases();
 void CopyPersistentToMemory();
