@@ -68,7 +68,7 @@ void SetRandomSeed()
 
 }
 
-void InitialStockPrice(StockPrices *prices)
+void InitializeStockPrice(StockPrices *prices)
 {
 
     prices->prices     = malloc(sizeof(float)  * 128);
@@ -95,7 +95,7 @@ void SetCompanies()
     sim_data.prices        = malloc(sizeof(StockPrices) * sim_data.num_companies);
 
     for (int i = 0; i < sim_data.num_companies;i++)
-        InitialStockPrice(&sim_data.prices[i]);
+        InitializeStockPrice(&sim_data.prices[i]);
 
 }
 
@@ -230,13 +230,13 @@ StockPrices *GetStockPricesFromNowUntil(char *company_name, time_t span)
         previous_time = 0;
 
     StockPrices *prices = malloc(sizeof(StockPrices));
-    InitialStockPrice(prices);
+    InitializeStockPrice(prices);
     for (int i = 0; i < sim_data.prices[company_idx].num_prices;i++) {
 
         if (sim_data.prices[company_idx].times[i] > current_time)
             break;
 
-        if (sim_data.prices[company_idx].times[i] >= previous_time || sim_data.prices[company_idx].times[i] <= current_time)
+        if (sim_data.prices[company_idx].times[i] >= previous_time && sim_data.prices[company_idx].times[i] <= current_time)
             StoreStockPrice(prices,sim_data.prices[company_idx].prices[i], sim_data.prices[company_idx].times[i]);
 
     }

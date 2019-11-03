@@ -528,8 +528,8 @@ DrawObject *PollForNewGraphObject(DrawObject *object)
 void DrawGraph(DrawObject *object) 
 {
 
-    object = PollForNewGraphObject(object);
-    Point *points       = object->graph.points;
+    object        = PollForNewGraphObject(object);
+    Point *points = object->graph.points;
 
     if (points == NULL || object->graph.num_points == 0)
         return;
