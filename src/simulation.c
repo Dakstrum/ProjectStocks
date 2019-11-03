@@ -13,6 +13,8 @@
 #include "dbaccess.h"
 #include "jsoncompanies.h"
 
+#define STOCK_PRICE_SIZE 4096
+
 typedef struct Sim {
 
     Company *companies;
@@ -71,9 +73,9 @@ void SetRandomSeed()
 void InitializeStockPrice(StockPrices *prices)
 {
 
-    prices->prices     = malloc(sizeof(float)  * 128);
-    prices->times      = malloc(sizeof(time_t) * 128);
-    prices->size       = 128;
+    prices->prices     = malloc(sizeof(float)  * STOCK_PRICE_SIZE);
+    prices->times      = malloc(sizeof(time_t) * STOCK_PRICE_SIZE);
+    prices->size       = STOCK_PRICE_SIZE;
     prices->num_prices = 0;
 
 }
@@ -127,7 +129,7 @@ void StoreStockPrice(StockPrices *prices, float price, time_t timestamp)
 
     if (prices->num_prices == prices->size) {
 
-        prices->size  += 128;
+        prices->size  += STOCK_PRICE_SIZE;
         prices->prices = realloc(prices->prices, sizeof(float)  * prices->size);
         prices->times  = realloc(prices->times,  sizeof(time_t) * prices->size);
 
