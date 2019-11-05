@@ -715,20 +715,18 @@ DrawObject *CreateNewDrawObject()
 
 bool DoesObjectExistInCurrentDrawLayer(char *object_name)
 {
+ 
+    if (current_draw_layer == -1)
+        return false;
 
+    DrawObject *object = NULL;
     for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++) {
 
-        DrawObject *object = draw_layers[current_draw_layer].objects[i];
+        object = draw_layers[current_draw_layer].objects[i];
 
-        if (object != NULL && object->name != NULL) {
-
-            if (strcmp(object->name, object_name) == 0) {
-
+        if (object != NULL && object->name != NULL)
+            if (strcmp(object->name, object_name) == 0)
                 return true;
-
-            }     
-
-        }
 
     }
 

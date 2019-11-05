@@ -27,8 +27,7 @@ void HandleInput(ALLEGRO_EVENT event)
 
     HandleMouseClicks(event);
     HandleKeyboard(event);
-    HandlePauseMenu(event);
-
+    
 }
 
 void HandleMouseClicks(ALLEGRO_EVENT event) 
@@ -42,13 +41,16 @@ void HandleMouseClicks(ALLEGRO_EVENT event)
 void HandleKeyboard(ALLEGRO_EVENT event) 
 {
 
+    HandlePauseMenu(event);
 
 }
 
-void HandlePauseMenu(ALLEGRO_EVENT local_event)
+void HandlePauseMenu(ALLEGRO_EVENT event)
 {
-    if(local_event.type == ALLEGRO_EVENT_KEY_DOWN && local_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
-        if(DoesObjectExistInCurrentDrawLayer("LoadingVideo"))
+
+    if(event.type == ALLEGRO_EVENT_KEY_DOWN && event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+
+        if(DoesObjectExistInCurrentDrawLayer("LoadingVideo") || DoesObjectExistInCurrentDrawLayer("StartUpVideo"))
             return;
 
         if(!DoesObjectExistInCurrentDrawLayer("OptionsMenu"))
