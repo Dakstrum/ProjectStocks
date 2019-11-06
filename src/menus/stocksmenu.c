@@ -67,13 +67,6 @@ void DisplayTempPopUp()
 
 }
 
-void RenderStocksMenu() 
-{
-
-    DrawLayers();
-
-}
-
 void StocksSellButtonCallBack()
 {
 
@@ -115,6 +108,7 @@ void CleanUpStocksMenu()
 
     if (stocks_menu != NULL)
         free(stocks_menu);
+    
     stocks_menu = NULL;
     
 }

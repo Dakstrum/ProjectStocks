@@ -22,23 +22,17 @@ char MenusThatDisablePauseMenuFunctionality[] =
     "OptionsMenu"
 };
 
-void RenderGeneralPurposeMenus() 
-{
-    DrawLayers();
-}
-
 void CleanUpGeneralPurposeMenus() 
 {
-    if (pause_menu != NULL)
-        free(pause_menu);
-    if (options_menu != NULL)
-        free(options_menu);
+
     pause_menu   = NULL;
     options_menu = NULL;
+
 }
 
 void ToggleOptionsMenu()
 {
+
     if (options_menu == NULL) {
 
         CreateNewDrawLayer();
@@ -72,7 +66,6 @@ void TogglePauseMenu()
 
 }
 
-//General Purpose Menu Callbacks
 void PauseMenuMainMenuButtonCallBack()
 {
 
@@ -103,7 +96,7 @@ void OptionsMenuExitButtonCallBack()
 
 }
 
-//Navigation Bar Callbacks
+
 void StocksButtonCallBack()
 {
 

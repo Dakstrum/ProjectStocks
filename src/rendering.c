@@ -23,7 +23,7 @@ void CleanUpRendering();
 void CleanUpDisplay();
 void CleanUpAddons();
 
-static void (*Render)()         = &StartUpSequence;
+static void (*RenderLogic)()    = &StartUpSequence;
 static ALLEGRO_DISPLAY *display = NULL;
 
 void InitializeRendering() 
@@ -60,7 +60,10 @@ void InitializeAddons()
 void HandleRendering() 
 {
 
-    Render();
+    if (RenderLogic != NULL)
+        RenderLogic();
+
+    DrawLayers();
     al_flip_display();
 
 }
@@ -93,7 +96,6 @@ void CleanUpAddons()
 
     al_shutdown_image_addon();
     al_shutdown_video_addon();
-    //al_shutdown_ttf_addon();
     al_shutdown_font_addon();
     al_shutdown_primitives_addon();
 
@@ -103,14 +105,14 @@ void SwitchToRenderingMainMenu()
 {
 
     InitializeMainMenu();
-    Render = &RenderMainMenu;
+    RenderLogic = NULL;
 
 }
 
 void SwitchToLoadingScreen()
 {
 
-    Render = &LoadingSequence;
+    RenderLogic = &LoadingSequence;
 
 }
 
@@ -118,7 +120,7 @@ void SwitchToRenderingStocksMenu()
 {
 
     InitializeStocksMenu();
-    Render = &RenderStocksMenu;
+    RenderLogic = NULL;
 
 }
 

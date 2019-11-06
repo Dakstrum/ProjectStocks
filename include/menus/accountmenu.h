@@ -2,7 +2,6 @@
 #define ACCOUNTMENU_H
 
 void InitializeAccountMenu();
-void RenderAccountMenu();
 void ToggleAccountMenu();
 
 #endif

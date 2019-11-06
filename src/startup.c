@@ -43,11 +43,11 @@ void StartUpSequence()
     if (video_object == NULL)
         InitializeStartUpSequence();
 
-    DrawLayers();
     if (!al_is_video_playing(video_object->video.video)) {
         
         ClearDrawLayers();
         SwitchToRenderingMainMenu();
+
     }
         
 }
@@ -59,9 +59,9 @@ void LoadingSequence()
 
         ClearDrawLayers();
         InitializeLoadingSequence();
+        
     }
 
-    DrawLayers();
     if (IsSimulationDone()) {
 
         ClearDrawLayers();

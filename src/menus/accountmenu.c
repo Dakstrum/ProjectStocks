@@ -9,8 +9,6 @@
 #include "drawlayers.h"
 #include "log.h"
 
-//static DrawObject *stocks_menu     = NULL;
-//static DrawObject *version_text  = NULL;
 static MenuWithChilds *account_menu = NULL;
 
 void InitializeAccountMenu() 
@@ -28,19 +26,12 @@ void InitializeAccountMenu()
 
 }
 
-
-void RenderAccountMenu() 
-{
-
-    DrawLayers();
-
-}
-
 void CleanUpAccountMenu() 
 {
 
     if (account_menu != NULL)
         free(account_menu);
+
     account_menu = NULL;
     
 }

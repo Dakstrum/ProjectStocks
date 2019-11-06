@@ -32,18 +32,12 @@ void InitializeMainMenu()
 
 }
 
-void RenderMainMenu() 
-{
-
-    DrawLayers();
-    
-}
-
 void CleanUpMainMenu() 
 {
 
     if (main_menu != NULL)
         free(main_menu);
+    
     main_menu = NULL;
 
 }
