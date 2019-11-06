@@ -129,10 +129,10 @@ void SetUpDB(sqlite3 **db, char *connection_string)
 
     char *setup =   "CREATE TABLE IF NOT EXISTS Company(CompanyId INTEGER PRIMARY KEY, Ipo DOUBLE NOT NULL, CompanyName VARCHAR(50) NOT NULL, Category VARCHAR(30), IsActiveInJson INT DEFAULT 0);"
                     "CREATE TABLE IF NOT EXISTS CompanyMetadata(CompanyMetaId INTEGER PRIMARY KEY, CompanyId INT NOT NULL, TotalEmployees INT NOT NULL, StocksInMarket UNSIGNED BIG INT, SaveId INT NOT NULL);"
-                    "CREATE TABLE IF NOT EXISTS StockPrices(StockPriceId INTEGER PRIMARY KEY, SaveId INT NOT NULL,  CompanyId INT NOT NULL, Price FLOAT NOT NULL, Time DATETIME NOT NULL);"
-                    "CREATE TABLE IF NOT EXISTS Saves(SaveId INTEGER PRIMARY KEY, SaveName TEXT NOT NULL, Money DOUBLE NOT NULL, TimeSpentInGame UNSIGNED BIG INT, RandomSeed UNSIGNED BIG INT);"
-                    "CREATE TABLE IF NOT EXISTS OwnedStocks(OwnedStockId INTEGER PRIMARY KEY, SaveId INT NOT NULL, CompanyId INT NOT NULL, HowManyOwned UNSIGNED BIG INT NOT NULL);"
-                    "CREATE TABLE IF NOT EXISTS Transactions(TransactionId INTEGER PRIMARY KEY, CompanyId INT NOT NULL, TransactionAmount DOUBLE NOT NULL, StocksExchanged INT NOT NULL, TransactionTime DATETIME NOT NULL, SaveId INT NOT NULL)";
+                    "CREATE TABLE IF NOT EXISTS Players(PlayerId INTERGER PRIMARY KEY, SaveId INT NOT NULL, PlayerName TEXT NOT NULL, Money DOUBLE NOT NULL);"
+                    "CREATE TABLE IF NOT EXISTS Saves(SaveId INTEGER PRIMARY KEY, SaveName TEXT NOT NULL, PlayerName TEXT NOT NULL, TimeSpentInGame UNSIGNED BIG INT DEFAULT(0), RandomSeed UNSIGNED BIG INT);"
+                    "CREATE TABLE IF NOT EXISTS OwnedStocks(OwnedStockId INTEGER PRIMARY KEY, SaveId INT NOT NULL, PlayerName TEXT NOT NULL, CompanyId INT NOT NULL, HowManyOwned UNSIGNED BIG INT NOT NULL);"
+                    "CREATE TABLE IF NOT EXISTS Transactions(TransactionId INTEGER PRIMARY KEY, SaveId INT NOT NULL, PlayerName TEXT NOT NULL, CompanyId INT NOT NULL, TransactionAmount DOUBLE NOT NULL, StocksExchanged INT NOT NULL, TransactionTime DATETIME NOT NULL);";
     sqlite3_exec(*db, setup, NULL, 0, &error);
     if (error != NULL)
         LogF("Error setting up db %s with %s", connection_string, error);
@@ -175,6 +175,58 @@ void SetupLogDB()
 
     }
     sqlite3_close(db);
+
+}
+
+int GetSaveIdCallback(void *save_id, int argc, char **argv, char **col_name) 
+{
+
+    if (argc > 0)
+        *((int *)save_id) = (unsigned int)atoi(argv[0]);
+
+    return 0;
+
+}
+
+int InsertSave(char *save_name, char *player_name, unsigned int game_seed)
+{
+
+    int save_id = -1;
+
+    sqlite3 *db;
+    if (OpenConnection(&db, DefaultConnection()) == 0) {
+
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Saves (SaveName, PlayerName, RandomSeed) VALUES ('%s', '%s', %d)", save_name, player_name, game_seed), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("SELECT SaveId FROM Saves WHERE RandomSeed = %d AND SaveName = '%s'", game_seed, save_name ), &GetSaveIdCallback, &save_id, db);
+
+    }
+
+    sqlite3_close(db);
+
+    return save_id;
+
+}
+
+int GetSaveSeedCallback(void *seed, int argc, char **argv, char **col_name) 
+{
+
+    if (argc > 0)
+        *((unsigned int *)seed) = (unsigned int)atoi(argv[0]);
+
+    return 0;
+
+}
+
+unsigned int GetSaveSeedWithSaveId(int save_id)
+{
+
+    unsigned int seed = 0;
+
+    sqlite3 *db;
+    if (OpenConnection(&db, DefaultConnection()) == 0)
+        ExecuteQuery(GetFormattedPointer("SELECT RandomSeed FROM Saves WHERE SaveId=%d", save_id), &GetSaveSeedCallback, &seed, db);
+
+    return seed;
 
 }
 

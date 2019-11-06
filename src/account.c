@@ -6,40 +6,58 @@
 
 #include "log.h"
 #include "shared.h"
+#include "account.h"
+#include "dbaccess.h"
 
-static int save_id = -1;
 static atomic_long game_time;
 static atomic_long game_time_dt;
+static atomic_uint game_seed;
 static atomic_bool pause_game_time;
+static atomic_int  save_id;
 
 static ALLEGRO_THREAD *account_thread = NULL;
 
 void *AccountEntry(ALLEGRO_THREAD *thread, void *arg);
 
+void SaveLoadTest()
+{
+
+#if DEBUGGING
+
+    CreateNewSave("NewSave", "Emma");
+    atomic_store(&game_seed, 0);
+    LoadSave(atomic_load(&save_id));
+
+#endif
+
+}
+
 void InitAccount() 
 {
 
+    atomic_store(&save_id, -1);
     atomic_store(&game_time, 3600);
     atomic_store(&game_time_dt, 2);
     atomic_store(&pause_game_time, false);
+    atomic_store(&game_seed, 0);
 
     account_thread = al_create_thread(&AccountEntry, NULL);
     al_start_thread(account_thread);
+    SaveLoadTest();
 
 }
 
 int GetSaveId() 
 {
 
-    return save_id;
+    return atomic_load(&save_id);
 
 }
 
 unsigned int GetSaveSeed() 
 {
 
-    Log("STUB: GetSaveSeed");
-    return 0;
+    return atomic_load(&game_seed);
 
 }
 
@@ -94,5 +112,25 @@ void *AccountEntry(ALLEGRO_THREAD *thread, void *arg)
 
     }
     return NULL;
+
+}
+
+
+void CreateNewSave(char *save_name, char *player_name)
+{
+
+    unsigned int new_game_seed = time(NULL);
+    atomic_store(&save_id, InsertSave(save_name, player_name, new_game_seed));
+    atomic_store(&game_seed, new_game_seed);
+    LogF("CreateNewSave save_id = %d, game_seed = %u", atomic_load(&save_id), atomic_load(&game_seed));
+
+}
+
+void LoadSave(int load_save_id)
+{
+
+    atomic_store(&save_id, load_save_id);
+    atomic_store(&game_seed, GetSaveSeedWithSaveId(load_save_id));
+    LogF("LoadSave game_seed = %u", atomic_load(&game_seed));
 
 }

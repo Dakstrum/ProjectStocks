@@ -14,6 +14,8 @@ char *MemoryConnection();
 char *DefaultConnection();
 
 int InsertAndOrSetCompanyToActive(char *company_name, float ipo);
+unsigned int GetSaveSeedWithSaveId(int save_id);
+int InsertSave(char *save_name, char *player_name, unsigned int game_seed);
 void InsertStockPrice(int save_id, int company_id, float stock_price, char *timestamp, sqlite3 *db);
 StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, char *end_time, TimeSpan timespan);
 
