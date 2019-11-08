@@ -19,6 +19,7 @@ typedef struct Sim {
 
     Company *companies;
     StockPrices *prices;
+    float *random_event_chance;
 
     unsigned int num_companies;
 
@@ -39,12 +40,10 @@ void CleanupBeforeExit();
 void SimulationLoop(unsigned int idx);
 void GenerateDataForCompanies();
 void IncrementCurrentTimeByHour();
-bool ShouldContinueSimulation(long long int current_time);
+bool ShouldContinueSimulation(time_t current_time);
 
 void SetYearLapse(int years_to_lapse);
 int GetYearFromBuff(char *buff);
-
-float GenerateRandomPriceFluctuation(float last_price);
 
 bool IsSimulationDone() 
 {
@@ -92,12 +91,17 @@ void ReclaimUnusedStockPriceMemory(StockPrices *prices)
 void SetCompanies() 
 {
 
-    sim_data.companies     = GetAllCompanies();
-    sim_data.num_companies = GetNumCompanies();
-    sim_data.prices        = malloc(sizeof(StockPrices) * sim_data.num_companies);
+    sim_data.companies           = GetAllCompanies();
+    sim_data.num_companies       = GetNumCompanies();
+    sim_data.prices              = malloc(sizeof(StockPrices) * sim_data.num_companies);
+    sim_data.random_event_chance = malloc(sizeof(float) * sim_data.num_companies);
 
-    for (int i = 0; i < sim_data.num_companies;i++)
+    for (int i = 0; i < sim_data.num_companies;i++) {
+
         InitializeStockPrice(&sim_data.prices[i]);
+        sim_data.random_event_chance[i] = 0.0;
+
+    }
 
 }
 
@@ -139,19 +143,71 @@ void StoreStockPrice(StockPrices *prices, float price, time_t timestamp)
 
 }
 
+float GetRandomSign()
+{
+
+    if (rand()%2 == 0)
+        return -1.0;
+    else
+        return 1.0;
+
+}
+
+float GetRandomFloat()
+{
+
+    return (float)rand()/RAND_MAX;
+
+}
+
+float GetRandomEventMagnitude()
+{
+
+    float random = GetRandomFloat();
+
+    if (random >= .2)
+        return .25;
+    else if (random >= 0.05)
+        return .5;
+    else
+        return .75;
+
+}
+
+float GenerateRandomEvent(float last_price, unsigned int idx)
+{
+
+    sim_data.random_event_chance[idx] += GetRandomSign() * GetRandomFloat() + .1;
+    if (sim_data.random_event_chance[idx] < 0)
+        sim_data.random_event_chance[idx] = 0.0;
+
+    if (sim_data.random_event_chance[idx] > 50 + rand() % 50)
+        return .05 * last_price * GetRandomSign() * GetRandomFloat() * GetRandomEventMagnitude();
+
+    return 0.0;
+
+}
+
+float GenerateRandomPriceFluctuation(float last_price) 
+{
+
+    return GetRandomSign() * GetRandomFloat() * last_price * .01;
+
+}
+
 void SimulationLoop(unsigned int idx) 
 {
 
     float last_price           = sim_data.companies[idx].ipo;
     float price                = 0.0;
-    long long int current_time = 0;
+    time_t current_time = 0;
 
     srand(sim_data.companies[idx].company_id + seed);
     StoreStockPrice(&sim_data.prices[idx], last_price, current_time);
     while (ShouldContinueSimulation(current_time)) {
 
         current_time += HOUR;
-        price         = last_price + GenerateRandomPriceFluctuation(last_price);
+        price         = last_price + GenerateRandomPriceFluctuation(last_price) + GenerateRandomEvent(last_price, idx);
         last_price    = price;
         StoreStockPrice(&sim_data.prices[idx], price, current_time);
 
@@ -159,14 +215,6 @@ void SimulationLoop(unsigned int idx)
     ReclaimUnusedStockPriceMemory(&sim_data.prices[idx]);
 
 }
-
-float GenerateRandomPriceFluctuation(float last_price) 
-{
-
-    return (1+rand()%2);
-
-}
-
 
 void SetYearLapse(int years_to_lapse) 
 {
@@ -182,7 +230,7 @@ void SetYearLapse(int years_to_lapse)
 
 }
 
-bool ShouldContinueSimulation(long long int current_time) 
+bool ShouldContinueSimulation(time_t current_time) 
 {
 
     char current_time_buff[128];
