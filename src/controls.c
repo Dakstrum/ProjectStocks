@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <ctype.h>
+#include <string.h>
 #include <stdbool.h>
 
 #include <allegro5/allegro.h>
@@ -11,6 +13,7 @@
 #include "generalpurposemenus.h"
 
 static int MAX_OBJECTS_PER_LAYER = 0;
+static const int MAX_CHARS_IN_TEXTBOX  = 128;
 
 bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y) 
 {
@@ -63,8 +66,7 @@ bool ToggledTextBoxActiveFlag(DrawObject *object, int x, int y)
 
     if (IsMouseClickInAreaOfObject(object, x, y)) {
 
-        SetAllTextBoxesToInactiveInCurrentDrawLayer();
-        object->textbox.active = true;
+        SetActiveTextBox(object);
         return true;
 
     }
@@ -119,11 +121,91 @@ void HandlePauseMenu(ALLEGRO_EVENT event)
 
         if(DoesObjectExistInCurrentDrawLayer("LoadingVideo") || DoesObjectExistInCurrentDrawLayer("StartUpVideo"))
             return;
-
         if(!DoesObjectExistInCurrentDrawLayer("OptionsMenu"))
             TogglePauseMenu();
    
     }
+
+}
+
+void RemoveSingleCharacterFromTextBox(DrawObject *object)
+{
+
+    if (object->textbox.current_character < 0)
+        return;
+
+    object->textbox.text[object->textbox.current_character] = '\0';
+    object->textbox.current_character--;
+
+}
+
+void InsertSingleCharacterIntoTextBox(DrawObject *object, const char *key_pressed, bool to_upper) 
+{
+
+    if (object->textbox.current_character >= MAX_CHARS_IN_TEXTBOX)
+        return;
+    if (strlen(key_pressed) > 1)
+        return;
+
+    bool good_char = false;
+    if (object->textbox.accept_alphabet_characters && isalpha(*key_pressed))
+        good_char = true;
+    else if (object->textbox.accept_number_characters && isdigit(*key_pressed))
+        good_char = true;
+
+    if (good_char) {
+
+        object->textbox.current_character++;
+        object->textbox.text[object->textbox.current_character] = to_upper ? toupper(*key_pressed) : tolower(*key_pressed);
+
+    }
+
+
+}
+
+bool ShouldUpperCase(ALLEGRO_EVENT event) 
+{
+    int modifiers   = event.keyboard.modifiers;
+    bool shift_caps = ALLEGRO_KEYMOD_SHIFT | ALLEGRO_KEYMOD_CAPSLOCK;
+    bool shift      = ALLEGRO_KEYMOD_SHIFT;
+    bool caps       = ALLEGRO_KEYMOD_CAPSLOCK;
+
+    if ((modifiers & shift_caps) == shift_caps)
+        return false;
+    else if (modifiers & shift)
+        return true;
+    else if (modifiers & caps)
+        return true;
+
+    return false;
+
+}
+
+void ModifyTextBox(DrawObject *object, ALLEGRO_EVENT event)
+{
+
+    bool to_upper = ShouldUpperCase(event);
+    switch (event.keyboard.keycode) {
+
+        case ALLEGRO_KEY_BACKSPACE:
+        case ALLEGRO_KEY_DELETE:  RemoveSingleCharacterFromTextBox(object); break;
+        case ALLEGRO_KEY_SPACE:   InsertSingleCharacterIntoTextBox(object, " ", false); break;
+        default: InsertSingleCharacterIntoTextBox(object, al_keycode_to_name(event.keyboard.keycode), to_upper); break;
+
+    }
+
+}
+
+void HandleTextBoxInput(ALLEGRO_EVENT event)
+{
+
+    DrawObject *object = GetActiveTextBox();
+
+    if (object == NULL || !object->textbox.active)
+        return;
+
+    if (event.type == ALLEGRO_EVENT_KEY_DOWN)
+        ModifyTextBox(object, event);
 
 }
 

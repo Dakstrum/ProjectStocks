@@ -116,7 +116,11 @@ typedef struct PopUp {
 typedef struct TextBox {
 
     bool active;
-    char input_field[128];
+    bool accept_alphabet_characters;
+    bool accept_number_characters;
+    unsigned int current_character;
+    char text[128];
+    char *placeholder_text;
 
 } TextBox;
 
@@ -171,6 +175,7 @@ typedef struct MenuWithChilds
 void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display);
 int GetMaxObjectsPerDrawLayer();
 int CreateNewDrawLayer();
+int GetCurrentDrawLayer();
 
 void ClearDrawLayers();
 void ClearCurrentDrawLayer();
@@ -190,6 +195,6 @@ int RemoveDrawObject(DrawObject *object);
 bool DoesObjectExistInCurrentDrawLayer(char *object_name);
 
 DrawObject** GetAllDrawObjectsInCurrentLayer();
-int GetCurrentDrawLayer();
-void SetAllTextBoxesToInactiveInCurrentDrawLayer();
+void SetActiveTextBox(DrawObject *object);
+DrawObject *GetActiveTextBox();
 #endif

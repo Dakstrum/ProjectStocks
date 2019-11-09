@@ -26,12 +26,20 @@ typedef struct DrawLayer
 
 } DrawLayer;
 
+typedef struct ActiveTextBox
+{
+
+    DrawObject *object;
+
+} ActiveTextBox;
 
 static DrawLayer *draw_layers;
 static int current_draw_layer = -1;
 
 static ALLEGRO_DISPLAY *display = NULL;
 static float scale              = 1.0f;
+
+static ActiveTextBox current_active_textbox;
 
 void SetObjectPointersToNull();
 
@@ -41,6 +49,7 @@ void CleanUpMenu(DrawObject *object);
 void CleanUpPopUp(DrawObject *object);
 void CleanUpVideo(DrawObject *object);
 void CleanUpText(DrawObject *object);
+void CleanUpTextBox(DrawObject *object);
 void ClearUpGeneric(DrawObject *object);
 
 bool HandleMouseClick(DrawObject *object, int x, int y);
@@ -79,6 +88,8 @@ int GetMaxObjectsPerDrawLayer()
 void SetObjectPointersToNull() 
 {
 
+    current_active_textbox.object = NULL;
+
     for (int i = 0; i < MAX_DRAW_LAYERS;i++) {
 
         for (int j = 0;j < MAX_OBJECTS_PER_LAYER; j++)
@@ -106,8 +117,19 @@ void SetAllTextBoxesToInactiveInCurrentDrawLayer()
 
     if (current_draw_layer == -1)
         return;
-    
+
     SetAllTextBoxesToInactiveInLayer(current_draw_layer);
+
+}
+
+void SetActiveTextBox(DrawObject *object)
+{
+
+    if (current_active_textbox.object != NULL)
+        current_active_textbox.object->textbox.active = false;
+
+    current_active_textbox.object = object;
+    object->textbox.active        = true;
 
 }
 
@@ -121,7 +143,13 @@ DrawObject** GetAllDrawObjectsInCurrentLayer()
 
 }
 
-/* SECTION: Draw Layer Creation and Cleanup */
+DrawObject *GetActiveTextBox()
+{
+
+    return current_active_textbox.object;
+
+}
+
 int CreateNewDrawLayer() 
 {
 
@@ -180,6 +208,7 @@ void ClearUpDrawLayer(int layer)
         }
 
     }
+    current_active_textbox.object = NULL;
 
 }
 
@@ -188,11 +217,12 @@ void ClearUpGeneric(DrawObject *object)
 
     switch (object->type) {
 
-        case MENU:   CleanUpMenu(object);   break;
-        case BUTTON: CleanUpButton(object); break;
-        case POPUP:  CleanUpPopUp(object);  break;
-        case VIDEO:  CleanUpVideo(object);  break;
-        case TEXT:   CleanUpText(object);   break;
+        case MENU:    CleanUpMenu(object);     break;
+        case BUTTON:  CleanUpButton(object);   break;
+        case POPUP:   CleanUpPopUp(object);    break;
+        case VIDEO:   CleanUpVideo(object);    break;
+        case TEXT:    CleanUpText(object);     break;
+        case TEXTBOX: CleanUpTextBox(object);  break;
 
     }
 
@@ -229,6 +259,13 @@ void CleanUpText(DrawObject *object)
 {
 
     //al_destroy_font(object->text.font);
+
+}
+
+void CleanUpTextBox(DrawObject *object)
+{
+
+
 
 }
 
