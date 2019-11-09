@@ -100,17 +100,32 @@ void InitializeControls()
 
 }
 
+void SetActiveTextBoxToInactive() 
+{
+
+    DrawObject *object = GetActiveTextBox();
+    if (object != NULL)
+        object->textbox.active = false;
+        
+}
+
 void HandleMouseInput(ALLEGRO_EVENT event) 
 {
 
     if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && event.mouse.button == 1) {
 
-        if (HandledMouseClickInButtonAreas(event.mouse.x, event.mouse.y))
+        if (HandledMouseClickInButtonAreas(event.mouse.x, event.mouse.y)) {
+
+            SetActiveTextBoxToInactive();
             return;
+            
+        }
         if (HandledMouseClickInTextbox(event.mouse.x, event.mouse.y))
             return;
 
+        SetActiveTextBoxToInactive();
     }
+
 
 }
 
