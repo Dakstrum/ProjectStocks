@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <float.h>
 #include <time.h>
+#include <math.h>
 
 #include "log.h"
 
