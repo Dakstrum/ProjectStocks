@@ -10,38 +10,95 @@
 #include "mainmenu.h"
 #include "generalpurposemenus.h"
 
-void HandleMouseClicks(ALLEGRO_EVENT event);
-void HandleKeyboard(ALLEGRO_EVENT event);
-void HandlePauseMenu(ALLEGRO_EVENT local_event);
+static int MAX_OBJECTS_PER_LAYER = 0;
+
+bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y) 
+{
+
+    if (object->x > x || x > object->x + object->width)
+        return false;
+    if (object->y > y || y > object->y + object->height)
+        return false;
+
+    return true;
+
+}
+
+bool HandleMouseClick(DrawObject *object, int x, int y) 
+{
+
+    if (IsMouseClickInAreaOfObject(object, x, y)) {
+
+        if (object->button.Callback != NULL) {
+
+            object->button.Callback();
+            return true;
+
+        }
+
+    }
+    return false;
+
+}
+
+void HandleMouseClickInButtonAreas(int x, int y) 
+{
+    
+    DrawObject **objects = GetAllDrawObjectsInCurrentLayer();
+
+    if (objects == NULL)
+        return;
+
+    for (int i = 0; i < MAX_OBJECTS_PER_LAYER;i++)
+        if (objects[i] != NULL && objects[i]->type == BUTTON)
+            if (HandleMouseClick(objects[i], x, y))
+                break;
+
+}
+
+bool ToggledTextBoxActiveFlag(DrawObject *object, int x, int y) 
+{
+
+    if (IsMouseClickInAreaOfObject(object, x, y)) {
+
+        SetAllTextBoxesToInactiveInCurrentDrawLayer();
+        object->textbox.active = true;
+        return true;
+
+    }
+    return false;
+
+}
+
+void HandleMouseClickInTextbox(int x, int y)
+{
+
+    DrawObject **objects = GetAllDrawObjectsInCurrentLayer();
+
+    if (objects == NULL)
+        return;
+
+    for (int i = 0;i < MAX_OBJECTS_PER_LAYER;i++)
+        if (objects[i] != NULL && objects[i]->type == TEXTBOX)
+            if(ToggledTextBoxActiveFlag(objects[i], x, y))
+                break;
+
+}
 
 void InitializeControls() 
 {
 
     al_install_mouse();
     al_install_keyboard();
+    MAX_OBJECTS_PER_LAYER = GetMaxObjectsPerDrawLayer();
 
 }
 
-void HandleInput(ALLEGRO_EVENT event) 
-{
-
-    HandleMouseClicks(event);
-    HandleKeyboard(event);
-    
-}
-
-void HandleMouseClicks(ALLEGRO_EVENT event) 
+void HandleMouseInput(ALLEGRO_EVENT event) 
 {
 
     if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && event.mouse.button == 1)
         HandleMouseClickInButtonAreas(event.mouse.x, event.mouse.y);
-
-}
-
-void HandleKeyboard(ALLEGRO_EVENT event) 
-{
-
-    HandlePauseMenu(event);
 
 }
 
@@ -58,4 +115,19 @@ void HandlePauseMenu(ALLEGRO_EVENT event)
    
     }
 
+}
+
+void HandleKeyboard(ALLEGRO_EVENT event) 
+{
+
+    HandlePauseMenu(event);
+
+}
+
+void HandleInput(ALLEGRO_EVENT event) 
+{
+
+    HandleMouseInput(event);
+    HandleKeyboard(event);
+    
 }

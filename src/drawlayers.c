@@ -69,6 +69,13 @@ void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display)
 
 }
 
+int GetMaxObjectsPerDrawLayer() 
+{
+
+    return MAX_OBJECTS_PER_LAYER;
+
+}
+
 void SetObjectPointersToNull() 
 {
 
@@ -84,45 +91,33 @@ void SetObjectPointersToNull()
 
 }
 
-void HandleMouseClickInButtonAreas(int x, int y) 
+void SetAllTextBoxesToInactiveInLayer(int layer)
 {
 
-    if (current_draw_layer < 0)
+    DrawObject **objects = draw_layers[layer].objects;
+    for (int i = 0;i < MAX_OBJECTS_PER_LAYER;i++)
+        if (objects[i] != NULL && objects[i]->type == TEXTBOX)
+            objects[i]->textbox.active = false;
+
+}
+
+void SetAllTextBoxesToInactiveInCurrentDrawLayer()
+{
+
+    if (current_draw_layer == -1)
         return;
     
-    for (int i = 0; i < MAX_OBJECTS_PER_LAYER;i++)
-        if (draw_layers[current_draw_layer].objects[i] != NULL &&  draw_layers[current_draw_layer].objects[i]->type == BUTTON)
-            if (HandleMouseClick(draw_layers[current_draw_layer].objects[i], x, y))
-                break;
+    SetAllTextBoxesToInactiveInLayer(current_draw_layer);
 
 }
 
-bool HandleMouseClick(DrawObject *object, int x, int y) 
+DrawObject** GetAllDrawObjectsInCurrentLayer() 
 {
 
-    if (IsMouseClickInAreaOfObject(object, x, y)) {
+    if (current_draw_layer == -1)
+        return NULL;
 
-        if (object->button.Callback != NULL) {
-
-            object->button.Callback();
-            return true;
-
-        }
-
-    }
-    return false;
-
-}
-
-bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y) 
-{
-
-    if (object->x > x || x > object->x + object->width)
-        return false;
-    if (object->y > y || y > object->y + object->height)
-        return false;
-
-    return true;
+    return draw_layers[current_draw_layer].objects;
 
 }
 
@@ -130,11 +125,9 @@ bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y)
 int CreateNewDrawLayer() 
 {
 
-    if (current_draw_layer + 1 == MAX_DRAW_LAYERS) {
-
+    if (current_draw_layer + 1 == MAX_DRAW_LAYERS)
         return -1;
 
-    }
     current_draw_layer++;
     return current_draw_layer;
 

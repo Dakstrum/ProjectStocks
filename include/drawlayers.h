@@ -16,7 +16,8 @@ typedef enum DrawType
     POPUP,
     VIDEO,
     TEXT,
-    GRAPH
+    GRAPH,
+    TEXTBOX
 
 } DrawType;
 
@@ -112,6 +113,13 @@ typedef struct PopUp {
 
 } PopUp;
 
+typedef struct TextBox {
+
+    bool active;
+    char input_field[128];
+
+} TextBox;
+
 typedef struct DrawObject 
 {
 
@@ -138,6 +146,7 @@ typedef struct DrawObject
         Video  video;
         Text   text;
         Graph graph;
+        TextBox textbox;
 
     };
 
@@ -160,6 +169,7 @@ typedef struct MenuWithChilds
 
 
 void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display);
+int GetMaxObjectsPerDrawLayer();
 int CreateNewDrawLayer();
 
 void ClearDrawLayers();
@@ -179,5 +189,7 @@ DrawObject *GetDrawObject(int layer, int object);
 int RemoveDrawObject(DrawObject *object);
 bool DoesObjectExistInCurrentDrawLayer(char *object_name);
 
-void HandleMouseClickInButtonAreas(int x, int y);
+DrawObject** GetAllDrawObjectsInCurrentLayer();
+int GetCurrentDrawLayer();
+void SetAllTextBoxesToInactiveInCurrentDrawLayer();
 #endif
