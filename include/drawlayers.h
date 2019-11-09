@@ -21,6 +21,20 @@ typedef enum DrawType
 
 } DrawType;
 
+typedef struct TextStyle {
+
+    char *font_path;
+    ALLEGRO_COLOR color;
+    ALLEGRO_FONT *font;
+
+    int font_size;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char a;
+
+} TextStyle;
+
 typedef struct Text 
 {
 
@@ -115,12 +129,19 @@ typedef struct PopUp {
 
 typedef struct TextBox {
 
+    ALLEGRO_BITMAP *bitmap;
+
     bool active;
     bool accept_alphabet_characters;
     bool accept_number_characters;
+    // current_character init to -1
     unsigned int current_character;
+    unsigned int limit_characters_to;
     char text[128];
     char *placeholder_text;
+
+    TextStyle *text_style;
+    TextStyle *placeholder_style;
 
 } TextBox;
 

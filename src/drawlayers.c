@@ -58,12 +58,13 @@ bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y);
 int AddDrawObjectToDrawLayer(DrawObject *object);
 
 void DrawSingleLayer(DrawLayer *layer);
-void DrawObjectOfTypeGen(DrawLayer *layer, int i);
+void DrawObjectOfTypeGen(DrawObject *object);
 void DrawMenu(DrawObject *object);
 void DrawButton(DrawObject *object);
 void DrawPopUp(DrawObject *object);
 void DrawVideo(DrawObject *object);
 void DrawText(DrawObject *object);
+void DrawTextBox(DrawObject *object);
 void DrawGraph(DrawObject *object);
 void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y);
 void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width, float height);
@@ -155,6 +156,8 @@ int CreateNewDrawLayer()
 
     if (current_draw_layer + 1 == MAX_DRAW_LAYERS)
         return -1;
+
+    SetAllTextBoxesToInactiveInCurrentDrawLayer();
 
     current_draw_layer++;
     return current_draw_layer;
@@ -277,6 +280,17 @@ int AddButtonToDrawLayer(DrawObject *object)
     if (object->asset_path != NULL)
         object->button.button_bitmap = GetBitmapFromCache(object->asset_path);
 
+    return AddDrawObjectToDrawLayer(object);
+
+}
+
+int AddTextBoxToDrawLayers(DrawObject *object)
+{
+
+    if (object->asset_path != NULL)
+        object->textbox.bitmap = GetBitmapFromCache(object->asset_path);
+
+    memset(object->textbox.text, '\0', 128);
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -415,12 +429,13 @@ int AddObjectToDrawLayer(DrawObject *object)
 
     switch (object->type) {
 
-        case MENU:   return AddMenuToDrawLayer(object);   break;
-        case BUTTON: return AddButtonToDrawLayer(object); break;
-        case POPUP:  return AddPopUpToDrawLayer(object);  break;
-        case VIDEO:  return AddVideoToDrawLayer(object);  break;
-        case TEXT:   return AddTextToDrawLayer(object);   break;
-        case GRAPH:  return AddGraphToDrawLayer(object);  break;
+        case MENU:    return AddMenuToDrawLayer(object);     break;
+        case BUTTON:  return AddButtonToDrawLayer(object);   break;
+        case POPUP:   return AddPopUpToDrawLayer(object);    break;
+        case VIDEO:   return AddVideoToDrawLayer(object);    break;
+        case TEXT:    return AddTextToDrawLayer(object);     break;
+        case TEXTBOX: return AddTextBoxToDrawLayers(object); break;
+        case GRAPH:   return AddGraphToDrawLayer(object);    break;
 
     }
 
@@ -513,21 +528,22 @@ void DrawSingleLayer(DrawLayer *layer)
 
     for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++) 
         if (layer->objects[i] != NULL && layer->objects[i]->should_this_be_drawn)
-            DrawObjectOfTypeGen(layer, i);
+            DrawObjectOfTypeGen(layer->objects[i]);
 
 }
 
-void DrawObjectOfTypeGen(DrawLayer *layer, int i) 
+void DrawObjectOfTypeGen(DrawObject *object) 
 {
 
-    switch (layer->objects[i]->type) {
+    switch (object->type) {
 
-        case MENU:   DrawMenu(layer->objects[i]);   break;
-        case BUTTON: DrawButton(layer->objects[i]); break;
-        case POPUP:  DrawPopUp(layer->objects[i]);  break;
-        case VIDEO:  DrawVideo(layer->objects[i]);  break;
-        case TEXT:   DrawText(layer->objects[i]);   break;
-        case GRAPH:  DrawGraph(layer->objects[i]);  break;
+        case MENU:    DrawMenu(object);    break;
+        case BUTTON:  DrawButton(object);  break;
+        case POPUP:   DrawPopUp(object);   break;
+        case VIDEO:   DrawVideo(object);   break;
+        case TEXT:    DrawText(object);    break;
+        case TEXTBOX: DrawTextBox(object); break;
+        case GRAPH:   DrawGraph(object);   break;
 
     }
 
@@ -676,6 +692,17 @@ void DrawText(DrawObject *object)
 {
 
     al_draw_text(object->text.font, object->text.color, object->x, object->y, 0, object->text.content);
+
+}
+
+void DrawTextBox(DrawObject *object)
+{
+
+    DrawGeneric(object->textbox.bitmap, object->x, object->y);
+    if (object->textbox.current_character == -1 && !object->textbox.active)
+        al_draw_text(object->textbox.placeholder_style->font, object->textbox.placeholder_style->color, object->x, object->y, 0, object->textbox.placeholder_text);
+    else
+        al_draw_text(object->textbox.text_style->font, object->textbox.text_style->color, object->x, object->y, 0, object->textbox.text);
 
 }
 

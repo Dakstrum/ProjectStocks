@@ -118,7 +118,7 @@ void HandleMouseInput(ALLEGRO_EVENT event)
 
             SetActiveTextBoxToInactive();
             return;
-            
+
         }
         if (HandledMouseClickInTextbox(event.mouse.x, event.mouse.y))
             return;
@@ -154,13 +154,8 @@ void RemoveSingleCharacterFromTextBox(DrawObject *object)
 
 }
 
-void InsertSingleCharacterIntoTextBox(DrawObject *object, const char *key_pressed, bool to_upper) 
+bool IsItAGoodCharacter(DrawObject *object, char *key_pressed)
 {
-
-    if (object->textbox.current_character >= MAX_CHARS_IN_TEXTBOX)
-        return;
-    if (strlen(key_pressed) > 1)
-        return;
 
     bool good_char = false;
     if (object->textbox.accept_alphabet_characters && isalpha(*key_pressed))
@@ -168,7 +163,21 @@ void InsertSingleCharacterIntoTextBox(DrawObject *object, const char *key_presse
     else if (object->textbox.accept_number_characters && isdigit(*key_pressed))
         good_char = true;
 
-    if (good_char) {
+    return good_char;
+
+}
+
+void InsertSingleCharacterIntoTextBox(DrawObject *object, const char *key_pressed, bool to_upper) 
+{
+
+    if (object->textbox.current_character >= MAX_CHARS_IN_TEXTBOX)
+        return;
+    if (object->textbox.current_character == object->textbox.limit_characters_to)
+        return;
+    if (strlen(key_pressed) > 1)
+        return;
+
+    if (IsItAGoodCharacter(object, key_pressed)) {
 
         object->textbox.current_character++;
         object->textbox.text[object->textbox.current_character] = to_upper ? toupper(*key_pressed) : tolower(*key_pressed);
