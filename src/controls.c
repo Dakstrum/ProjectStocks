@@ -41,18 +41,20 @@ bool HandleMouseClick(DrawObject *object, int x, int y)
 
 }
 
-void HandleMouseClickInButtonAreas(int x, int y) 
+bool HandledMouseClickInButtonAreas(int x, int y) 
 {
     
     DrawObject **objects = GetAllDrawObjectsInCurrentLayer();
 
     if (objects == NULL)
-        return;
+        return false;
 
     for (int i = 0; i < MAX_OBJECTS_PER_LAYER;i++)
         if (objects[i] != NULL && objects[i]->type == BUTTON)
             if (HandleMouseClick(objects[i], x, y))
-                break;
+                return true;
+
+    return false;
 
 }
 
@@ -70,18 +72,20 @@ bool ToggledTextBoxActiveFlag(DrawObject *object, int x, int y)
 
 }
 
-void HandleMouseClickInTextbox(int x, int y)
+bool HandledMouseClickInTextbox(int x, int y)
 {
 
     DrawObject **objects = GetAllDrawObjectsInCurrentLayer();
 
     if (objects == NULL)
-        return;
+        return false;
 
     for (int i = 0;i < MAX_OBJECTS_PER_LAYER;i++)
         if (objects[i] != NULL && objects[i]->type == TEXTBOX)
             if(ToggledTextBoxActiveFlag(objects[i], x, y))
-                break;
+                return true;
+
+    return false;
 
 }
 
@@ -97,8 +101,14 @@ void InitializeControls()
 void HandleMouseInput(ALLEGRO_EVENT event) 
 {
 
-    if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && event.mouse.button == 1)
-        HandleMouseClickInButtonAreas(event.mouse.x, event.mouse.y);
+    if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && event.mouse.button == 1) {
+
+        if (HandledMouseClickInButtonAreas(event.mouse.x, event.mouse.y))
+            return;
+        if (HandledMouseClickInTextbox(event.mouse.x, event.mouse.y))
+            return;
+
+    }
 
 }
 
