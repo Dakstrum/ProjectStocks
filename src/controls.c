@@ -13,7 +13,8 @@
 #include "generalpurposemenus.h"
 
 static int MAX_OBJECTS_PER_LAYER = 0;
-static const int MAX_CHARS_IN_TEXTBOX  = 128;
+// leave last character as null character. Leave one character for flicker;
+static const int MAX_CHARS_IN_TEXTBOX  = 126;
 
 bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y) 
 {

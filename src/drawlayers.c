@@ -129,8 +129,10 @@ void SetActiveTextBox(DrawObject *object)
     if (current_active_textbox.object != NULL)
         current_active_textbox.object->textbox.active = false;
 
-    current_active_textbox.object = object;
-    object->textbox.active        = true;
+    current_active_textbox.object   = object;
+    object->textbox.active          = true;
+    object->textbox.flicker         = GetCurrentTime();
+    object->textbox.flicker_drawing = true;
 
 }
 
@@ -290,7 +292,7 @@ int AddTextBoxToDrawLayers(DrawObject *object)
     if (object->asset_path != NULL)
         object->textbox.bitmap = GetBitmapFromCache(object->asset_path);
 
-    memset(object->textbox.text, '\0', 128);
+    memset(object->textbox.text, '\0', 129);
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -695,14 +697,50 @@ void DrawText(DrawObject *object)
 
 }
 
+void SetModifiedTextBoxWithFlicker(DrawObject *object)
+{
+
+    struct timespec current_time = GetCurrentTime();
+    if (object->textbox.flicker_drawing) {
+ 
+        if (GetMillDiff(&object->textbox.flicker, &current_time) >= 750) {
+
+            object->textbox.flicker_drawing = false;
+            object->textbox.flicker         = GetCurrentTime();
+
+        } else {
+
+            object->textbox.text[object->textbox.current_character + 1] = '|';
+
+        }
+
+    } else {
+
+        if (GetMillDiff(&object->textbox.flicker, &current_time) >= 250) {
+
+            object->textbox.flicker_drawing = true;
+            object->textbox.flicker         = GetCurrentTime();
+
+        }
+
+    }
+
+}
+
 void DrawTextBox(DrawObject *object)
 {
 
     DrawGeneric(object->textbox.bitmap, object->x, object->y);
-    if (object->textbox.current_character == -1 && !object->textbox.active)
+    if (object->textbox.current_character == -1 && !object->textbox.active) {
+
         al_draw_text(object->textbox.placeholder_style->font, object->textbox.placeholder_style->color, object->x, object->y, 0, object->textbox.placeholder_text);
-    else
+
+    } else {
+
         al_draw_text(object->textbox.text_style->font, object->textbox.text_style->color, object->x, object->y, 0, object->textbox.text);
+        object->textbox.text[object->textbox.current_character + 1] = '\0';
+
+    }
 
 }
 

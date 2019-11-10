@@ -140,6 +140,9 @@ typedef struct TextBox {
     char text[128];
     char *placeholder_text;
 
+    struct timespec flicker;
+    bool flicker_drawing;
+
     TextStyle *text_style;
     TextStyle *placeholder_style;
 
