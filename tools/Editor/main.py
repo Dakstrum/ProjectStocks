@@ -65,10 +65,11 @@ def OpenCallback():
     open_window.setWindowTitle("File explorer")
 
     model       = QFileSystemModel()
-    model.setRootPath(QDir.homePath())
+    model.setRootPath(QDir.currentPath())
     tree        = QTreeView(open_window)
     tree.setModel(model)
-    tree.setRootIndex(model.index(QDir.homePath()))
+    tree.setRootIndex(model.index(QDir.currentPath()))
+    tree.setMinimumSize(1280, 720)
     tree.clicked.connect(OpenFileCallback)
 
     open_window.setMinimumHeight(720)
