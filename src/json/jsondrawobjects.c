@@ -20,7 +20,7 @@ static unsigned int num_objects   = 0;
 void SetParsedObjectsNull();
 void ParseJsonDrawObject(array_list *objects_list);
 void WithTypeSetDrawObject(char *type, int idx);
-void SetCommonObjectProperties(int idx, char *path);
+void SetCommonObjectProperties(int idx, char *path, char *child_of);
 void SetMenuObject(int idx);
 void SetVideoObject(int idx);
 void SetButtonObject(int idx);
@@ -30,6 +30,7 @@ void SetMenuTextObject(int idx, int button_idx, char *child_of);
 
 void CheckAndSetMenuButtons(int idx, char *child_of);
 void CheckAndSetMenuText(int idx, char *child_of);
+void CheckAndSetTextboxes(int idx, char *child_of);
 
 void InitialzeDrawObjectsJson() 
 {
@@ -63,7 +64,7 @@ void ParseJsonDrawObject(array_list *objects_list)
 void WithTypeSetDrawObject(char *type, int idx) 
 {
 
-    SetCommonObjectProperties(idx, "");
+    SetCommonObjectProperties(idx, "", NULL);
     if (strcmp(type, "Menu") == 0)
         SetMenuObject(idx);
     else if (strcmp(type, "Video") == 0)
@@ -87,7 +88,7 @@ void SetParsedObjectsNull()
 
 }
 
-void SetCommonObjectProperties(int idx, char *path) 
+void SetCommonObjectProperties(int idx, char *path, char *child_of) 
 {
 
     char base_path[128];
@@ -106,6 +107,7 @@ void SetCommonObjectProperties(int idx, char *path)
     parsed_objects[num_objects].y          = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Y"), idx));
     parsed_objects[num_objects].width      = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Width"), idx));
     parsed_objects[num_objects].height     = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Height"), idx));
+    parsed_objects[num_objects].child_of   = child_of;
 
 }
 
@@ -118,6 +120,7 @@ void SetMenuObject(int idx)
 
     CheckAndSetMenuButtons(idx, parsed_objects[menu_index].name);
     CheckAndSetMenuText(idx, parsed_objects[menu_index].name);
+    CheckAndSetTextboxes(idx, parsed_objects[menu_index].name);
 
 }
 
@@ -139,14 +142,10 @@ void SetMenuButtonObject(int idx, int button_idx, char *child_of)
 {
 
     char path[128];
-    SetCommonObjectProperties(idx, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/", idx, button_idx));
-
-    // TODO Set button callback. Requires existing function list to implement.
+    SetCommonObjectProperties(idx, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/", idx, button_idx), child_of);
     parsed_objects[num_objects].type     = BUTTON;
     parsed_objects[num_objects].x        = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/RX", idx, button_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/X", idx));
     parsed_objects[num_objects].y        = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/RY", idx, button_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Y", idx));
-    parsed_objects[num_objects].child_of = child_of;
-
     num_objects++;
 
 }
@@ -180,8 +179,8 @@ void SetMenuTextObject(int idx, int text_idx, char *child_of)
     parsed_objects[num_objects].name                  = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Name", idx, text_idx));
     parsed_objects[num_objects].x                     = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/RX", idx, text_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/X", idx));
     parsed_objects[num_objects].y                     = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/RY", idx, text_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Y", idx));
-    parsed_objects[num_objects].text.font_size = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/FontSize", idx, text_idx));
-    parsed_objects[num_objects].text.content   = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Content", idx, text_idx));
+    parsed_objects[num_objects].text.font_size        = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/FontSize", idx, text_idx));
+    parsed_objects[num_objects].text.content          = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Content", idx, text_idx));
     parsed_objects[num_objects].child_of              = child_of;
     parsed_objects[num_objects].should_this_be_drawn  = true;
 
@@ -217,6 +216,70 @@ void CheckAndSetMenuText(int idx, char *child_of)
 
     for (int i = 0; i < text_list->length;i++)
         SetMenuTextObject(idx, i, child_of);
+
+}
+
+void SetFontStyle(TextStyle **style, int idx, int textbox_idx, char *text_field)
+{
+
+    char path[128];
+    (*style) = malloc(sizeof(TextStyle));
+    (*style)->font_size = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/%s/FontSize", idx, textbox_idx, text_field));
+    (*style)->font_path = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/%s/Path", idx, textbox_idx, text_field));
+
+    array_list *colors = GetArrayList(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/%s/Color", idx, textbox_idx, text_field));
+    if (colors->length == 4) {
+
+        (*style)->r = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/%s/Color/0", idx, textbox_idx, text_field));
+        (*style)->g = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/%s/Color/1", idx, textbox_idx, text_field));
+        (*style)->b = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/%s/Color/2", idx, textbox_idx, text_field));
+        (*style)->a = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/%s/Color/3", idx, textbox_idx, text_field));
+
+    } else {
+
+        (*style)->r = 255;
+        (*style)->g = 255;
+        (*style)->b = 255;
+        (*style)->a = 255;
+
+    }
+
+}
+
+void SetMenuTextbox(int idx, int textbox_idx, char *child_of)
+{
+
+    char path[128];
+    parsed_objects[num_objects].type                        = TEXTBOX;
+    parsed_objects[num_objects].asset_path                  = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Path", idx, textbox_idx));
+    parsed_objects[num_objects].name                        = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Name", idx, textbox_idx));
+    parsed_objects[num_objects].x                           = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/RX", idx, textbox_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/X", idx));
+    parsed_objects[num_objects].y                           = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/RY", idx, textbox_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Y", idx));
+    parsed_objects[num_objects].width                       = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Width", idx, textbox_idx));
+    parsed_objects[num_objects].height                      = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Height", idx, textbox_idx));
+    parsed_objects[num_objects].textbox.limit_characters_to = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Text/CharacterLimit", idx, textbox_idx));
+    parsed_objects[num_objects].textbox.placeholder_text    = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Placeholder/Content", idx, textbox_idx));
+    parsed_objects[num_objects].child_of                    = child_of;
+    parsed_objects[num_objects].should_this_be_drawn        = true;
+
+    SetFontStyle(&parsed_objects[num_objects].textbox.text_style, idx, textbox_idx, "Text");
+    SetFontStyle(&parsed_objects[num_objects].textbox.placeholder_style, idx, textbox_idx, "Placeholder");
+
+    num_objects++;
+
+}
+
+void CheckAndSetTextboxes(int idx, char *child_of) 
+{
+
+    char buffer[128];
+    array_list *text_list = GetArrayList(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Textbox", idx));
+
+    if (text_list == NULL)
+        return;
+
+    for (int i = 0; i < text_list->length;i++)
+        SetMenuTextbox(idx, i, child_of);
 
 }
 
@@ -283,6 +346,20 @@ void SetTextDrawObjectFromJson(DrawObject *draw_object, int object_idx)
 
 }
 
+void SetTextboxDrawObjectFromJson(DrawObject *draw_object, int object_idx)
+{
+
+    draw_object->type = TEXTBOX;
+    SetCommonDrawObjectPropertiesForGetDrawObject(draw_object, object_idx);
+    draw_object->textbox.placeholder_text    = parsed_objects[object_idx].textbox.placeholder_text;
+    draw_object->textbox.flicker_drawing     = false;
+    draw_object->textbox.current_character   = -1;
+    draw_object->textbox.limit_characters_to = parsed_objects[object_idx].textbox.limit_characters_to;
+    
+
+
+}
+
 DrawObject *CreateDrawObjectFromJson(int object_idx) 
 {
 
@@ -290,10 +367,11 @@ DrawObject *CreateDrawObjectFromJson(int object_idx)
 
     switch (parsed_objects[object_idx].type) {
 
-        case VIDEO:  SetVideoDrawObjectFromJson(draw_object, object_idx); break;
-        case BUTTON: SetButtonDrawObjectFromJson(draw_object, object_idx); break;
-        case MENU:   SetMenuDrawObjectFromJson(draw_object, object_idx); break;
-        case TEXT:   SetTextDrawObjectFromJson(draw_object, object_idx); break;
+        case VIDEO:   SetVideoDrawObjectFromJson(draw_object, object_idx);   break;
+        case BUTTON:  SetButtonDrawObjectFromJson(draw_object, object_idx);  break;
+        case MENU:    SetMenuDrawObjectFromJson(draw_object, object_idx);    break;
+        case TEXT:    SetTextDrawObjectFromJson(draw_object, object_idx);    break;
+        case TEXTBOX: SetTextboxDrawObjectFromJson(draw_object, object_idx); break;
 
     }
 
@@ -348,24 +426,27 @@ void SetMenuChild(int object_idx, MenuWithChilds *menu_with_childs)
     switch (parsed_objects[object_idx].type) {
 
         case BUTTON:
-            if (menu_with_childs->num_buttons == 255) {
 
-                Log("Too many child buttons in menu");
+            if (menu_with_childs->num_buttons == 255)
                 return;
-
-            }
             menu_with_childs->buttons[menu_with_childs->num_buttons] = CreateDrawObjectFromJson(object_idx); 
             menu_with_childs->num_buttons++; 
             break;
+
         case TEXT:
-            if (menu_with_childs->num_text == 255) {
 
-                Log("Too many child text in menu");
+            if (menu_with_childs->num_text == 255)
                 return;
-
-            }
             menu_with_childs->text[menu_with_childs->num_text] = CreateDrawObjectFromJson(object_idx);
             menu_with_childs->num_text++; 
+            break;
+
+        case TEXTBOX:
+
+            if (menu_with_childs->num_text_boxes == 255)
+                return;
+            menu_with_childs->text_boxes[menu_with_childs->num_text_boxes] = CreateDrawObjectFromJson(object_idx);
+            menu_with_childs->num_text_boxes++;
             break;
 
     }
@@ -393,8 +474,10 @@ MenuWithChilds *GetMenuWithChildsFromDrawObjectJson(char *menu_name)
     menu_with_childs->menu           = menu;
     menu_with_childs->num_buttons    = 0;
     menu_with_childs->num_text       = 0;
+    menu_with_childs->num_text_boxes = 0;
     menu_with_childs->buttons        = malloc(sizeof(DrawObject *) * 256);
     menu_with_childs->text           = malloc(sizeof(DrawObject *) * 256);
+    menu_with_childs->text_boxes     = malloc(sizeof(DrawObject *) * 256);
 
     SetAllMenuChilds(menu_with_childs);
     ReclaimUnusedSpaceFromMenuWithChilds(menu_with_childs);

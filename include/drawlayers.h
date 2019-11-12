@@ -187,11 +187,13 @@ typedef struct MenuWithChilds
 
     int num_buttons;
     int num_text;
+    int num_text_boxes;
 
     int draw_layer;
 
     DrawObject **buttons;
     DrawObject **text;
+    DrawObject **text_boxes;
 
 } MenuWithChilds;
 
