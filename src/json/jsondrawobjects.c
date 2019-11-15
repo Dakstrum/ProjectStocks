@@ -424,34 +424,25 @@ void ReclaimUnusedSpaceFromMenuWithChilds(MenuWithChilds *menu_with_childs)
 
 }
 
+void SetChild(int object_idx, int *num_buttons, DrawObject **objects)
+{
+
+    if (*num_buttons == 255)
+        return;
+
+    objects[*num_buttons] = CreateDrawObjectFromJson(object_idx);
+    (*num_buttons)++;
+
+}
+
 void SetMenuChild(int object_idx, MenuWithChilds *menu_with_childs) 
 {
 
     switch (parsed_objects[object_idx].type) {
 
-        case BUTTON:
-
-            if (menu_with_childs->num_buttons == 255)
-                return;
-            menu_with_childs->buttons[menu_with_childs->num_buttons] = CreateDrawObjectFromJson(object_idx); 
-            menu_with_childs->num_buttons++; 
-            break;
-
-        case TEXT:
-
-            if (menu_with_childs->num_text == 255)
-                return;
-            menu_with_childs->text[menu_with_childs->num_text] = CreateDrawObjectFromJson(object_idx);
-            menu_with_childs->num_text++; 
-            break;
-
-        case TEXTBOX:
-
-            if (menu_with_childs->num_text_boxes == 255)
-                return;
-            menu_with_childs->text_boxes[menu_with_childs->num_text_boxes] = CreateDrawObjectFromJson(object_idx);
-            menu_with_childs->num_text_boxes++;
-            break;
+        case BUTTON:  SetChild(object_idx, &menu_with_childs->num_buttons, menu_with_childs->buttons); break;
+        case TEXT:    SetChild(object_idx, &menu_with_childs->num_text, menu_with_childs->text); break;
+        case TEXTBOX: SetChild(object_idx, &menu_with_childs->num_text_boxes, menu_with_childs->text_boxes); break;
 
     }
 
