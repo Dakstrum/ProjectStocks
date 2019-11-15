@@ -272,7 +272,7 @@ void SetMenuTextbox(int idx, int textbox_idx, char *child_of)
 void CheckAndSetTextboxes(int idx, char *child_of) 
 {
 
-    char buffer[128];
+    char buffer[512];
     array_list *text_list = GetArrayList(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Textbox", idx));
 
     if (text_list == NULL)
@@ -356,7 +356,9 @@ void SetTextboxDrawObjectFromJson(DrawObject *draw_object, int object_idx)
     draw_object->textbox.current_character   = -1;
     draw_object->textbox.limit_characters_to = parsed_objects[object_idx].textbox.limit_characters_to;
     
-
+    draw_object->textbox.placeholder_text    = parsed_objects[object_idx].textbox.placeholder_text;
+    draw_object->textbox.text_style          = parsed_objects[object_idx].textbox.text_style;
+    draw_object->textbox.placeholder_style   = parsed_objects[object_idx].textbox.placeholder_style;
 
 }
 
@@ -393,30 +395,28 @@ DrawObject *GetDrawObjectFromDrawObjectJson(char *object_name)
 
 }
 
+void ReclaimUnsuedSpace(int num_objects, DrawObject ***objects) 
+{
+
+    if (num_objects == 0) {
+
+        free((*objects));
+        (*objects) = NULL;
+
+    } else {
+
+        (*objects) = realloc((*objects), sizeof(DrawObject *) * num_objects);
+
+    } 
+
+}
+
 void ReclaimUnusedSpaceFromMenuWithChilds(MenuWithChilds *menu_with_childs) 
 {
 
-    if (menu_with_childs->num_buttons == 0) {
-
-        free(menu_with_childs->buttons);
-        menu_with_childs->buttons = NULL;
-
-    } else {
-
-        menu_with_childs->buttons = realloc(menu_with_childs->buttons, sizeof(DrawObject *) * menu_with_childs->num_buttons);
-
-    }
-
-    if (menu_with_childs->num_text == 0){
-
-        free(menu_with_childs->text);
-        menu_with_childs->text = NULL;
-
-    } else {
-
-        menu_with_childs->text = realloc(menu_with_childs->text, sizeof(DrawObject *) * menu_with_childs->num_text);
-
-    }
+    ReclaimUnsuedSpace(menu_with_childs->num_buttons, &menu_with_childs->buttons);
+    ReclaimUnsuedSpace(menu_with_childs->num_text, &menu_with_childs->text);
+    ReclaimUnsuedSpace(menu_with_childs->num_text_boxes, &menu_with_childs->text_boxes);
 
 }
 
