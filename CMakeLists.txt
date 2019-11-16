@@ -34,7 +34,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DDEBUGGING)
 endif()
 
-if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if (CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
     string(APPEND CMAKE_C_FLAGS_DEBUG " -O0 -g -Wall -fno-omit-frame-pointer -fsanitize=address")
     string(APPEND CMAKE_C_FLAGS_RELEASE " -O2")
 else()
