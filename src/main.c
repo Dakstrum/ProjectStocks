@@ -1,6 +1,8 @@
-#define ALLEGRO_USE_CONSOLE 1
-
 #include <stdio.h>
+
+#ifdef __linux__
+    #include <signal.h>
+#endif
 #include <allegro5/allegro.h>
 
 #include "dbaccess.h"
@@ -43,6 +45,10 @@ int main(int argc, char **argv)
         GameLoop();
 
     CleanUp();
+
+#ifdef __linux__
+    raise(SIGTSTP);
+#endif
     return 0;
 
 }
@@ -168,7 +174,6 @@ void CleanUp()
     CleanUpRendering();
     CleanUpLogging();
     CleanUpGameThreads();
-    al_uninstall_system();
 
 }
 

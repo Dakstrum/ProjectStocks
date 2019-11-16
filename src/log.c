@@ -22,8 +22,7 @@ static const unsigned int max_queue_size    = 128;
 static unsigned int queue_pointer           = 0;
 static unsigned int exclusive_queue_pointer = 0;
 static ALLEGRO_MUTEX *log_mutex             = NULL;
-
-static ALLEGRO_THREAD *queue_thread = NULL;
+static ALLEGRO_THREAD *queue_thread         = NULL;
 
 void ResetQueue();
 void *LoggingEntry(ALLEGRO_THREAD *thread, void *arg);
@@ -201,14 +200,12 @@ void ResetExclusiveQueue()
 
 void CleanUpLogging() 
 {
+    al_join_thread(queue_thread, NULL);
+    al_destroy_thread(queue_thread);
 
     ResetQueue();
     al_destroy_mutex(log_mutex);
     free(queue);
-
-    al_join_thread(queue_thread, NULL);
-    al_destroy_thread(queue_thread);
-
 }
 
 void TransferQueue()
@@ -236,7 +233,7 @@ void *LoggingEntry(ALLEGRO_THREAD *thread, void *arg)
 
     while (!ShouldICleanUp()) {
 
-        al_rest(0.5);
+        al_rest(1.0);
         TransferQueue();
         WriteQueue();
 
