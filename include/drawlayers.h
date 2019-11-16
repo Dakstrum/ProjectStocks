@@ -223,4 +223,5 @@ bool DoesObjectExistInCurrentDrawLayer(char *object_name);
 DrawObject** GetAllDrawObjectsInCurrentLayer();
 void SetActiveTextBox(DrawObject *object);
 DrawObject *GetActiveTextBox();
+char *GetTextFromTextBox(char *object_name);
 #endif

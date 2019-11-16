@@ -747,7 +747,7 @@ void DrawTextBox(DrawObject *object)
 
         if (object->textbox.active)
             SetModifiedTextBoxWithFlicker(object);
-        
+
         al_draw_text(object->textbox.text_style->font, object->textbox.text_style->color, object->x, object->y, 0, object->textbox.text);
         object->textbox.text[object->textbox.current_character + 1] = '\0';
 
@@ -819,23 +819,40 @@ DrawObject *CreateNewDrawObject()
 
 }
 
-bool DoesObjectExistInCurrentDrawLayer(char *object_name)
+DrawObject *FindDrawObject(char *object_name)
 {
- 
+
     if (current_draw_layer == -1)
-        return false;
+        return NULL;
 
     DrawObject *object = NULL;
     for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++) {
 
         object = draw_layers[current_draw_layer].objects[i];
-
         if (object != NULL && object->name != NULL)
             if (strcmp(object->name, object_name) == 0)
-                return true;
+                return object;
 
     }
 
-    return false;
+    return NULL;
+
+}
+
+bool DoesObjectExistInCurrentDrawLayer(char *object_name)
+{
+ 
+    return FindDrawObject(object_name) != NULL ? true : false;
+
+}
+
+char *GetTextFromTextBox(char *object_name) 
+{
+
+    DrawObject *object = FindDrawObject(object_name);
+    if (object == NULL)
+        return NULL;
+
+    return object->textbox.text;
 
 }
