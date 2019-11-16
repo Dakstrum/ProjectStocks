@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QMenuBar, QMenu, QMainWindow, QFileSystemModel, QTreeView, QListWidget
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QMenuBar, QMenu, QMainWindow, QFileSystemModel, QTreeView, QListWidget, QLabel
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import QDir
 import json
 
@@ -30,6 +31,7 @@ class MainWindow(QMainWindow):
 
         self.window_container = QWidget()
         self.window_layout    = QHBoxLayout()
+        self.pixmap_label     = QLabel()
         self.SetMenuBar()
         self.SetMenuList()
         self.setCentralWidget(self.window_container)
@@ -47,7 +49,20 @@ class MainWindow(QMainWindow):
         for menu in self.menu_config_obj.menus:
             self.menu_list.addItem(menu["Name"])
 
+        self.menu_list.itemClicked.connect(self.MenuItemClicked)
         self.window_layout.addWidget(self.menu_list)
+
+    def MenuItemClicked(self, item):
+
+        self.window_layout.removeWidget(self.pixmap_label)
+        clicked_menu = None
+        for menu in self.menu_config_obj.menus:
+            if menu["Name"] == item.text():
+                clicked_menu = menu
+                break
+        self.pixmap_label.setPixmap(QPixmap(menu["Path"]))
+        self.window_layout.addWidget(self.pixmap_label)
+
 
 class MenuConfig():
 
