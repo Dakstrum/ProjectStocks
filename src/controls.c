@@ -173,7 +173,7 @@ void InsertSingleCharacterIntoTextBox(DrawObject *object, const char *key_presse
 
     if (object->textbox.current_character >= MAX_CHARS_IN_TEXTBOX)
         return;
-    if (object->textbox.current_character == object->textbox.limit_characters_to)
+    if (object->textbox.current_character+1 == object->textbox.limit_characters_to)
         return;
     if (strlen(key_pressed) > 1)
         return;

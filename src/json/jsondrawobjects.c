@@ -261,6 +261,8 @@ void SetMenuTextbox(int idx, int textbox_idx, char *child_of)
     parsed_objects[num_objects].textbox.placeholder_text    = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Placeholder/Content", idx, textbox_idx));
     parsed_objects[num_objects].child_of                    = child_of;
     parsed_objects[num_objects].should_this_be_drawn        = true;
+    parsed_objects[num_objects].textbox.accept_alphabet_characters = strcmp(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Text/AcceptAlphabetCharacters", idx, textbox_idx)), "true") == 0 ? true : false;
+    parsed_objects[num_objects].textbox.accept_number_characters   = strcmp(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Text/AcceptNumberCharacters", idx, textbox_idx)), "true") == 0 ? true : false;
 
     SetFontStyle(&parsed_objects[num_objects].textbox.text_style, idx, textbox_idx, "Text");
     SetFontStyle(&parsed_objects[num_objects].textbox.placeholder_style, idx, textbox_idx, "Placeholder");
@@ -356,9 +358,11 @@ void SetTextboxDrawObjectFromJson(DrawObject *draw_object, int object_idx)
     draw_object->textbox.current_character   = -1;
     draw_object->textbox.limit_characters_to = parsed_objects[object_idx].textbox.limit_characters_to;
     
-    draw_object->textbox.placeholder_text    = parsed_objects[object_idx].textbox.placeholder_text;
-    draw_object->textbox.text_style          = parsed_objects[object_idx].textbox.text_style;
-    draw_object->textbox.placeholder_style   = parsed_objects[object_idx].textbox.placeholder_style;
+    draw_object->textbox.placeholder_text           = parsed_objects[object_idx].textbox.placeholder_text;
+    draw_object->textbox.text_style                 = parsed_objects[object_idx].textbox.text_style;
+    draw_object->textbox.placeholder_style          = parsed_objects[object_idx].textbox.placeholder_style;
+    draw_object->textbox.accept_number_characters   = parsed_objects[object_idx].textbox.accept_number_characters;
+    draw_object->textbox.accept_alphabet_characters = parsed_objects[object_idx].textbox.accept_alphabet_characters;
 
 }
 
