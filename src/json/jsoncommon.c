@@ -45,9 +45,7 @@ array_list *GetJsonObjectArray(json_object *object, const char *json_path)
 
     json_object *store_object = NULL;
 
-    if (json_pointer_get(object, json_path, &store_object) != 0)
-        LogF("Unable to find array at path %s", json_path);
-    else
+    if (json_pointer_get(object, json_path, &store_object) == 0)
         return json_object_get_array(store_object);
 
     return NULL;

@@ -226,8 +226,9 @@ void HandleTextBoxInput(ALLEGRO_EVENT event)
 
     DrawObject *object = GetActiveTextBox();
 
-    if (object == NULL || !object->textbox.active)
+    if (object == NULL || !object->textbox.active) {
         return;
+    }
 
     if (event.type == ALLEGRO_EVENT_KEY_DOWN)
         ModifyTextBox(object, event);
@@ -238,6 +239,7 @@ void HandleKeyboard(ALLEGRO_EVENT event)
 {
 
     HandlePauseMenu(event);
+    HandleTextBoxInput(event);
 
 }
 

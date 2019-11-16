@@ -292,7 +292,13 @@ int AddTextBoxToDrawLayers(DrawObject *object)
     if (object->asset_path != NULL)
         object->textbox.bitmap = GetBitmapFromCache(object->asset_path);
 
-    memset(object->textbox.text, '\0', 129);
+    memset(object->textbox.text, '\0', 128);
+
+    object->textbox.text_style->font  = GetFontFromCache(object->textbox.text_style->font_path, object->textbox.text_style->font_size);
+    object->textbox.text_style->color = al_map_rgba(object->textbox.text_style->r, object->textbox.text_style->g, object->textbox.text_style->b, object->textbox.text_style->a);
+
+    object->textbox.placeholder_style->font  = GetFontFromCache(object->textbox.placeholder_style->font_path, object->textbox.placeholder_style->font_size);
+    object->textbox.placeholder_style->color = al_map_rgba(object->textbox.placeholder_style->r, object->textbox.placeholder_style->g, object->textbox.placeholder_style->b, object->textbox.placeholder_style->a); 
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -421,6 +427,8 @@ int AddMenuWithChildsToDrawLayer(MenuWithChilds *menu_with_childs)
         AddObjectToDrawLayer(menu_with_childs->buttons[i]);
     for (int i = 0; i < menu_with_childs->num_text;i++)
         AddObjectToDrawLayer(menu_with_childs->text[i]);
+    for (int i = 0; i < menu_with_childs->num_text_boxes;i++)
+        AddObjectToDrawLayer(menu_with_childs->text_boxes[i]);
 
     return 0;
 

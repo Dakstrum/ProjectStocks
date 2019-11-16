@@ -135,8 +135,8 @@ typedef struct TextBox {
     bool accept_alphabet_characters;
     bool accept_number_characters;
     // current_character init to -1
-    unsigned int current_character;
-    unsigned int limit_characters_to;
+    int current_character;
+    int limit_characters_to;
     char text[128];
     char *placeholder_text;
 
