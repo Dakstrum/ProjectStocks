@@ -191,9 +191,9 @@ void InsertSingleCharacterIntoTextBox(DrawObject *object, const char *key_presse
 bool ShouldUpperCase(ALLEGRO_EVENT event) 
 {
     int modifiers   = event.keyboard.modifiers;
-    bool shift_caps = ALLEGRO_KEYMOD_SHIFT | ALLEGRO_KEYMOD_CAPSLOCK;
-    bool shift      = ALLEGRO_KEYMOD_SHIFT;
-    bool caps       = ALLEGRO_KEYMOD_CAPSLOCK;
+    int shift_caps  = ALLEGRO_KEYMOD_SHIFT | ALLEGRO_KEYMOD_CAPSLOCK;
+    int shift       = ALLEGRO_KEYMOD_SHIFT;
+    int caps        = ALLEGRO_KEYMOD_CAPSLOCK;
 
     if ((modifiers & shift_caps) == shift_caps)
         return false;
@@ -230,7 +230,7 @@ void HandleTextBoxInput(ALLEGRO_EVENT event)
         return;
     }
 
-    if (event.type == ALLEGRO_EVENT_KEY_DOWN)
+    if (event.type == ALLEGRO_EVENT_KEY_CHAR)
         ModifyTextBox(object, event);
 
 }
