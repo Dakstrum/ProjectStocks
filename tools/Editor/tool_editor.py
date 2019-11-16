@@ -31,9 +31,9 @@ class MainWindow(QMainWindow):
 
         self.window_container = QWidget()
         self.window_layout    = QHBoxLayout()
-        self.pixmap_label     = QLabel()
         self.SetMenuBar()
         self.SetMenuList()
+        self.SetPixmapLabelDefaults()
         self.setCentralWidget(self.window_container)
         self.window_container.setLayout(self.window_layout)
 
@@ -49,8 +49,16 @@ class MainWindow(QMainWindow):
         for menu in self.menu_config_obj.menus:
             self.menu_list.addItem(menu["Name"])
 
+        self.menu_list.setMinimumWidth(200)
+        self.menu_list.setMaximumWidth(200)
         self.menu_list.itemClicked.connect(self.MenuItemClicked)
         self.window_layout.addWidget(self.menu_list)
+
+    def SetPixmapLabelDefaults(self):
+
+        self.pixmap_label = QLabel()
+        self.pixmap_label.setScaledContents(True)
+        self.window_layout.addWidget(self.pixmap_label)
 
     def MenuItemClicked(self, item):
 
@@ -60,6 +68,7 @@ class MainWindow(QMainWindow):
             if menu["Name"] == item.text():
                 clicked_menu = menu
                 break
+
         self.pixmap_label.setPixmap(QPixmap(menu["Path"]))
         self.window_layout.addWidget(self.pixmap_label)
 
