@@ -711,7 +711,7 @@ void SetModifiedTextBoxWithFlicker(DrawObject *object)
     struct timespec current_time = GetCurrentTime();
     if (object->textbox.flicker_drawing) {
  
-        if (GetMillDiff(&object->textbox.flicker, &current_time) >= 750) {
+        if (GetMillDiff(&object->textbox.flicker, &current_time) >= 500) {
 
             object->textbox.flicker_drawing = false;
             object->textbox.flicker         = GetCurrentTime();
@@ -745,6 +745,9 @@ void DrawTextBox(DrawObject *object)
 
     } else {
 
+        if (object->textbox.active)
+            SetModifiedTextBoxWithFlicker(object);
+        
         al_draw_text(object->textbox.text_style->font, object->textbox.text_style->color, object->x, object->y, 0, object->textbox.text);
         object->textbox.text[object->textbox.current_character + 1] = '\0';
 
