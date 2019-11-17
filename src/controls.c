@@ -155,11 +155,11 @@ void RemoveSingleCharacterFromTextBox(DrawObject *object)
 
 }
 
-bool IsItAGoodCharacter(DrawObject *object, char *key_pressed)
+bool IsItAGoodCharacter(DrawObject *object, const char *key_pressed)
 {
 
     bool good_char = false;
-    if (object->textbox.accept_alphabet_characters && isalpha(*key_pressed))
+    if (object->textbox.accept_alphabet_characters && (isalpha(*key_pressed) || *key_pressed == ' '))
         good_char = true;
     else if (object->textbox.accept_number_characters && isdigit(*key_pressed))
         good_char = true;
