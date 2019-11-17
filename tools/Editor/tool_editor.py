@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QMenuBar, QMenu, QMainWindow, QFileSystemModel, QTreeView, QListWidget, QLabel
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QMenuBar, QMenu, QMainWindow, QFileSystemModel, QTreeView, QListWidget, QLabel, QLineEdit, QGroupBox
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import QDir
 import json
@@ -8,6 +8,13 @@ def main():
     app    = QApplication([])
     window = MainWindow()
     app.exec_()
+
+def GetProperty(dict, property):
+
+    try:
+        return dict[property]
+    except:
+        return None
 
 class MainWindow(QMainWindow):
 
@@ -31,6 +38,7 @@ class MainWindow(QMainWindow):
 
         self.window_container = QWidget()
         self.window_layout    = QHBoxLayout()
+        self.menu_attributes  = None
         self.SetMenuBar()
         self.SetMenuList()
         self.SetPixmapLabelDefaults()
@@ -71,6 +79,82 @@ class MainWindow(QMainWindow):
 
         self.pixmap_label.setPixmap(QPixmap(menu["Path"]))
         self.window_layout.addWidget(self.pixmap_label)
+        self.MenuAttributes(clicked_menu)
+
+    def MenuAttributes(self, menu):
+
+        menu_list_idx = -1
+        for i in range(self.menu_list.count()):
+            if self.menu_list.item(i).text() == menu["Name"]:
+                menu_list_idx = i
+                break
+
+        if self.menu_attributes is not None:
+            self.menu_attributes.SetNewMenu(menu, self.menu_list)
+        else:
+            self.menu_attributes = MenuAttributesBox(menu)
+            self.window_layout.addWidget(self.menu_attributes.GetGroup())
+
+class MenuAttributesBox(QGroupBox):
+
+    def __init__(self, menu):
+
+        super().__init__()
+        self.menu            = menu
+        self.group           = QGroupBox("Attributes")
+        self.layout          = QVBoxLayout()
+        self.SetGroupElements()
+        self.SetLayout()
+        self.SetGroup()
+
+    def SetGroupElements(self):
+
+        self.name      = QLineAssociation(self.menu, "Name")
+        temp_buttons   = GetProperty(self.menu, "Buttons")
+        temp_text      = GetProperty(self.menu, "Text")
+        temp_textboxes = GetProperty(self.menu, "Textbox")
+
+    def SetLayout(self):
+
+        self.layout.addWidget(self.name)
+
+    def SetGroup(self):
+
+        self.group.setLayout(self.layout)
+        self.group.setMinimumWidth(200)
+        self.group.setMaximumWidth(200)
+
+    def SetNewMenu(self, menu):
+
+        self.menu = menu
+        self.RemoveGroupElements()
+        self.SetGroupElements()
+        self.SetLayout()
+
+    def RemoveGroupElements(self):
+
+        self.layout.removeWidget(self.name)
+        self.name.StoreText()
+        self.name.deleteLater()
+
+    def GetGroup(self):
+
+        return self.group
+
+
+class QLineAssociation(QLineEdit):
+
+    def __init__(self, obj, prop):
+
+        super().__init__()
+
+        self.insert(obj[prop])
+        self.obj      = obj
+        self.property = prop
+
+    def StoreText(self):
+
+        self.obj[self.property] = self.text()
 
 
 class MenuConfig():
