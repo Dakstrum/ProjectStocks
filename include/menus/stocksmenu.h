@@ -5,5 +5,7 @@ void InitializeStocksMenu();
 void ToggleStocksMenu();
 void ToggleSellTransactionMenu();
 void ToggleBuyTransactionMenu();
+void MakeSellTransactionButtonCallBack();
+void MakeBuyTransactionButtonCallBack();
 
 #endif

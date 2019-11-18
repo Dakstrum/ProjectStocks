@@ -11,6 +11,7 @@
 #include "cache.h"
 #include "graph.h"
 #include "startup.h"
+#include "dbaccess.h"
 
 
 static MenuWithChilds *stocks_menu           = NULL;
@@ -101,6 +102,19 @@ void StocksBuyButtonCallBack()
 
     }
 
+}
+
+void MakeSellTransactionButtonCallBack()
+{
+
+    Log(GetTextFromTextBox("SellTextBox"));
+
+}
+
+void MakeBuyTransactionButtonCallBack()
+{
+    
+    InsertNewStockTransaction(1,1,1,GetTextFromTextBox("BuyTextBox"));
 }
 
 void CleanUpStocksMenu() 

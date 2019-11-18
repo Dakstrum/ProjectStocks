@@ -285,6 +285,16 @@ void InsertNewCompany(char *company_name, float ipo, sqlite3 *db)
 
 }
 
+void InsertNewStockTransaction(int owned_stock_id, int save_id, int company_id, char *how_many_owned) 
+{
+    sqlite3 *db;
+    if (OpenConnection(&db, DefaultConnection()) == 0) {
+
+        ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks (OwnedStockId, SaveId, PlayerName, CompanyId, HowManyOwned) VALUES (1, 1, 1, 1, '%s');", how_many_owned), NULL, NULL, db);
+    }
+
+}
+
 int SetCompanyId(void *company_id, int argc, char **argv, char **col_name) 
 {
 

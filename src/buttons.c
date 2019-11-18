@@ -31,6 +31,9 @@ void MainMenuYoutubeButtonCallBack();
 void MainMenuWebsiteButtonCallBack();
 void StocksSellButtonCallBack();
 void StocksBuyButtonCallBack();
+void MakeSellTransactionButtonCallBack();
+void MakeBuyTransactionButtonCallBack();
+
 
 
 
@@ -42,7 +45,7 @@ typedef struct ButtonCallsbacks
 
 } ButtonCallsbacks;
 
-#define NUM_CALLBACKS 17
+#define NUM_CALLBACKS 19
 static ButtonCallsbacks callbacks[] = {
 
     {"STUB",                               &StubCallback},
@@ -61,7 +64,9 @@ static ButtonCallsbacks callbacks[] = {
     {"YoutubeButton",                      &MainMenuYoutubeButtonCallBack},
     {"WebsiteButton",                      &MainMenuWebsiteButtonCallBack},
     {"ToggleTransactionSellButton",        &StocksSellButtonCallBack},
-    {"ToggleTransactionBuyButton",         &StocksBuyButtonCallBack}
+    {"ToggleTransactionBuyButton",         &StocksBuyButtonCallBack},
+    {"MakeTransactionSellButton",          &MakeSellTransactionButtonCallBack},
+    {"MakeTransactionBuyButton",           &MakeBuyTransactionButtonCallBack}
 
 
 
@@ -74,7 +79,6 @@ void *GetButtonCallback(char *button_name)
         if (strcmp(button_name, callbacks[i].name) == 0) 
             return callbacks[i].Callback;
 
-    LogF("Unable to find callback for %s", button_name);
     return &StubCallback;
 
 }
