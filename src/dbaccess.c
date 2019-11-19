@@ -285,12 +285,22 @@ void InsertNewCompany(char *company_name, float ipo, sqlite3 *db)
 
 }
 
-void InsertNewStockTransaction(int owned_stock_id, int save_id, int company_id, char *how_many_owned) 
+void InsertNewStockTransactionIntoOwnedStocks(int owned_stock_id, int save_id, int company_id, char *how_many_owned) 
 {
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks (OwnedStockId, SaveId, PlayerName, CompanyId, HowManyOwned) VALUES (1, 1, 1, 1, '%s');", how_many_owned), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks (OwnedStockId, SaveId, PlayerName, CompanyId, HowManyOwned) VALUES (2, 1, 1, 1, '%s');", how_many_owned), NULL, NULL, db);
+    }
+
+}
+
+void InsertNewStockTransaction(int transation_id, int save_id, int player_name, int company_id, char *transaction_amount, int stocks_exchanged, time_t transaction_time) 
+{
+    sqlite3 *db;
+    if (OpenConnection(&db, DefaultConnection()) == 0) {
+
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions (TransactionId, SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (2, 1, 1, 1, '1', '%s', %d);", transaction_amount, transaction_time), NULL, NULL, db);
     }
 
 }

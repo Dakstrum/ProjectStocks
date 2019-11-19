@@ -12,6 +12,7 @@
 #include "graph.h"
 #include "startup.h"
 #include "dbaccess.h"
+#include "account.h"
 
 
 static MenuWithChilds *stocks_menu           = NULL;
@@ -113,8 +114,11 @@ void MakeSellTransactionButtonCallBack()
 
 void MakeBuyTransactionButtonCallBack()
 {
-    
-    InsertNewStockTransaction(1,1,1,GetTextFromTextBox("BuyTextBox"));
+
+    char *AmountFromTextBox = GetTextFromTextBox("BuyTextBox");
+    InsertNewStockTransactionIntoOwnedStocks(1,1,1,AmountFromTextBox);
+    InsertNewStockTransaction(1,1,1,1, AmountFromTextBox, 1, GetGameTime());
+
 }
 
 void CleanUpStocksMenu() 
