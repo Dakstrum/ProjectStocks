@@ -115,7 +115,8 @@ void MakeSellTransactionButtonCallBack()
 void MakeBuyTransactionButtonCallBack()
 {
 
-    char *AmountFromTextBox = GetTextFromTextBox("BuyTextBox");
+    int *AmountFromTextBox = atoi(GetTextFromTextBox("BuyTextBox"));
+    
     InsertNewStockTransactionIntoOwnedStocks(1,1,1,AmountFromTextBox);
     InsertNewStockTransaction(1,1,1,1, AmountFromTextBox, 1, GetGameTime());
 
