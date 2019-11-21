@@ -305,6 +305,15 @@ void InsertNewStockTransaction(int transation_id, int save_id, int player_name, 
 
 }
 
+void InsertSubtractedStockTransaction(int amount_to_subtract)
+{
+    sqlite3 *db;
+    if (OpenConnection(&db, DefaultConnection()) == 0) {
+
+        ExecuteQuery(GetFormattedPointer("SELECT * FROM OwnedStocks; UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE OwnedStockId=2;", amount_to_subtract), NULL, NULL, db);
+    }
+}
+
 int SetCompanyId(void *company_id, int argc, char **argv, char **col_name) 
 {
 
