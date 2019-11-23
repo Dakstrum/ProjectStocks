@@ -287,6 +287,7 @@ void InsertNewCompany(char *company_name, float ipo, sqlite3 *db)
 
 void InsertNewStockTransactionIntoOwnedStocks(int owned_stock_id, int save_id, int company_id, int *how_many_owned) 
 {
+
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
@@ -297,16 +298,18 @@ void InsertNewStockTransactionIntoOwnedStocks(int owned_stock_id, int save_id, i
 
 void InsertNewStockTransaction(int transation_id, int save_id, int player_name, int company_id, int *transaction_amount, int stocks_exchanged, time_t transaction_time) 
 {
+
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions (TransactionId, SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (2, 1, 1, 1, '1', %d, %d);", transaction_amount, transaction_time), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions ( SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (1, 1, 1, '1', %d, %d);", transaction_amount, transaction_time), NULL, NULL, db);
     }
 
 }
 
 void InsertSubtractedStockTransaction(int amount_to_subtract)
 {
+    
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
