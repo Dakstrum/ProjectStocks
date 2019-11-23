@@ -203,7 +203,7 @@ WindowSettings GetSettingsFromDB(sqlite3 *db)
 
 }
 
-WindowSettings GetWindowSettings() 
+WindowSettings GetWindowSettingsFromDB() 
 {
 
     WindowSettings settings = {1920, 1080, WINDOWED};

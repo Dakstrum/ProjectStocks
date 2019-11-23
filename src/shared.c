@@ -8,13 +8,29 @@
 #include <math.h>
 
 #include "log.h"
+#include "shared.h"
 
 static atomic_bool should_clean_up;
+static WindowSettings window_settings;
 
 void InitializeShared() 
 {
 
     atomic_store(&should_clean_up, false);
+
+}
+
+void SetWindowSettings(WindowSettings settings) 
+{
+
+    window_settings = settings;
+
+}
+
+WindowSettings GetWindowSettings() 
+{
+
+    return window_settings;    
 
 }
 

@@ -197,6 +197,13 @@ typedef struct MenuWithChilds
 
 } MenuWithChilds;
 
+typedef struct DrawObjectTypeCollection {
+
+    DrawObject **objects;
+    unsigned int num_objects;
+
+} DrawObjectTypeCollection;
+
 
 void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display);
 int GetMaxObjectsPerDrawLayer();
@@ -224,4 +231,7 @@ DrawObject** GetAllDrawObjectsInCurrentLayer();
 void SetActiveTextBox(DrawObject *object);
 DrawObject *GetActiveTextBox();
 char *GetTextFromTextBox(char *object_name);
+
+DrawObjectTypeCollection *GetObjectsByType(DrawType type);
+void DisposeDrawObjectTypeCollection(DrawObjectTypeCollection *collection);
 #endif

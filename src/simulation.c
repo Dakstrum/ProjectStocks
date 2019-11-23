@@ -83,8 +83,8 @@ void ReclaimUnusedStockPriceMemory(StockPrices *prices)
 {
 
     prices->size = prices->num_prices;
-    prices->prices = realloc(prices->prices, sizeof(float) * prices->size);
-    prices->times  = realloc(prices->times, sizeof(time_t) * prices->size);
+    prices->prices = realloc(prices->prices, sizeof(float) * (prices->size + 1));
+    prices->times  = realloc(prices->times, sizeof(time_t) * (prices->size + 1));
 
 }
 
@@ -287,5 +287,21 @@ StockPrices *GetStockPricesFromNowUntil(char *company_name, time_t span)
     ReclaimUnusedStockPriceMemory(prices);
 
     return prices;
+
+}
+
+float CurrentStockPrice(char *company_name) 
+{
+
+    int company_idx = GetCompanySimIndex(company_name);
+    if (company_idx == -1)
+        return -1.0f;
+
+    time_t current_time = GetGameTime(); 
+    for (int i = 0; i < sim_data.prices[company_idx].num_prices; i++)
+        if (sim_data.prices[company_idx].times[i] == current_time)
+            return sim_data.prices[company_idx].prices[i];
+
+    return -1.0f;
 
 }
