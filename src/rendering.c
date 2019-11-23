@@ -14,7 +14,15 @@
 #include "drawlayers.h"
 #include "rendering.h"
 #include "startup.h"
+#include "dbaccess.h"
 #include "stocksmenu.h"
+
+typedef struct DisplayFlagMap {
+
+    ScreenSetting display_setting;
+    int allegro_flag;
+
+} DisplayFlagMap;
 
 void InitializeDisplay();
 void InitializeAddons();
@@ -25,6 +33,15 @@ void CleanUpAddons();
 
 static void (*RenderLogic)()    = &StartUpSequence;
 static ALLEGRO_DISPLAY *display = NULL;
+static WindowSettings window_settings;
+static DisplayFlagMap flag_maps[3] = 
+{
+
+    {FULLSCREEN, ALLEGRO_FULLSCREEN},
+    {WINDOWED, ALLEGRO_WINDOWED},
+    {BORDERLESS, ALLEGRO_FRAMELESS}
+
+};
 
 void InitializeRendering() 
 {
@@ -37,7 +54,10 @@ void InitializeRendering()
 void InitializeDisplay() 
 {
 
-    display = al_create_display(1920, 1080);
+    window_settings = GetWindowSettings();
+    al_set_new_display_flags(flag_maps[window_settings.screen_flag].allegro_flag);
+    
+    display = al_create_display(window_settings.width, window_settings.height);
     InitializeDrawLayers(display);
     
 }

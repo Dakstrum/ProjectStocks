@@ -5,12 +5,13 @@
 
 #include "log.h"
 #include "graph.h"
-#include "dbaccess.h"
 #include "shared.h"
+#include "dbaccess.h"
 
 void SetupMainDB();
 void SetupLogDB();
 
+void InsertDefaultSettingsIfNeeded(sqlite3 *db);
 int GetCompanyId(char *company_name, sqlite3 *db);
 bool DoesCompanyExist(char *company_name, sqlite3 *db);
 void SetCompanyToActive(char *company_name, sqlite3 *db);
@@ -132,13 +133,12 @@ void SetUpDB(sqlite3 **db, char *connection_string)
                     "CREATE TABLE IF NOT EXISTS Players(PlayerId INTERGER PRIMARY KEY, SaveId INT NOT NULL, PlayerName TEXT NOT NULL, Money DOUBLE NOT NULL);"
                     "CREATE TABLE IF NOT EXISTS Saves(SaveId INTEGER PRIMARY KEY, SaveName TEXT NOT NULL, PlayerName TEXT NOT NULL, TimeSpentInGame UNSIGNED BIG INT DEFAULT(0), RandomSeed UNSIGNED BIG INT);"
                     "CREATE TABLE IF NOT EXISTS OwnedStocks(OwnedStockId INTEGER PRIMARY KEY, SaveId INT NOT NULL, PlayerName TEXT NOT NULL, CompanyId INT NOT NULL, HowManyOwned UNSIGNED BIG INT NOT NULL);"
-                    "CREATE TABLE IF NOT EXISTS Transactions(TransactionId INTEGER PRIMARY KEY, SaveId INT NOT NULL, PlayerName TEXT NOT NULL, CompanyId INT NOT NULL, TransactionAmount DOUBLE NOT NULL, StocksExchanged INT NOT NULL, TransactionTime DATETIME NOT NULL);";
+                    "CREATE TABLE IF NOT EXISTS Transactions(TransactionId INTEGER PRIMARY KEY, SaveId INT NOT NULL, PlayerName TEXT NOT NULL, CompanyId INT NOT NULL, TransactionAmount DOUBLE NOT NULL, StocksExchanged INT NOT NULL, TransactionTime DATETIME NOT NULL);"
+                    "CREATE TABLE IF NOT EXISTS Settings(SettingsId INTEGER PRIMARY KEY, WindowWidth UNSIGNED INT NOT NULL, WindowHeight UNSIGNED INT NOT NULL, WindowStyle UNSIGNED INT NOT NULL);"
+                    "UPDATE Company SET IsActiveInJson=0;";
     sqlite3_exec(*db, setup, NULL, 0, &error);
     if (error != NULL)
         LogF("Error setting up db %s with %s", connection_string, error);
-
-    char *set_all_companies_to_inactive = "UPDATE Company SET IsActiveInJson=0;";
-    sqlite3_exec(*db, set_all_companies_to_inactive, NULL, 0, 0);
 
 }
 
@@ -148,12 +148,6 @@ void SetupMainDB()
     sqlite3 *db = NULL;
     SetUpDB(&db, DefaultConnection());
     sqlite3_close(db);
-
-
-    sqlite3 *persistent_memory_db = NULL;
-    SetUpDB(&persistent_memory_db, MemoryConnection());
-    if (persistent_memory_db == NULL)
-        Log("Persistent memory never set");
     
 }
 
@@ -175,6 +169,49 @@ void SetupLogDB()
 
     }
     sqlite3_close(db);
+
+}
+
+void SetWindowSettingsIfExists(void *settings, int argc, char **argv, char **col_name) 
+{
+
+    WindowSettings *temp_settings = (WindowSettings *)settings;
+    if (argc == 0)
+        return;
+
+    temp_settings->width          = atoi(argv[0]);
+    temp_settings->height         = atoi(argv[1]);
+    temp_settings->screen_flag    = atoi(argv[2]);
+
+
+}
+
+WindowSettings GetSettingsFromDB(sqlite3 *db) 
+{
+
+    WindowSettings settings = {0, 0, WINDOWED};
+    ExecuteQuery(GetFormattedPointer("SELECT WindowWidth, WindowHeight, WindowStyle FROM Settings;"), (void *)(&SetWindowSettingsIfExists), &settings, db);
+    if (settings.width == 0) {
+
+        settings.width  = 1920;
+        settings.height = 1080;
+        settings.screen_flag = WINDOWED;
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Settings (WindowWidth, WindowHeight, WindowStyle) VALUES (1920, 1080, 1);"), NULL, NULL, db);
+
+    }
+    return settings;
+
+}
+
+WindowSettings GetWindowSettings() 
+{
+
+    WindowSettings settings = {1920, 1080, WINDOWED};
+    sqlite3 *db = NULL;
+    if (OpenConnection(&db, DefaultConnection()))
+        return settings;
+
+    return GetSettingsFromDB(db);
 
 }
 
