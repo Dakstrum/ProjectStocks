@@ -59,4 +59,7 @@ long GetMillDiff(struct timespec *t1, struct timespec *t2);
 struct timespec GetCurrentTime();
 struct timespec GetOffsetTime(long offset_in_milli);
 
+void SetWindowSettings(WindowSettings settings);
+WindowSettings GetWindowSettings();
+
 #endif

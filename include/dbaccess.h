@@ -9,7 +9,7 @@
 void InitializeDatabases();
 void CopyPersistentToMemory();
 int OpenConnection(sqlite3 **db, char *connection_string);
-WindowSettings GetWindowSettings();
+WindowSettings GetWindowSettingsFromDB();
 
 char *MemoryConnection();
 char *DefaultConnection();

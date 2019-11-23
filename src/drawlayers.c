@@ -856,3 +856,40 @@ char *GetTextFromTextBox(char *object_name)
     return object->textbox.text;
 
 }
+
+
+DrawObjectTypeCollection *GetObjectsByType(DrawType type)
+{
+
+    DrawObjectTypeCollection *collection = malloc(sizeof(DrawObjectTypeCollection *));
+    collection->num_objects = 0;
+    collection->objects     = malloc(sizeof(DrawObject *) * MAX_OBJECTS_PER_LAYER);
+    DrawObject *object      = NULL;
+    for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++) {
+
+        object = draw_layers[current_draw_layer].objects[i];
+        if (object != NULL && object->type == type) {
+
+            collection->objects[collection->num_objects] = object;
+            collection->num_objects++;
+
+        }
+
+    }
+    collection->objects = realloc(collection->objects, sizeof(DrawObject *) * collection->num_objects + 1);
+    return collection;
+
+}
+
+void DisposeDrawObjectTypeCollection(DrawObjectTypeCollection *collection)
+{
+
+    if (collection == NULL)
+        return;
+
+    if (collection->objects != NULL)
+        free(collection->objects);
+
+    free(collection);
+
+}

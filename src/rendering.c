@@ -46,15 +46,18 @@ static DisplayFlagMap flag_maps[3] =
 void InitializeRendering() 
 {
 
+    SetWindowSettings(GetWindowSettingsFromDB());
+    window_settings = GetWindowSettings();
+
     InitializeDisplay();
     InitializeAddons();
-
+    
 }
 
 void InitializeDisplay() 
 {
-
-    window_settings = GetWindowSettings();
+    
+    
     al_set_new_display_flags(flag_maps[window_settings.screen_flag].allegro_flag);
     
     display = al_create_display(window_settings.width, window_settings.height);
