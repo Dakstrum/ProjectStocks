@@ -3,6 +3,14 @@
 
 #include <time.h>
 
+typedef enum ScreenSetting {
+
+    FULLSCREEN,
+    WINDOWED,
+    BORDERLESS
+
+} ScreenSetting;
+
 typedef enum TimeSpan {
 
     ONE_DAY = 0,
@@ -27,6 +35,14 @@ typedef struct StockPrices {
     unsigned int size;
 
 } StockPrices;
+
+typedef struct WindowSettings {
+
+    int width;
+    int height;
+    ScreenSetting screen_flag;
+    
+} WindowSettings;
 
 void InitializeShared();
 bool ShouldICleanUp();
