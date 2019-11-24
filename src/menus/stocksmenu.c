@@ -109,8 +109,8 @@ void MakeSellTransactionButtonCallBack()
 {
     int *AmountFromTextBox = atoi(GetTextFromTextBox("SellTextBox"));
 
-    InsertSubtractedStockTransaction(AmountFromTextBox);
-    InsertNewStockTransaction(1,1,1,1, AmountFromTextBox, 1, GetGameTime());
+    SubtractOwnedStock(AmountFromTextBox);
+    InsertStockTransaction(1,1,1,1, AmountFromTextBox, 1, GetGameTime());
 
 }
 
@@ -119,8 +119,8 @@ void MakeBuyTransactionButtonCallBack()
 
     int *AmountFromTextBox = atoi(GetTextFromTextBox("BuyTextBox"));
     
-    InsertNewStockTransactionIntoOwnedStocks(1,1,1,AmountFromTextBox);
-    InsertNewStockTransaction(1,1,1,1, AmountFromTextBox, 1, GetGameTime());
+    AddOwnedStock(1,1,1,AmountFromTextBox);
+    InsertStockTransaction(1,1,1,1, AmountFromTextBox, 1, GetGameTime());
 
 }
 

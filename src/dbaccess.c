@@ -322,7 +322,7 @@ void InsertNewCompany(char *company_name, float ipo, sqlite3 *db)
 
 }
 
-void InsertNewStockTransactionIntoOwnedStocks(int owned_stock_id, int save_id, int company_id, int *how_many_owned) 
+void AddOwnedStock(int owned_stock_id, int save_id, int company_id, int *how_many_owned) 
 {
 
     sqlite3 *db;
@@ -333,7 +333,7 @@ void InsertNewStockTransactionIntoOwnedStocks(int owned_stock_id, int save_id, i
 
 }
 
-void InsertNewStockTransaction(int transation_id, int save_id, int player_name, int company_id, int *transaction_amount, int stocks_exchanged, time_t transaction_time) 
+void InsertStockTransaction(int transation_id, int save_id, int player_name, int company_id, int *transaction_amount, int stocks_exchanged, time_t transaction_time) 
 {
 
     sqlite3 *db;
@@ -344,7 +344,7 @@ void InsertNewStockTransaction(int transation_id, int save_id, int player_name, 
 
 }
 
-void InsertSubtractedStockTransaction(int amount_to_subtract)
+void SubtractOwnedStock(int amount_to_subtract)
 {
     
     sqlite3 *db;
