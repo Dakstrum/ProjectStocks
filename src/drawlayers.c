@@ -880,7 +880,7 @@ char *GetTextFromTextBox(char *object_name)
 DrawObjectTypeCollection *GetObjectsByType(DrawType type)
 {
 
-    DrawObjectTypeCollection *collection = malloc(sizeof(DrawObjectTypeCollection *));
+    DrawObjectTypeCollection *collection = malloc(sizeof(DrawObjectTypeCollection));
     collection->num_objects = 0;
     collection->objects     = malloc(sizeof(DrawObject *) * MAX_OBJECTS_PER_LAYER);
     DrawObject *object      = NULL;
