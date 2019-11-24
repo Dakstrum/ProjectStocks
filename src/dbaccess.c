@@ -328,7 +328,7 @@ void AddOwnedStock(int owned_stock_id, int save_id, int company_id, int *how_man
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks (OwnedStockId, SaveId, PlayerName, CompanyId, HowManyOwned) VALUES (2, 1, 1, 1, '%d');", how_many_owned), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks (OwnedStockId, SaveId, PlayerName, CompanyId, HowManyOwned) VALUES (2, 1, 1, %d, '%d');", company_id, how_many_owned), NULL, NULL, db);
     }
 
 }

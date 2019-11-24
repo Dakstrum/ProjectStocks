@@ -107,7 +107,8 @@ void StocksBuyButtonCallBack()
 
 void MakeSellTransactionButtonCallBack()
 {
-    int *AmountFromTextBox = atoi(GetTextFromTextBox("SellTextBox"));
+
+    int AmountFromTextBox = atoi(GetTextFromTextBox("SellTextBox"));
 
     SubtractOwnedStock(AmountFromTextBox);
     InsertStockTransaction(1,1,1,1, AmountFromTextBox, 1, GetGameTime());
@@ -117,7 +118,11 @@ void MakeSellTransactionButtonCallBack()
 void MakeBuyTransactionButtonCallBack()
 {
 
-    int *AmountFromTextBox = atoi(GetTextFromTextBox("BuyTextBox"));
+    int AmountFromTextBox = atoi(GetTextFromTextBox("BuyTextBox"));
+
+    DrawObjectTypeCollection *Graph = GetObjectsByType(GRAPH);
+
+    //LogF("%d",Graph->num_objects);
     
     AddOwnedStock(1,1,1,AmountFromTextBox);
     InsertStockTransaction(1,1,1,1, AmountFromTextBox, 1, GetGameTime());
