@@ -37,9 +37,10 @@ static DrawLayer *draw_layers;
 static int current_draw_layer = -1;
 
 static ALLEGRO_DISPLAY *display = NULL;
-static float scale              = 1.0f;
 
 static ActiveTextBox current_active_textbox;
+static WindowScale scale;
+static ALLEGRO_BITMAP *video_buffer;
 
 void SetObjectPointersToNull();
 
@@ -67,13 +68,16 @@ void DrawText(DrawObject *object);
 void DrawTextBox(DrawObject *object);
 void DrawGraph(DrawObject *object);
 void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y);
+void DrawBackBuffer(ALLEGRO_BITMAP *bitmap);
 void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width, float height);
 
 void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display) 
 {
 
-    display     = active_display;
-    draw_layers = malloc(sizeof(DrawLayer) * MAX_DRAW_LAYERS);
+    al_destroy_bitmap(video_buffer);
+    video_buffer = al_create_bitmap(1920, 1080);
+    display      = active_display;
+    draw_layers  = malloc(sizeof(DrawLayer) * MAX_DRAW_LAYERS);
     current_draw_layer = -1;
     SetObjectPointersToNull();
 
@@ -528,8 +532,14 @@ int AddTextToDrawLayer(DrawObject *object)
 void DrawLayers() 
 {
 
+    scale = GetWindowScale();
+    al_set_target_bitmap(video_buffer);
+
     for (int i = 0; i < current_draw_layer+1; i++)
         DrawSingleLayer(&draw_layers[i]);
+
+    al_set_target_backbuffer(display);
+    DrawBackBuffer(video_buffer);
 
 }
 
@@ -775,7 +785,16 @@ void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width,
 
     float scale_width  = al_get_bitmap_width(bitmap);
     float scale_height = al_get_bitmap_height(bitmap);
-    al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_height, x, y, width * scale, height * scale, 0);
+    al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_height, x, y, width, height, 0);
+
+}
+
+void DrawBackBuffer(ALLEGRO_BITMAP *bitmap) 
+{
+
+    float scale_width  = (float)al_get_bitmap_width(bitmap)  * scale.x_scale;
+    float scale_height = (float)al_get_bitmap_height(bitmap) * scale.y_scale;
+    al_draw_scaled_bitmap(bitmap, 0, 0, 1920, 1080, 0, 0, scale_width, scale_height, 0);
 
 }
 
