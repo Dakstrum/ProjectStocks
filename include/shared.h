@@ -44,6 +44,13 @@ typedef struct WindowSettings {
     
 } WindowSettings;
 
+typedef struct WindowScale {
+
+    float x_scale;
+    float y_scale;
+
+} WindowScale;
+
 void InitializeShared();
 bool ShouldICleanUp();
 void SetCleanUpToTrue();
@@ -61,5 +68,6 @@ struct timespec GetOffsetTime(long offset_in_milli);
 
 void SetWindowSettings(WindowSettings settings);
 WindowSettings GetWindowSettings();
+WindowScale GetWindowScale();
 
 #endif

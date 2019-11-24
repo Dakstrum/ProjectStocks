@@ -51,7 +51,7 @@ void InitializeRendering()
 
     InitializeDisplay();
     InitializeAddons();
-    
+
 }
 
 void InitializeDisplay() 
@@ -62,7 +62,8 @@ void InitializeDisplay()
     
     display = al_create_display(window_settings.width, window_settings.height);
     InitializeDrawLayers(display);
-    
+    //al_add_new_bitmap_flag(ALLEGRO_NO_PRESERVE_TEXTURE);
+
 }
 
 void InitializeAddons() 

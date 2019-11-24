@@ -15,13 +15,14 @@
 static int MAX_OBJECTS_PER_LAYER = 0;
 // leave last character as null character. Leave one character for flicker;
 static const int MAX_CHARS_IN_TEXTBOX  = 126;
+static WindowScale scale;
 
 bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y) 
 {
 
-    if (object->x > x || x > object->x + object->width)
+    if (object->x * scale.x_scale > x || x > (object->x + object->width) * scale.x_scale)
         return false;
-    if (object->y > y || y > object->y + object->height)
+    if (object->y * scale.y_scale > y || y > (object->y + object->height) * scale.y_scale)
         return false;
 
     return true;
@@ -246,6 +247,7 @@ void HandleKeyboard(ALLEGRO_EVENT event)
 void HandleInput(ALLEGRO_EVENT event) 
 {
 
+    scale = GetWindowScale();
     HandleMouseInput(event);
     HandleKeyboard(event);
     
