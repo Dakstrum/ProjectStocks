@@ -13,13 +13,19 @@
 #include "startup.h"
 #include "dbaccess.h"
 #include "account.h"
+#include "simulation.h"
 
 
 static MenuWithChilds *stocks_menu           = NULL;
 static MenuWithChilds *sell_transaction_menu = NULL;
 static MenuWithChilds *buy_transaction_menu  = NULL;
 
+char *company;
+int price_per_stock;
+int amount_in_text_box;
+
 void DisplayTempPopUp();
+void GetCurrentGraphAndCompanyInfo();
 
 void InitializeStocksMenu() 
 { 
@@ -87,9 +93,13 @@ void StocksSellButtonCallBack()
 
 }
 
+DrawObjectTypeCollection *current_draw_layer_graphs;
+
 void StocksBuyButtonCallBack()
 {
-
+    
+    GetCurrentGraphAndCompanyInfo();
+    
     if (buy_transaction_menu == NULL) {
 
         CreateNewDrawLayer();
@@ -105,10 +115,30 @@ void StocksBuyButtonCallBack()
 
 }
 
+void GetCurrentGraphAndCompanyInfo()
+{
+
+    if(DoesObjectExistInCurrentDrawLayer("BuyTransactionMenu")) {
+
+        Log("You are clicking out of Menu");
+
+    } else {
+
+        current_draw_layer_graphs = GetObjectsByType(GRAPH);
+
+        company = current_draw_layer_graphs->objects[0]->graph.company;
+        price_per_stock  = CurrentStockPrice(company);
+
+        LogF("Company = %s | Price = %d", company, price_per_stock);
+
+    }
+
+}
+
 void MakeSellTransactionButtonCallBack()
 {
 
-    int AmountFromTextBox = atoi(GetTextFromTextBox("SellTextBox"));
+    amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));
 
     SubtractOwnedStock(AmountFromTextBox);
     InsertStockTransaction(1,1,1,1, AmountFromTextBox, 1, GetGameTime());
@@ -118,12 +148,10 @@ void MakeSellTransactionButtonCallBack()
 void MakeBuyTransactionButtonCallBack()
 {
 
-    int AmountFromTextBox = atoi(GetTextFromTextBox("BuyTextBox"));
+    amount_in_text_box = atoi(GetTextFromTextBox("BuyTextBox"));
 
-    DrawObjectTypeCollection *Graph = GetObjectsByType(GRAPH);
 
-    //LogF("%d",Graph->num_objects);
-    
+
     AddOwnedStock(1,1,1,AmountFromTextBox);
     InsertStockTransaction(1,1,1,1, AmountFromTextBox, 1, GetGameTime());
 
