@@ -131,6 +131,8 @@ void GetCurrentGraphAndCompanyInfo()
 
         LogF("Company = %s | Price = %d", company, price_per_stock);
 
+        
+
     }
 
 }
@@ -140,8 +142,10 @@ void MakeSellTransactionButtonCallBack()
 
     amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));
 
-    SubtractOwnedStock(AmountFromTextBox);
-    InsertStockTransaction(1,1,1,1, AmountFromTextBox, 1, GetGameTime());
+    SubtractOwnedStock(amount_in_text_box);
+    InsertStockTransaction(1,1,9, amount_in_text_box, 1, GetGameTime());
+
+    StocksSellButtonCallBack();
 
 }
 
@@ -150,10 +154,10 @@ void MakeBuyTransactionButtonCallBack()
 
     amount_in_text_box = atoi(GetTextFromTextBox("BuyTextBox"));
 
+    AddOwnedStock(1,1,1, amount_in_text_box);
+    InsertStockTransaction(1,1,1, amount_in_text_box * price_per_stock, amount_in_text_box, GetGameTime());
 
-
-    AddOwnedStock(1,1,1,AmountFromTextBox);
-    InsertStockTransaction(1,1,1,1, AmountFromTextBox, 1, GetGameTime());
+    StocksBuyButtonCallBack();
 
 }
 

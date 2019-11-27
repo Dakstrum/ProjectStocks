@@ -7,6 +7,7 @@
 #include "graph.h"
 #include "shared.h"
 #include "dbaccess.h"
+#include "account.h"
 
 void SetupMainDB();
 void SetupLogDB();
@@ -328,18 +329,18 @@ void AddOwnedStock(int owned_stock_id, int save_id, int company_id, int *how_man
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks (OwnedStockId, SaveId, PlayerName, CompanyId, HowManyOwned) VALUES (2, 1, 1, %d, '%d');", company_id, how_many_owned), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks (OwnedStockId, SaveId, PlayerName, CompanyId, HowManyOwned) VALUES (2, %d, 1, %d, '%d');", GetSaveId(), company_id, how_many_owned), NULL, NULL, db);
     }
 
 }
 
-void InsertStockTransaction(int transation_id, int save_id, int player_name, int company_id, int *transaction_amount, int stocks_exchanged, time_t transaction_time) 
+void InsertStockTransaction(int save_id, int player_name, int company_id, int *transaction_amount, int stocks_exchanged, time_t transaction_time) 
 {
 
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions ( SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (1, 1, 1, '1', %d, %d);", transaction_amount, transaction_time), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions ( SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, 1, 1, %d, %d, %d);", GetSaveId(), transaction_amount, stocks_exchanged, transaction_time), NULL, NULL, db);
     }
 
 }
