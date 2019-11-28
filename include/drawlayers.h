@@ -17,9 +17,19 @@ typedef enum DrawType
     VIDEO,
     TEXT,
     GRAPH,
-    TEXTBOX
+    TEXTBOX,
+    SCROLLBOX
 
 } DrawType;
+
+typedef struct ScrollBox {
+
+    int vertical_offset;
+    char **text_content;
+    char **icon_paths;
+    ALLEGRO_BITMAP **icons
+
+} ScrollBox;
 
 typedef struct TextStyle {
 
@@ -188,12 +198,14 @@ typedef struct MenuWithChilds
     int num_buttons;
     int num_text;
     int num_text_boxes;
+    int num_scroll_boxes;
 
     int draw_layer;
 
     DrawObject **buttons;
     DrawObject **text;
     DrawObject **text_boxes;
+    DrawObject **scroll_boxes;
 
 } MenuWithChilds;
 

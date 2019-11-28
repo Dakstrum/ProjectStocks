@@ -67,6 +67,7 @@ void DrawVideo(DrawObject *object);
 void DrawText(DrawObject *object);
 void DrawTextBox(DrawObject *object);
 void DrawGraph(DrawObject *object);
+void DrawScrollBox(DrawObject *object);
 void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y);
 void DrawBackBuffer(ALLEGRO_BITMAP *bitmap);
 void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width, float height);
@@ -406,6 +407,13 @@ int AddGraphToDrawLayer(DrawObject *object)
 
 }
 
+int AddScrollBoxToDrawLayer(DrawObject *object) 
+{
+
+    return AddDrawObjectToDrawLayer(object);
+
+}
+
 void StoreMenuWithChildsRefOnDrawLayer(MenuWithChilds *menu_with_childs) 
 {
 
@@ -427,11 +435,17 @@ int AddMenuWithChildsToDrawLayer(MenuWithChilds *menu_with_childs)
 
     StoreMenuWithChildsRefOnDrawLayer(menu_with_childs);
     AddObjectToDrawLayer(menu_with_childs->menu);
-    for (int i = 0; i < menu_with_childs->num_buttons;i++)
+
+    for (int i = 0; i < menu_with_childs->num_buttons; i++)
         AddObjectToDrawLayer(menu_with_childs->buttons[i]);
-    for (int i = 0; i < menu_with_childs->num_text;i++)
+
+    for (int i = 0; i < menu_with_childs->num_text; i++)
         AddObjectToDrawLayer(menu_with_childs->text[i]);
-    for (int i = 0; i < menu_with_childs->num_text_boxes;i++)
+
+    for (int i = 0; i < menu_with_childs->num_text_boxes; i++)
+        AddObjectToDrawLayer(menu_with_childs->text_boxes[i]);
+
+    for (int i = 0; i < menu_with_childs->num_scroll_boxes; i++)
         AddObjectToDrawLayer(menu_with_childs->text_boxes[i]);
 
     return 0;
@@ -443,13 +457,14 @@ int AddObjectToDrawLayer(DrawObject *object)
 
     switch (object->type) {
 
-        case MENU:    return AddMenuToDrawLayer(object);     break;
-        case BUTTON:  return AddButtonToDrawLayer(object);   break;
-        case POPUP:   return AddPopUpToDrawLayer(object);    break;
-        case VIDEO:   return AddVideoToDrawLayer(object);    break;
-        case TEXT:    return AddTextToDrawLayer(object);     break;
-        case TEXTBOX: return AddTextBoxToDrawLayers(object); break;
-        case GRAPH:   return AddGraphToDrawLayer(object);    break;
+        case MENU:      return AddMenuToDrawLayer(object);      break;
+        case BUTTON:    return AddButtonToDrawLayer(object);    break;
+        case POPUP:     return AddPopUpToDrawLayer(object);     break;
+        case VIDEO:     return AddVideoToDrawLayer(object);     break;
+        case TEXT:      return AddTextToDrawLayer(object);      break;
+        case TEXTBOX:   return AddTextBoxToDrawLayers(object);  break;
+        case GRAPH:     return AddGraphToDrawLayer(object);     break;
+        case SCROLLBOX: return AddScrollBoxToDrawLayer(object); break;
 
     }
 
@@ -557,13 +572,14 @@ void DrawObjectOfTypeGen(DrawObject *object)
 
     switch (object->type) {
 
-        case MENU:    DrawMenu(object);    break;
-        case BUTTON:  DrawButton(object);  break;
-        case POPUP:   DrawPopUp(object);   break;
-        case VIDEO:   DrawVideo(object);   break;
-        case TEXT:    DrawText(object);    break;
-        case TEXTBOX: DrawTextBox(object); break;
-        case GRAPH:   DrawGraph(object);   break;
+        case MENU:      DrawMenu(object);      break;
+        case BUTTON:    DrawButton(object);    break;
+        case POPUP:     DrawPopUp(object);     break;
+        case VIDEO:     DrawVideo(object);     break;
+        case TEXT:      DrawText(object);      break;
+        case TEXTBOX:   DrawTextBox(object);   break;
+        case GRAPH:     DrawGraph(object);     break;
+        case SCROLLBOX: DrawScrollBox(object); break;
 
     }
 
@@ -762,6 +778,13 @@ void DrawTextBox(DrawObject *object)
         object->textbox.text[object->textbox.current_character + 1] = '\0';
 
     }
+
+}
+
+void DrawScrollBox(DrawObject *object) 
+{
+
+    /* TODO */   
 
 }
 
