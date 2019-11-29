@@ -8,6 +8,7 @@
 #include "shared.h"
 #include "dbaccess.h"
 #include "account.h"
+#include "stocksmenu.h"
 
 void SetupMainDB();
 void SetupLogDB();
@@ -345,14 +346,37 @@ void InsertStockTransaction(int save_id, int player_name, int company_id, int *t
 
 }
 
-void SubtractOwnedStock(int amount_to_subtract)
+void CanYouSubtractFrom(int amount_to_subtract)
 {
-    
+
     sqlite3 *db;
+    int owned_stock_amount;
+    
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("SELECT * FROM OwnedStocks; UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE OwnedStockId=2;", amount_to_subtract), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE OwnedStockId=2"), &FindOutIfYouCanSubtractFrom, &owned_stock_amount, db);
+
+        if (owned_stock_amount >= amount_to_subtract) {
+
+            ExecuteQuery(GetFormattedPointer("SELECT * FROM OwnedStocks; UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE OwnedStockId=2;", amount_to_subtract), NULL, NULL, db);
+            //DisplayTempPopUp(); //TODO make it say you successfully Sold X
+        } else {
+ 
+            //DisplayTempPopUp(); //TODO make it say you cannot sell stocks you dont have
+
+        }
+
     }
+
+}
+
+int FindOutIfYouCanSubtractFrom(void *owned_stock_amount, int argc, char **argv, char **col_name)
+{
+
+    if (argc > 0)
+        *((int *)owned_stock_amount) = (int)atoi(argv[0]);
+    
+    return 0;
 }
 
 int SetCompanyId(void *company_id, int argc, char **argv, char **col_name) 

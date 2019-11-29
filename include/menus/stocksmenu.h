@@ -8,4 +8,6 @@ void ToggleBuyTransactionMenu();
 void MakeSellTransactionButtonCallBack();
 void MakeBuyTransactionButtonCallBack();
 
+void DisplayTempPopUp();
+
 #endif
