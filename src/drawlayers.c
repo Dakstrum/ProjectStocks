@@ -858,7 +858,11 @@ int RemoveDrawObject(DrawObject *object)
 DrawObject *CreateNewDrawObject() 
 {
 
-    return malloc(sizeof(DrawObject));
+    DrawObject *object = malloc(sizeof(DrawObject));
+    object->name       = NULL;
+    object->asset_path = NULL;
+
+    return object;
 
 }
 
