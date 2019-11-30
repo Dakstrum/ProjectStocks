@@ -17,7 +17,7 @@ static int MAX_OBJECTS_PER_LAYER = 0;
 static const int MAX_CHARS_IN_TEXTBOX  = 126;
 static WindowScale scale;
 
-bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y) 
+bool IsMouseCursorInAreaOfObject(DrawObject *object, int x, int y) 
 {
 
     if (object->x * scale.x_scale > x || x > (object->x + object->width) * scale.x_scale)
@@ -32,7 +32,7 @@ bool IsMouseClickInAreaOfObject(DrawObject *object, int x, int y)
 bool HandleMouseClick(DrawObject *object, int x, int y) 
 {
 
-    if (IsMouseClickInAreaOfObject(object, x, y)) {
+    if (IsMouseCursorInAreaOfObject(object, x, y)) {
 
         if (object->button.Callback != NULL) {
 
@@ -66,7 +66,7 @@ bool HandledMouseClickInButtonAreas(int x, int y)
 bool ToggledTextBoxActiveFlag(DrawObject *object, int x, int y) 
 {
 
-    if (IsMouseClickInAreaOfObject(object, x, y)) {
+    if (IsMouseCursorInAreaOfObject(object, x, y)) {
 
         SetActiveTextBox(object);
         return true;
@@ -111,6 +111,35 @@ void SetActiveTextBoxToInactive()
         
 }
 
+void HandleScrollEventInArea(DrawObject *object, ALLEGRO_EVENT event)
+{
+
+    if (IsMouseCursorInAreaOfObject(object, event.mouse.x, event.mouse.y)) {
+
+        object->scrollbox.vertical_offset += event.mouse.dz * 5;
+
+        if (object->scrollbox.vertical_offset < object->scrollbox.min_vertical_offset)
+            object->scrollbox.vertical_offset = object->scrollbox.min_vertical_offset;
+        else if (object->scrollbox.vertical_offset > object->scrollbox.max_vertical_offset)
+            object->scrollbox.vertical_offset = object->scrollbox.max_vertical_offset;
+
+    }
+
+}
+
+void HandleScrollWheelEvent(ALLEGRO_EVENT event)
+{
+
+    DrawObject **objects = GetAllDrawObjectsInCurrentLayer();
+    if (objects == NULL)
+        return;
+
+    for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++)
+        if (objects[i] != NULL && objects[i]->type == SCROLLBOX)
+            HandleScrollEventInArea(objects[i], event);
+
+}
+
 void HandleMouseInput(ALLEGRO_EVENT event) 
 {
 
@@ -126,6 +155,11 @@ void HandleMouseInput(ALLEGRO_EVENT event)
             return;
 
         SetActiveTextBoxToInactive();
+    } else if (event.type == ALLEGRO_EVENT_MOUSE_AXES) {
+
+        if (event.mouse.dz != 0)
+            HandleScrollWheelEvent(event);
+
     }
 
 

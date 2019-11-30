@@ -25,9 +25,11 @@ typedef enum DrawType
 typedef struct ScrollBox {
 
     int vertical_offset;
+    int min_vertical_offset;
+    int max_vertical_offset;
     char **text_content;
     char **icon_paths;
-    ALLEGRO_BITMAP **icons
+    ALLEGRO_BITMAP **icons;
 
 } ScrollBox;
 
@@ -185,6 +187,7 @@ typedef struct DrawObject
         Text   text;
         Graph graph;
         TextBox textbox;
+        ScrollBox scrollbox;
 
     };
 

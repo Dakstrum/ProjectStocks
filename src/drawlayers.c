@@ -225,6 +225,7 @@ void ClearUpDrawLayer(int layer)
 void ClearUpGeneric(DrawObject *object) 
 {
 
+    object->name = NULL;
     switch (object->type) {
 
         case MENU:    CleanUpMenu(object);     break;
