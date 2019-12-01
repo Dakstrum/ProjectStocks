@@ -417,7 +417,7 @@ int AddScrollBoxToDrawLayer(DrawObject *object)
     text_style->color     = al_map_rgba(text_style->r, text_style->g, text_style->b, text_style->a);
 
     scrollbox->min_vertical_offset = object->y - scrollbox->vertical_spacing;
-    scrollbox->max_vertical_offset = object->y + scrollbox->vertical_spacing;
+    scrollbox->max_vertical_offset = object->y + object->height + scrollbox->vertical_spacing;
     scrollbox->vertical_offset     = 0;
 
     LogF("object->min_vertical_offset = %d", object->scrollbox.min_vertical_offset);
