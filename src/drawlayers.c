@@ -410,9 +410,6 @@ int AddGraphToDrawLayer(DrawObject *object)
 
 int AddScrollBoxToDrawLayer(DrawObject *object) 
 {
-
-    if (object == NULL)
-        return 0;
     
     ScrollBox *scrollbox  = &object->scrollbox;
     TextStyle *text_style = scrollbox->text_style;
@@ -423,6 +420,7 @@ int AddScrollBoxToDrawLayer(DrawObject *object)
     scrollbox->max_vertical_offset = object->y + scrollbox->vertical_spacing;
     scrollbox->vertical_offset     = 0;
 
+    Log("Added ScrollBox");
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -803,7 +801,7 @@ void DrawScrollBox(DrawObject *object)
     int vertical_offset  = object->scrollbox.vertical_offset;
     for (int i = 0; i < object->scrollbox.num_items; i++) {
 
-        y = (i - 1) * vertical_spacing + vertical_offset;
+        y = (i - 1) * vertical_spacing + vertical_offset + object->y;
 
         if (y < object->scrollbox.min_vertical_offset)
             continue;

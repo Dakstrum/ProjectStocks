@@ -14,7 +14,37 @@
 #include "linkopener.h"
 #include "rendering.h"
 
-static MenuWithChilds *main_menu    = NULL;
+static MenuWithChilds *main_menu = NULL;
+
+void DisplayTempScrollBox() 
+{
+
+    DrawObject *object = CreateNewDrawObject();
+
+    object->type = SCROLLBOX;
+    object->should_this_be_drawn = true;
+    object->x      = 100;
+    object->y      = 100;
+    object->width  = 100;
+    object->height = 500;
+
+    object->scrollbox.vertical_spacing = 20;
+    object->scrollbox.vertical_offset  = 0;
+    object->scrollbox.num_items        = 2;
+    object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
+    object->scrollbox.text_content[0]  = "WeBeHard";
+    object->scrollbox.text_content[1]  = "Unimpressive Games";
+    object->scrollbox.text_style       = malloc(sizeof(TextStyle));
+    object->scrollbox.text_style->font_size = 20;
+    object->scrollbox.text_style->a = 255;
+    object->scrollbox.text_style->r = 255;
+    object->scrollbox.text_style->g = 255;
+    object->scrollbox.text_style->b = 255;
+    object->scrollbox.text_style->font_path = "assets/font/Open_Sans/OpenSans-Regular.ttf";
+
+    AddObjectToDrawLayer(object);
+
+}
 
 void InitializeMainMenu() 
 {
@@ -29,6 +59,7 @@ void InitializeMainMenu()
     
     main_menu = GetMenuWithChildsFromJsonLayer("MainMenu");
     AddMenuWithChildsToDrawLayer(main_menu);
+    DisplayTempScrollBox();
 
 }
 
