@@ -474,14 +474,15 @@ MenuWithChilds *GetMenuWithChildsFromDrawObjectJson(char *menu_name)
     if (menu == NULL)
         return NULL;
 
-    MenuWithChilds *menu_with_childs = malloc(sizeof(MenuWithChilds));
-    menu_with_childs->menu           = menu;
-    menu_with_childs->num_buttons    = 0;
-    menu_with_childs->num_text       = 0;
-    menu_with_childs->num_text_boxes = 0;
-    menu_with_childs->buttons        = malloc(sizeof(DrawObject *) * 256);
-    menu_with_childs->text           = malloc(sizeof(DrawObject *) * 256);
-    menu_with_childs->text_boxes     = malloc(sizeof(DrawObject *) * 256);
+    MenuWithChilds *menu_with_childs   = malloc(sizeof(MenuWithChilds));
+    menu_with_childs->menu             = menu;
+    menu_with_childs->num_buttons      = 0;
+    menu_with_childs->num_text         = 0;
+    menu_with_childs->num_text_boxes   = 0;
+    menu_with_childs->num_scroll_boxes = 0;
+    menu_with_childs->buttons          = malloc(sizeof(DrawObject *) * 256);
+    menu_with_childs->text             = malloc(sizeof(DrawObject *) * 256);
+    menu_with_childs->text_boxes       = malloc(sizeof(DrawObject *) * 256);
 
     SetAllMenuChilds(menu_with_childs);
     ReclaimUnusedSpaceFromMenuWithChilds(menu_with_childs);

@@ -21,7 +21,6 @@ void InitializeNewsMenu()
 
     }
 
-
     news_menu = GetMenuWithChildsFromJsonLayer("NewsMenu");
     AddMenuWithChildsToDrawLayer(news_menu);
 

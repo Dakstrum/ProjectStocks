@@ -412,7 +412,7 @@ int AddScrollBoxToDrawLayer(DrawObject *object)
 {
 
     if (object == NULL)
-        return;
+        return 0;
     
     ScrollBox *scrollbox  = &object->scrollbox;
     TextStyle *text_style = scrollbox->text_style;
@@ -888,6 +888,8 @@ DrawObject *CreateNewDrawObject()
     DrawObject *object = malloc(sizeof(DrawObject));
     object->name       = NULL;
     object->asset_path = NULL;
+    object->child_of   = NULL;
+    object->type       = -1;
 
     return object;
 
@@ -934,6 +936,9 @@ char *GetTextFromTextBox(char *object_name)
 
 DrawObjectTypeCollection *GetObjectsByType(DrawType type)
 {
+
+    if (current_draw_layer == -1)
+        return NULL;
 
     DrawObjectTypeCollection *collection = malloc(sizeof(DrawObjectTypeCollection));
     collection->num_objects = 0;
