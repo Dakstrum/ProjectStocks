@@ -22,17 +22,6 @@ typedef enum DrawType
 
 } DrawType;
 
-typedef struct ScrollBox {
-
-    int vertical_offset;
-    int min_vertical_offset;
-    int max_vertical_offset;
-    char **text_content;
-    char **icon_paths;
-    ALLEGRO_BITMAP **icons;
-
-} ScrollBox;
-
 typedef struct TextStyle {
 
     char *font_path;
@@ -46,6 +35,22 @@ typedef struct TextStyle {
     unsigned char a;
 
 } TextStyle;
+
+typedef struct ScrollBox {
+
+    int vertical_spacing;
+    int vertical_offset;
+    int min_vertical_offset;
+    int max_vertical_offset;
+
+    int num_items;
+    char **text_content;
+    char **icon_paths;
+
+    ALLEGRO_BITMAP **icons;
+    TextStyle *text_style;
+
+} ScrollBox;
 
 typedef struct Text 
 {

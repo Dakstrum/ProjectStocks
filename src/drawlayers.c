@@ -411,6 +411,18 @@ int AddGraphToDrawLayer(DrawObject *object)
 int AddScrollBoxToDrawLayer(DrawObject *object) 
 {
 
+    if (object == NULL)
+        return;
+    
+    ScrollBox *scrollbox  = &object->scrollbox;
+    TextStyle *text_style = scrollbox->text_style;
+    text_style->font      = GetFontFromCache(text_style->font_path, text_style->font_size);
+    text_style->color     = al_map_rgba(text_style->r, text_style->g, text_style->b, text_style->a);
+
+    scrollbox->min_vertical_offset = object->y - scrollbox->vertical_spacing;
+    scrollbox->max_vertical_offset = object->y + scrollbox->vertical_spacing;
+    scrollbox->vertical_offset     = 0;
+
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -785,7 +797,22 @@ void DrawTextBox(DrawObject *object)
 void DrawScrollBox(DrawObject *object) 
 {
 
-    /* TODO */   
+    int x = object->x;
+    int y = 0;
+    int vertical_spacing = object->scrollbox.vertical_spacing;
+    int vertical_offset  = object->scrollbox.vertical_offset;
+    for (int i = 0; i < object->scrollbox.num_items; i++) {
+
+        y = (i - 1) * vertical_spacing + vertical_offset;
+
+        if (y < object->scrollbox.min_vertical_offset)
+            continue;
+        else if (y > object->scrollbox.max_vertical_offset)
+            continue;
+
+        al_draw_text(object->textbox.text_style->font, object->textbox.text_style->color, x, y, 0, object->scrollbox.text_content[i]);
+
+    }
 
 }
 
