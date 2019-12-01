@@ -32,8 +32,8 @@ void DisplayTempScrollBox()
     object->scrollbox.vertical_offset  = 0;
     object->scrollbox.num_items        = 2;
     object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
-    object->scrollbox.text_content[0]  = "WeBeHard";
-    object->scrollbox.text_content[1]  = "Unimpressive Games";
+    object->scrollbox.text_content[0]  = GetFormattedPointer("WeBeHard");
+    object->scrollbox.text_content[1]  = GetFormattedPointer("Unimpressive Games");
     object->scrollbox.text_style       = malloc(sizeof(TextStyle));
     object->scrollbox.text_style->font_size = 20;
     object->scrollbox.text_style->a = 255;

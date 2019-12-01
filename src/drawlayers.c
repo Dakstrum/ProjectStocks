@@ -420,7 +420,9 @@ int AddScrollBoxToDrawLayer(DrawObject *object)
     scrollbox->max_vertical_offset = object->y + scrollbox->vertical_spacing;
     scrollbox->vertical_offset     = 0;
 
-    Log("Added ScrollBox");
+    LogF("object->min_vertical_offset = %d", object->scrollbox.min_vertical_offset);
+    if (object->scrollbox.text_style->font == NULL)
+        LogF("font is null");
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -808,7 +810,7 @@ void DrawScrollBox(DrawObject *object)
         else if (y > object->scrollbox.max_vertical_offset)
             continue;
 
-        al_draw_text(object->textbox.text_style->font, object->textbox.text_style->color, x, y, 0, object->scrollbox.text_content[i]);
+        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x, y, 0, object->scrollbox.text_content[i]);
 
     }
 
