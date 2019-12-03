@@ -59,12 +59,38 @@ void CleanUpLoadSaveMenu()
 
 }
 
-void CleanUpLoadSaveMenu() 
+void CleanUpNewSaveMenu() 
 {
 
     if (new_save_menu != NULL)
         free(new_save_menu);
     
     new_save_menu = NULL;
+
+}
+
+
+//Load SaveButton Callbacks
+
+void NewSaveButtonCallBack()
+{
+    CreateNewDrawLayer();
+    new_save_menu = GetMenuWithChildsFromJsonLayer("NewSaveMenu");
+    AddMenuWithChildsToDrawLayer(new_save_menu);
+
+}
+
+//New Save Button Callbacks
+void NewSaveMenuBackButtonCallBack()
+{
+
+    ClearCurrentDrawLayer();
+    
+}
+
+void NewSaveMenuCreateButtonCallBack()
+{
+    
+
 
 }
