@@ -143,7 +143,7 @@ void MakeSellTransactionButtonCallBack()
     amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));
 
     //SubtractOwnedStock(amount_in_text_box);
-    AttemptToSubtractFrom(amount_in_text_box, price_per_stock);
+    AttemptToSubtractFromCurrentStock(amount_in_text_box, price_per_stock);
     //InsertStockTransaction(1,1,9, amount_in_text_box, 1, GetGameTime());
 
     StocksSellButtonCallBack();
@@ -154,10 +154,7 @@ void MakeBuyTransactionButtonCallBack()
 {
 
     amount_in_text_box = atoi(GetTextFromTextBox("BuyTextBox"));
-
-    //AddOwnedStock(1,1, amount_in_text_box);
-    AttemptToAddFrom(amount_in_text_box, price_per_stock);
-    //InsertStockTransaction(1,1, amount_in_text_box * price_per_stock, amount_in_text_box, GetGameTime());
+    AttemptToAddFromCurrentStock(amount_in_text_box, price_per_stock);
 
     StocksBuyButtonCallBack();
 

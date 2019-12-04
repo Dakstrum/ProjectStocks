@@ -19,7 +19,8 @@ bool DoesCompanyExist(char *company_name, sqlite3 *db);
 void SetCompanyToActive(char *company_name, sqlite3 *db);
 void InsertNewCompany(char *company_name, float ipo, sqlite3 *db);
 void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db);
-int FindOutIfYouCanAddFrom(void *owned_stock_amount, int argc, char **argv, char **col_name);
+int FindOutIfYouCanAddFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name);
+int FindOutIfYouCanSubtractFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name);
 
 void InitializeDatabases() 
 {
@@ -336,7 +337,7 @@ void AddOwnedStock(int owned_stock_id, int company_id, int *how_many_owned)
 
 }
 
-void InsertStockTransaction(int player_name, int company_id, int *transaction_amount, int stocks_exchanged, time_t transaction_time) 
+void InsertStockTransaction(int player_name, int company_id, int transaction_amount, int stocks_exchanged, time_t transaction_time) 
 {
 
     sqlite3 *db;
@@ -347,14 +348,14 @@ void InsertStockTransaction(int player_name, int company_id, int *transaction_am
 
 }
 
-void AttemptToAddFrom(int amount_to_add, int price_per_stock)
+void AttemptToAddFromCurrentStock(int amount_to_add, int price_per_stock)
 {
     sqlite3 *db;
     int owned_stock_amount;
 
      if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE OwnedStockId=2"), &FindOutIfYouCanAddFrom, &owned_stock_amount, db);
+        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE OwnedStockId=2"), &FindOutIfYouCanAddFromCurrentStock, &owned_stock_amount, db);
 
         if(owned_stock_amount <= 0) {
 
@@ -362,26 +363,27 @@ void AttemptToAddFrom(int amount_to_add, int price_per_stock)
 
         } else {
 
-            ExecuteQuery(GetFormattedPointer("SELECT * FROM OwnedStocks; UPDATE OwnedStocks SET HowManyOwned = HowManyOwned + %d  WHERE OwnedStockId=2;", amount_to_add), NULL, NULL, db);
+            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned + %d  WHERE OwnedStockId=2;", amount_to_add), NULL, NULL, db);
         
         }
         
-        InsertStockTransaction(1,1, amount_to_add * price_per_stock, amount_to_add, GetGameTime());
+        InsertStockTransaction(1,1, -amount_to_add * price_per_stock, amount_to_add, GetGameTime());
 
     }
 
 }
 
-int FindOutIfYouCanAddFrom(void *owned_stock_amount, int argc, char **argv, char **col_name)
+int FindOutIfYouCanAddFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name)
 {
 
     if (argc > 0)
         *((int *)owned_stock_amount) = (int)atoi(argv[0]);
     
     return 0;
+
 }
 
-void AttemptToSubtractFrom(int amount_to_subtract, int price_per_stock)
+void AttemptToSubtractFromCurrentStock(int amount_to_subtract, int price_per_stock)
 {
 
     sqlite3 *db;
@@ -389,24 +391,20 @@ void AttemptToSubtractFrom(int amount_to_subtract, int price_per_stock)
     
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE OwnedStockId=2"), &FindOutIfYouCanSubtractFrom, &owned_stock_amount, db);
+        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE OwnedStockId=2"), &FindOutIfYouCanSubtractFromCurrentStock, &owned_stock_amount, db);
 
         if (owned_stock_amount >= amount_to_subtract) {
 
-            ExecuteQuery(GetFormattedPointer("SELECT * FROM OwnedStocks; UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE OwnedStockId=2;", amount_to_subtract), NULL, NULL, db);
-            InsertStockTransaction(1,1, amount_to_subtract * price_per_stock, amount_to_subtract, GetGameTime());
-            //DisplayTempPopUp(); //TODO make it say you successfully Sold X
-        } else {
- 
-            //DisplayTempPopUp(); //TODO make it say you cannot sell stocks you dont have
-
+            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE OwnedStockId=2;", amount_to_subtract), NULL, NULL, db);
+            InsertStockTransaction(1,1, amount_to_subtract * price_per_stock, -amount_to_subtract, GetGameTime());
+            
         }
 
     }
 
 }
 
-int FindOutIfYouCanSubtractFrom(void *owned_stock_amount, int argc, char **argv, char **col_name)
+int FindOutIfYouCanSubtractFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name)
 {
 
     if (argc > 0)
