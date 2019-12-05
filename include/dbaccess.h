@@ -20,4 +20,7 @@ int InsertSave(char *save_name, char *player_name, unsigned int game_seed);
 void InsertStockPrice(int save_id, int company_id, float stock_price, char *timestamp, sqlite3 *db);
 StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, char *end_time, TimeSpan timespan);
 
+void AttemptToSubtractFromCurrentStock(int amount_to_subtract, int price_per_stock);
+void AttemptToAddFromCurrentStock(int amount_to_add, int price_per_stock);
+
 #endif

@@ -7,6 +7,9 @@
 #include "graph.h"
 #include "shared.h"
 #include "dbaccess.h"
+#include "account.h"
+#include "stocksmenu.h"
+
 
 void SetupMainDB();
 void SetupLogDB();
@@ -17,6 +20,8 @@ bool DoesCompanyExist(char *company_name, sqlite3 *db);
 void SetCompanyToActive(char *company_name, sqlite3 *db);
 void InsertNewCompany(char *company_name, float ipo, sqlite3 *db);
 void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db);
+int FindOutIfYouCanAddFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name);
+int FindOutIfYouCanSubtractFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name);
 
 void InitializeDatabases() 
 {
@@ -190,13 +195,21 @@ WindowSettings GetSettingsFromDB(sqlite3 *db)
 {
 
     WindowSettings settings = {0, 0, WINDOWED};
+<<<<<<< HEAD
     ExecuteQuery(GetFormattedPointer("SELECT WindowWidth, WindowHeight, WindowStyle FROM Settings"), (void *)(&SetWindowSettingsIfExists), &settings, db);
+=======
+    ExecuteQuery(GetFormattedPointer("SELECT WindowWidth, WindowHeight, WindowStyle FROM Settings;"), (void *)(&SetWindowSettingsIfExists), &settings, db);
+>>>>>>> feature-textbox-implementation
     if (settings.width == 0) {
 
         settings.width  = 1920;
         settings.height = 1080;
         settings.screen_flag = WINDOWED;
+<<<<<<< HEAD
         ExecuteQuery(GetFormattedPointer("INSERT INTO Settings (WindowWidth, WindowHeight, WindowStyle) VALUES (1920, 1080, 1)"), NULL, NULL, db);
+=======
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Settings (WindowWidth, WindowHeight, WindowStyle) VALUES (1920, 1080, 1);"), NULL, NULL, db);
+>>>>>>> feature-textbox-implementation
 
     }
     return settings;
@@ -320,6 +333,93 @@ void InsertNewCompany(char *company_name, float ipo, sqlite3 *db)
 
     ExecuteQuery(GetFormattedPointer("INSERT INTO Company (Ipo, CompanyName, IsActiveInJson) VALUES (%f, '%s', 1);", ipo, company_name), NULL, NULL, db);
 
+}
+
+void AddOwnedStock(int owned_stock_id, int company_id, int *how_many_owned) 
+{
+
+    sqlite3 *db;
+    if (OpenConnection(&db, DefaultConnection()) == 0) {
+
+        ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks (OwnedStockId, SaveId, PlayerName, CompanyId, HowManyOwned) VALUES (2, %d, 1, %d, '%d');", GetSaveId(), company_id, how_many_owned), NULL, NULL, db);
+    }
+
+}
+
+void InsertStockTransaction(int player_name, int company_id, int transaction_amount, int stocks_exchanged, time_t transaction_time) 
+{
+
+    sqlite3 *db;
+    if (OpenConnection(&db, DefaultConnection()) == 0) {
+
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions ( SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, 1, 1, %d, %d, %d);", GetSaveId(), transaction_amount, stocks_exchanged, transaction_time), NULL, NULL, db);
+    }
+
+}
+
+void AttemptToAddFromCurrentStock(int amount_to_add, int price_per_stock)
+{
+    sqlite3 *db;
+    int owned_stock_amount;
+
+     if (OpenConnection(&db, DefaultConnection()) == 0) {
+
+        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE OwnedStockId=2"), &FindOutIfYouCanAddFromCurrentStock, &owned_stock_amount, db);
+
+        if(owned_stock_amount <= 0) {
+
+            AddOwnedStock(1,1, amount_to_add);
+
+        } else {
+
+            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned + %d  WHERE OwnedStockId=2;", amount_to_add), NULL, NULL, db);
+        
+        }
+        
+        InsertStockTransaction(1,1, -amount_to_add * price_per_stock, amount_to_add, GetGameTime());
+
+    }
+
+}
+
+int FindOutIfYouCanAddFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name)
+{
+
+    if (argc > 0)
+        *((int *)owned_stock_amount) = (int)atoi(argv[0]);
+    
+    return 0;
+
+}
+
+void AttemptToSubtractFromCurrentStock(int amount_to_subtract, int price_per_stock)
+{
+
+    sqlite3 *db;
+    int owned_stock_amount;
+    
+    if (OpenConnection(&db, DefaultConnection()) == 0) {
+
+        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE OwnedStockId=2"), &FindOutIfYouCanSubtractFromCurrentStock, &owned_stock_amount, db);
+
+        if (owned_stock_amount >= amount_to_subtract) {
+
+            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE OwnedStockId=2;", amount_to_subtract), NULL, NULL, db);
+            InsertStockTransaction(1,1, amount_to_subtract * price_per_stock, -amount_to_subtract, GetGameTime());
+            
+        }
+
+    }
+
+}
+
+int FindOutIfYouCanSubtractFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name)
+{
+
+    if (argc > 0)
+        *((int *)owned_stock_amount) = (int)atoi(argv[0]);
+    
+    return 0;
 }
 
 int SetCompanyId(void *company_id, int argc, char **argv, char **col_name) 

@@ -11,12 +11,16 @@
 #include "cache.h"
 #include "graph.h"
 #include "startup.h"
+#include "dbaccess.h"
+#include "account.h"
+#include "simulation.h"
 
 
 static MenuWithChilds *stocks_menu           = NULL;
 static MenuWithChilds *sell_transaction_menu = NULL;
 static MenuWithChilds *buy_transaction_menu  = NULL;
 
+<<<<<<< HEAD
 void DisplayTempPopUp()
 {
 
@@ -37,6 +41,14 @@ void DisplayTempPopUp()
     AddObjectToDrawLayer(popup_object);
 
 }
+=======
+char *company;
+int price_per_stock;
+int amount_in_text_box;
+
+void DisplayTempPopUp();
+void GetCurrentGraphAndCompanyInfo();
+>>>>>>> feature-textbox-implementation
 
 void InitializeStocksMenu() 
 { 
@@ -81,9 +93,13 @@ void StocksSellButtonCallBack()
 
 }
 
+DrawObjectTypeCollection *current_draw_layer_graphs;
+
 void StocksBuyButtonCallBack()
 {
-
+    
+    GetCurrentGraphAndCompanyInfo();
+    
     if (buy_transaction_menu == NULL) {
 
         CreateNewDrawLayer();
@@ -96,6 +112,51 @@ void StocksBuyButtonCallBack()
         buy_transaction_menu = NULL;
 
     }
+
+}
+
+void GetCurrentGraphAndCompanyInfo()
+{
+
+    if(DoesObjectExistInCurrentDrawLayer("BuyTransactionMenu")) {
+
+        Log("You are clicking out of Menu");
+
+    } else {
+
+        current_draw_layer_graphs = GetObjectsByType(GRAPH);
+
+        company = current_draw_layer_graphs->objects[0]->graph.company;
+        price_per_stock  = CurrentStockPrice(company);
+
+        LogF("Company = %s | Price = %d", company, price_per_stock);
+
+        
+
+    }
+
+}
+
+void MakeSellTransactionButtonCallBack()
+{
+
+    amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));
+
+    //SubtractOwnedStock(amount_in_text_box);
+    AttemptToSubtractFromCurrentStock(amount_in_text_box, price_per_stock);
+    //InsertStockTransaction(1,1,9, amount_in_text_box, 1, GetGameTime());
+
+    StocksSellButtonCallBack();
+
+}
+
+void MakeBuyTransactionButtonCallBack()
+{
+
+    amount_in_text_box = atoi(GetTextFromTextBox("BuyTextBox"));
+    AttemptToAddFromCurrentStock(amount_in_text_box, price_per_stock);
+
+    StocksBuyButtonCallBack();
 
 }
 
