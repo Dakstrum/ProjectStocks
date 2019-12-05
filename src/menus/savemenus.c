@@ -13,6 +13,7 @@
 #include "generalpurposemenus.h"
 #include "linkopener.h"
 #include "rendering.h"
+#include "account.h"
 
 static MenuWithChilds *load_save_menu    = NULL;
 static MenuWithChilds *new_save_menu     = NULL;
@@ -91,6 +92,9 @@ void NewSaveMenuBackButtonCallBack()
 void NewSaveMenuCreateButtonCallBack()
 {
     
+    char *save_name_in_text_box   = GetTextFromTextBox("SaveNameTextBox");
+    char *player_name_in_text_box = GetTextFromTextBox("PlayerNameTextBox");
 
+    CreateNewSave(save_name_in_text_box, player_name_in_text_box);
 
 }
