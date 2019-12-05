@@ -69,7 +69,7 @@ static ButtonCallsbacks callbacks[] = {
     {"ToggleTransactionSellButton",        &StocksSellButtonCallBack},
     {"ToggleTransactionBuyButton",         &StocksBuyButtonCallBack},
     {"MakeTransactionSellButton",          &MakeSellTransactionButtonCallBack},
-    {"MakeTransactionBuyButton",           &MakeBuyTransactionButtonCallBack}
+    {"MakeTransactionBuyButton",           &MakeBuyTransactionButtonCallBack},
     {"NewSaveButton",                      &NewSaveButtonCallBack},
     {"NewSaveMenuBackButton",              &NewSaveMenuBackButtonCallBack},
     {"NewSaveMenuCreateButton",            &NewSaveMenuCreateButtonCallBack}

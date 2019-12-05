@@ -195,21 +195,14 @@ WindowSettings GetSettingsFromDB(sqlite3 *db)
 {
 
     WindowSettings settings = {0, 0, WINDOWED};
-<<<<<<< HEAD
     ExecuteQuery(GetFormattedPointer("SELECT WindowWidth, WindowHeight, WindowStyle FROM Settings"), (void *)(&SetWindowSettingsIfExists), &settings, db);
-=======
-    ExecuteQuery(GetFormattedPointer("SELECT WindowWidth, WindowHeight, WindowStyle FROM Settings;"), (void *)(&SetWindowSettingsIfExists), &settings, db);
->>>>>>> feature-textbox-implementation
+
     if (settings.width == 0) {
 
         settings.width  = 1920;
         settings.height = 1080;
         settings.screen_flag = WINDOWED;
-<<<<<<< HEAD
-        ExecuteQuery(GetFormattedPointer("INSERT INTO Settings (WindowWidth, WindowHeight, WindowStyle) VALUES (1920, 1080, 1)"), NULL, NULL, db);
-=======
         ExecuteQuery(GetFormattedPointer("INSERT INTO Settings (WindowWidth, WindowHeight, WindowStyle) VALUES (1920, 1080, 1);"), NULL, NULL, db);
->>>>>>> feature-textbox-implementation
 
     }
     return settings;
