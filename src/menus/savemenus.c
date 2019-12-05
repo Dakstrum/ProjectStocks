@@ -81,6 +81,13 @@ void NewSaveButtonCallBack()
 
 }
 
+void LoadSaveMenuLoadButtonCallBack()
+{
+
+    SwitchToLoadingScreen();
+
+}
+
 //New Save Button Callbacks
 void NewSaveMenuBackButtonCallBack()
 {
