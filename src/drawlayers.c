@@ -459,7 +459,7 @@ int AddMenuWithChildsToDrawLayer(MenuWithChilds *menu_with_childs)
         AddObjectToDrawLayer(menu_with_childs->text_boxes[i]);
 
     for (int i = 0; i < menu_with_childs->num_scroll_boxes; i++)
-        AddObjectToDrawLayer(menu_with_childs->text_boxes[i]);
+        AddObjectToDrawLayer(menu_with_childs->scroll_boxes[i]);
 
     return 0;
 
