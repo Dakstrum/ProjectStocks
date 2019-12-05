@@ -11,6 +11,7 @@
 #include "newsmenu.h"
 #include "accountmenu.h"
 #include "generalpurposemenus.h"
+#include "savemenus.h"
 
 
 void StubCallback();
@@ -33,7 +34,9 @@ void StocksSellButtonCallBack();
 void StocksBuyButtonCallBack();
 void MakeSellTransactionButtonCallBack();
 void MakeBuyTransactionButtonCallBack();
-
+void NewSaveButtonCallBack();
+void NewSaveMenuBackButtonCallBack();
+void NewSaveMenuCreateButtonCallBack();
 
 
 
@@ -45,7 +48,7 @@ typedef struct ButtonCallsbacks
 
 } ButtonCallsbacks;
 
-#define NUM_CALLBACKS 19
+#define NUM_CALLBACKS 22
 static ButtonCallsbacks callbacks[] = {
 
     {"STUB",                               &StubCallback},
@@ -67,6 +70,9 @@ static ButtonCallsbacks callbacks[] = {
     {"ToggleTransactionBuyButton",         &StocksBuyButtonCallBack},
     {"MakeTransactionSellButton",          &MakeSellTransactionButtonCallBack},
     {"MakeTransactionBuyButton",           &MakeBuyTransactionButtonCallBack}
+    {"NewSaveButton",                      &NewSaveButtonCallBack},
+    {"NewSaveMenuBackButton",              &NewSaveMenuBackButtonCallBack},
+    {"NewSaveMenuCreateButton",            &NewSaveMenuCreateButtonCallBack}
 
 };
 

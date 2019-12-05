@@ -13,6 +13,7 @@
 #include "generalpurposemenus.h"
 #include "linkopener.h"
 #include "rendering.h"
+#include "savemenus.h"
 
 static MenuWithChilds *main_menu = NULL;
 
@@ -77,8 +78,9 @@ void CleanUpMainMenu()
 void MainMenuStartButtonCallBack()
 {
     
-    SwitchToLoadingScreen();
-
+    //SwitchToLoadingScreen();
+    ClearDrawLayers();
+    InitializeLoadSaveMenu();
 }
 
 void MainMenuOptionsButtonCallBack()
@@ -105,7 +107,7 @@ void MainMenuGitHubButtonCallBack()
 void MainMenuTwitterButtonCallBack()
 {
 
-    OpenLink("https://twitter.com/DSectorStudios");
+    OpenLink("https://twitter.com/Dakstrum");
 
 }
 
@@ -119,6 +121,6 @@ void MainMenuYoutubeButtonCallBack()
 void MainMenuWebsiteButtonCallBack()
 {
 
-    OpenLink("https://www.darksectorstudios.com");
+    OpenLink("https://www.dakstrum.com");
 
 }
