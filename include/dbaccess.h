@@ -21,7 +21,7 @@ void InsertStockPrice(int save_id, int company_id, float stock_price, char *time
 StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, char *end_time, TimeSpan timespan);
 
 
-void AttemptToSubtractFromCurrentStock(int amount_to_subtract, int price_per_stock);
-void AttemptToAddFromCurrentStock(int amount_to_add, int price_per_stock);
+void AttemptToSubtractFromCurrentStock(int company_name, int amount_to_subtract, int price_per_stock);
+void AttemptToAddFromCurrentStock(int company_name, int amount_to_add, int price_per_stock);
 
 #endif

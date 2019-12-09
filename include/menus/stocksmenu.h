@@ -4,7 +4,7 @@
 void InitializeStocksMenu();
 void MakeSellTransactionButtonCallBack();
 void MakeBuyTransactionButtonCallBack();
-
+char *GetCurrentCompanyFromGraph();
 void DisplayTempPopUp();
 
 #endif

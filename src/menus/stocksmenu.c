@@ -20,7 +20,7 @@ static MenuWithChilds *stocks_menu           = NULL;
 static MenuWithChilds *sell_transaction_menu = NULL;
 static MenuWithChilds *buy_transaction_menu  = NULL;
 
-char *company;
+char *current_company_name;
 float price_per_stock;
 
 void DisplayTempPopUp();
@@ -41,7 +41,7 @@ void InitializeStocksMenu()
     AddMenuWithChildsToDrawLayer(stocks_menu);
     DisplayTempPopUp();
 
-    DrawObject *graph = GetGraphDrawObject("WeBeHard", ONE_DAY, 961, 373);
+    DrawObject *graph = GetGraphDrawObject("Unimpressive Video Things", ONE_DAY, 961, 373);
     if (graph != NULL) {
 
         graph->x = 415;
@@ -80,8 +80,8 @@ void StocksSellButtonCallBack()
 
     if (sell_transaction_menu == NULL) {
 
-        company                = GetCurrentCompanyFromGraph();
-        price_per_stock        = GetPricePerStock(company);
+        current_company_name   = GetCurrentCompanyFromGraph();
+        price_per_stock        = GetPricePerStock(current_company_name);
 
         CreateNewDrawLayer();
         sell_transaction_menu = GetMenuWithChildsFromJsonLayer("SellTransactionMenu");
@@ -101,8 +101,8 @@ void StocksBuyButtonCallBack()
 
     if (buy_transaction_menu == NULL) {
 
-        company                = GetCurrentCompanyFromGraph();
-        price_per_stock        = GetPricePerStock(company);
+        current_company_name   = GetCurrentCompanyFromGraph();
+        price_per_stock        = GetPricePerStock(current_company_name);
 
         CreateNewDrawLayer();
         buy_transaction_menu = GetMenuWithChildsFromJsonLayer("BuyTransactionMenu");
@@ -140,7 +140,7 @@ void MakeSellTransactionButtonCallBack()
     int amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));
 
     //SubtractOwnedStock(amount_in_text_box);
-    AttemptToSubtractFromCurrentStock(amount_in_text_box, price_per_stock);
+    AttemptToSubtractFromCurrentStock(current_company_name, amount_in_text_box, price_per_stock);
     //InsertStockTransaction(1,1,9, amount_in_text_box, 1, GetGameTime());
 
     StocksSellButtonCallBack();
@@ -152,7 +152,7 @@ void MakeBuyTransactionButtonCallBack()
     
     int amount_in_text_box = atoi(GetTextFromTextBox("BuyTextBox"));
 
-    AttemptToAddFromCurrentStock(amount_in_text_box, amount_in_text_box);
+    AttemptToAddFromCurrentStock(current_company_name, amount_in_text_box, price_per_stock);
 
     StocksBuyButtonCallBack();
 
