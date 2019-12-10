@@ -328,48 +328,52 @@ void InsertNewCompany(char *company_name, float ipo, sqlite3 *db)
 
 }
 
-void AddOwnedStock(int owned_stock_id, int company_id, int *how_many_owned) 
+void AddOwnedStock(int company_name, int amount_to_own) 
 {
 
     sqlite3 *db;
+
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks (OwnedStockId, SaveId, PlayerName, CompanyId, HowManyOwned) VALUES (2, %d, 1, %d, '%d');", GetSaveId(), company_id, how_many_owned), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks ( SaveId, PlayerName, CompanyId, HowManyOwned) VALUES (%d, 1, %d, '%d');", GetSaveId(), GetCompanyId(company_name, db), amount_to_own), NULL, NULL, db);
     }
 
 }
 
-void InsertStockTransaction(int player_name, int company_id, int transaction_amount, int stocks_exchanged, time_t transaction_time) 
+void InsertStockTransaction(int company_name, int transaction_amount, int stocks_exchanged) 
 {
 
     sqlite3 *db;
+
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions ( SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, 1, 1, %d, %d, %d);", GetSaveId(), transaction_amount, stocks_exchanged, transaction_time), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions ( SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, 1, %d, %d, %d, %d);", GetSaveId(), GetCompanyId(company_name, db), transaction_amount, stocks_exchanged, GetGameTime()), NULL, NULL, db);
+
     }
 
 }
 
-void AttemptToAddFromCurrentStock(int amount_to_add, int price_per_stock)
+void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, int price_per_stock)
 {
+
     sqlite3 *db;
     int owned_stock_amount;
 
      if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE OwnedStockId=2"), &FindOutIfYouCanAddFromCurrentStock, &owned_stock_amount, db);
+        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId =%d;", GetCompanyId(company_name, db)), &FindOutIfYouCanAddFromCurrentStock, &owned_stock_amount, db);
 
         if(owned_stock_amount <= 0) {
-
-            AddOwnedStock(1,1, amount_to_add);
+ 
+            AddOwnedStock(company_name, amount_to_add);
 
         } else {
 
-            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned + %d  WHERE OwnedStockId=2;", amount_to_add), NULL, NULL, db);
+            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned + %d  WHERE CompanyId=%d;", amount_to_add, GetCompanyId(company_name, db)), NULL, NULL, db);
         
         }
         
-        InsertStockTransaction(1,1, -amount_to_add * price_per_stock, amount_to_add, GetGameTime());
+        InsertStockTransaction(company_name, -amount_to_add * price_per_stock, amount_to_add);
 
     }
 
@@ -385,7 +389,7 @@ int FindOutIfYouCanAddFromCurrentStock(void *owned_stock_amount, int argc, char 
 
 }
 
-void AttemptToSubtractFromCurrentStock(int amount_to_subtract, int price_per_stock)
+void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtract, int price_per_stock)
 {
 
     sqlite3 *db;
@@ -393,12 +397,12 @@ void AttemptToSubtractFromCurrentStock(int amount_to_subtract, int price_per_sto
     
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE OwnedStockId=2"), &FindOutIfYouCanSubtractFromCurrentStock, &owned_stock_amount, db);
+        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d;", GetCompanyId(company_name, db)), &FindOutIfYouCanSubtractFromCurrentStock, &owned_stock_amount, db);
 
         if (owned_stock_amount >= amount_to_subtract) {
 
-            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE OwnedStockId=2;", amount_to_subtract), NULL, NULL, db);
-            InsertStockTransaction(1,1, amount_to_subtract * price_per_stock, -amount_to_subtract, GetGameTime());
+            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE CompanyId=%d;", amount_to_subtract, GetCompanyId(company_name, db)), NULL, NULL, db);
+            InsertStockTransaction(company_name, amount_to_subtract * price_per_stock, -amount_to_subtract);
             
         }
 
@@ -430,6 +434,17 @@ int SetCompanyId(void *company_id, int argc, char **argv, char **col_name)
 int GetCompanyId(char *company_name, sqlite3 *db) 
 {
 
+    int company_id;
+    ExecuteQuery(GetFormattedPointer("SELECT CompanyId FROM Company WHERE CompanyName='%s'", company_name), &SetCompanyId, &company_id, db);
+
+    return company_id;
+
+}
+
+int GetCompanyIdTEST(char *company_name) 
+{
+
+    sqlite3 *db;
     int company_id;
     ExecuteQuery(GetFormattedPointer("SELECT CompanyId FROM Company WHERE CompanyName='%s'", company_name), &SetCompanyId, &company_id, db);
 
