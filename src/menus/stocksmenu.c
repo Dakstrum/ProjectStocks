@@ -15,7 +15,6 @@
 #include "account.h"
 #include "simulation.h"
 
-
 static MenuWithChilds *stocks_menu           = NULL;
 static MenuWithChilds *sell_transaction_menu = NULL;
 static MenuWithChilds *buy_transaction_menu  = NULL;
@@ -155,4 +154,3 @@ void CleanUpStocksMenu()
     stocks_menu = NULL;
     
 }
-

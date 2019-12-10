@@ -10,7 +10,6 @@
 #include "account.h"
 #include "stocksmenu.h"
 
-
 void SetupMainDB();
 void SetupLogDB();
 
@@ -328,28 +327,23 @@ void InsertNewCompany(char *company_name, float ipo, sqlite3 *db)
 
 }
 
-void AddOwnedStock(int company_name, int amount_to_own) 
+void AddOwnedStock(char *company_name, int amount_to_own) 
 {
 
     sqlite3 *db;
 
-    if (OpenConnection(&db, DefaultConnection()) == 0) {
-
+    if (OpenConnection(&db, DefaultConnection()) == 0) 
         ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks ( SaveId, PlayerName, CompanyId, HowManyOwned) VALUES (%d, 1, %d, '%d');", GetSaveId(), GetCompanyId(company_name, db), amount_to_own), NULL, NULL, db);
-    }
 
 }
 
-void InsertStockTransaction(int company_name, int transaction_amount, int stocks_exchanged) 
+void InsertStockTransaction(char *company_name, int transaction_amount, int stocks_exchanged) 
 {
 
     sqlite3 *db;
 
-    if (OpenConnection(&db, DefaultConnection()) == 0) {
-
+    if (OpenConnection(&db, DefaultConnection()) == 0)
         ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions ( SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, 1, %d, %d, %d, %d);", GetSaveId(), GetCompanyId(company_name, db), transaction_amount, stocks_exchanged, GetGameTime()), NULL, NULL, db);
-
-    }
 
 }
 
@@ -363,15 +357,10 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, int pri
 
         ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId =%d;", GetCompanyId(company_name, db)), &FindOutIfYouCanAddFromCurrentStock, &owned_stock_amount, db);
 
-        if(owned_stock_amount <= 0) {
- 
+        if(owned_stock_amount <= 0) 
             AddOwnedStock(company_name, amount_to_add);
-
-        } else {
-
+        else
             ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned + %d  WHERE CompanyId=%d;", amount_to_add, GetCompanyId(company_name, db)), NULL, NULL, db);
-        
-        }
         
         InsertStockTransaction(company_name, -amount_to_add * price_per_stock, amount_to_add);
 
@@ -434,17 +423,6 @@ int SetCompanyId(void *company_id, int argc, char **argv, char **col_name)
 int GetCompanyId(char *company_name, sqlite3 *db) 
 {
 
-    int company_id;
-    ExecuteQuery(GetFormattedPointer("SELECT CompanyId FROM Company WHERE CompanyName='%s'", company_name), &SetCompanyId, &company_id, db);
-
-    return company_id;
-
-}
-
-int GetCompanyIdTEST(char *company_name) 
-{
-
-    sqlite3 *db;
     int company_id;
     ExecuteQuery(GetFormattedPointer("SELECT CompanyId FROM Company WHERE CompanyName='%s'", company_name), &SetCompanyId, &company_id, db);
 
