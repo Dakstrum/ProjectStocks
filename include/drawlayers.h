@@ -38,10 +38,15 @@ typedef struct TextStyle {
 
 typedef struct ScrollBox {
 
+    ALLEGRO_BITMAP *boxes_bitmap;
     int vertical_spacing;
     int vertical_offset;
     int min_vertical_offset;
     int max_vertical_offset;
+    int box_width;
+    int box_height;
+
+    void (*box_click)(char *);
 
     int num_items;
     char **text_content;

@@ -93,6 +93,50 @@ bool HandledMouseClickInTextbox(int x, int y)
 
 }
 
+bool CheckForScrollboxClick(DrawObject *object, int x, int y) 
+{
+
+    if (!IsMouseCursorInAreaOfObject(object, x, y))
+        return false;
+
+    const int obj_x            = object->x;
+    const int vertical_spacing = object->scrollbox.vertical_spacing;
+    const int vertical_offset  = object->scrollbox.vertical_offset;
+
+    int box_y = 0;
+    for (int i = 0; i < object->scrollbox.num_items; i++) {
+
+        box_y = (i - 1) * vertical_spacing + vertical_offset + object->y;
+
+        if (x < obj_x * scale.x_scale || x > (obj_x + object->scrollbox.box_width) * scale.x_scale)
+            continue;
+        if (y < box_y * scale.y_scale || y > (box_y + object->scrollbox.box_height) * scale.y_scale)
+            continue;
+
+        object->scrollbox.box_click(object->scrollbox.text_content[i]);
+        break;
+
+    }
+
+
+    return false;
+}
+
+bool HandledMouseClickInScrollBox(int x, int y)
+{
+
+    DrawObject **objects = GetAllDrawObjectsInCurrentLayer();
+    if (objects == NULL)
+        return false;
+
+    for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++)
+        if (objects[i] != NULL && objects[i]->type == SCROLLBOX)
+            if (CheckForScrollboxClick(objects[i], x, y))
+                return true;
+
+    return false;
+}
+
 void InitializeControls() 
 {
 
@@ -116,7 +160,7 @@ void HandleScrollEventInArea(DrawObject *object, ALLEGRO_EVENT event)
 
     if (IsMouseCursorInAreaOfObject(object, event.mouse.x, event.mouse.y)) {
 
-        object->scrollbox.vertical_offset += event.mouse.dz * 5;
+        object->scrollbox.vertical_offset += event.mouse.dz * 10;
 
         if (object->scrollbox.vertical_offset < object->scrollbox.min_vertical_offset)
             object->scrollbox.vertical_offset = object->scrollbox.min_vertical_offset;
@@ -153,8 +197,11 @@ void HandleMouseInput(ALLEGRO_EVENT event)
         }
         if (HandledMouseClickInTextbox(event.mouse.x, event.mouse.y))
             return;
+        else if (HandledMouseClickInScrollBox(event.mouse.x, event.mouse.y))
+            return;
 
         SetActiveTextBoxToInactive();
+
     } else if (event.type == ALLEGRO_EVENT_MOUSE_AXES) {
 
         if (event.mouse.dz != 0)
@@ -225,10 +272,10 @@ void InsertSingleCharacterIntoTextBox(DrawObject *object, const char *key_presse
 
 bool ShouldUpperCase(ALLEGRO_EVENT event) 
 {
-    int modifiers   = event.keyboard.modifiers;
-    int shift_caps  = ALLEGRO_KEYMOD_SHIFT | ALLEGRO_KEYMOD_CAPSLOCK;
-    int shift       = ALLEGRO_KEYMOD_SHIFT;
-    int caps        = ALLEGRO_KEYMOD_CAPSLOCK;
+    int modifiers                = event.keyboard.modifiers;
+    static const int shift_caps  = ALLEGRO_KEYMOD_SHIFT | ALLEGRO_KEYMOD_CAPSLOCK;
+    static const int shift       = ALLEGRO_KEYMOD_SHIFT;
+    static const int caps        = ALLEGRO_KEYMOD_CAPSLOCK;
 
     if ((modifiers & shift_caps) == shift_caps)
         return false;

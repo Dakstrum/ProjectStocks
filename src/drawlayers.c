@@ -410,19 +410,26 @@ int AddGraphToDrawLayer(DrawObject *object)
 
 int AddScrollBoxToDrawLayer(DrawObject *object) 
 {
+    if (object->scrollbox.boxes_bitmap)
+        return -1;
     
-    ScrollBox *scrollbox  = &object->scrollbox;
-    TextStyle *text_style = scrollbox->text_style;
-    text_style->font      = GetFontFromCache(text_style->font_path, text_style->font_size);
-    text_style->color     = al_map_rgba(text_style->r, text_style->g, text_style->b, text_style->a);
+    object->scrollbox.boxes_bitmap = GetBitmapFromCache(object->asset_path);
+    object->scrollbox.box_width    = al_get_bitmap_width(object->scrollbox.boxes_bitmap);
+    object->scrollbox.box_height   = al_get_bitmap_height(object->scrollbox.boxes_bitmap);
 
-    scrollbox->min_vertical_offset = object->y - scrollbox->vertical_spacing;
+
+    ScrollBox *scrollbox           = &object->scrollbox;
+    TextStyle *text_style          = scrollbox->text_style;
+    text_style->font               = GetFontFromCache(text_style->font_path, text_style->font_size);
+    text_style->color              = al_map_rgba(text_style->r, text_style->g, text_style->b, text_style->a);
+
+    scrollbox->min_vertical_offset = object->y - 2 * scrollbox->vertical_spacing;
     scrollbox->max_vertical_offset = object->y + object->height + scrollbox->vertical_spacing;
     scrollbox->vertical_offset     = 0;
 
-    LogF("object->min_vertical_offset = %d", object->scrollbox.min_vertical_offset);
     if (object->scrollbox.text_style->font == NULL)
         LogF("font is null");
+
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -797,20 +804,22 @@ void DrawTextBox(DrawObject *object)
 void DrawScrollBox(DrawObject *object) 
 {
 
-    int x = object->x;
-    int y = 0;
-    int vertical_spacing = object->scrollbox.vertical_spacing;
-    int vertical_offset  = object->scrollbox.vertical_offset;
+    const int x = object->x;
+    const int vertical_spacing = object->scrollbox.vertical_spacing;
+    const int vertical_offset  = object->scrollbox.vertical_offset;
+
+    int box_y = 0;
     for (int i = 0; i < object->scrollbox.num_items; i++) {
 
-        y = (i - 1) * vertical_spacing + vertical_offset + object->y;
+        box_y = (i - 1) * vertical_spacing + vertical_offset + object->y;
 
-        if (y < object->scrollbox.min_vertical_offset)
+        if (box_y < object->scrollbox.min_vertical_offset)
             continue;
-        else if (y > object->scrollbox.max_vertical_offset)
+        else if (box_y > object->scrollbox.max_vertical_offset)
             continue;
 
-        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x, y, 0, object->scrollbox.text_content[i]);
+        DrawGeneric(object->scrollbox.boxes_bitmap, x, box_y);
+        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30, box_y + 20, 0, object->scrollbox.text_content[i]);
 
     }
 
@@ -822,8 +831,8 @@ void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y)
     if (bitmap == NULL)
         return;
 
-    float scale_width  = al_get_bitmap_width(bitmap);
-    float scale_height = al_get_bitmap_height(bitmap);
+    const float scale_width  = al_get_bitmap_width(bitmap);
+    const float scale_height = al_get_bitmap_height(bitmap);
     al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_height, x, y, scale_width, scale_height, 0);
 
 }
@@ -834,8 +843,8 @@ void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width,
     if (bitmap == NULL)
         return;
 
-    float scale_width  = al_get_bitmap_width(bitmap);
-    float scale_height = al_get_bitmap_height(bitmap);
+    const float scale_width  = al_get_bitmap_width(bitmap);
+    const float scale_height = al_get_bitmap_height(bitmap);
     al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_height, x, y, width, height, 0);
 
 }
@@ -843,8 +852,8 @@ void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width,
 void DrawBackBuffer(ALLEGRO_BITMAP *bitmap) 
 {
 
-    float scale_width  = (float)al_get_bitmap_width(bitmap)  * scale.x_scale;
-    float scale_height = (float)al_get_bitmap_height(bitmap) * scale.y_scale;
+    const float scale_width  = (float)al_get_bitmap_width(bitmap)  * scale.x_scale;
+    const float scale_height = (float)al_get_bitmap_height(bitmap) * scale.y_scale;
     al_draw_scaled_bitmap(bitmap, 0, 0, 1920, 1080, 0, 0, scale_width, scale_height, 0);
 
 }
