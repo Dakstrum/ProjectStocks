@@ -449,3 +449,16 @@ void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), voi
     free(query);
 
 }
+
+char *GetSaveNameFromSaveId(int save_id)
+{
+
+    sqlite3 *db;
+    char *save_name;
+
+    if (OpenConnection(&db, DefaultConnection()) == 0)
+        ExecuteQuery(GetFormattedPointer("SELECT SaveName FROM Saves WHERE SaveId=%d", save_id), &GetSaveSeedCallback, &save_name, db);
+
+    return save_name;
+
+}
