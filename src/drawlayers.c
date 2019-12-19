@@ -904,6 +904,27 @@ DrawObject *CreateNewDrawObject()
 
 }
 
+DrawObject *CreateScrollBoxObject()
+{
+
+    DrawObject *object                      = CreateNewDrawObject();
+    object->type                            = SCROLLBOX;
+    object->should_this_be_drawn            = true;
+    object->scrollbox.vertical_spacing      = 85;
+    object->scrollbox.vertical_offset       = 0;
+
+    object->scrollbox.text_style            = malloc(sizeof(TextStyle));
+    object->scrollbox.text_style->font_size = 40;
+    object->scrollbox.text_style->a         = 255;
+    object->scrollbox.text_style->r         = 0;
+    object->scrollbox.text_style->g         = 0;
+    object->scrollbox.text_style->b         = 0;
+    object->scrollbox.text_style->font_path = "assets/font/DanielLinssenM5/m5x7.ttf";
+
+    return object;
+
+}
+
 DrawObject *FindDrawObject(char *object_name)
 {
 

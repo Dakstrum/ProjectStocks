@@ -27,30 +27,16 @@ void ScrollBoxClick(char *scroll_box_content)
 void DisplayTempScrollBox() 
 {
 
-    DrawObject *object = CreateNewDrawObject();
-
-    object->type = SCROLLBOX;
-    object->should_this_be_drawn = true;
+    DrawObject *object = CreateScrollBoxObject();
     object->x          = 100;
     object->y          = 100;
     object->width      = 300;
     object->height     = 500;
-    object->asset_path = "assets/images/companyicons/StocksBox.png";
 
-    object->scrollbox.vertical_spacing = 85;
-    object->scrollbox.vertical_offset  = 0;
-    object->scrollbox.num_items        = 2;
     object->scrollbox.box_click        = &ScrollBoxClick;
     object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
     object->scrollbox.text_content[0]  = GetFormattedPointer("WeBeHard");
     object->scrollbox.text_content[1]  = GetFormattedPointer("Unimpressive Games");
-    object->scrollbox.text_style       = malloc(sizeof(TextStyle));
-    object->scrollbox.text_style->font_size = 40;
-    object->scrollbox.text_style->a = 255;
-    object->scrollbox.text_style->r = 0;
-    object->scrollbox.text_style->g = 0;
-    object->scrollbox.text_style->b = 0;
-    object->scrollbox.text_style->font_path = "assets/font/DanielLinssenM5/m5x7.ttf";
 
     AddObjectToDrawLayer(object);
 
@@ -83,7 +69,6 @@ void CleanUpMainMenu()
 
 }
 
-//Menu Button Callbacks
 void MainMenuStartButtonCallBack()
 {
     
@@ -109,7 +94,7 @@ void MainMenuExitButtonCallBack()
 void MainMenuGitHubButtonCallBack()
 {
 
-    OpenLink("www.github.com");
+    OpenLink("https://www.github.com");
 
 }
 
