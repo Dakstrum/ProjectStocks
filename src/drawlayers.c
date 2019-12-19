@@ -410,13 +410,16 @@ int AddGraphToDrawLayer(DrawObject *object)
 
 int AddScrollBoxToDrawLayer(DrawObject *object) 
 {
-    if (object->scrollbox.boxes_bitmap)
+    if (object->asset_path == NULL) {
+
+        Log("Unable to add scrollbox to draw layer.");
         return -1;
+
+    }
     
     object->scrollbox.boxes_bitmap = GetBitmapFromCache(object->asset_path);
     object->scrollbox.box_width    = al_get_bitmap_width(object->scrollbox.boxes_bitmap);
     object->scrollbox.box_height   = al_get_bitmap_height(object->scrollbox.boxes_bitmap);
-
 
     ScrollBox *scrollbox           = &object->scrollbox;
     TextStyle *text_style          = scrollbox->text_style;
@@ -428,7 +431,7 @@ int AddScrollBoxToDrawLayer(DrawObject *object)
     scrollbox->vertical_offset     = 0;
 
     if (object->scrollbox.text_style->font == NULL)
-        LogF("font is null");
+        Log("font is null");
 
     return AddDrawObjectToDrawLayer(object);
 
@@ -907,11 +910,23 @@ DrawObject *CreateNewDrawObject()
 DrawObject *CreateScrollBoxObject()
 {
 
-    DrawObject *object                      = CreateNewDrawObject();
+    DrawObject *object = CreateNewDrawObject();
+
+    object->x                               = 0;
+    object->y                               = 0;
+    object->width                           = 0;
+    object->height                          = 0;
+    object->asset_path                      = NULL;
     object->type                            = SCROLLBOX;
     object->should_this_be_drawn            = true;
+
+    object->scrollbox.num_items             = 2;
+    object->scrollbox.box_click             = NULL;
     object->scrollbox.vertical_spacing      = 85;
     object->scrollbox.vertical_offset       = 0;
+    object->scrollbox.box_click             = NULL;
+    object->scrollbox.text_content          = NULL;
+    object->scrollbox.boxes_bitmap          = NULL;
 
     object->scrollbox.text_style            = malloc(sizeof(TextStyle));
     object->scrollbox.text_style->font_size = 40;

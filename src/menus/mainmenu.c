@@ -32,7 +32,9 @@ void DisplayTempScrollBox()
     object->y          = 100;
     object->width      = 300;
     object->height     = 500;
+    object->asset_path = "assets/images/companyicons/StocksBox.png";
 
+    object->scrollbox.num_items        = 2;
     object->scrollbox.box_click        = &ScrollBoxClick;
     object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
     object->scrollbox.text_content[0]  = GetFormattedPointer("WeBeHard");
