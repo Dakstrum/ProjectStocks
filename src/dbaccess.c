@@ -440,17 +440,12 @@ void InsertStockPrice(int save_id, int company_id, float stock_price, char *time
 int GetSaveNameFromSaveIdCallback(void *save_name, int argc, char **argv, char **col_name)
 {
 
-    LogF("SaveName In GETSAVENAMEFROMSAVEIDCALLBACK: %p", save_name);
     if (argc > 0) {
 
-        
-        *((char **)save_name) = argv[0];
-        LogF("SaveName In GETSAVENAMEFROMSAVEIDCALLBACKIFSTATEMNT: %p", save_name);
-        LogF("SAVENAMEDEF: %s", *((char **)save_name));
+        char *temp = *((char **)save_name);
+        strncpy(temp, argv[0], 127);
+        temp[127] = '\0';
 
-        LogF("argc: %d", argc);
-        LogF("argv: %s", argv[0]);
-        LogF("col_name: %s", col_name[0]);
     }
 
     return 0;
@@ -459,14 +454,11 @@ int GetSaveNameFromSaveIdCallback(void *save_name, int argc, char **argv, char *
 
 char *GetSaveNameFromSaveId(int save_id)
 {
-    char *save_name;
+    char *save_name = malloc(sizeof(char) * 128);
 
     sqlite3 *db;
-    LogF("SaveName In GETSAVENAMEFROMSAVEID: %p", &save_name);
     if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("SELECT SaveName FROM Saves WHERE SaveId=%d", save_id), &GetSaveNameFromSaveIdCallback, &save_name, db);
-    LogF("SaveName In GETSAVENAMEFROMSAVEID: %p", &save_name);
-    LogF("%s", save_name);
+        ExecuteQuery(GetFormattedPointer("SELECT SaveName FROM Saves WHERE SaveId = %d", save_id), &GetSaveNameFromSaveIdCallback, &save_name, db);
 
     return save_name;
 }
