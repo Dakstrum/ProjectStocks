@@ -26,6 +26,13 @@ void LoadSaveScrollBoxClick(char *scroll_box_content)
 
 }
 
+void AddSaveContentToScrollBox(DrawObject *object)
+{
+    GetAmountOfSaves();
+    for(int i; i < GetAmountOfSaves(); i++)
+        object->scrollbox.text_content[i]  = GetSaveNameFromSaveId(i+1);
+}
+
 void DisplayLoadSaveScrollBox() 
 {
 
@@ -37,17 +44,13 @@ void DisplayLoadSaveScrollBox()
     object->height     = 603;
     object->asset_path = "assets/images/companyicons/StocksBox.png";
 
-    object->scrollbox.num_items        = 96;
+    object->scrollbox.num_items        = GetAmountOfSaves();
     object->scrollbox.box_click        = &LoadSaveScrollBoxClick;
     object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
 
-    Log("");
-    for(int i; i < 96; i++)
-        object->scrollbox.text_content[i]  = GetSaveNameFromSaveId(i+1);
+    AddSaveContentToScrollBox(object);
 
-    //object->scrollbox.text_content[0]  = GetSaveNameFromSaveId(1);
-    //object->scrollbox.text_content[1]  = GetSaveNameFromSaveId(2);
-    //object->scrollbox.text_content[2]  = GetSaveNameFromSaveId(3);
+    LogF("SAVESAMOUNTAFTER: %d", GetAmountOfSaves());
     AddObjectToDrawLayer(object);
 
 }

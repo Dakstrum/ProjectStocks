@@ -24,5 +24,6 @@ void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtrac
 void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, int price_per_stock);
 
 char *GetSaveNameFromSaveId(int save_id);
+int GetAmountOfSaves();
 
 #endif
