@@ -29,30 +29,25 @@ void LoadSaveScrollBoxClick(char *scroll_box_content)
 void DisplayLoadSaveScrollBox() 
 {
 
-    DrawObject *object = CreateNewDrawObject();
+    DrawObject *object = CreateScrollBoxObject();
 
-    object->type = SCROLLBOX;
-    object->should_this_be_drawn = true;
     object->x          = 535;
     object->y          = 226;
     object->width      = 288;
     object->height     = 603;
     object->asset_path = "assets/images/companyicons/StocksBox.png";
 
-    object->scrollbox.vertical_spacing = 85;
-    object->scrollbox.vertical_offset  = 0;
+    object->scrollbox.num_items        = 96;
     object->scrollbox.box_click        = &LoadSaveScrollBoxClick;
     object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
-    object->scrollbox.text_content[0]  = GetSaveNameFromSaveId(2);
-    object->scrollbox.num_items        = 1;
-    object->scrollbox.text_style       = malloc(sizeof(TextStyle));
-    object->scrollbox.text_style->font_size = 40;
-    object->scrollbox.text_style->a = 255;
-    object->scrollbox.text_style->r = 0;
-    object->scrollbox.text_style->g = 0;
-    object->scrollbox.text_style->b = 0;
-    object->scrollbox.text_style->font_path = "assets/font/DanielLinssenM5/m5x7.ttf";
 
+    Log("");
+    for(int i; i < 96; i++)
+        object->scrollbox.text_content[i]  = GetSaveNameFromSaveId(i+1);
+
+    //object->scrollbox.text_content[0]  = GetSaveNameFromSaveId(1);
+    //object->scrollbox.text_content[1]  = GetSaveNameFromSaveId(2);
+    //object->scrollbox.text_content[2]  = GetSaveNameFromSaveId(3);
     AddObjectToDrawLayer(object);
 
 }
