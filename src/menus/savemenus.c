@@ -43,17 +43,9 @@ void DisplayLoadSaveScrollBox()
     object->scrollbox.vertical_offset  = 0;
     object->scrollbox.box_click        = &LoadSaveScrollBoxClick;
     object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
-    for(int i; i < 15; i++) {
-
-        char *save_name = GetSaveNameFromSaveId(i);
-        object->scrollbox.text_content[i]  = GetFormattedPointer(save_name);
-        LogF("%s", object->scrollbox.text_content[i]);
-    }
-    object->scrollbox.num_items        = 15;
-    //object->scrollbox.text_content[0]  = GetFormattedPointer("WeBeHard");
-    //object->scrollbox.text_content[1]  = GetFormattedPointer("Unimpressive Games");
-    //object->scrollbox.text_content[2]  = GetFormattedPointer("Unimpressive Games");
-    //object->scrollbox.num_items        = 3;
+    LogF("Save Name: %s", GetSaveNameFromSaveId(2));
+    object->scrollbox.text_content[0]  = GetFormattedPointer("WeBeHard");
+    object->scrollbox.num_items        = 1;
     object->scrollbox.text_style       = malloc(sizeof(TextStyle));
     object->scrollbox.text_style->font_size = 40;
     object->scrollbox.text_style->a = 255;
