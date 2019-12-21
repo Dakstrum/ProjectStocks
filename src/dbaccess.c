@@ -437,6 +437,32 @@ void InsertStockPrice(int save_id, int company_id, float stock_price, char *time
 
 }
 
+int GetSaveNameFromSaveIdCallback(void *save_name, int argc, char **argv, char **col_name)
+{
+
+    if (argc > 0) {
+
+        char *temp = *((char **)save_name);
+        strncpy(temp, argv[0], 127);
+        temp[127] = '\0';
+
+    }
+
+    return 0;
+
+}
+
+char *GetSaveNameFromSaveId(int save_id)
+{
+    char *save_name = malloc(sizeof(char) * 128);
+
+    sqlite3 *db;
+    if (OpenConnection(&db, DefaultConnection()) == 0)
+        ExecuteQuery(GetFormattedPointer("SELECT SaveName FROM Saves WHERE SaveId = %d", save_id), &GetSaveNameFromSaveIdCallback, &save_name, db);
+
+    return save_name;
+}
+
 void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db) 
 {
 

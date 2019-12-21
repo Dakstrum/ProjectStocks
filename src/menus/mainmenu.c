@@ -14,6 +14,7 @@
 #include "linkopener.h"
 #include "rendering.h"
 #include "savemenus.h"
+#include "dbaccess.h"
 
 static MenuWithChilds *main_menu = NULL;
 

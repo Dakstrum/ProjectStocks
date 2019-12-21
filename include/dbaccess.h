@@ -23,4 +23,6 @@ StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, ch
 void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtract, int price_per_stock);
 void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, int price_per_stock);
 
+char *GetSaveNameFromSaveId(int save_id);
+
 #endif
