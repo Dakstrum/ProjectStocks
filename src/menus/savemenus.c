@@ -21,9 +21,10 @@ static MenuWithChilds *new_save_menu     = NULL;
 
 void LoadSaveScrollBoxClick(char *scroll_box_content)
 {
-
-    LogF("Got click %s", scroll_box_content);
-
+    
+    DrawObject *save_name_text = GetDrawObjectFromJsonLayer("SaveNameText");
+    save_name_text->text.content = scroll_box_content;
+    
 }
 
 void AddSaveContentToScrollBox(DrawObject *object)
@@ -50,7 +51,6 @@ void DisplayLoadSaveScrollBox()
 
     AddSaveContentToScrollBox(object);
 
-    LogF("SAVESAMOUNTAFTER: %d", GetAmountOfSaves());
     AddObjectToDrawLayer(object);
 
 }
@@ -65,7 +65,7 @@ void InitializeLoadSaveMenu()
         return;
 
     }
-    
+
     load_save_menu = GetMenuWithChildsFromJsonLayer("LoadSaveMenu");
     AddMenuWithChildsToDrawLayer(load_save_menu);
     DisplayLoadSaveScrollBox();
