@@ -463,6 +463,53 @@ char *GetSaveNameFromSaveId(int save_id)
     return save_name;
 }
 
+int GetStockNameFromStockIdCallback(void *stock_name, int argc, char **argv, char **col_name)
+{
+
+    if (argc > 0) {
+
+        char *temp = *((char **)stock_name);
+        strncpy(temp, argv[0], 127);
+        temp[127] = '\0';
+
+    }
+
+    return 0;
+}
+
+char *GetStockNameFromStockId(int stock_id)
+{
+    char *stock_name = malloc(sizeof(char) * 128);
+
+    sqlite3 *db;
+    if (OpenConnection(&db, DefaultConnection()) == 0)
+        ExecuteQuery(GetFormattedPointer("SELECT CompanyName FROM Company WHERE CompanyId = %d", stock_id), &GetStockNameFromStockIdCallback, &stock_name, db);
+
+    return stock_name;
+}
+
+int GetAmountOfCompanysCallback(void *amount_of_saves, int argc, char **argv, char **col_name)
+{
+
+    if (argc > 0) 
+        *((int *)amount_of_saves) = atoi(argv[0]);
+
+    return 0;
+}
+
+int GetAmountOfCompanies()
+{
+
+    int amount_of_companies;
+
+    sqlite3 *db;
+    if (OpenConnection(&db, DefaultConnection()) == 0)
+        ExecuteQuery(GetFormattedPointer("SELECT * FROM Company"), &GetAmountOfCompanysCallback, &amount_of_companies, db);
+
+    return amount_of_companies;
+
+}
+
 void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db) 
 {
 

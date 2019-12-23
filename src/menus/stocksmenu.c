@@ -21,6 +21,7 @@ static MenuWithChilds *buy_transaction_menu  = NULL;
 
 static char *current_company_name;
 static float price_per_stock;
+DrawObject *graph;
 
 void DisplayTempPopUp()
 {
@@ -43,6 +44,64 @@ void DisplayTempPopUp()
 
 }
 
+void DisplayGraph(char *company_name, int x, int y)
+{
+
+    graph = GetGraphDrawObject(company_name, ONE_DAY, 961, 373);
+    if (graph != NULL) {
+
+        graph->x = 415;
+        graph->y = 234;
+        AddObjectToDrawLayer(graph);
+
+    }
+
+}
+
+void LoadCompanyScrollBoxClick(char *scroll_box_content)
+{
+    RemoveDrawObject(graph);
+    DisplayGraph(scroll_box_content ,414, 234);
+
+}
+
+void AddCompanyContentToStocksScrollBox(DrawObject *object)
+{
+
+    for(int i; i < GetAmountOfCompanies(); i++)
+        object->scrollbox.text_content[i]  = GetStockNameFromStockId(i+1);
+
+}
+
+void DisplayCompanyScrollBox() 
+{
+
+    DrawObject *object = CreateScrollBoxObject();
+
+    object->x          = 2;
+    object->y          = 230;
+    object->width      = 288;
+    object->height     = 603;
+    object->asset_path = "assets/images/companyicons/StocksBox.png";
+
+    object->scrollbox.num_items        = GetAmountOfCompanies();
+    object->scrollbox.box_click        = &LoadCompanyScrollBoxClick;
+    object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
+
+    AddCompanyContentToStocksScrollBox(object);
+    AddObjectToDrawLayer(object);
+
+}
+
+
+char *GetCurrentCompanyFromGraph()
+{
+
+    DrawObjectTypeCollection *current_draw_layer_graphs = GetObjectsByType(GRAPH);
+    return current_draw_layer_graphs->objects[0]->graph.company;
+
+}
+
 void InitializeStocksMenu() 
 { 
     
@@ -54,28 +113,14 @@ void InitializeStocksMenu()
     }
 
     stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
+
     AddMenuWithChildsToDrawLayer(stocks_menu);
+    DisplayCompanyScrollBox();
+    DisplayGraph(GetStockNameFromStockId(1) ,414, 234);
     DisplayTempPopUp();
 
-    DrawObject *graph = GetGraphDrawObject("Unimpressive Video Things", ONE_DAY, 961, 373);
-    if (graph != NULL) {
-
-        graph->x = 415;
-        graph->y = 234;
-        AddObjectToDrawLayer(graph);
-
-    }
-
 }
 
-char *GetCurrentCompanyFromGraph()
-{
-
-    DrawObjectTypeCollection *current_draw_layer_graphs = GetObjectsByType(GRAPH);
-    LogF("%s", current_draw_layer_graphs->objects[0]->graph.company);
-    return current_draw_layer_graphs->objects[0]->graph.company;
-
-}
 
 float GetPricePerStock(char *company)
 {

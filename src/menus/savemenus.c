@@ -37,7 +37,7 @@ void DisplayLoadSaveScrollBox()
     object->y          = 226;
     object->width      = 288;
     object->height     = 603;
-    object->asset_path = "assets/images/companyicons/StocksBox.png";
+    object->asset_path = "assets/images/companyicons/SaveBox.png";
 
     object->scrollbox.vertical_spacing = 85;
     object->scrollbox.vertical_offset  = 0;
