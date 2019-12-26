@@ -21,7 +21,7 @@ static MenuWithChilds *buy_transaction_menu  = NULL;
 
 static char *current_company_name;
 static float price_per_stock;
-DrawObject *graph;
+DrawObject  *current_graph;
 
 void DisplayTempPopUp();
 void DisplayGraph(char *company_name);
@@ -44,19 +44,18 @@ void InitializeStocksMenu()
     AddMenuWithChildsToDrawLayer(stocks_menu);
     DisplayCompanyScrollBox();
     DisplayGraph(GetStockNameFromStockId(1));
-    
 
 }
 
 void DisplayGraph(char *company_name)
 {
 
-    graph = GetGraphDrawObject(company_name, ONE_DAY, 961, 373);
-    if (graph != NULL) {
+    current_graph = GetGraphDrawObject(company_name, ONE_DAY, 961, 373);
+    if (current_graph != NULL) {
 
-        graph->x = 415;
-        graph->y = 234;
-        AddObjectToDrawLayer(graph);
+        current_graph->x = 415;
+        current_graph->y = 234;
+        AddObjectToDrawLayer(current_graph);
 
     }
 
@@ -72,7 +71,7 @@ char *GetCurrentCompanyFromGraph()
 
 void LoadCompanyScrollBoxClick(char *scroll_box_content)
 {
-    RemoveDrawObject(graph);
+    RemoveDrawObject(current_graph);
     DisplayGraph(scroll_box_content);
 
 }
