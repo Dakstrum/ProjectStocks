@@ -23,28 +23,32 @@ static char *current_company_name;
 static float price_per_stock;
 DrawObject *graph;
 
-void DisplayTempPopUp()
-{
+void DisplayTempPopUp();
+void DisplayGraph(char *company_name);
+void DisplayCompanyScrollBox();
+void AddCompanyContentToStocksScrollBox(DrawObject *object);
 
-    DrawObject *popup_object = CreateNewDrawObject();
 
-    popup_object->type                 = POPUP;
-    popup_object->should_this_be_drawn = true;
-    popup_object->x                    = 0;
-    popup_object->y                    = 0;
-
-    popup_object->width  = 1920;
-    popup_object->height = 1080;
+void InitializeStocksMenu() 
+{ 
     
-    popup_object->asset_path                 = "assets/images/generalpurposemenus/popups/genericpopup.png";
-    popup_object->popup.diff_time_to_animate = 1000;
-    popup_object->popup.diff_time_to_stay    = 2000;
-    popup_object->popup.direction            = "Up";
-    AddObjectToDrawLayer(popup_object);
+    if (CreateNewDrawLayer() == -1) {
+
+        Log("STUB: StocksMenu could not create new draw layer");
+        return;
+
+    }
+
+    stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
+
+    AddMenuWithChildsToDrawLayer(stocks_menu);
+    DisplayCompanyScrollBox();
+    DisplayGraph(GetStockNameFromStockId(1));
+    
 
 }
 
-void DisplayGraph(char *company_name, int x, int y)
+void DisplayGraph(char *company_name)
 {
 
     graph = GetGraphDrawObject(company_name, ONE_DAY, 961, 373);
@@ -58,18 +62,18 @@ void DisplayGraph(char *company_name, int x, int y)
 
 }
 
-void LoadCompanyScrollBoxClick(char *scroll_box_content)
+char *GetCurrentCompanyFromGraph()
 {
-    RemoveDrawObject(graph);
-    DisplayGraph(scroll_box_content ,414, 234);
+
+    DrawObjectTypeCollection *current_draw_layer_graphs = GetObjectsByType(GRAPH);
+    return current_draw_layer_graphs->objects[0]->graph.company;
 
 }
 
-void AddCompanyContentToStocksScrollBox(DrawObject *object)
+void LoadCompanyScrollBoxClick(char *scroll_box_content)
 {
-
-    for(int i; i < GetAmountOfCompanies(); i++)
-        object->scrollbox.text_content[i]  = GetStockNameFromStockId(i+1);
+    RemoveDrawObject(graph);
+    DisplayGraph(scroll_box_content);
 
 }
 
@@ -94,33 +98,14 @@ void DisplayCompanyScrollBox()
 }
 
 
-char *GetCurrentCompanyFromGraph()
+
+void AddCompanyContentToStocksScrollBox(DrawObject *object)
 {
 
-    DrawObjectTypeCollection *current_draw_layer_graphs = GetObjectsByType(GRAPH);
-    return current_draw_layer_graphs->objects[0]->graph.company;
+    for(int i; i < GetAmountOfCompanies(); i++)
+        object->scrollbox.text_content[i]  = GetStockNameFromStockId(i+1);
 
 }
-
-void InitializeStocksMenu() 
-{ 
-    
-    if (CreateNewDrawLayer() == -1) {
-
-        Log("STUB: StocksMenu could not create new draw layer");
-        return;
-
-    }
-
-    stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
-
-    AddMenuWithChildsToDrawLayer(stocks_menu);
-    DisplayCompanyScrollBox();
-    DisplayGraph(GetStockNameFromStockId(1) ,414, 234);
-    DisplayTempPopUp();
-
-}
-
 
 float GetPricePerStock(char *company)
 {
@@ -178,6 +163,7 @@ void MakeSellTransactionButtonCallBack()
     int amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));
     AttemptToSubtractFromCurrentStock(current_company_name, amount_in_text_box, price_per_stock);
     StocksSellButtonCallBack();
+    DisplayTempPopUp(); // TODO tell you what you sold or bought for how much
 
 }
 
@@ -187,6 +173,7 @@ void MakeBuyTransactionButtonCallBack()
     int amount_in_text_box = atoi(GetTextFromTextBox("BuyTextBox"));
     AttemptToAddFromCurrentStock(current_company_name, amount_in_text_box, price_per_stock);
     StocksBuyButtonCallBack();
+    DisplayTempPopUp(); // TODO tell you what you sold or bought for how much
 
 }
 
@@ -198,4 +185,25 @@ void CleanUpStocksMenu()
     
     stocks_menu = NULL;
     
+}
+
+void DisplayTempPopUp()
+{
+
+    DrawObject *popup_object = CreateNewDrawObject();
+
+    popup_object->type                 = POPUP;
+    popup_object->should_this_be_drawn = true;
+    popup_object->x                    = 0;
+    popup_object->y                    = 0;
+
+    popup_object->width  = 1920;
+    popup_object->height = 1080;
+    
+    popup_object->asset_path                 = "assets/images/generalpurposemenus/popups/genericpopup.png";
+    popup_object->popup.diff_time_to_animate = 1000;
+    popup_object->popup.diff_time_to_stay    = 2000;
+    popup_object->popup.direction            = "Up";
+    AddObjectToDrawLayer(popup_object);
+
 }
