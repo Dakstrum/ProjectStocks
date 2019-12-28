@@ -19,11 +19,12 @@
 static MenuWithChilds *load_save_menu    = NULL;
 static MenuWithChilds *new_save_menu     = NULL;
 
+void LoadSaveNameText();
+
 void LoadSaveScrollBoxClick(char *scroll_box_content)
 {
     
-    DrawObject *save_name_text = GetDrawObjectFromJsonLayer("SaveNameText");
-    save_name_text->text.content = scroll_box_content;
+    LogF("save name: %s", scroll_box_content);
     
 }
 
@@ -43,7 +44,7 @@ void DisplayLoadSaveScrollBox()
     object->y          = 226;
     object->width      = 288;
     object->height     = 603;
-    object->asset_path = "assets/images/companyicons/StocksBox.png";
+    object->asset_path = "assets/images/companyicons/SaveBox.png";
 
     object->scrollbox.num_items        = GetAmountOfSaves();
     object->scrollbox.box_click        = &LoadSaveScrollBoxClick;
@@ -66,9 +67,13 @@ void InitializeLoadSaveMenu()
 
     }
 
+    LoadSaveNameText();
     load_save_menu = GetMenuWithChildsFromJsonLayer("LoadSaveMenu");
+    LoadSaveNameText();
     AddMenuWithChildsToDrawLayer(load_save_menu);
+    LoadSaveNameText();
     DisplayLoadSaveScrollBox();
+    LoadSaveNameText();
 
 }
 
@@ -141,5 +146,24 @@ void NewSaveMenuCreateButtonCallBack()
     char *player_name_in_text_box = GetTextFromTextBox("PlayerNameTextBox");
 
     CreateNewSave(save_name_in_text_box, player_name_in_text_box);
+
+}
+
+void LoadSaveNameText()
+{
+
+    DrawObject *text_object = CreateNewDrawObject();
+
+    text_object->type                 = TEXT;
+    text_object->should_this_be_drawn = true;
+    text_object->x                    = 855;
+    text_object->y                    = 228;
+
+
+    text_object->width  = 1920;
+    text_object->height = 1080;
+
+    text_object->text.content                 = "Yert";
+    AddObjectToDrawLayer(text_object);
 
 }
