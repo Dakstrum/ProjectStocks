@@ -12,6 +12,7 @@
 #include "accountmenu.h"
 #include "generalpurposemenus.h"
 #include "savemenus.h"
+#include "cardsmenu.h"
 
 
 void StubCallback();
@@ -39,6 +40,7 @@ void NewSaveButtonCallBack();
 void NewSaveMenuBackButtonCallBack();
 void NewSaveMenuCreateButtonCallBack();
 void LoadSaveMenuLoadButtonCallBack();
+void TempApplyButtonCallBack();
 
 
 
@@ -50,7 +52,7 @@ typedef struct ButtonCallsbacks
 
 } ButtonCallsbacks;
 
-#define NUM_CALLBACKS 24
+#define NUM_CALLBACKS 25
 static ButtonCallsbacks callbacks[] = {
 
     {"STUB",                               &StubCallback},
@@ -76,7 +78,8 @@ static ButtonCallsbacks callbacks[] = {
     {"NewSaveButton",                      &NewSaveButtonCallBack},
     {"NewSaveMenuBackButton",              &NewSaveMenuBackButtonCallBack},
     {"NewSaveMenuCreateButton",            &NewSaveMenuCreateButtonCallBack},
-    {"LoadSaveMenuLoadButton",             &LoadSaveMenuLoadButtonCallBack}
+    {"LoadSaveMenuLoadButton",             &LoadSaveMenuLoadButtonCallBack},
+    {"TempApplyButton",                    &TempApplyButtonCallBack}
 
 };
 

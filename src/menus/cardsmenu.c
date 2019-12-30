@@ -8,8 +8,17 @@
 #include "jsonlayer.h"
 #include "drawlayers.h"
 #include "log.h"
+#include "cache.h"
+#include "graph.h"
+#include "startup.h"
+#include "dbaccess.h"
+#include "account.h"
+#include "simulation.h"
 
-static MenuWithChilds *cards_menu = NULL;
+static MenuWithChilds *cards_menu      = NULL;
+static MenuWithChilds *apply_card_menu = NULL;
+
+void AddCompanyContentToApplyCardScrollBox(DrawObject *object);
 
 void InitializeCardsMenu() 
 {
@@ -26,6 +35,40 @@ void InitializeCardsMenu()
 
 }
 
+void LoadCompanyToApplyCardToScrollBoxClick(char *scroll_box_content)
+{
+    LogF("TODO: apply card to company");
+
+}
+
+void DisplayCompanyToApplyCardToScrollBox() 
+{
+
+    DrawObject *object = CreateScrollBoxObject();
+
+    object->x          = 2;
+    object->y          = 230;
+    object->width      = 288;
+    object->height     = 603;
+    object->asset_path = "assets/images/companyicons/StocksBox.png";
+
+    object->scrollbox.num_items        = GetAmountOfCompanies();
+    object->scrollbox.box_click        = &LoadCompanyToApplyCardToScrollBoxClick;
+    object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
+
+    AddCompanyContentToApplyCardScrollBox(object);
+    AddObjectToDrawLayer(object);
+
+}
+
+void AddCompanyContentToApplyCardScrollBox(DrawObject *object)
+{
+
+    for(int i; i < GetAmountOfCompanies(); i++)
+        object->scrollbox.text_content[i]  = GetStockNameFromStockId(i+1);
+
+}
+
 void CleanUpCardsMenu() 
 {
 
@@ -36,3 +79,21 @@ void CleanUpCardsMenu()
     
 }
 
+void TempApplyButtonCallBack()
+{
+	
+	if (apply_card_menu == NULL) {
+
+        CreateNewDrawLayer();
+        apply_card_menu = GetMenuWithChildsFromJsonLayer("ApplyCardMenu");
+        DisplayCompanyToApplyCardToScrollBox(); 
+        AddMenuWithChildsToDrawLayer(apply_card_menu);
+        
+    } else {
+
+        ClearCurrentDrawLayer();
+        apply_card_menu = NULL;
+
+    }
+
+}

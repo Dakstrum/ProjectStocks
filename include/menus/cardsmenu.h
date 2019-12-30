@@ -3,5 +3,6 @@
 
 void InitializeCardsMenu();
 void ToggleCardsMenu();
+void TempApplyButtonCallBack();
 
 #endif
