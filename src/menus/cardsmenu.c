@@ -46,10 +46,10 @@ void DisplayCompanyToApplyCardToScrollBox()
 
     DrawObject *object = CreateScrollBoxObject();
 
-    object->x          = 2;
-    object->y          = 230;
+    object->x          = 757;
+    object->y          = 363;
     object->width      = 288;
-    object->height     = 603;
+    object->height     = 200;
     object->asset_path = "assets/images/companyicons/StocksBox.png";
 
     object->scrollbox.num_items        = GetAmountOfCompanies();
@@ -86,8 +86,8 @@ void TempApplyButtonCallBack()
 
         CreateNewDrawLayer();
         apply_card_menu = GetMenuWithChildsFromJsonLayer("ApplyCardMenu");
-        DisplayCompanyToApplyCardToScrollBox(); 
         AddMenuWithChildsToDrawLayer(apply_card_menu);
+        DisplayCompanyToApplyCardToScrollBox(); 
         
     } else {
 
