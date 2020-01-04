@@ -115,7 +115,7 @@ void SetAllTextBoxesToInactiveInLayer(int layer)
     DrawObject **objects = draw_layers[layer].objects;
     for (int i = 0;i < MAX_OBJECTS_PER_LAYER;i++)
         if (objects[i] != NULL && objects[i]->type == TEXTBOX)
-            objects[i]->textbox.active = false;
+            objects[i]->bit_flags ^= (objects[i]->bit_flags & TEXTBOX_ACTIVE);
 
 }
 
@@ -133,12 +133,11 @@ void SetActiveTextBox(DrawObject *object)
 {
 
     if (current_active_textbox.object != NULL)
-        current_active_textbox.object->textbox.active = false;
+        current_active_textbox.object->bit_flags ^= (current_active_textbox.object->bit_flags & TEXTBOX_ACTIVE);
 
-    current_active_textbox.object   = object;
-    object->textbox.active          = true;
-    object->textbox.flicker         = GetCurrentTime();
-    object->textbox.flicker_drawing = true;
+    current_active_textbox.object  = object;
+    object->bit_flags             |= TEXTBOX_ACTIVE | TEXTBOX_FLICKER_DRAWING;
+    object->textbox.flicker        = GetCurrentTime();
 
 }
 
@@ -682,28 +681,28 @@ void WaitPopUp(DrawObject *object)
 
     struct timespec current_time = GetCurrentTime();
     if (GetMillDiff(&current_time, &object->popup.last_stay_time) >= object->popup.diff_time_to_stay)
-        object->bit_flags |= DONE_STAYING;
+        object->bit_flags |= POPUP_DONE_STAYING;
 
 }
 
 void DrawPopUp(DrawObject *object)
 {
 
-    if (!(object->bit_flags & DONE_INTRO_ANIMATION)) {
+    if (!(object->bit_flags & POPUP_DONE_INTRO_ANIMATION)) {
 
-        MovePopUp(object, object->popup.set_dx_dy, false, DONE_INTRO_ANIMATION);
-        if (object->bit_flags & DONE_INTRO_ANIMATION)
+        MovePopUp(object, object->popup.set_dx_dy, false, POPUP_DONE_INTRO_ANIMATION);
+        if (object->bit_flags & POPUP_DONE_INTRO_ANIMATION)
             object->popup.last_stay_time = GetCurrentTime();
 
-    } else if (!(object->bit_flags & DONE_STAYING)) {
+    } else if (!(object->bit_flags & POPUP_DONE_STAYING)) {
 
         WaitPopUp(object);
-        if (object->bit_flags & DONE_STAYING)
+        if (object->bit_flags & POPUP_DONE_STAYING)
             object->popup.last_animation_time = GetCurrentTime();
 
-    } else if (!(object->bit_flags & DONE_OUTRO_ANIMATION)) {
+    } else if (!(object->bit_flags & POPUP_DONE_OUTRO_ANIMATION)) {
 
-        MovePopUp(object, object->popup.set_dx_dy_reverse, true, DONE_OUTRO_ANIMATION);
+        MovePopUp(object, object->popup.set_dx_dy_reverse, true, POPUP_DONE_OUTRO_ANIMATION);
 
     } else {
 
@@ -758,12 +757,12 @@ void SetModifiedTextBoxWithFlicker(DrawObject *object)
 {
 
     struct timespec current_time = GetCurrentTime();
-    if (object->textbox.flicker_drawing) {
+    if (object->bit_flags & TEXTBOX_FLICKER_DRAWING) {
  
         if (GetMillDiff(&object->textbox.flicker, &current_time) >= 500) {
 
-            object->textbox.flicker_drawing = false;
-            object->textbox.flicker         = GetCurrentTime();
+            object->bit_flags      ^= (object->bit_flags & TEXTBOX_FLICKER_DRAWING);
+            object->textbox.flicker = GetCurrentTime();
 
         } else {
 
@@ -775,8 +774,8 @@ void SetModifiedTextBoxWithFlicker(DrawObject *object)
 
         if (GetMillDiff(&object->textbox.flicker, &current_time) >= 250) {
 
-            object->textbox.flicker_drawing = true;
-            object->textbox.flicker         = GetCurrentTime();
+            object->bit_flags       |= TEXTBOX_FLICKER_DRAWING;
+            object->textbox.flicker  = GetCurrentTime();
 
         }
 
@@ -788,13 +787,13 @@ void DrawTextBox(DrawObject *object)
 {
 
     DrawGeneric(object->textbox.bitmap, object->x, object->y);
-    if (object->textbox.current_character == -1 && !object->textbox.active) {
+    if (object->textbox.current_character == -1 && !(object->bit_flags & TEXTBOX_ACTIVE)) {
 
         al_draw_text(object->textbox.placeholder_style->font, object->textbox.placeholder_style->color, object->x, object->y, 0, object->textbox.placeholder_text);
 
     } else {
 
-        if (object->textbox.active)
+        if (object->bit_flags & TEXTBOX_ACTIVE)
             SetModifiedTextBoxWithFlicker(object);
 
         al_draw_text(object->textbox.text_style->font, object->textbox.text_style->color, object->x, object->y, 0, object->textbox.text);

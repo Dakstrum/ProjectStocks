@@ -27,9 +27,13 @@ typedef enum DrawBitFlags
 
     SHOULD_BE_DRAWN = 1,
     TEXT_IS_DYNAMIC = 2,
-    DONE_INTRO_ANIMATION = 4,
-    DONE_OUTRO_ANIMATION = 8,
-    DONE_STAYING = 16
+    POPUP_DONE_INTRO_ANIMATION = 4,
+    POPUP_DONE_OUTRO_ANIMATION = 8,
+    POPUP_DONE_STAYING = 16,
+    TEXTBOX_ACTIVE = 32,
+    TEXTBOX_ACCEPT_ALPHABET_CHARACTERS = 64,
+    TEXTBOX_ACCEPT_NUMBER_CHARACTERS = 128,
+    TEXTBOX_FLICKER_DRAWING = 256
 
 } DrawBitFlags;
 
@@ -160,9 +164,6 @@ typedef struct TextBox {
 
     ALLEGRO_BITMAP *bitmap;
 
-    bool active;
-    bool accept_alphabet_characters;
-    bool accept_number_characters;
     // current_character init to -1
     int current_character;
     int limit_characters_to;
@@ -170,7 +171,6 @@ typedef struct TextBox {
     char *placeholder_text;
 
     struct timespec flicker;
-    bool flicker_drawing;
 
     TextStyle *text_style;
     TextStyle *placeholder_style;

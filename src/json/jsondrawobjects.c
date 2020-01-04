@@ -261,8 +261,8 @@ void SetMenuTextbox(int idx, int textbox_idx, char *child_of)
     parsed_objects[num_objects].textbox.placeholder_text    = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Placeholder/Content", idx, textbox_idx));
     parsed_objects[num_objects].child_of                    = child_of;
     parsed_objects[num_objects].bit_flags                   = SHOULD_BE_DRAWN;
-    parsed_objects[num_objects].textbox.accept_alphabet_characters = strcmp(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Text/AcceptAlphabetCharacters", idx, textbox_idx)), "true") == 0 ? true : false;
-    parsed_objects[num_objects].textbox.accept_number_characters   = strcmp(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Text/AcceptNumberCharacters", idx, textbox_idx)), "true") == 0 ? true : false;
+    parsed_objects[num_objects].bit_flags                  |= strcmp(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Text/AcceptAlphabetCharacters", idx, textbox_idx)), "true") == 0 ? TEXTBOX_ACCEPT_ALPHABET_CHARACTERS : 0;
+    parsed_objects[num_objects].bit_flags                  |= strcmp(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Text/AcceptNumberCharacters", idx, textbox_idx)), "true") == 0 ? TEXTBOX_ACCEPT_NUMBER_CHARACTERS : 0;
 
     SetFontStyle(&parsed_objects[num_objects].textbox.text_style, idx, textbox_idx, "Text");
     SetFontStyle(&parsed_objects[num_objects].textbox.placeholder_style, idx, textbox_idx, "Placeholder");
@@ -305,6 +305,7 @@ void SetCommonDrawObjectPropertiesForGetDrawObject(DrawObject *draw_object, int 
     draw_object->asset_path           = parsed_objects[object_idx].asset_path;
     draw_object->bit_flags            = parsed_objects[object_idx].bit_flags;
     draw_object->child_of             = parsed_objects[object_idx].child_of;
+    draw_object->bit_flags            = parsed_objects[object_idx].bit_flags;
 
 }
 
@@ -351,18 +352,15 @@ void SetTextDrawObjectFromJson(DrawObject *draw_object, int object_idx)
 void SetTextboxDrawObjectFromJson(DrawObject *draw_object, int object_idx)
 {
 
-    draw_object->type = TEXTBOX;
     SetCommonDrawObjectPropertiesForGetDrawObject(draw_object, object_idx);
+
+    draw_object->type = TEXTBOX;
     draw_object->textbox.placeholder_text    = parsed_objects[object_idx].textbox.placeholder_text;
-    draw_object->textbox.flicker_drawing     = false;
     draw_object->textbox.current_character   = -1;
     draw_object->textbox.limit_characters_to = parsed_objects[object_idx].textbox.limit_characters_to;
-    
-    draw_object->textbox.placeholder_text           = parsed_objects[object_idx].textbox.placeholder_text;
-    draw_object->textbox.text_style                 = parsed_objects[object_idx].textbox.text_style;
-    draw_object->textbox.placeholder_style          = parsed_objects[object_idx].textbox.placeholder_style;
-    draw_object->textbox.accept_number_characters   = parsed_objects[object_idx].textbox.accept_number_characters;
-    draw_object->textbox.accept_alphabet_characters = parsed_objects[object_idx].textbox.accept_alphabet_characters;
+    draw_object->textbox.placeholder_text    = parsed_objects[object_idx].textbox.placeholder_text;
+    draw_object->textbox.text_style          = parsed_objects[object_idx].textbox.text_style;
+    draw_object->textbox.placeholder_style   = parsed_objects[object_idx].textbox.placeholder_style;
 
 }
 
