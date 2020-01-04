@@ -26,4 +26,6 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, int pri
 char *GetSaveNameFromSaveId(int save_id);
 int GetAmountOfSaves();
 
+int GetAmountOfCompanies();
+char *GetStockNameFromStockId(int stock_id);
 #endif
