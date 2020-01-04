@@ -391,9 +391,6 @@ int AddPopUpToDrawLayer(DrawObject *object)
         object->popup.popup_bitmap = GetBitmapFromCache(object->asset_path);
 
     object->popup.last_animation_time       = GetCurrentTime();
-    object->popup.done_intro_animation      = false;
-    object->popup.done_outro_animation      = false;
-    object->popup.done_staying              = false;
     object->popup.diff_time_left_to_animate = object->popup.diff_time_to_animate;
     object->popup.diff_time_left_to_stay    = object->popup.diff_time_to_stay;
 
@@ -650,7 +647,7 @@ void DrawGraph(DrawObject *object)
 
 }
 
-void MovePopUp(DrawObject *object, void (*set_dx_dy)(void *, int, int), bool reversed, bool *done)
+void MovePopUp(DrawObject *object, void (*set_dx_dy)(void *, int, int), bool reversed, int bit_flag)
 {
 
     struct timespec current_time = GetCurrentTime();
@@ -673,7 +670,7 @@ void MovePopUp(DrawObject *object, void (*set_dx_dy)(void *, int, int), bool rev
 
     } else {
 
-        *done = true;
+        object->bit_flags |= bit_flag;
         object->popup.diff_time_left_to_animate = object->popup.diff_time_to_animate;
 
     }
@@ -685,28 +682,28 @@ void WaitPopUp(DrawObject *object)
 
     struct timespec current_time = GetCurrentTime();
     if (GetMillDiff(&current_time, &object->popup.last_stay_time) >= object->popup.diff_time_to_stay)
-        object->popup.done_staying = true;
+        object->bit_flags |= DONE_STAYING;
 
 }
 
 void DrawPopUp(DrawObject *object)
 {
 
-    if (!object->popup.done_intro_animation) {
+    if (!(object->bit_flags & DONE_INTRO_ANIMATION)) {
 
-        MovePopUp(object, object->popup.set_dx_dy, false, &object->popup.done_intro_animation);
-        if (object->popup.done_intro_animation)
+        MovePopUp(object, object->popup.set_dx_dy, false, DONE_INTRO_ANIMATION);
+        if (object->bit_flags & DONE_INTRO_ANIMATION)
             object->popup.last_stay_time = GetCurrentTime();
 
-    } else if (!object->popup.done_staying) {
+    } else if (!(object->bit_flags & DONE_STAYING)) {
 
         WaitPopUp(object);
-        if (object->popup.done_staying)
+        if (object->bit_flags & DONE_STAYING)
             object->popup.last_animation_time = GetCurrentTime();
 
-    } else if (!object->popup.done_outro_animation) {
+    } else if (!(object->bit_flags & DONE_OUTRO_ANIMATION)) {
 
-        MovePopUp(object, object->popup.set_dx_dy_reverse, true, &object->popup.done_outro_animation);
+        MovePopUp(object, object->popup.set_dx_dy_reverse, true, DONE_OUTRO_ANIMATION);
 
     } else {
 

@@ -171,7 +171,8 @@ void MakeSellTransactionButtonCallBack()
     int amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));
     AttemptToSubtractFromCurrentStock(current_company_name, amount_in_text_box, price_per_stock);
     StocksSellButtonCallBack();
-    //DisplayTempPopUp(); // TODO tell you what you sold or bought for how much
+    // TODO tell you what you sold or bought for how much
+    //DisplayTempPopUp(); 
 
 }
 
@@ -181,7 +182,8 @@ void MakeBuyTransactionButtonCallBack()
     int amount_in_text_box = atoi(GetTextFromTextBox("BuyTextBox"));
     AttemptToAddFromCurrentStock(current_company_name, amount_in_text_box, price_per_stock);
     StocksBuyButtonCallBack();
-    //DisplayTempPopUp(); // TODO tell you what you sold or bought for how much
+    // TODO tell you what you sold or bought for how much
+    DisplayTempPopUp(); 
 
 }
 

@@ -26,7 +26,10 @@ typedef enum DrawBitFlags
 {
 
     SHOULD_BE_DRAWN = 1,
-    TEXT_IS_DYNAMIC = 2
+    TEXT_IS_DYNAMIC = 2,
+    DONE_INTRO_ANIMATION = 4,
+    DONE_OUTRO_ANIMATION = 8,
+    DONE_STAYING = 16
 
 } DrawBitFlags;
 
@@ -146,10 +149,6 @@ typedef struct PopUp {
     float current_y;
     float dx;
     float dy;
-
-    bool done_intro_animation;
-    bool done_outro_animation;
-    bool done_staying;
 
     char *direction;
     void (*set_dx_dy)(void *, int, int);
