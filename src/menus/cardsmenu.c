@@ -97,3 +97,20 @@ void TempApplyButtonCallBack()
     }
 
 }
+
+void CardApplyExitButtonCallBack()
+{
+    if (apply_card_menu == NULL) {
+
+        CreateNewDrawLayer();
+        apply_card_menu = GetMenuWithChildsFromJsonLayer("ApplyCardMenu");
+        AddMenuWithChildsToDrawLayer(apply_card_menu);
+        DisplayCompanyToApplyCardToScrollBox(); 
+        
+    } else {
+
+        ClearCurrentDrawLayer();
+        apply_card_menu = NULL;
+
+    }
+}

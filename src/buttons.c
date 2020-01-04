@@ -41,6 +41,7 @@ void NewSaveMenuBackButtonCallBack();
 void NewSaveMenuCreateButtonCallBack();
 void LoadSaveMenuLoadButtonCallBack();
 void TempApplyButtonCallBack();
+void CardApplyExitButtonCallBack();
 
 
 
@@ -52,7 +53,7 @@ typedef struct ButtonCallsbacks
 
 } ButtonCallsbacks;
 
-#define NUM_CALLBACKS 25
+#define NUM_CALLBACKS 26
 static ButtonCallsbacks callbacks[] = {
 
     {"STUB",                               &StubCallback},
@@ -79,7 +80,8 @@ static ButtonCallsbacks callbacks[] = {
     {"NewSaveMenuBackButton",              &NewSaveMenuBackButtonCallBack},
     {"NewSaveMenuCreateButton",            &NewSaveMenuCreateButtonCallBack},
     {"LoadSaveMenuLoadButton",             &LoadSaveMenuLoadButtonCallBack},
-    {"TempApplyButton",                    &TempApplyButtonCallBack}
+    {"TempApplyButton",                    &TempApplyButtonCallBack},
+    {"CardApplyExitButton",                &CardApplyExitButtonCallBack}
 
 };
 
