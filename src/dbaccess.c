@@ -454,6 +454,7 @@ int GetSaveNameFromSaveIdCallback(void *save_name, int argc, char **argv, char *
 
 char *GetSaveNameFromSaveId(int save_id)
 {
+
     char *save_name = malloc(sizeof(char) * 128);
 
     sqlite3 *db;
@@ -461,7 +462,31 @@ char *GetSaveNameFromSaveId(int save_id)
         ExecuteQuery(GetFormattedPointer("SELECT SaveName FROM Saves WHERE SaveId = %d", save_id), &GetSaveNameFromSaveIdCallback, &save_name, db);
 
     return save_name;
+
 }
+
+int GetAmountOfSavesCallback(void *amount_of_saves, int argc, char **argv, char **col_name)
+{
+
+    if (argc > 0) 
+        *((int *)amount_of_saves) = atoi(argv[0]);
+
+    return 0;
+}
+
+int GetAmountOfSaves()
+{
+
+    int amount_of_saves;
+
+    sqlite3 *db;
+    if (OpenConnection(&db, DefaultConnection()) == 0)
+        ExecuteQuery(GetFormattedPointer("SELECT * FROM Saves"), &GetAmountOfSavesCallback, &amount_of_saves, db);
+
+    return amount_of_saves;
+
+}
+
 
 void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db) 
 {

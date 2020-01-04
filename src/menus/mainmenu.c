@@ -29,6 +29,7 @@ void ScrollBoxClick(char *scroll_box_content)
 void DisplayTempScrollBox() 
 {
 
+    // TEST CODE
     DrawObject *object = CreateScrollBoxObject();
     object->x          = 100;
     object->y          = 100;
@@ -49,6 +50,7 @@ void DisplayTempScrollBox()
 void DynamicText() 
 {
 
+    // TEST CODE
     VersionObject = GetDrawObjectFromJsonLayer("Version1");
     AddObjectToDrawLayer(VersionObject);
 
@@ -57,6 +59,7 @@ void DynamicText()
 void MainMenuRenderLogic()
 {
 
+    // TEST CODE
     if (VersionObject == NULL)
         return;
 
@@ -80,7 +83,6 @@ void InitializeMainMenu()
     main_menu = GetMenuWithChildsFromJsonLayer("MainMenu");
     AddMenuWithChildsToDrawLayer(main_menu);
     DisplayTempScrollBox();
-    DynamicText();
 
 }
 
