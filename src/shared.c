@@ -90,6 +90,27 @@ char *GetFormattedPointer(const char *str, ...)
 
 }
 
+void SetFormattedPointerVaList(char *buffer, const char *str, va_list args) 
+{
+
+    //va_start(args, str);
+    vsprintf(buffer, str, args);
+    va_end(args);
+    
+    buffer[511] = '\0';
+
+}
+
+char *GetFormattedPointerVaList(const char *str, va_list args)
+{
+
+    // NEEDS TO BE FREED, so be sure to free the return.
+    char *buffer = malloc(sizeof(char) * 512);
+    SetFormattedPointerVaList(buffer, str, args);
+    return buffer;
+
+}
+
 
 float MaxF(float *array, unsigned int size) 
 {

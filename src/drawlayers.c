@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <stdbool.h>
 
 #include <allegro5/allegro.h>
@@ -242,14 +243,12 @@ void ClearUpGeneric(DrawObject *object)
 void CleanUpButton(DrawObject *object) 
 {
 
-    //al_destroy_bitmap(object->button.button_bitmap);
 
 }
 
 void CleanUpMenu(DrawObject *object) 
 {
 
-    //al_destroy_bitmap(object->menu.menu_bitmap);
 
 }
 
@@ -269,7 +268,11 @@ void CleanUpVideo(DrawObject *object)
 void CleanUpText(DrawObject *object) 
 {
 
-    //al_destroy_font(object->text.font);
+    if (object->bit_flags & TEXT_IS_DYNAMIC)
+        free(object->text.content);
+
+    object->text.content = NULL;
+    object->text.font    = NULL;
 
 }
 
@@ -585,7 +588,7 @@ void DrawSingleLayer(DrawLayer *layer)
 {
 
     for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++) 
-        if (layer->objects[i] != NULL && layer->objects[i]->should_this_be_drawn)
+        if (layer->objects[i] != NULL && layer->objects[i]->bit_flags & SHOULD_BE_DRAWN)
             DrawObjectOfTypeGen(layer->objects[i]);
 
 }
@@ -639,9 +642,9 @@ void DrawGraph(DrawObject *object)
     if (points == NULL || object->graph.num_points == 0)
         return;
 
-    float x             = object->x;
-    float y_start_point = object->y + object->height;
-    ALLEGRO_COLOR color = al_map_rgba(255, 255, 255, 255);
+    const float x             = object->x;
+    const float y_start_point = object->y + object->height;
+    ALLEGRO_COLOR color       = al_map_rgba(255, 255, 255, 255);
     for (unsigned int i = 0;i < object->graph.num_points - 1;i++)
         al_draw_line(x + points[i].x, y_start_point - points[i].y, x + points[i+1].x, y_start_point - points[i+1].y, color , 2);
 
@@ -894,6 +897,31 @@ int RemoveDrawObject(DrawObject *object)
 
 }
 
+void SetTextContent(DrawObject *object, const char *str, ...) 
+{
+
+    if (object == NULL)
+        return;
+
+    if (object->type != TEXT)
+        return;
+
+    va_list args;
+    va_start(args, str);
+    
+    if (!(object->bit_flags & TEXT_IS_DYNAMIC)) {
+        
+        object->bit_flags   |= TEXT_IS_DYNAMIC;
+        object->text.content = GetFormattedPointerVaList(str, args);
+
+    } else { 
+
+        SetFormattedPointerVaList(object->text.content, str, args);
+
+    }
+
+}
+
 DrawObject *CreateNewDrawObject() 
 {
 
@@ -902,6 +930,8 @@ DrawObject *CreateNewDrawObject()
     object->asset_path = NULL;
     object->child_of   = NULL;
     object->type       = -1;
+    object->bit_flags  = 0;
+    object->bit_flags  = SHOULD_BE_DRAWN;
 
     return object;
 
@@ -918,7 +948,6 @@ DrawObject *CreateScrollBoxObject()
     object->height                          = 0;
     object->asset_path                      = NULL;
     object->type                            = SCROLLBOX;
-    object->should_this_be_drawn            = true;
 
     object->scrollbox.num_items             = 2;
     object->scrollbox.box_click             = NULL;

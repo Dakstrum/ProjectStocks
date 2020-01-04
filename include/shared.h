@@ -57,6 +57,8 @@ void SetCleanUpToTrue();
 
 char *GetFormattedBuffer(char buffer[512], const char *str, ...);
 char *GetFormattedPointer(const char *str, ...);
+void SetFormattedPointerVaList(char *buffer, const char *str, va_list args);
+char *GetFormattedPointerVaList(const char *str, va_list args);
 
 float MaxF(float *array, unsigned int size);
 float MinF(float *array, unsigned int size);

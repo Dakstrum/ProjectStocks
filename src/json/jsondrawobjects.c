@@ -100,7 +100,7 @@ void SetCommonObjectProperties(int idx, char *path, char *child_of)
     char buffer[512];
     char appended_path[256];
 
-    parsed_objects[num_objects].should_this_be_drawn = true;
+    parsed_objects[num_objects].bit_flags  = SHOULD_BE_DRAWN;
     parsed_objects[num_objects].name       = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Name"), idx));
     parsed_objects[num_objects].asset_path = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Path"), idx));
     parsed_objects[num_objects].x          = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "X"), idx));
@@ -182,7 +182,7 @@ void SetMenuTextObject(int idx, int text_idx, char *child_of)
     parsed_objects[num_objects].text.font_size        = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/FontSize", idx, text_idx));
     parsed_objects[num_objects].text.content          = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Content", idx, text_idx));
     parsed_objects[num_objects].child_of              = child_of;
-    parsed_objects[num_objects].should_this_be_drawn  = true;
+    parsed_objects[num_objects].bit_flags             = SHOULD_BE_DRAWN;
 
     array_list *colors = GetArrayList(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Color",idx, text_idx));
     if (colors->length == 4) {
@@ -260,7 +260,7 @@ void SetMenuTextbox(int idx, int textbox_idx, char *child_of)
     parsed_objects[num_objects].textbox.limit_characters_to = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Text/CharacterLimit", idx, textbox_idx));
     parsed_objects[num_objects].textbox.placeholder_text    = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Placeholder/Content", idx, textbox_idx));
     parsed_objects[num_objects].child_of                    = child_of;
-    parsed_objects[num_objects].should_this_be_drawn        = true;
+    parsed_objects[num_objects].bit_flags                   = SHOULD_BE_DRAWN;
     parsed_objects[num_objects].textbox.accept_alphabet_characters = strcmp(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Text/AcceptAlphabetCharacters", idx, textbox_idx)), "true") == 0 ? true : false;
     parsed_objects[num_objects].textbox.accept_number_characters   = strcmp(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Text/AcceptNumberCharacters", idx, textbox_idx)), "true") == 0 ? true : false;
 
@@ -303,7 +303,7 @@ void SetCommonDrawObjectPropertiesForGetDrawObject(DrawObject *draw_object, int 
     draw_object->width                = parsed_objects[object_idx].width;
     draw_object->height               = parsed_objects[object_idx].height;
     draw_object->asset_path           = parsed_objects[object_idx].asset_path;
-    draw_object->should_this_be_drawn = parsed_objects[object_idx].should_this_be_drawn;
+    draw_object->bit_flags            = parsed_objects[object_idx].bit_flags;
     draw_object->child_of             = parsed_objects[object_idx].child_of;
 
 }

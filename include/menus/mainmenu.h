@@ -4,5 +4,6 @@
 void InitializeMainMenu();
 void ShowStartMenu();
 void ToggleOptionsMenu();
+void MainMenuRenderLogic();
 
 #endif

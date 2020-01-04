@@ -129,7 +129,7 @@ void SwitchToRenderingMainMenu()
 {
 
     InitializeMainMenu();
-    RenderLogic = NULL;
+    RenderLogic = &MainMenuRenderLogic;
 
 }
 

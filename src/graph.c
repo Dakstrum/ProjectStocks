@@ -42,7 +42,7 @@ DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points)
     object->type                 = GRAPH;
     object->width                = width;
     object->height               = height;
-    object->should_this_be_drawn = true;
+    object->bit_flags            = SHOULD_BE_DRAWN;
     object->name                 = NULL;
     object->asset_path           = NULL;
     object->child_of             = NULL;

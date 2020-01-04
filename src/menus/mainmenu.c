@@ -17,6 +17,7 @@
 #include "dbaccess.h"
 
 static MenuWithChilds *main_menu = NULL;
+static DrawObject *VersionObject = NULL;
 
 void ScrollBoxClick(char *scroll_box_content)
 {
@@ -45,6 +46,26 @@ void DisplayTempScrollBox()
 
 }
 
+void DynamicText() 
+{
+
+    VersionObject = GetDrawObjectFromJsonLayer("Version1");
+    AddObjectToDrawLayer(VersionObject);
+
+}
+
+void MainMenuRenderLogic()
+{
+
+    if (VersionObject == NULL)
+        return;
+
+    static int i = 0;
+    SetTextContent(VersionObject, "Version is %d", i);
+    i++;
+
+}
+
 void InitializeMainMenu() 
 {
 
@@ -59,6 +80,7 @@ void InitializeMainMenu()
     main_menu = GetMenuWithChildsFromJsonLayer("MainMenu");
     AddMenuWithChildsToDrawLayer(main_menu);
     DisplayTempScrollBox();
+    DynamicText();
 
 }
 

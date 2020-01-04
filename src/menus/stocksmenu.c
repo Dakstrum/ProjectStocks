@@ -27,11 +27,9 @@ void DisplayTempPopUp()
 
     DrawObject *popup_object = CreateNewDrawObject();
 
-    popup_object->type                 = POPUP;
-    popup_object->should_this_be_drawn = true;
-    popup_object->x                    = 0;
-    popup_object->y                    = 0;
-
+    popup_object->type   = POPUP;
+    popup_object->x      = 0;
+    popup_object->y      = 0;
     popup_object->width  = 1920;
     popup_object->height = 1080;
     

@@ -32,7 +32,6 @@ void DisplayLoadSaveScrollBox()
     DrawObject *object = CreateNewDrawObject();
 
     object->type = SCROLLBOX;
-    object->should_this_be_drawn = true;
     object->x          = 535;
     object->y          = 226;
     object->width      = 288;

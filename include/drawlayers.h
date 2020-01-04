@@ -22,6 +22,14 @@ typedef enum DrawType
 
 } DrawType;
 
+typedef enum DrawBitFlags 
+{
+
+    SHOULD_BE_DRAWN = 1,
+    TEXT_IS_DYNAMIC = 2
+
+} DrawBitFlags;
+
 typedef struct TextStyle {
 
     char *font_path;
@@ -174,7 +182,6 @@ typedef struct DrawObject
 {
 
     DrawType type;
-    bool should_this_be_drawn;
     float x;
     float y;
     float width;
@@ -182,6 +189,7 @@ typedef struct DrawObject
 
     int layer_index;
     int object_index;
+    int bit_flags;
 
     char *name;
     char *asset_path;
@@ -252,6 +260,8 @@ DrawObject *CreateScrollBoxObject();
 DrawObject *GetDrawObject(int layer, int object);
 int RemoveDrawObject(DrawObject *object);
 bool DoesObjectExistInCurrentDrawLayer(char *object_name);
+
+void SetTextContent(DrawObject *object, const char *str, ...);
 
 DrawObject** GetAllDrawObjectsInCurrentLayer();
 void SetActiveTextBox(DrawObject *object);
