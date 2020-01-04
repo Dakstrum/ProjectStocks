@@ -151,7 +151,7 @@ void SetActiveTextBoxToInactive()
 
     DrawObject *object = GetActiveTextBox();
     if (object != NULL)
-        object->textbox.active = false;
+        object->bit_flags ^= (object->bit_flags & TEXTBOX_ACTIVE);
         
 }
 
@@ -241,9 +241,9 @@ bool IsItAGoodCharacter(DrawObject *object, const char *key_pressed)
 {
 
     bool good_char = false;
-    if (object->textbox.accept_alphabet_characters && (isalpha(*key_pressed) || *key_pressed == ' '))
+    if (object->bit_flags & TEXTBOX_ACCEPT_ALPHABET_CHARACTERS && (isalpha(*key_pressed) || *key_pressed == ' '))
         good_char = true;
-    else if (object->textbox.accept_number_characters && isdigit(*key_pressed))
+    else if (object->bit_flags & TEXTBOX_ACCEPT_NUMBER_CHARACTERS && isdigit(*key_pressed))
         good_char = true;
 
     return good_char;
@@ -308,7 +308,7 @@ void HandleTextBoxInput(ALLEGRO_EVENT event)
 
     DrawObject *object = GetActiveTextBox();
 
-    if (object == NULL || !object->textbox.active) {
+    if (object == NULL || !(object->bit_flags & TEXTBOX_ACTIVE)) {
         return;
     }
 
