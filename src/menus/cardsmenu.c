@@ -29,7 +29,6 @@ void InitializeCardsMenu()
         return;
     }
 
-
     cards_menu = GetMenuWithChildsFromJsonLayer("CardsMenu");
     AddMenuWithChildsToDrawLayer(cards_menu);
 
@@ -37,6 +36,7 @@ void InitializeCardsMenu()
 
 void LoadCompanyToApplyCardToScrollBoxClick(char *scroll_box_content)
 {
+
     LogF("TODO: apply card to company");
 
 }
@@ -69,19 +69,9 @@ void AddCompanyContentToApplyCardScrollBox(DrawObject *object)
 
 }
 
-void CleanUpCardsMenu() 
-{
-
-    if (cards_menu != NULL)
-        free(cards_menu);
-
-    cards_menu = NULL;
-    
-}
-
 void TempApplyButtonCallBack()
 {
-	
+	//TestCodePleaseKeep
 	if (apply_card_menu == NULL) {
 
         CreateNewDrawLayer();
@@ -113,4 +103,15 @@ void CardApplyExitButtonCallBack()
         apply_card_menu = NULL;
 
     }
+}
+
+
+void CleanUpCardsMenu() 
+{
+
+    if (cards_menu != NULL)
+        free(cards_menu);
+
+    cards_menu = NULL;
+    
 }
