@@ -880,6 +880,14 @@ int RemoveDrawObject(DrawObject *object)
         return -1;
 
     }
+
+    if (object->layer_index > current_draw_layer) {
+
+        Log("Attempt to remove object that does not exist");
+        return -1;
+
+    }
+
     if (draw_layers[object->layer_index].objects[object->object_index] == NULL) {
 
         LogF("object with name %s", object->name);
@@ -888,8 +896,8 @@ int RemoveDrawObject(DrawObject *object)
     }
     ClearUpGeneric(object);
 
-    int layer_index  = object->layer_index;
-    int object_index = object->object_index;
+    const int layer_index  = object->layer_index;
+    const int object_index = object->object_index;
     free(draw_layers[layer_index].objects[object_index]);
     draw_layers[layer_index].objects[object_index] = NULL;
     
@@ -925,13 +933,15 @@ void SetTextContent(DrawObject *object, const char *str, ...)
 DrawObject *CreateNewDrawObject() 
 {
 
-    DrawObject *object = malloc(sizeof(DrawObject));
-    object->name       = NULL;
-    object->asset_path = NULL;
-    object->child_of   = NULL;
-    object->type       = -1;
-    object->bit_flags  = 0;
-    object->bit_flags  = SHOULD_BE_DRAWN;
+    DrawObject *object   = malloc(sizeof(DrawObject));
+    object->name         = NULL;
+    object->asset_path   = NULL;
+    object->child_of     = NULL;
+    object->type         = -1;
+    object->bit_flags    = 0;
+    object->bit_flags    = SHOULD_BE_DRAWN;
+    object->layer_index  = 0;
+    object->object_index = 0;
 
     return object;
 
