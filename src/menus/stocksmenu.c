@@ -23,6 +23,10 @@ static float price_per_stock                 = 0.0;
 static char *current_company_name            = NULL;
 static DrawObject  *current_graph            = NULL;
 
+
+//DrawObject *CompanyNameTextObject  = NULL;
+//DrawObject *CompanyAboutTextObject = NULL;
+
 void DisplayTempPopUp();
 void DisplayGraph(char *company_name);
 void DisplayCompanyScrollBox();
@@ -46,6 +50,22 @@ void DisplayTempPopUp()
     AddObjectToDrawLayer(popup_object);
 }
 
+void UpdateStocksStatsText(char *company_name)
+{
+
+    //DrawObject *CompanyNameTextObject  = GetDrawObjectFromJsonLayer("StocksMenuChangingCompanyNameText");
+    //DrawObject *CompanyAboutTextObject = GetDrawObjectFromJsonLayer("StocksMenuChangingAboutText");
+
+    //RemoveDrawObject(CompanyNameTextObject);
+    //RemoveDrawObject(CompanyAboutTextObject);
+
+    //AddObjectToDrawLayer(CompanyNameTextObject);
+    //AddObjectToDrawLayer(CompanyAboutTextObject);
+
+    //SetTextContent(CompanyNameTextObject, "%s", company_name);
+    //SetTextContent(CompanyAboutTextObject, "Version is %d");
+}
+
 void InitializeStocksMenu() 
 { 
     
@@ -61,6 +81,7 @@ void InitializeStocksMenu()
     AddMenuWithChildsToDrawLayer(stocks_menu);
     DisplayCompanyScrollBox();
     DisplayGraph(GetStockNameFromStockId(1));
+    UpdateStocksStatsText(GetStockNameFromStockId(1));
 
 }
 
@@ -90,6 +111,7 @@ void LoadCompanyScrollBoxClick(char *scroll_box_content)
 {
     RemoveDrawObject(current_graph);
     DisplayGraph(scroll_box_content);
+    UpdateStocksStatsText(scroll_box_content);
 
 }
 

@@ -51,7 +51,7 @@ void DynamicText()
 {
 
     // TEST CODE
-    VersionObject = GetDrawObjectFromJsonLayer("Version1");
+    VersionObject = GetDrawObjectFromJsonLayer("MainMenuWebsiteText");
     AddObjectToDrawLayer(VersionObject);
 
 }
@@ -83,6 +83,9 @@ void InitializeMainMenu()
     main_menu = GetMenuWithChildsFromJsonLayer("MainMenu");
     AddMenuWithChildsToDrawLayer(main_menu);
     DisplayTempScrollBox();
+    
+    DynamicText();
+    MainMenuRenderLogic();
 
 }
 
