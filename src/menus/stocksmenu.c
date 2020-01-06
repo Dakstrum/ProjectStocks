@@ -24,8 +24,8 @@ static char *current_company_name            = NULL;
 static DrawObject  *current_graph            = NULL;
 
 
-//DrawObject *CompanyNameTextObject  = NULL;
-//DrawObject *CompanyAboutTextObject = NULL;
+static DrawObject *CompanyNameTextObject  = NULL;
+static DrawObject *CompanyAboutTextObject = NULL;
 
 void DisplayTempPopUp();
 void DisplayGraph(char *company_name);
@@ -53,17 +53,17 @@ void DisplayTempPopUp()
 void UpdateStocksStatsText(char *company_name)
 {
 
-    //DrawObject *CompanyNameTextObject  = GetDrawObjectFromJsonLayer("StocksMenuChangingCompanyNameText");
-    //DrawObject *CompanyAboutTextObject = GetDrawObjectFromJsonLayer("StocksMenuChangingAboutText");
+    RemoveDrawObject(CompanyNameTextObject);
+    RemoveDrawObject(CompanyAboutTextObject);
 
-    //RemoveDrawObject(CompanyNameTextObject);
-    //RemoveDrawObject(CompanyAboutTextObject);
+    CompanyNameTextObject  = GetDrawObjectFromJsonLayer("StocksMenuChangingCompanyNameText");
+    CompanyAboutTextObject = GetDrawObjectFromJsonLayer("StocksMenuChangingAboutText");
 
-    //AddObjectToDrawLayer(CompanyNameTextObject);
-    //AddObjectToDrawLayer(CompanyAboutTextObject);
+    AddObjectToDrawLayer(CompanyNameTextObject);
+    AddObjectToDrawLayer(CompanyAboutTextObject);
 
-    //SetTextContent(CompanyNameTextObject, "%s", company_name);
-    //SetTextContent(CompanyAboutTextObject, "Version is %d");
+    SetTextContent(CompanyNameTextObject, "%s", company_name);
+    SetTextContent(CompanyAboutTextObject, "Version is PLEASE FIX");
 }
 
 void InitializeStocksMenu() 
@@ -111,6 +111,8 @@ void LoadCompanyScrollBoxClick(char *scroll_box_content)
 {
     RemoveDrawObject(current_graph);
     DisplayGraph(scroll_box_content);
+
+    //RemoveDrawObject(CompanyNameTextObject);
     UpdateStocksStatsText(scroll_box_content);
 
 }
