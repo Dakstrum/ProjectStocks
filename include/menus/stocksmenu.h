@@ -2,8 +2,15 @@
 #define STOCKSMENU_H
 
 void InitializeStocksMenu();
+
 void MakeSellTransactionButtonCallBack();
 void MakeBuyTransactionButtonCallBack();
+void OneDButtonCallBack();
+void OneWButtonCallBack();
+void OneMButtonCallBack();
+void OneYButtonCallBack();
+void AllButtonCallBack();
+
 char *GetCurrentCompanyFromGraph();
 void DisplayTempPopUp();
 

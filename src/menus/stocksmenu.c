@@ -28,7 +28,7 @@ static DrawObject *CompanyNameTextObject  = NULL;
 static DrawObject *CompanyAboutTextObject = NULL;
 
 void DisplayTempPopUp();
-void DisplayGraph(char *company_name);
+void DisplayGraph(char *company_name, TimeSpan time_span);
 void DisplayCompanyScrollBox();
 void AddCompanyContentToStocksScrollBox(DrawObject *object);
 
@@ -63,7 +63,7 @@ void UpdateStocksStatsText(char *company_name)
     AddObjectToDrawLayer(CompanyAboutTextObject);
 
     SetTextContent(CompanyNameTextObject, "%s", company_name);
-    SetTextContent(CompanyAboutTextObject, "Version is PLEASE FIX");
+    SetTextContent(CompanyAboutTextObject, "Dynamic Description of a company");
 }
 
 void InitializeStocksMenu() 
@@ -80,12 +80,12 @@ void InitializeStocksMenu()
 
     AddMenuWithChildsToDrawLayer(stocks_menu);
     DisplayCompanyScrollBox();
-    DisplayGraph(GetStockNameFromStockId(1));
+    DisplayGraph(GetStockNameFromStockId(1), ONE_DAY);
     UpdateStocksStatsText(GetStockNameFromStockId(1));
 
 }
 
-void DisplayGraph(char *company_name)
+void DisplayGraph(char *company_name, TimeSpan time_span)
 {
 
     current_graph = GetGraphDrawObject(company_name, ONE_DAY, 961, 373);
@@ -109,10 +109,9 @@ char *GetCurrentCompanyFromGraph()
 
 void LoadCompanyScrollBoxClick(char *scroll_box_content)
 {
-    RemoveDrawObject(current_graph);
-    DisplayGraph(scroll_box_content);
 
-    //RemoveDrawObject(CompanyNameTextObject);
+    RemoveDrawObject(current_graph);
+    DisplayGraph(scroll_box_content, ONE_DAY);
     UpdateStocksStatsText(scroll_box_content);
 
 }
@@ -196,7 +195,7 @@ void MakeSellTransactionButtonCallBack()
     AttemptToSubtractFromCurrentStock(current_company_name, amount_in_text_box, price_per_stock);
     StocksSellButtonCallBack();
     // TODO tell you what you sold or bought for how much
-    //DisplayTempPopUp(); 
+    DisplayTempPopUp(); 
 
 }
 
@@ -208,6 +207,41 @@ void MakeBuyTransactionButtonCallBack()
     StocksBuyButtonCallBack();
     // TODO tell you what you sold or bought for how much
     DisplayTempPopUp(); 
+
+}
+
+void OneDButtonCallBack()
+{
+    //RemoveDrawObject(current_graph);
+    LogF("CURRENT GRAPH: %s", GetCurrentCompanyFromGraph());
+    DisplayGraph(GetCurrentCompanyFromGraph(), ONE_DAY);
+}
+
+void OneWButtonCallBack()
+{
+
+    DisplayGraph(GetCurrentCompanyFromGraph(), ONE_WEEK);
+
+}
+
+void OneMButtonCallBack()
+{
+
+    DisplayGraph(GetCurrentCompanyFromGraph(), ONE_MONTH);
+
+}
+
+void OneYButtonCallBack()
+{
+
+    DisplayGraph(GetCurrentCompanyFromGraph(), ONE_YEAR);
+
+}
+
+void AllButtonCallBack()
+{
+
+    DisplayGraph(GetCurrentCompanyFromGraph(), ALL_TIME);
 
 }
 

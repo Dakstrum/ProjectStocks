@@ -65,7 +65,6 @@ void MainMenuRenderLogic()
 
     static int i = 0;
     SetTextContent(VersionObject, "Version is %d", i);
-    i++;
 
 }
 
