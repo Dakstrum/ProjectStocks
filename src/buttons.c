@@ -12,6 +12,7 @@
 #include "accountmenu.h"
 #include "generalpurposemenus.h"
 #include "savemenus.h"
+#include "cardsmenu.h"
 
 
 void StubCallback();
@@ -26,6 +27,7 @@ void OptionsMenuExitButtonCallBack();
 void StocksButtonCallBack();
 void NewsButtonCallBack();
 void AccountButtonCallBack();
+void CardsButtonCallBack();
 void MainMenuGitHubButtonCallBack();
 void MainMenuTwitterButtonCallBack();
 void MainMenuYoutubeButtonCallBack();
@@ -38,6 +40,8 @@ void NewSaveButtonCallBack();
 void NewSaveMenuBackButtonCallBack();
 void NewSaveMenuCreateButtonCallBack();
 void LoadSaveMenuLoadButtonCallBack();
+void TempApplyButtonCallBack();
+void CardApplyExitButtonCallBack();
 
 
 
@@ -49,7 +53,7 @@ typedef struct ButtonCallsbacks
 
 } ButtonCallsbacks;
 
-#define NUM_CALLBACKS 23
+#define NUM_CALLBACKS 26
 static ButtonCallsbacks callbacks[] = {
 
     {"STUB",                               &StubCallback},
@@ -63,6 +67,7 @@ static ButtonCallsbacks callbacks[] = {
     {"StocksButton",                       &StocksButtonCallBack},
     {"NewsButton",                         &NewsButtonCallBack},
     {"AccountButton",                      &AccountButtonCallBack},
+    {"CardsButton",                        &CardsButtonCallBack},
     {"GitHubButton",                       &MainMenuGitHubButtonCallBack},
     {"TwitterButton",                      &MainMenuTwitterButtonCallBack},
     {"YoutubeButton",                      &MainMenuYoutubeButtonCallBack},
@@ -74,7 +79,9 @@ static ButtonCallsbacks callbacks[] = {
     {"NewSaveButton",                      &NewSaveButtonCallBack},
     {"NewSaveMenuBackButton",              &NewSaveMenuBackButtonCallBack},
     {"NewSaveMenuCreateButton",            &NewSaveMenuCreateButtonCallBack},
-    {"LoadSaveMenuLoadButton",             &LoadSaveMenuLoadButtonCallBack}
+    {"LoadSaveMenuLoadButton",             &LoadSaveMenuLoadButtonCallBack},
+    {"TempApplyButton",                    &TempApplyButtonCallBack},
+    {"CardApplyExitButton",                &CardApplyExitButtonCallBack}
 
 };
 

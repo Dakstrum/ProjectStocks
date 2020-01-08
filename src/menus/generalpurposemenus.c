@@ -12,6 +12,7 @@
 #include "stocksmenu.h"
 #include "newsmenu.h"
 #include "accountmenu.h"
+#include "cardsmenu.h"
 #include "mainmenu.h"
 
 static MenuWithChilds *pause_menu   = NULL;
@@ -121,3 +122,10 @@ void AccountButtonCallBack()
     
 }
 
+void CardsButtonCallBack()
+{
+    
+    ClearCurrentDrawLayer();
+    InitializeCardsMenu();
+    
+}
