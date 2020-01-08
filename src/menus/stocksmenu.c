@@ -23,10 +23,15 @@ static float price_per_stock                 = 0.0;
 static char *current_company_name            = NULL;
 static DrawObject  *current_graph            = NULL;
 
+
+static DrawObject *CompanyNameTextObject  = NULL;
+static DrawObject *CompanyAboutTextObject = NULL;
+
 void DisplayTempPopUp();
-void DisplayGraph(char *company_name);
+void DisplayGraph(char *company_name, TimeSpan time_span);
 void DisplayCompanyScrollBox();
 void AddCompanyContentToStocksScrollBox(DrawObject *object);
+char *GetCurrentCompanyFromGraph();
 
 void DisplayTempPopUp()
 {
@@ -46,6 +51,14 @@ void DisplayTempPopUp()
     AddObjectToDrawLayer(popup_object);
 }
 
+void UpdateStocksStatsText(char *company_name)
+{
+    current_company_name = GetCurrentCompanyFromGraph();
+
+    SetTextContent(CompanyNameTextObject, "%s", company_name);
+    SetTextContent(CompanyAboutTextObject, "Dynamic Description of a company");
+}
+
 void InitializeStocksMenu() 
 { 
     
@@ -60,14 +73,22 @@ void InitializeStocksMenu()
 
     AddMenuWithChildsToDrawLayer(stocks_menu);
     DisplayCompanyScrollBox();
-    DisplayGraph(GetStockNameFromStockId(1));
+    DisplayGraph(GetStockNameFromStockId(1), ONE_DAY);
+
+    CompanyNameTextObject  = GetDrawObjectFromJsonLayer("StocksMenuChangingCompanyNameText");
+    CompanyAboutTextObject = GetDrawObjectFromJsonLayer("StocksMenuChangingAboutText");
+
+    AddObjectToDrawLayer(CompanyNameTextObject);
+    AddObjectToDrawLayer(CompanyAboutTextObject);
+
+    UpdateStocksStatsText(GetStockNameFromStockId(1));
 
 }
 
-void DisplayGraph(char *company_name)
+void DisplayGraph(char *company_name, TimeSpan time_span)
 {
 
-    current_graph = GetGraphDrawObject(company_name, ONE_DAY, 961, 373);
+    current_graph = GetGraphDrawObject(company_name, time_span, 961, 373);
     if (current_graph != NULL) {
 
         current_graph->x = 415;
@@ -88,8 +109,10 @@ char *GetCurrentCompanyFromGraph()
 
 void LoadCompanyScrollBoxClick(char *scroll_box_content)
 {
+
     RemoveDrawObject(current_graph);
-    DisplayGraph(scroll_box_content);
+    DisplayGraph(scroll_box_content, ONE_DAY);
+    UpdateStocksStatsText(scroll_box_content);
 
 }
 
@@ -172,7 +195,7 @@ void MakeSellTransactionButtonCallBack()
     AttemptToSubtractFromCurrentStock(current_company_name, amount_in_text_box, price_per_stock);
     StocksSellButtonCallBack();
     // TODO tell you what you sold or bought for how much
-    //DisplayTempPopUp(); 
+    DisplayTempPopUp(); 
 
 }
 
@@ -184,6 +207,55 @@ void MakeBuyTransactionButtonCallBack()
     StocksBuyButtonCallBack();
     // TODO tell you what you sold or bought for how much
     DisplayTempPopUp(); 
+
+}
+
+void OneDButtonCallBack()
+{
+    current_company_name = GetCurrentCompanyFromGraph();
+    RemoveDrawObject(current_graph);
+    DisplayGraph(current_company_name, ONE_DAY);
+    UpdateStocksStatsText(current_company_name);
+
+}
+
+void OneWButtonCallBack()
+{
+
+    current_company_name = GetCurrentCompanyFromGraph();
+    RemoveDrawObject(current_graph);
+    DisplayGraph(current_company_name, ONE_WEEK);
+    UpdateStocksStatsText(current_company_name);
+
+}
+
+void OneMButtonCallBack()
+{
+
+    current_company_name = GetCurrentCompanyFromGraph();
+    RemoveDrawObject(current_graph);
+    DisplayGraph(current_company_name, ONE_MONTH);
+    UpdateStocksStatsText(current_company_name);
+
+}
+
+void OneYButtonCallBack()
+{
+
+    current_company_name = GetCurrentCompanyFromGraph();
+    RemoveDrawObject(current_graph);
+    DisplayGraph(current_company_name, ONE_YEAR);
+    UpdateStocksStatsText(current_company_name);
+
+}
+
+void AllButtonCallBack()
+{
+
+    current_company_name = GetCurrentCompanyFromGraph();
+    RemoveDrawObject(current_graph);
+    DisplayGraph(current_company_name, ALL_TIME);
+    UpdateStocksStatsText(current_company_name);
 
 }
 
