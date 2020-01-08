@@ -15,14 +15,19 @@
 #include "rendering.h"
 #include "account.h"
 #include "dbaccess.h"
+#include "mainmenu.h"
 
 static MenuWithChilds *load_save_menu    = NULL;
 static MenuWithChilds *new_save_menu     = NULL;
 
+static DrawObject *SaveNameTextObject  = NULL;
+
+void UpdateSaveStatsText(char *save_name);
+
 void LoadSaveScrollBoxClick(char *scroll_box_content)
 {
     
-    LogF("save name: %s", scroll_box_content);
+    UpdateSaveStatsText(scroll_box_content);
     
 }
 
@@ -54,6 +59,13 @@ void DisplayLoadSaveScrollBox()
 
 }
 
+void UpdateSaveStatsText(char *save_name)
+{
+
+    SetTextContent(SaveNameTextObject, "%s", save_name);
+
+}
+
 void InitializeLoadSaveMenu() 
 {
 
@@ -68,6 +80,11 @@ void InitializeLoadSaveMenu()
     load_save_menu = GetMenuWithChildsFromJsonLayer("LoadSaveMenu");
     AddMenuWithChildsToDrawLayer(load_save_menu);
     DisplayLoadSaveScrollBox();
+
+    SaveNameTextObject  = GetDrawObjectFromJsonLayer("LoadSaveMenuSaveNameText");
+
+    AddObjectToDrawLayer(SaveNameTextObject);
+
 
 }
 
@@ -140,5 +157,8 @@ void NewSaveMenuCreateButtonCallBack()
     char *player_name_in_text_box = GetTextFromTextBox("PlayerNameTextBox");
 
     CreateNewSave(save_name_in_text_box, player_name_in_text_box);
+
+    ClearDrawLayers();
+    InitializeMainMenu();
 
 }
