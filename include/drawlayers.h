@@ -43,7 +43,7 @@ typedef struct TextStyle {
     ALLEGRO_COLOR color;
     ALLEGRO_FONT *font;
 
-    int font_size;
+    unsigned char font_size;
     unsigned char r;
     unsigned char g;
     unsigned char b;
@@ -54,16 +54,16 @@ typedef struct TextStyle {
 typedef struct ScrollBox {
 
     ALLEGRO_BITMAP *boxes_bitmap;
-    int vertical_spacing;
-    int vertical_offset;
-    int min_vertical_offset;
-    int max_vertical_offset;
-    int box_width;
-    int box_height;
+    short int vertical_spacing;
+    short int vertical_offset;
+    short int min_vertical_offset;
+    short int max_vertical_offset;
+    short int box_width;
+    unsigned char box_height;
 
     void (*box_click)(char *);
 
-    int num_items;
+    unsigned short int num_items;
     char **text_content;
     char **icon_paths;
 
@@ -79,7 +79,7 @@ typedef struct Text
     ALLEGRO_COLOR color;
     ALLEGRO_FONT *font;
 
-    int font_size;
+    unsigned char font_size;
     unsigned char r;
     unsigned char g;
     unsigned char b;
@@ -111,8 +111,8 @@ typedef struct Video {
 
 typedef struct Point {
 
-    int x;
-    int y;
+    unsigned short int x;
+    unsigned short int y;
 
 } Point;
 
@@ -165,8 +165,8 @@ typedef struct TextBox {
     ALLEGRO_BITMAP *bitmap;
 
     // current_character init to -1
-    int current_character;
-    int limit_characters_to;
+    unsigned char current_character;
+    unsigned char limit_characters_to;
     char text[128];
     char *placeholder_text;
 
@@ -186,13 +186,12 @@ typedef struct DrawObject
     float width;
     float height;
 
-    int layer_index;
-    int object_index;
-    int bit_flags;
+    unsigned char layer_index;
+    unsigned char object_index;
+    unsigned short int bit_flags;
 
     char *name;
     char *asset_path;
-
     char *child_of;
 
     union {
@@ -215,12 +214,11 @@ typedef struct MenuWithChilds
 
     DrawObject *menu;
 
-    int num_buttons;
-    int num_text;
-    int num_text_boxes;
-    int num_scroll_boxes;
-
-    int draw_layer;
+    unsigned char num_buttons;
+    unsigned char num_text;
+    unsigned char num_text_boxes;
+    unsigned char num_scroll_boxes;
+    unsigned char draw_layer;
 
     DrawObject **buttons;
     DrawObject **text;
@@ -232,7 +230,7 @@ typedef struct MenuWithChilds
 typedef struct DrawObjectTypeCollection {
 
     DrawObject **objects;
-    unsigned int num_objects;
+    unsigned short int num_objects;
 
 } DrawObjectTypeCollection;
 
