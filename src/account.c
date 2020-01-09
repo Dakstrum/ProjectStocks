@@ -10,7 +10,8 @@
 #include "dbaccess.h"
 
 static atomic_long game_time;
-static atomic_long game_time_dt;
+static atomic_long game_time_real_dt;
+static atomic_long game_time_game_dt;
 static atomic_uint game_seed;
 static atomic_bool pause_game_time;
 static atomic_int  save_id;
@@ -37,9 +38,10 @@ void InitAccount()
 
     atomic_store(&save_id, -1);
     atomic_store(&game_time, 3600);
-    atomic_store(&game_time_dt, 2);
+    atomic_store(&game_time_real_dt, 2);
     atomic_store(&pause_game_time, false);
     atomic_store(&game_seed, 0);
+    atomic_store(&game_time_game_dt, 3600);
 
     account_thread = al_create_thread(&AccountEntry, NULL);
     al_start_thread(account_thread);
@@ -85,9 +87,9 @@ void SetGameTime(time_t time_to_set)
 bool CheckToIncrementGametime(long int dt) 
 {
 
-    if (dt == atomic_load(&game_time_dt)) {
+    if (dt == atomic_load(&game_time_real_dt)) {
 
-        atomic_store(&game_time, atomic_load(&game_time) + 3600);
+        atomic_store(&game_time, atomic_load(&game_time) + atomic_load(&game_time_game_dt));
         return true;
 
     }
@@ -132,5 +134,22 @@ void LoadSave(int load_save_id)
     atomic_store(&save_id, load_save_id);
     atomic_store(&game_seed, GetSaveSeedWithSaveId(load_save_id));
     LogF("LoadSave game_seed = %u", atomic_load(&game_seed));
+
+}
+
+void SetGameSpeed(const int speed) 
+{
+
+    static const long ONE_HOUR          = 3600;
+    static const long ONE_HOUR_AND_HALF = ONE_HOUR * 1.5;
+    static const long TWO_HOURS         = ONE_HOUR * 2;
+
+    switch (speed) {
+
+        case 2:  atomic_store(&game_time_game_dt, ONE_HOUR_AND_HALF); break;
+        case 3:  atomic_store(&game_time_game_dt, TWO_HOURS); break;
+        default: atomic_store(&game_time_game_dt, ONE_HOUR); break;
+
+    }
 
 }

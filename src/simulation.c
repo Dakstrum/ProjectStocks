@@ -270,6 +270,10 @@ StockPrices *GetStockPricesFromNowUntil(char *company_name, time_t span)
 
     time_t current_time  = GetGameTime();
     time_t previous_time = current_time - span;
+
+    if (span == 0)
+        previous_time = 0;
+
     if (previous_time < 0)
         previous_time = 0;
 

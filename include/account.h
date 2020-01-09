@@ -20,4 +20,6 @@ void SetGameTime(time_t time_to_set);
 
 time_t GetGameTime();
 
+void SetGameSpeed(const int speed);
+
 #endif

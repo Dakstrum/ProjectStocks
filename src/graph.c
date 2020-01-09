@@ -32,7 +32,7 @@ static const TimeSpanWithDiff timespans[] = {
     {ONE_YEAR    , 29030400},
     {TWO_YEARS   , 58060800},
     {FIVE_YEARS  , 145152000},
-    {ALL_TIME    , -1}
+    {ALL_TIME    , 0}
 };
 
 DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points) 

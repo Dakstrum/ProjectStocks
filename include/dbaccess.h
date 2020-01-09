@@ -31,4 +31,7 @@ int GetAmountOfSaves();
 
 int GetAmountOfCompanies();
 char *GetStockNameFromStockId(int stock_id);
+
+void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db);
+
 #endif
