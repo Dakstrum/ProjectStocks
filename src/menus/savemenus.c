@@ -20,7 +20,8 @@
 static MenuWithChilds *load_save_menu    = NULL;
 static MenuWithChilds *new_save_menu     = NULL;
 
-static DrawObject *SaveNameTextObject  = NULL;
+static DrawObject *SaveNameTextObject    = NULL;
+static DrawObject *PlayerNameTextObject  = NULL;
 
 void UpdateSaveStatsText(char *save_name);
 
@@ -62,7 +63,8 @@ void DisplayLoadSaveScrollBox()
 void UpdateSaveStatsText(char *save_name)
 {
 
-    SetTextContent(SaveNameTextObject, "%s", save_name);
+    SetTextContent(SaveNameTextObject, "%s",   save_name);
+    SetTextContent(PlayerNameTextObject, "%s", GetPlayerNameFromSaveName(save_name));
 
 }
 
@@ -81,11 +83,12 @@ void InitializeLoadSaveMenu()
     AddMenuWithChildsToDrawLayer(load_save_menu);
     DisplayLoadSaveScrollBox();
 
-    SaveNameTextObject  = GetDrawObjectFromJsonLayer("LoadSaveMenuSaveNameText");
+    SaveNameTextObject   = GetDrawObjectFromJsonLayer("LoadSaveMenuSaveNameText");
+    PlayerNameTextObject = GetDrawObjectFromJsonLayer("LoadSaveMenuPlayerNameText");
 
     AddObjectToDrawLayer(SaveNameTextObject);
-
-
+    AddObjectToDrawLayer(PlayerNameTextObject);
+    
 }
 
 void InitializeNewSaveMenu() 

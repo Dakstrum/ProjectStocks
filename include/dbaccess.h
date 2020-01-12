@@ -28,4 +28,7 @@ int GetAmountOfSaves();
 
 int GetAmountOfCompanies();
 char *GetStockNameFromStockId(int stock_id);
+
+char *GetPlayerNameFromSaveName(char *save_name);
+int *GetSaveIdFromSaveName(char *save_name);
 #endif
