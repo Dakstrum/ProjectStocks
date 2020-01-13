@@ -26,6 +26,7 @@ typedef struct Sim {
 } Sim;
 
 
+static const float TRUNCATE_TO_AMOUNT = 500.0;
 static const int HOUR = 3600;
 static int end_year   = 0;
 
@@ -291,6 +292,60 @@ StockPrices *GetStockPricesFromNowUntil(char *company_name, time_t span)
     ReclaimUnusedStockPriceMemory(prices);
 
     return prices;
+
+}
+
+int GetNumToReducePricesBy(StockPrices *prices) 
+{
+
+    int reduce_by        = 1;
+    const int num_prices = prices->num_prices;
+    for (int i = 0; i < 24;i++) {
+
+
+        if (TRUNCATE_TO_AMOUNT/((float)num_prices/reduce_by) > 1.0)
+            return reduce_by;
+
+        reduce_by = reduce_by << 1;
+
+    }
+    Log("Unable to reduce prices amount");
+    return 4;
+
+}
+
+void RemoveElements(StockPrices *prices)
+{
+
+    int reduce_by = GetNumToReducePricesBy(prices);
+    LogF("Reduce by %d", reduce_by);
+    int new_index = 1;
+    for (int i = 1; i < prices->num_prices;i++) {
+
+        if ((i + 1) % reduce_by == 0 || (i + 1) == prices->num_prices) {
+
+            prices->prices[new_index] = prices->prices[i];
+            prices->times[new_index]  = prices->times[i];
+            new_index++;
+
+        }
+
+    }
+    prices->num_prices = new_index;
+    ReclaimUnusedStockPriceMemory(prices);
+
+}
+
+void ReduceStockPriceAmount(StockPrices *prices)
+{
+
+    if (prices == NULL)
+        return;
+
+    if (TRUNCATE_TO_AMOUNT/(float)prices->num_prices > 1.0)
+        return;
+
+    RemoveElements(prices);
 
 }
 

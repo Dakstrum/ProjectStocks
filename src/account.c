@@ -18,6 +18,8 @@ static atomic_int  save_id;
 
 static ALLEGRO_THREAD *account_thread = NULL;
 
+static const long ONE_HOUR = 3600;
+
 void *AccountEntry(ALLEGRO_THREAD *thread, void *arg);
 
 void SaveLoadTest()
@@ -37,11 +39,11 @@ void InitAccount()
 {
 
     atomic_store(&save_id, -1);
-    atomic_store(&game_time, 3600);
+    atomic_store(&game_time, ONE_HOUR);
     atomic_store(&game_time_real_dt, 2);
     atomic_store(&pause_game_time, false);
     atomic_store(&game_seed, 0);
-    atomic_store(&game_time_game_dt, 3600);
+    atomic_store(&game_time_game_dt, ONE_HOUR);
 
     account_thread = al_create_thread(&AccountEntry, NULL);
     al_start_thread(account_thread);
@@ -140,7 +142,6 @@ void LoadSave(int load_save_id)
 void SetGameSpeed(const int speed) 
 {
 
-    static const long ONE_HOUR          = 3600;
     static const long ONE_HOUR_AND_HALF = ONE_HOUR * 1.5;
     static const long TWO_HOURS         = ONE_HOUR * 2;
 

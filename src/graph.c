@@ -74,10 +74,13 @@ void SetGraphPoints(DrawObject *object, StockPrices *stocks)
 DrawObject *GetConstructedGraphDrawObject(char *company_name, int timespan_index, int width, int height) 
 {
 
-    StockPrices *stocks  = GetStockPricesFromNowUntil(company_name, timespans[timespan_index].diff);
+    StockPrices *stocks = GetStockPricesFromNowUntil(company_name, timespans[timespan_index].diff);
     if (stocks == NULL)
         return NULL;
-    DrawObject *object   = GetBasicGraphDrawObject(width, height, stocks->num_prices);
+
+    ReduceStockPriceAmount(stocks);
+
+    DrawObject *object = GetBasicGraphDrawObject(width, height, stocks->num_prices);
     SetGraphPoints(object, stocks);
 
     return object;
