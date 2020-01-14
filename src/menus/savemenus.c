@@ -29,7 +29,7 @@ void LoadSaveScrollBoxClick(char *scroll_box_content)
 void AddSaveContentToScrollBox(DrawObject *object)
 {
     GetAmountOfSaves();
-    for(int i; i < GetAmountOfSaves(); i++)
+    for(int i = 0; i < GetAmountOfSaves(); i++)
         object->scrollbox.text_content[i]  = GetSaveNameFromSaveId(i+1);
 }
 
@@ -47,7 +47,7 @@ void DisplayLoadSaveScrollBox()
 
     object->scrollbox.num_items        = GetAmountOfSaves();
     object->scrollbox.box_click        = &LoadSaveScrollBoxClick;
-    object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
+    object->scrollbox.text_content     = malloc(sizeof(char *) * GetAmountOfSaves());
 
     AddSaveContentToScrollBox(object);
     AddObjectToDrawLayer(object);
