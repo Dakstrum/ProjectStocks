@@ -165,8 +165,8 @@ typedef struct TextBox {
     ALLEGRO_BITMAP *bitmap;
 
     // current_character init to -1
-    unsigned char current_character;
-    unsigned char limit_characters_to;
+    short int current_character;
+    short int limit_characters_to;
     char text[128];
     char *placeholder_text;
 

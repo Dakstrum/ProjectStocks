@@ -64,7 +64,7 @@ void DisplayCompanyToApplyCardToScrollBox()
 void AddCompanyContentToApplyCardScrollBox(DrawObject *object)
 {
 
-    for(int i; i < GetAmountOfCompanies(); i++)
+    for(int i = 0; i < GetAmountOfCompanies(); i++)
         object->scrollbox.text_content[i]  = GetStockNameFromStockId(i+1);
 
 }
