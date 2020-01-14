@@ -19,9 +19,8 @@ void InitializeStartUpSequence()
 {
 
     CreateNewDrawLayer();
-    video_object = GetDrawObjectFromJsonLayer("StartUpVideo");
-    video_object->video.should_repeat           = false;
-    video_object->video.start_video_immediately = true;
+    video_object             = GetDrawObjectFromJsonLayer("StartUpVideo");
+    video_object->bit_flags |= VIDEO_SHOULD_START_IMMEDIATELY;
     AddObjectToDrawLayer(video_object);
     
 }
@@ -30,9 +29,8 @@ void InitializeLoadingSequence()
 {
 
     CreateNewDrawLayer();
-    loading_object = GetDrawObjectFromJsonLayer("LoadingVideo");
-    loading_object->video.should_repeat           = true;
-    loading_object->video.start_video_immediately = true;
+    loading_object           = GetDrawObjectFromJsonLayer("LoadingVideo");
+    video_object->bit_flags |= VIDEO_SHOULD_REPEAT | VIDEO_SHOULD_START_IMMEDIATELY;
     AddObjectToDrawLayer(loading_object);
     
 }

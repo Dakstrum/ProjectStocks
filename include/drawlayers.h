@@ -33,7 +33,9 @@ typedef enum DrawBitFlags
     TEXTBOX_ACTIVE = 32,
     TEXTBOX_ACCEPT_ALPHABET_CHARACTERS = 64,
     TEXTBOX_ACCEPT_NUMBER_CHARACTERS = 128,
-    TEXTBOX_FLICKER_DRAWING = 256
+    TEXTBOX_FLICKER_DRAWING = 256,
+    VIDEO_SHOULD_REPEAT = 512,
+    VIDEO_SHOULD_START_IMMEDIATELY = 1024
 
 } DrawBitFlags;
 
@@ -103,8 +105,6 @@ typedef struct Menu {
 
 typedef struct Video {
 
-    bool should_repeat;
-    bool start_video_immediately;
     ALLEGRO_VIDEO *video;
 
 } Video;

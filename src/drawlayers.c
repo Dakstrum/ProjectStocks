@@ -519,7 +519,7 @@ int AddVideoToDrawLayer(DrawObject *object)
         return -1;
     }
     
-    if (object->video.start_video_immediately)
+    if (object->bit_flags & VIDEO_SHOULD_START_IMMEDIATELY)
         al_start_video(object->video.video, al_get_default_mixer());
 
     return AddDrawObjectToDrawLayer(object);
@@ -735,7 +735,7 @@ void DrawButton(DrawObject *object)
 void DrawVideo(DrawObject *object) 
 {
 
-    if (!al_is_video_playing(object->video.video) && object->video.should_repeat) {
+    if (!al_is_video_playing(object->video.video) && object->bit_flags & VIDEO_SHOULD_REPEAT) {
 
         al_seek_video(object->video.video, 0.0);
         al_set_video_playing(object->video.video, true);
