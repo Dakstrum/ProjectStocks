@@ -297,15 +297,14 @@ void CleanUpDrawObjectJson()
 void SetCommonDrawObjectPropertiesForGetDrawObject(DrawObject *draw_object, int object_idx) 
 {
 
-    draw_object->name                 = parsed_objects[object_idx].name;
-    draw_object->x                    = parsed_objects[object_idx].x;
-    draw_object->y                    = parsed_objects[object_idx].y;
-    draw_object->width                = parsed_objects[object_idx].width;
-    draw_object->height               = parsed_objects[object_idx].height;
-    draw_object->asset_path           = parsed_objects[object_idx].asset_path;
-    draw_object->bit_flags            = parsed_objects[object_idx].bit_flags;
-    draw_object->child_of             = parsed_objects[object_idx].child_of;
-    draw_object->bit_flags            = parsed_objects[object_idx].bit_flags;
+    draw_object->name       = parsed_objects[object_idx].name;
+    draw_object->x          = parsed_objects[object_idx].x;
+    draw_object->y          = parsed_objects[object_idx].y;
+    draw_object->width      = parsed_objects[object_idx].width;
+    draw_object->height     = parsed_objects[object_idx].height;
+    draw_object->asset_path = parsed_objects[object_idx].asset_path;
+    draw_object->bit_flags  = parsed_objects[object_idx].bit_flags;
+    draw_object->child_of   = parsed_objects[object_idx].child_of;
 
 }
 
@@ -397,7 +396,7 @@ DrawObject *GetDrawObjectFromDrawObjectJson(char *object_name)
 
 }
 
-void ReclaimUnsuedSpace(int num_objects, DrawObject ***objects) 
+void ReclaimUnsuedSpace(unsigned char num_objects, DrawObject ***objects) 
 {
 
     if (num_objects == 0) {
@@ -422,7 +421,7 @@ void ReclaimUnusedSpaceFromMenuWithChilds(MenuWithChilds *menu_with_childs)
 
 }
 
-void SetChild(int object_idx, int *num_buttons, DrawObject **objects)
+void SetChild(int object_idx, unsigned char *num_buttons, DrawObject **objects)
 {
 
     if (*num_buttons == 255)

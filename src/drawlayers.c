@@ -934,7 +934,6 @@ DrawObject *CreateNewDrawObject()
     object->asset_path   = NULL;
     object->child_of     = NULL;
     object->type         = -1;
-    object->bit_flags    = 0;
     object->bit_flags    = SHOULD_BE_DRAWN;
     object->layer_index  = 0;
     object->object_index = 0;
