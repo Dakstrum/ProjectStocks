@@ -6,7 +6,6 @@
 #include "log.h"
 #include "graph.h"
 #include "shared.h"
-#include "dbaccess.h"
 #include "account.h"
 #include "stocksmenu.h"
 

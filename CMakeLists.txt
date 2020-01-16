@@ -26,6 +26,8 @@ include_directories(${JSON_C_PUBLIC_HEADERS})
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/include/menus)
 include_directories(${PROJECT_SOURCE_DIR}/include/json)
+include_directories(${PROJECT_SOURCE_DIR}/include/db)
+
 
 file(GLOB_RECURSE sources ${PROJECT_SOURCE_DIR}/src/*.c)
 file(GLOB_RECURSE headers ${PROJECT_SOURCE_DIR}/include/*.h)
