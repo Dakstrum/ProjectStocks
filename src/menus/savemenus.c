@@ -156,7 +156,7 @@ void LoadSaveMenuBackButtonCallBack()
 void LoadSaveMenuDeleteSaveButtonCallBack()
 {
 
-    Log("DELETESAVE");
+    DeleteSave(SaveNameTextObject->text.content, PlayerNameTextObject->text.content);
 
 }
 
