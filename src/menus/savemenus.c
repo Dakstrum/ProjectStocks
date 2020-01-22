@@ -128,7 +128,7 @@ void CleanUpNewSaveMenu()
 }
 
 
-//Load SaveButton Callbacks
+//LoadSave Button Callbacks
 
 void NewSaveButtonCallBack()
 {
@@ -142,6 +142,21 @@ void LoadSaveMenuLoadButtonCallBack()
 {
 
     SwitchToLoadingScreen();
+
+}
+
+void LoadSaveMenuBackButtonCallBack()
+{
+
+    ClearDrawLayers();
+    InitializeMainMenu();
+
+}
+
+void LoadSaveMenuDeleteSaveButtonCallBack()
+{
+
+    Log("DELETESAVE");
 
 }
 

@@ -38,6 +38,8 @@ void NewSaveButtonCallBack();
 void NewSaveMenuBackButtonCallBack();
 void NewSaveMenuCreateButtonCallBack();
 void LoadSaveMenuLoadButtonCallBack();
+void LoadSaveMenuBackButtonCallBack();
+void LoadSaveMenuDeleteSaveButtonCallBack();
 
 
 
@@ -49,7 +51,7 @@ typedef struct ButtonCallsbacks
 
 } ButtonCallsbacks;
 
-#define NUM_CALLBACKS 23
+#define NUM_CALLBACKS 25
 static ButtonCallsbacks callbacks[] = {
 
     {"STUB",                               &StubCallback},
@@ -71,10 +73,12 @@ static ButtonCallsbacks callbacks[] = {
     {"ToggleTransactionBuyButton",         &StocksBuyButtonCallBack},
     {"MakeTransactionSellButton",          &MakeSellTransactionButtonCallBack},
     {"MakeTransactionBuyButton",           &MakeBuyTransactionButtonCallBack},
-    {"NewSaveButton",                      &NewSaveButtonCallBack},
+    {"LoadSaveMenuNewSaveButton",          &NewSaveButtonCallBack},
     {"NewSaveMenuBackButton",              &NewSaveMenuBackButtonCallBack},
     {"NewSaveMenuCreateButton",            &NewSaveMenuCreateButtonCallBack},
-    {"LoadSaveMenuLoadButton",             &LoadSaveMenuLoadButtonCallBack}
+    {"LoadSaveMenuLoadButton",             &LoadSaveMenuLoadButtonCallBack},
+    {"LoadSaveMenuBackButton",             &LoadSaveMenuBackButtonCallBack},
+    {"LoadSaveMenuDeleteSaveButton",       &LoadSaveMenuDeleteSaveButtonCallBack}
 
 };
 
