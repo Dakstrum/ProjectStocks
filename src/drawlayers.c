@@ -409,6 +409,7 @@ int AddGraphToDrawLayer(DrawObject *object)
 
 int AddScrollBoxToDrawLayer(DrawObject *object) 
 {
+
     if (object->asset_path == NULL) {
 
         Log("Unable to add scrollbox to draw layer.");
@@ -425,9 +426,12 @@ int AddScrollBoxToDrawLayer(DrawObject *object)
     text_style->font               = GetFontFromCache(text_style->font_path, text_style->font_size);
     text_style->color              = al_map_rgba(text_style->r, text_style->g, text_style->b, text_style->a);
 
-    scrollbox->min_vertical_offset = object->y - 2 * scrollbox->vertical_spacing;
-    scrollbox->max_vertical_offset = object->y + object->height + scrollbox->vertical_spacing;
-    scrollbox->vertical_offset     = 0;
+    if (object->scrollbox.box_height * object->scrollbox.num_items > object->height) {
+
+        scrollbox->min_vertical_offset = object->y - 2 * scrollbox->vertical_spacing;
+        scrollbox->max_vertical_offset = object->y + object->height + scrollbox->vertical_spacing;
+
+    }
 
     if (object->scrollbox.text_style->font == NULL)
         Log("font is null");
@@ -813,11 +817,9 @@ void DrawScrollBox(DrawObject *object)
     int box_y = 0;
     for (int i = 0; i < object->scrollbox.num_items; i++) {
 
-        box_y = (i - 1) * vertical_spacing + vertical_offset + object->y;
+        box_y = i * vertical_spacing + vertical_offset + object->y;
 
-        if (box_y < object->scrollbox.min_vertical_offset)
-            continue;
-        else if (box_y > object->scrollbox.max_vertical_offset)
+        if (box_y < object->y || box_y > object->y + object->height)
             continue;
 
         DrawGeneric(object->scrollbox.boxes_bitmap, x, box_y);
@@ -958,6 +960,8 @@ DrawObject *CreateScrollBoxObject()
     object->scrollbox.box_click             = NULL;
     object->scrollbox.vertical_spacing      = 85;
     object->scrollbox.vertical_offset       = 0;
+    object->scrollbox.min_vertical_offset   = 0;
+    object->scrollbox.max_vertical_offset   = 0;
     object->scrollbox.box_click             = NULL;
     object->scrollbox.text_content          = NULL;
     object->scrollbox.boxes_bitmap          = NULL;

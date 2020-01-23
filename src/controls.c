@@ -106,7 +106,7 @@ bool CheckForScrollboxClick(DrawObject *object, int x, int y)
     int box_y = 0;
     for (int i = 0; i < object->scrollbox.num_items; i++) {
 
-        box_y = (i - 1) * vertical_spacing + vertical_offset + object->y;
+        box_y = i * vertical_spacing + vertical_offset + object->y;
 
         if (x < obj_x * scale.x_scale || x > (obj_x + object->scrollbox.box_width) * scale.x_scale)
             continue;
