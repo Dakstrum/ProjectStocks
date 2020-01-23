@@ -160,13 +160,13 @@ void HandleScrollEventInArea(DrawObject *object, ALLEGRO_EVENT event)
 
     if (IsMouseCursorInAreaOfObject(object, event.mouse.x, event.mouse.y)) {
 
-        object->scrollbox.vertical_offset += event.mouse.dz * 30;
+        object->scrollbox.vertical_offset += event.mouse.dz * 20;
 
         if (object->scrollbox.vertical_offset < object->scrollbox.min_vertical_offset)
             object->scrollbox.vertical_offset = object->scrollbox.min_vertical_offset;
         else if (object->scrollbox.vertical_offset > object->scrollbox.max_vertical_offset)
             object->scrollbox.vertical_offset = object->scrollbox.max_vertical_offset;
-        LogF("vertical offset = %d", object->scrollbox.vertical_offset);
+
     }
 
 }

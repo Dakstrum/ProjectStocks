@@ -71,6 +71,7 @@ void DrawTextBox(DrawObject *object);
 void DrawGraph(DrawObject *object);
 void DrawScrollBox(DrawObject *object);
 void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y);
+void DrawGenericTinted(ALLEGRO_BITMAP *bitmap, float x, float y, ALLEGRO_COLOR tint);
 void DrawBackBuffer(ALLEGRO_BITMAP *bitmap);
 void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width, float height);
 
@@ -432,7 +433,7 @@ int AddScrollBoxToDrawLayer(DrawObject *object)
         int diff          = object->scrollbox.box_height * object->scrollbox.num_items - object->height;
         int boxes_in_diff = (int)ceil((double)diff / (object->scrollbox.box_height));
         scrollbox->min_vertical_offset = -boxes_in_diff * scrollbox->vertical_spacing;
-        scrollbox->max_vertical_offset =  0;//boxes_in_diff * scrollbox->vertical_spacing;
+        scrollbox->max_vertical_offset = 0;
 
     }
 
@@ -825,8 +826,25 @@ void DrawScrollBox(DrawObject *object)
         if (box_y < object->y || box_y > object->y + object->height)
             continue;
 
-        DrawGeneric(object->scrollbox.boxes_bitmap, x, box_y);
-        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30, box_y + 20, 0, object->scrollbox.text_content[i]);
+        float box_with_vertical  = box_y + vertical_spacing;
+        float object_with_height = object->y + object->height;
+        float crossing_diff      = box_with_vertical - object_with_height;
+        if (crossing_diff > 0) {
+
+            float percent_diff       = (crossing_diff / ((box_with_vertical + object_with_height) / 2));
+            unsigned char alpha_mask = 255 - (unsigned char)(percent_diff * 255.0 * 4.0);
+            float x_offset           = percent_diff * 400.0;
+
+            DrawGenericTinted(object->scrollbox.boxes_bitmap, x + x_offset, box_y, al_map_rgba(255, 255, 255, alpha_mask));
+            al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30 + x_offset, box_y + 20, 0, object->scrollbox.text_content[i]);
+            LogF("Percent diff = %f, %d", percent_diff, (unsigned char)percent_diff);
+
+        } else {
+
+            DrawGeneric(object->scrollbox.boxes_bitmap, x, box_y);
+            al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30, box_y + 20, 0, object->scrollbox.text_content[i]);
+
+        }
 
     }
 
@@ -841,6 +859,18 @@ void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y)
     const float scale_width  = al_get_bitmap_width(bitmap);
     const float scale_height = al_get_bitmap_height(bitmap);
     al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_height, x, y, scale_width, scale_height, 0);
+
+}
+
+void DrawGenericTinted(ALLEGRO_BITMAP *bitmap, float x, float y, ALLEGRO_COLOR tint)
+{
+
+    if (bitmap == NULL)
+        return;
+
+    const float scale_width  = al_get_bitmap_width(bitmap);
+    const float scale_height = al_get_bitmap_height(bitmap);
+    al_draw_tinted_scaled_bitmap(bitmap, tint, 0, 0, scale_width, scale_height, x, y, scale_width, scale_height, 0);
 
 }
 
