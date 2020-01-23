@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -428,8 +429,10 @@ int AddScrollBoxToDrawLayer(DrawObject *object)
 
     if (object->scrollbox.box_height * object->scrollbox.num_items > object->height) {
 
-        scrollbox->min_vertical_offset = object->y - 2 * scrollbox->vertical_spacing;
-        scrollbox->max_vertical_offset = object->y + object->height + scrollbox->vertical_spacing;
+        int diff          = object->scrollbox.box_height * object->scrollbox.num_items - object->height;
+        int boxes_in_diff = (int)ceil((double)diff / (object->scrollbox.box_height));
+        scrollbox->min_vertical_offset = -boxes_in_diff * scrollbox->vertical_spacing;
+        scrollbox->max_vertical_offset =  0;//boxes_in_diff * scrollbox->vertical_spacing;
 
     }
 
