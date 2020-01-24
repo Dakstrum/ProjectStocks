@@ -15,14 +15,20 @@
 #include "rendering.h"
 #include "account.h"
 #include "dbaccount.h"
+#include "mainmenu.h"
 
 static MenuWithChilds *load_save_menu    = NULL;
 static MenuWithChilds *new_save_menu     = NULL;
 
+static DrawObject *SaveNameTextObject    = NULL;
+static DrawObject *PlayerNameTextObject  = NULL;
+
+void UpdateSaveStatsText(char *save_name);
+
 void LoadSaveScrollBoxClick(char *scroll_box_content)
 {
     
-    LogF("save name: %s", scroll_box_content);
+    UpdateSaveStatsText(scroll_box_content);
     
 }
 
@@ -54,6 +60,14 @@ void DisplayLoadSaveScrollBox()
 
 }
 
+void UpdateSaveStatsText(char *save_name)
+{
+
+    SetTextContent(SaveNameTextObject, "%s",   save_name);
+    SetTextContent(PlayerNameTextObject, "%s", GetPlayerNameFromSaveName(save_name));
+
+}
+
 void InitializeLoadSaveMenu() 
 {
 
@@ -69,6 +83,12 @@ void InitializeLoadSaveMenu()
     AddMenuWithChildsToDrawLayer(load_save_menu);
     DisplayLoadSaveScrollBox();
 
+    SaveNameTextObject   = GetDrawObjectFromJsonLayer("LoadSaveMenuSaveNameText");
+    PlayerNameTextObject = GetDrawObjectFromJsonLayer("LoadSaveMenuPlayerNameText");
+
+    AddObjectToDrawLayer(SaveNameTextObject);
+    AddObjectToDrawLayer(PlayerNameTextObject);
+    
 }
 
 void InitializeNewSaveMenu() 
@@ -108,7 +128,7 @@ void CleanUpNewSaveMenu()
 }
 
 
-//Load SaveButton Callbacks
+//LoadSave Button Callbacks
 
 void NewSaveButtonCallBack()
 {
@@ -122,6 +142,21 @@ void LoadSaveMenuLoadButtonCallBack()
 {
 
     SwitchToLoadingScreen();
+
+}
+
+void LoadSaveMenuBackButtonCallBack()
+{
+
+    ClearDrawLayers();
+    InitializeMainMenu();
+
+}
+
+void LoadSaveMenuDeleteSaveButtonCallBack()
+{
+
+    DeleteSave(SaveNameTextObject->text.content, PlayerNameTextObject->text.content);
 
 }
 
@@ -140,5 +175,8 @@ void NewSaveMenuCreateButtonCallBack()
     char *player_name_in_text_box = GetTextFromTextBox("PlayerNameTextBox");
 
     CreateNewSave(save_name_in_text_box, player_name_in_text_box);
+
+    ClearDrawLayers();
+    InitializeMainMenu();
 
 }

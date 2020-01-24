@@ -267,6 +267,34 @@ char *GetSaveNameFromSaveId(int save_id)
 
 }
 
+int GetPlayerNameFromSaveNameCallback(void *player_name, int argc, char **argv, char **col_name)
+{
+
+    if (argc > 0) {
+
+        char *temp = *((char **)player_name);
+        strncpy(temp, argv[0], 127);
+        temp[127] = '\0';
+
+    }
+
+    return 0;
+
+}
+
+char *GetPlayerNameFromSaveName(char *save_name)
+{
+
+    char *player_name = malloc(sizeof(char) * 128);
+
+    sqlite3 *db;
+    if (OpenConnection(&db, DefaultConnection()) == 0)
+        ExecuteQuery(GetFormattedPointer("SELECT PlayerName FROM Saves WHERE SaveName = '%s'", save_name), &GetPlayerNameFromSaveNameCallback, &player_name, db);
+
+    return player_name;
+
+}
+
 int GetAmountOfSavesCallback(void *amount_of_saves, int argc, char **argv, char **col_name)
 {
 
