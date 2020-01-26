@@ -67,6 +67,7 @@ typedef struct ScrollBox {
     void (*box_click)(char *);
 
     unsigned short int num_items;
+    short int currently_tinted;
     char **text_content;
     char **icon_paths;
 

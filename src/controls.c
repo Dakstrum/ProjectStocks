@@ -386,9 +386,21 @@ void TintScrollBox()
     if (collection == NULL)
         return;
 
+    DrawObject *object = NULL;
     for (int i = 0;i < collection->num_objects;i++) {
 
+        object = collection->objects[i];
+        object->scrollbox.currently_tinted = -1;
+        for (int k = 0;k < object->scrollbox.num_items;k++) {
 
+            if (MouseInScrollBoxArea(object, state.x, state.y, k)) {
+
+                object->scrollbox.currently_tinted = k;
+                break;
+
+            }
+
+        }
 
     }
 
@@ -400,5 +412,6 @@ void HandleMouseLocation()
 {
 
     TintButtons();
+    TintScrollBox();
 
 }
