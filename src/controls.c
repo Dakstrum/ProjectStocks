@@ -107,28 +107,33 @@ bool HandledMouseClickInTextbox(int x, int y)
 
 }
 
-bool CheckForScrollboxClick(DrawObject *object, int x, int y) 
+bool MouseInScrollBoxArea(DrawObject *object, const int x, const int y, const int idx)
+{
+
+    int box_y = idx * object->scrollbox.vertical_spacing + object->scrollbox.vertical_offset + object->y;
+
+    if (x < object->x * scale.x_scale || x > (object->x + object->scrollbox.box_width) * scale.x_scale)
+        return false;
+    if (y < box_y * scale.y_scale || y > (box_y + object->scrollbox.box_height) * scale.y_scale)
+        return false;
+
+    return true;
+}
+
+bool CheckForScrollboxClick(DrawObject *object, const int x, const int y) 
 {
 
     if (!IsMouseCursorInAreaOfObject(object, x, y))
         return false;
 
-    const int obj_x            = object->x;
-    const int vertical_spacing = object->scrollbox.vertical_spacing;
-    const int vertical_offset  = object->scrollbox.vertical_offset;
-
-    int box_y = 0;
     for (int i = 0; i < object->scrollbox.num_items; i++) {
 
-        box_y = i * vertical_spacing + vertical_offset + object->y;
+        if (MouseInScrollBoxArea(object, x, y, i)) {
 
-        if (x < obj_x * scale.x_scale || x > (obj_x + object->scrollbox.box_width) * scale.x_scale)
-            continue;
-        if (y < box_y * scale.y_scale || y > (box_y + object->scrollbox.box_height) * scale.y_scale)
-            continue;
+            object->scrollbox.box_click(object->scrollbox.text_content[i]);
+            break;
 
-        object->scrollbox.box_click(object->scrollbox.text_content[i]);
-        break;
+        }
 
     }
 
@@ -366,6 +371,27 @@ void TintButtons()
             collection->objects[i]->bit_flags ^= BUTTON_MOUSE_HOVERING;   
 
     }
+    DisposeDrawObjectTypeCollection(collection);
+
+}
+
+void TintScrollBox()
+{
+
+    static ALLEGRO_MOUSE_STATE state;
+    al_get_mouse_state(&state);
+
+    DrawObjectTypeCollection *collection = GetObjectsByType(SCROLLBOX);
+
+    if (collection == NULL)
+        return;
+
+    for (int i = 0;i < collection->num_objects;i++) {
+
+
+
+    }
+
     DisposeDrawObjectTypeCollection(collection);
 
 }

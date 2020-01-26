@@ -843,7 +843,7 @@ void DrawScrollBox(DrawObject *object)
 
         } else {
 
-            DrawGeneric(object->scrollbox.boxes_bitmap, x, box_y);
+            DrawGenericTinted(object->scrollbox.boxes_bitmap, x, box_y, al_map_rgba(255, 255, 255, object->bit_flags & BUTTON_MOUSE_HOVERING ? 150 : 255));
             al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30, box_y + 20, 0, object->scrollbox.text_content[i]);
 
         }
