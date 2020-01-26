@@ -48,18 +48,22 @@ bool HandleMouseClick(DrawObject *object, int x, int y)
 
 bool HandledMouseClickInButtonAreas(int x, int y) 
 {
-    
-    DrawObject **objects = GetAllDrawObjectsInCurrentLayer();
 
-    if (objects == NULL)
-        return false;
+    DrawObjectTypeCollection *collection = GetObjectsByType(BUTTON); 
 
-    for (int i = 0; i < MAX_OBJECTS_PER_LAYER;i++)
-        if (objects[i] != NULL && objects[i]->type == BUTTON)
-            if (HandleMouseClick(objects[i], x, y))
-                return true;
+    bool handled_mouse_click = false;
+    for (int i = 0; i < collection->num_objects;i++) {
 
-    return false;
+        if (HandleMouseClick(collection->objects[i], x, y)) {
+
+            handled_mouse_click = true;
+            break;
+
+        }
+
+    }
+    DisposeDrawObjectTypeCollection(collection);
+    return handled_mouse_click;
 
 }
 
@@ -79,17 +83,21 @@ bool ToggledTextBoxActiveFlag(DrawObject *object, int x, int y)
 bool HandledMouseClickInTextbox(int x, int y)
 {
 
-    DrawObject **objects = GetAllDrawObjectsInCurrentLayer();
+    DrawObjectTypeCollection *collection = GetObjectsByType(BUTTON);
 
-    if (objects == NULL)
-        return false;
+    bool handled_mouse_click = false;
+    for (int i = 0;i < collection->num_objects;i++) {
 
-    for (int i = 0;i < MAX_OBJECTS_PER_LAYER;i++)
-        if (objects[i] != NULL && objects[i]->type == TEXTBOX)
-            if(ToggledTextBoxActiveFlag(objects[i], x, y))
-                return true;
+        if(ToggledTextBoxActiveFlag(collection->objects[i], x, y)) {
 
-    return false;
+            handled_mouse_click = true;
+            break;
+
+        }
+
+    }
+    DisposeDrawObjectTypeCollection(collection);
+    return handled_mouse_click;
 
 }
 
@@ -117,7 +125,6 @@ bool CheckForScrollboxClick(DrawObject *object, int x, int y)
         break;
 
     }
-
 
     return false;
 }
