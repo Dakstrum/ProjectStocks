@@ -67,6 +67,7 @@ void GameLoop()
 
         } else {
 
+            HandleMouseLocation();
             HandleRendering();
 
         }

@@ -736,7 +736,10 @@ void DrawMenu(DrawObject *object)
 void DrawButton(DrawObject *object) 
 {
 
-    DrawGeneric(object->button.button_bitmap, object->x, object->y);
+    if (object->bit_flags & BUTTON_MOUSE_HOVERING)
+        DrawGenericTinted(object->button.button_bitmap, object->x, object->y, al_map_rgba(255, 255, 255, 10));
+    else
+        DrawGeneric(object->button.button_bitmap, object->x, object->y);
 
 }
 
@@ -837,7 +840,6 @@ void DrawScrollBox(DrawObject *object)
 
             DrawGenericTinted(object->scrollbox.boxes_bitmap, x + x_offset, box_y, al_map_rgba(255, 255, 255, alpha_mask));
             al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30 + x_offset, box_y + 20, 0, object->scrollbox.text_content[i]);
-            LogF("Percent diff = %f, %d", percent_diff, (unsigned char)percent_diff);
 
         } else {
 

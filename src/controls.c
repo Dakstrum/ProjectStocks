@@ -51,6 +51,9 @@ bool HandledMouseClickInButtonAreas(int x, int y)
 
     DrawObjectTypeCollection *collection = GetObjectsByType(BUTTON); 
 
+    if (collection == NULL)
+        return false;
+
     bool handled_mouse_click = false;
     for (int i = 0; i < collection->num_objects;i++) {
 
@@ -84,6 +87,9 @@ bool HandledMouseClickInTextbox(int x, int y)
 {
 
     DrawObjectTypeCollection *collection = GetObjectsByType(BUTTON);
+
+    if (collection == NULL)
+        return false;
 
     bool handled_mouse_click = false;
     for (int i = 0;i < collection->num_objects;i++) {
@@ -339,4 +345,34 @@ void HandleInput(ALLEGRO_EVENT event)
     HandleMouseInput(event);
     HandleKeyboard(event);
     
+}
+
+void TintButtons()
+{
+
+    static ALLEGRO_MOUSE_STATE state;
+    al_get_mouse_state(&state);
+
+    DrawObjectTypeCollection *collection = GetObjectsByType(BUTTON);
+
+    if (collection == NULL)
+        return;
+
+    for (int i = 0;i < collection->num_objects;i++) {
+
+        if (IsMouseCursorInAreaOfObject(collection->objects[i], state.x, state.y))
+            collection->objects[i]->bit_flags |= BUTTON_MOUSE_HOVERING;
+        else
+            collection->objects[i]->bit_flags ^= BUTTON_MOUSE_HOVERING;   
+
+    }
+    DisposeDrawObjectTypeCollection(collection);
+
+}
+
+void HandleMouseLocation()
+{
+
+    TintButtons();
+
 }
