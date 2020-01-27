@@ -19,7 +19,6 @@ typedef struct FontCache {
     ALLEGRO_FONT *font;
     int font_size;
 
-
 } FontCache;
 
 ALLEGRO_BITMAP *GetNewlyAddedBitmapFromCache(char *asset_path);

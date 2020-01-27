@@ -5,11 +5,11 @@
 
 #include <allegro5/allegro.h>
 
-#include "drawlayers.h"
-#include "shared.h"
 #include "log.h"
-
+#include "audio.h"
+#include "shared.h"
 #include "mainmenu.h"
+#include "drawlayers.h"
 #include "generalpurposemenus.h"
 
 static int MAX_OBJECTS_PER_LAYER = 0;
@@ -36,6 +36,7 @@ bool HandleMouseClick(DrawObject *object, int x, int y)
 
         if (object->button.Callback != NULL) {
 
+            PlaySample(BUTTON_CLICK);
             object->button.Callback();
             return true;
 
@@ -403,7 +404,6 @@ void TintScrollBox()
         }
 
     }
-
     DisposeDrawObjectTypeCollection(collection);
 
 }
