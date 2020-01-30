@@ -368,7 +368,7 @@ void TintButtons()
 
         if (IsMouseCursorInAreaOfObject(collection->objects[i], state.x, state.y))
             collection->objects[i]->bit_flags |= BUTTON_MOUSE_HOVERING;
-        else
+        else if (collection->objects[i]->bit_flags & BUTTON_MOUSE_HOVERING)
             collection->objects[i]->bit_flags ^= BUTTON_MOUSE_HOVERING;   
 
     }

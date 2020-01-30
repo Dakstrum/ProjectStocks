@@ -736,10 +736,17 @@ void DrawMenu(DrawObject *object)
 void DrawButton(DrawObject *object) 
 {
 
-    if (object->bit_flags & BUTTON_MOUSE_HOVERING)
-        DrawGenericTinted(object->button.button_bitmap, object->x, object->y, al_map_rgba(255, 255, 255, 10));
-    else
+    if (object->bit_flags & BUTTON_MOUSE_HOVERING) {
+
+        al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
+        DrawGenericTinted(object->button.button_bitmap, object->x, object->y, al_map_rgba(255, 255, 255, 200));
+        al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_INVERSE_ALPHA);
+
+    } else {
+
         DrawGeneric(object->button.button_bitmap, object->x, object->y);
+
+    }
 
 }
 
@@ -843,8 +850,10 @@ void DrawScrollBox(DrawObject *object)
 
         } else {
 
+            al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
             DrawGenericTinted(object->scrollbox.boxes_bitmap, x, box_y, al_map_rgba(255, 255, 255, object->scrollbox.currently_tinted == i ? 150 : 255));
             al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30, box_y + 20, 0, object->scrollbox.text_content[i]);
+            al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_INVERSE_ALPHA);
 
         }
 
