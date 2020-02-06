@@ -61,7 +61,7 @@ ALLEGRO_BITMAP *GetBitmapFromCache(char *asset_path)
 
 }
 
-void IncreaseCacheSize(int cache_index, unsigned int *cache_size, int size_of_cache_struct, void *cache)
+void IncreaseCacheSize(unsigned int cache_index, unsigned int *cache_size, int size_of_cache_struct, void *cache)
 {
 
     if (cache_index + 1 < *cache_size)
@@ -122,7 +122,7 @@ ALLEGRO_FONT *GetFontFromCache(char *asset_path, int font_size)
     if (asset_path == NULL || font_size == 0)
         return NULL;
 
-    for (int i = 0; i < font_cache_index; i++) {
+    for (size_t i = 0; i < font_cache_index; i++) {
 
         if (font_cache[i].font_size == font_size && strcmp(font_cache[i].asset_path, asset_path) == 0) 
             return font_cache[i].font;

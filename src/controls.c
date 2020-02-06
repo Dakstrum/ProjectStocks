@@ -131,6 +131,7 @@ bool CheckForScrollboxClick(DrawObject *object, const int x, const int y)
 
         if (MouseInScrollBoxArea(object, x, y, i)) {
 
+            PlaySample(BUTTON_CLICK);
             object->scrollbox.box_click(object->scrollbox.text_content[i]);
             break;
 

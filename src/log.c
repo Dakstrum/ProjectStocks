@@ -41,7 +41,7 @@ void InitializeLogging()
 
     queue           = malloc(sizeof(Queue) * max_queue_size);
     exclusive_queue = malloc(sizeof(Queue) * max_queue_size);
-    for (int i = 0;i < max_queue_size; i++) {
+    for (size_t i = 0;i < max_queue_size; i++) {
         queue[i].message           = NULL;
         exclusive_queue[i].message = NULL;
     }
@@ -73,7 +73,7 @@ void WriteQueue()
 
     sqlite3_exec(db, "BEGIN TRANSACTION", NULL, 0, 0);
 
-    for (int i = 0; i < exclusive_queue_pointer; i++)
+    for (size_t i = 0; i < exclusive_queue_pointer; i++)
         InsertMessage(db, i);
 
     sqlite3_exec(db, "END TRANSACTION", NULL, 0, 0);
@@ -170,7 +170,7 @@ void LogF(const char *str, ...)
 void ResetQueue() 
 {
 
-    for (int i = 0; i < queue_pointer; i++) {
+    for (size_t i = 0; i < queue_pointer; i++) {
 
         if (queue[i].message != NULL)
             free(queue[i].message);
@@ -184,7 +184,7 @@ void ResetQueue()
 void ResetExclusiveQueue()
 {
 
-    for (int i = 0; i < exclusive_queue_pointer;i++) {
+    for (size_t i = 0; i < exclusive_queue_pointer;i++) {
 
         if (exclusive_queue[i].message != NULL) { 
 
@@ -215,7 +215,7 @@ void TransferQueue()
 
     al_lock_mutex(log_mutex);
 
-    for (int i = 0; i < queue_pointer;i++) {
+    for (size_t i = 0; i < queue_pointer;i++) {
 
         exclusive_queue[i].message = queue[i].message;
         queue[i].message           = NULL;

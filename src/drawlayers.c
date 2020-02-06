@@ -315,6 +315,7 @@ int AddTextBoxToDrawLayers(DrawObject *object)
 
 void PopupSetUpDy(void *gen_object, int x, int y)
 {
+    
     DrawObject *object = (DrawObject *)gen_object;
     object->popup.dy   = -(float)(object->popup.current_y - y)/(object->popup.diff_time_left_to_animate);
 

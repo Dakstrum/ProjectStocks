@@ -97,7 +97,7 @@ void SetCompanies()
     sim_data.prices              = malloc(sizeof(StockPrices) * sim_data.num_companies);
     sim_data.random_event_chance = malloc(sizeof(float) * sim_data.num_companies);
 
-    for (int i = 0; i < sim_data.num_companies;i++) {
+    for (size_t i = 0; i < sim_data.num_companies;i++) {
 
         InitializeStockPrice(&sim_data.prices[i]);
         sim_data.random_event_chance[i] = 0.0;
@@ -123,7 +123,7 @@ void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg)
 void GenerateDataForCompanies() 
 {
 
-    for (unsigned int i = 0;i < sim_data.num_companies;i++)
+    for (size_t i = 0;i < sim_data.num_companies;i++)
         SimulationLoop(i);
 
 }
@@ -254,7 +254,7 @@ int GetYearFromBuff(char *buff)
 int GetCompanySimIndex(char *company_name)
 {
 
-    for (int i = 0; i < sim_data.num_companies;i++)
+    for (size_t i = 0; i < sim_data.num_companies;i++)
         if (strcmp(company_name, sim_data.companies[i].company_name) == 0)
             return i;
 
@@ -280,7 +280,7 @@ StockPrices *GetStockPricesFromNowUntil(char *company_name, time_t span)
 
     StockPrices *prices = malloc(sizeof(StockPrices));
     InitializeStockPrice(prices);
-    for (int i = 0; i < sim_data.prices[company_idx].num_prices;i++) {
+    for (size_t i = 0; i < sim_data.prices[company_idx].num_prices;i++) {
 
         if (sim_data.prices[company_idx].times[i] > current_time)
             break;
@@ -300,7 +300,7 @@ int GetNumToReducePricesBy(StockPrices *prices)
 
     int reduce_by        = 1;
     const int num_prices = prices->num_prices;
-    for (int i = 0; i < 24;i++) {
+    for (size_t i = 0; i < 24;i++) {
 
 
         if (TRUNCATE_TO_AMOUNT/((float)num_prices/reduce_by) > 1.0)
@@ -320,7 +320,7 @@ void RemoveElements(StockPrices *prices)
     int reduce_by = GetNumToReducePricesBy(prices);
     LogF("Reduce by %d", reduce_by);
     int new_index = 1;
-    for (int i = 1; i < prices->num_prices;i++) {
+    for (size_t i = 1; i < prices->num_prices;i++) {
 
         if ((i + 1) % reduce_by == 0 || (i + 1) == prices->num_prices) {
 
@@ -357,7 +357,7 @@ float CurrentStockPrice(char *company_name)
         return -1.0f;
 
     time_t current_time = GetGameTime(); 
-    for (int i = 0; i < sim_data.prices[company_idx].num_prices; i++)
+    for (size_t i = 0; i < sim_data.prices[company_idx].num_prices; i++)
         if (sim_data.prices[company_idx].times[i] == current_time)
             return sim_data.prices[company_idx].prices[i];
 

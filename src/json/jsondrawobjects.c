@@ -56,7 +56,7 @@ void ParseJsonDrawObject(array_list *objects_list)
     SetParsedObjectsNull();
 
     char buffer[512];
-    for (int i = 0; i < objects_list->length; i++)
+    for (size_t i = 0; i < objects_list->length; i++)
         WithTypeSetDrawObject(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Type", i)), i);
 
 }
@@ -159,7 +159,7 @@ void CheckAndSetMenuButtons(int idx, char *child_of)
     if (button_list == NULL)
         return;
 
-    for (int i = 0; i < button_list->length;i++)
+    for (size_t i = 0; i < button_list->length;i++)
         SetMenuButtonObject(idx, i, child_of);
 
 }
@@ -214,7 +214,7 @@ void CheckAndSetMenuText(int idx, char *child_of)
     if (text_list == NULL) 
         return;
 
-    for (int i = 0; i < text_list->length;i++)
+    for (size_t i = 0; i < text_list->length;i++)
         SetMenuTextObject(idx, i, child_of);
 
 }
@@ -280,7 +280,7 @@ void CheckAndSetTextboxes(int idx, char *child_of)
     if (text_list == NULL)
         return;
 
-    for (int i = 0; i < text_list->length;i++)
+    for (size_t i = 0; i < text_list->length;i++)
         SetMenuTextbox(idx, i, child_of);
 
 }

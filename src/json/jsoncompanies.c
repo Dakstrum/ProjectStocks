@@ -48,7 +48,7 @@ void SetCompanyProducts(int company_index, array_list *products)
     char buffer[512];
     parsed_companies[company_index].products       = malloc(sizeof(char *) * products->length);
     parsed_companies[company_index].total_products = products->length;
-    for (int i = 0; i < products->length; i++) {
+    for (size_t i = 0; i < products->length; i++) {
 
         parsed_companies[company_index].products[i] = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/Products/%d/ProductName", company_index, i));
 
@@ -62,7 +62,7 @@ void ParseCompanyJsonObject(array_list *companies_list)
     num_companies    = companies_list->length;
     parsed_companies = malloc(sizeof(Company) * companies_list->length);
     char buffer[512];
-    for (int i = 0; i < companies_list->length; i++) {
+    for (size_t i = 0; i < companies_list->length; i++) {
 
         parsed_companies[i].company_name = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/CompanyName", i));
         parsed_companies[i].ipo          = GetFloatFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/IPO", i));
