@@ -16,6 +16,7 @@
 #include "account.h"
 #include "dbaccount.h"
 #include "mainmenu.h"
+#include "simulation.h"
 
 static MenuWithChilds *load_save_menu    = NULL;
 static MenuWithChilds *new_save_menu     = NULL;
@@ -143,6 +144,7 @@ void NewSaveButtonCallBack()
 void LoadSaveMenuLoadButtonCallBack()
 {
 
+    StartSimulation();
     SwitchToLoadingScreen();
 
 }

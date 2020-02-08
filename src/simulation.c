@@ -364,3 +364,20 @@ float CurrentStockPrice(char *company_name)
     return -1.0f;
 
 }
+
+static ALLEGRO_THREAD *stock_simulation_thread = NULL;
+void StartSimulation()
+{
+
+    stock_simulation_thread = al_create_thread(StockSimulationEntry, NULL);
+    al_start_thread(stock_simulation_thread);
+
+}
+
+void StopSimulation()
+{
+
+    al_join_thread(stock_simulation_thread, NULL);
+    al_destroy_thread(stock_simulation_thread);
+
+}

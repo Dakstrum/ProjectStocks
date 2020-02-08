@@ -12,4 +12,6 @@ StockPrices *GetStockPricesFromNowUntil(char *company_name, time_t span);
 void ReduceStockPriceAmount(StockPrices *prices);
 float CurrentStockPrice(char *company_name);
 
+void StartSimulation();
+void StopSimulation();
 #endif

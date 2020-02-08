@@ -12,8 +12,8 @@
 #include "rendering.h"
 #include "log.h"
 
-static DrawObject *video_object = NULL;
-DrawObject *loading_object      = NULL;
+static DrawObject *video_object   = NULL;
+static DrawObject *loading_object = NULL;
 
 void InitializeStartUpSequence() 
 {
@@ -29,8 +29,8 @@ void InitializeLoadingSequence()
 {
 
     CreateNewDrawLayer();
-    loading_object           = GetDrawObjectFromJsonLayer("LoadingVideo");
-    video_object->bit_flags |= VIDEO_SHOULD_REPEAT | VIDEO_SHOULD_START_IMMEDIATELY;
+    loading_object             = GetDrawObjectFromJsonLayer("LoadingVideo");
+    loading_object->bit_flags |= VIDEO_SHOULD_REPEAT | VIDEO_SHOULD_START_IMMEDIATELY;
     AddObjectToDrawLayer(loading_object);
     
 }
@@ -45,6 +45,7 @@ void StartUpSequence()
         
         ClearDrawLayers();
         SwitchToRenderingMainMenu();
+        video_object = NULL;
 
     }
         
@@ -64,6 +65,7 @@ void LoadingSequence()
 
         ClearDrawLayers();
         SwitchToRenderingStocksMenu();
+        loading_object = NULL;
 
     }
 
