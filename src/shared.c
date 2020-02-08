@@ -61,7 +61,7 @@ void SetCleanUpToTrue()
 
 }
 
-char *GetFormattedBuffer(char buffer[512], const char *str, ...) 
+char *GetFormattedBuffer(char buffer[1024], const char *str, ...) 
 {
 
     va_list args;
@@ -69,13 +69,14 @@ char *GetFormattedBuffer(char buffer[512], const char *str, ...)
     vsprintf(buffer, str, args);
 
     va_end(args);
-    buffer[511] = '\0';
+    buffer[1023] = '\0';
     return buffer;
 
 }
 
 char *GetFormattedPointer(const char *str, ...) 
 {
+
     // NEEDS TO BE FREED, so be sure to free the return.
     char *buffer = malloc(sizeof(char) * 2048);
 

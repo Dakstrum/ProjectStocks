@@ -12,6 +12,7 @@
 #include "drawlayers.h"
 
 #define MAX_PARSED_OBJECTS 1024
+#define BUFFER_SIZE        1024
 
 static json_object *draw_objects  = NULL;
 static DrawObject *parsed_objects = NULL;
@@ -55,7 +56,7 @@ void ParseJsonDrawObject(array_list *objects_list)
     parsed_objects = malloc(sizeof(DrawObject) * MAX_PARSED_OBJECTS);
     SetParsedObjectsNull();
 
-    char buffer[512];
+    char buffer[BUFFER_SIZE];
     for (size_t i = 0; i < objects_list->length; i++)
         WithTypeSetDrawObject(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Type", i)), i);
 
@@ -97,7 +98,7 @@ void SetCommonObjectProperties(int idx, char *path, char *child_of)
     else
         strcpy(base_path, path);
 
-    char buffer[512];
+    char buffer[BUFFER_SIZE];
     char appended_path[256];
 
     parsed_objects[num_objects].bit_flags  = SHOULD_BE_DRAWN;
@@ -153,7 +154,7 @@ void SetMenuButtonObject(int idx, int button_idx, char *child_of)
 void CheckAndSetMenuButtons(int idx, char *child_of) 
 {
 
-    char buffer[512];
+    char buffer[BUFFER_SIZE];
     array_list *button_list = GetArrayList(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Buttons", idx));
 
     if (button_list == NULL)
@@ -208,7 +209,7 @@ void SetMenuTextObject(int idx, int text_idx, char *child_of)
 void CheckAndSetMenuText(int idx, char *child_of) 
 {
 
-    char buffer[512];
+    char buffer[BUFFER_SIZE];
     array_list *text_list = GetArrayList(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Text", idx));
 
     if (text_list == NULL) 
@@ -274,7 +275,7 @@ void SetMenuTextbox(int idx, int textbox_idx, char *child_of)
 void CheckAndSetTextboxes(int idx, char *child_of) 
 {
 
-    char buffer[512];
+    char buffer[BUFFER_SIZE];
     array_list *text_list = GetArrayList(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Textbox", idx));
 
     if (text_list == NULL)
