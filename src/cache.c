@@ -44,6 +44,34 @@ void InitializeCache()
 
 }
 
+void IncreaseCacheSize(unsigned short int cache_index, unsigned short int *cache_size, int size_of_cache_struct, void *cache)
+{
+
+    if (cache_index + 1 < *cache_size)
+        return;
+
+    *cache_size += 256;
+    cache = realloc(cache, size_of_cache_struct * *(cache_size));
+    Log("Increased cache");
+
+}
+
+
+ALLEGRO_BITMAP *GetNewlyAddedBitmapFromCache(char *asset_path) 
+{
+
+    IncreaseCacheSize(bitmap_cache_index, &bitmap_cache_size, sizeof(BitmapCache *), (void *)bitmap_cache);;
+
+    bitmap_cache[bitmap_cache_index].asset_path = asset_path;
+    bitmap_cache[bitmap_cache_index].bitmap     = al_load_bitmap(asset_path);
+
+    bitmap_cache_index++;
+
+    return bitmap_cache[bitmap_cache_index-1].bitmap;
+    
+}
+
+
 ALLEGRO_BITMAP *GetBitmapFromCache(char *asset_path) 
 {
 
@@ -57,54 +85,15 @@ ALLEGRO_BITMAP *GetBitmapFromCache(char *asset_path)
 
     }
 
+    LogF("Returning new bitmap %s", asset_path);
     return GetNewlyAddedBitmapFromCache(asset_path);
-
-}
-
-void IncreaseCacheSize(unsigned short int cache_index, unsigned short int *cache_size, int size_of_cache_struct, void *cache)
-{
-
-    if (cache_index + 1 < *cache_size)
-        return;
-
-    *cache_size += 256;
-    cache = realloc(cache, size_of_cache_struct * *(cache_size));
-    Log("Increased cache");
-
-}
-
-void IncreaseBitmapCacheSizeIfNeeded() 
-{
-
-    IncreaseCacheSize(bitmap_cache_index, &bitmap_cache_size, sizeof(BitmapCache *), (void *)bitmap_cache);
-
-}
-
-ALLEGRO_BITMAP *GetNewlyAddedBitmapFromCache(char *asset_path) 
-{
-
-    IncreaseBitmapCacheSizeIfNeeded();
-
-    bitmap_cache[bitmap_cache_index].asset_path = asset_path;
-    bitmap_cache[bitmap_cache_index].bitmap     = al_load_bitmap(asset_path);
-
-    bitmap_cache_index++;
-
-    return bitmap_cache[bitmap_cache_index-1].bitmap;
-    
-}
-
-void IncreaseFontCacheSizeIfNeeded() 
-{
-
-    IncreaseCacheSize(font_cache_index, &font_cache_size, sizeof(FontCache *), (void *)font_cache);
 
 }
 
 ALLEGRO_FONT *GetNewlyAddedFontFromCache(char *asset_path, int font_size) 
 {
 
-    IncreaseFontCacheSizeIfNeeded();
+    IncreaseCacheSize(font_cache_index, &font_cache_size, sizeof(FontCache *), (void *)font_cache);
 
     font_cache[font_cache_index].font       = al_load_ttf_font(asset_path, font_size, 0);
     font_cache[font_cache_index].font_size  = font_size;
@@ -128,6 +117,7 @@ ALLEGRO_FONT *GetFontFromCache(char *asset_path, int font_size)
             return font_cache[i].font;
 
     }
+    LogF("Returning new font %s with size %d", asset_path, font_size);
 
     return GetNewlyAddedFontFromCache(asset_path, font_size);
 

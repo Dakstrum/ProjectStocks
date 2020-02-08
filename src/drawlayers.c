@@ -306,11 +306,14 @@ void CleanUpScrollbox(DrawObject *object)
     if (object->scrollbox.text_content != NULL)
         free(object->scrollbox.text_content);
 
+    if (object->scrollbox.icon_paths != NULL)
+        free(object->scrollbox.icon_paths);
+
     object->scrollbox.icons        = NULL;
     object->scrollbox.text_style   = NULL;
     object->scrollbox.text_content = NULL;
-    //free(object->scrollbox.icon_paths);
-
+    object->scrollbox.icon_paths   = NULL;
+    
 }
 
 
@@ -1041,6 +1044,7 @@ DrawObject *CreateScrollBoxObject()
     object->scrollbox.text_content          = NULL;
     object->scrollbox.boxes_bitmap          = NULL;
     object->scrollbox.icons                 = NULL;
+    object->scrollbox.icon_paths            = NULL;
 
     object->scrollbox.text_style            = malloc(sizeof(TextStyle));
     object->scrollbox.text_style->font_size = 40;

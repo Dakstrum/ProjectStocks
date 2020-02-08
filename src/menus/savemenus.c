@@ -34,9 +34,10 @@ void LoadSaveScrollBoxClick(char *scroll_box_content)
 
 void AddSaveContentToScrollBox(DrawObject *object)
 {
-    GetAmountOfSaves();
+
     for(int i = 0; i < GetAmountOfSaves(); i++)
-        object->scrollbox.text_content[i]  = GetSaveNameFromSaveId(i+1);
+        object->scrollbox.text_content[i] = GetSaveNameFromSaveId(i+1);
+
 }
 
 void DisplayLoadSaveScrollBox() 
@@ -132,6 +133,7 @@ void CleanUpNewSaveMenu()
 
 void NewSaveButtonCallBack()
 {
+
     CreateNewDrawLayer();
     new_save_menu = GetMenuWithChildsFromJsonLayer("NewSaveMenu");
     AddMenuWithChildsToDrawLayer(new_save_menu);
