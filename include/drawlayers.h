@@ -61,7 +61,7 @@ typedef struct ScrollBox {
     short int vertical_offset;
     short int min_vertical_offset;
     short int max_vertical_offset;
-    short int box_width;
+    unsigned short int box_width;
     unsigned char box_height;
 
     void (*box_click)(char *);
@@ -125,7 +125,7 @@ typedef struct Graph {
 
     Point *points;
 
-    unsigned int num_points;
+    unsigned short int num_points;
 
     ALLEGRO_COLOR color;
     unsigned char r;

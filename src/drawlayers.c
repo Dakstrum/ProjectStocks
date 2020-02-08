@@ -53,6 +53,7 @@ void CleanUpPopUp(DrawObject *object);
 void CleanUpVideo(DrawObject *object);
 void CleanUpText(DrawObject *object);
 void CleanUpTextBox(DrawObject *object);
+void CleanUpScrollbox(DrawObject *object);
 void ClearUpGeneric(DrawObject *object);
 
 bool HandleMouseClick(DrawObject *object, int x, int y);
@@ -80,6 +81,7 @@ void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display)
 
     al_destroy_bitmap(video_buffer);
     video_buffer = al_create_bitmap(1920, 1080);
+    al_set_new_bitmap_flags(ALLEGRO_NO_PRESERVE_TEXTURE);
     display      = active_display;
     draw_layers  = malloc(sizeof(DrawLayer) * MAX_DRAW_LAYERS);
     current_draw_layer = -1;
@@ -230,12 +232,13 @@ void ClearUpGeneric(DrawObject *object)
     object->name = NULL;
     switch (object->type) {
 
-        case MENU:    CleanUpMenu(object);     break;
-        case BUTTON:  CleanUpButton(object);   break;
-        case POPUP:   CleanUpPopUp(object);    break;
-        case VIDEO:   CleanUpVideo(object);    break;
-        case TEXT:    CleanUpText(object);     break;
-        case TEXTBOX: CleanUpTextBox(object);  break;
+        case MENU     : CleanUpMenu(object);     break;
+        case BUTTON   : CleanUpButton(object);   break;
+        case POPUP    : CleanUpPopUp(object);    break;
+        case VIDEO    : CleanUpVideo(object);    break;
+        case TEXT     : CleanUpText(object);     break;
+        case TEXTBOX  : CleanUpTextBox(object);  break;
+        case SCROLLBOX: CleanUpScrollbox(object); break;
 
     }
 
@@ -281,6 +284,32 @@ void CleanUpTextBox(DrawObject *object)
 {
 
 
+
+}
+
+void CleanUpScrollbox(DrawObject *object)
+{
+
+    if (object->scrollbox.icons != NULL)
+        free(object->scrollbox.icons);
+    
+    if (object->scrollbox.text_style != NULL)
+        free(object->scrollbox.text_style);
+
+    for (unsigned short int i = 0; i < object->scrollbox.num_items;i++) {
+
+        free(object->scrollbox.text_content[i]);
+        object->scrollbox.text_content[i] = NULL;
+
+    }
+
+    if (object->scrollbox.text_content != NULL)
+        free(object->scrollbox.text_content);
+
+    object->scrollbox.icons        = NULL;
+    object->scrollbox.text_style   = NULL;
+    object->scrollbox.text_content = NULL;
+    //free(object->scrollbox.icon_paths);
 
 }
 
@@ -650,7 +679,7 @@ void DrawGraph(DrawObject *object)
     const float x             = object->x;
     const float y_start_point = object->y + object->height;
     ALLEGRO_COLOR color       = al_map_rgba(255, 255, 255, 255);
-    for (unsigned int i = 0;i < object->graph.num_points - 1;i++)
+    for (unsigned short int i = 0;i < object->graph.num_points - 1;i++)
         al_draw_line(x + points[i].x, y_start_point - points[i].y, x + points[i+1].x, y_start_point - points[i+1].y, color , 2);
 
 }
@@ -1011,6 +1040,7 @@ DrawObject *CreateScrollBoxObject()
     object->scrollbox.box_click             = NULL;
     object->scrollbox.text_content          = NULL;
     object->scrollbox.boxes_bitmap          = NULL;
+    object->scrollbox.icons                 = NULL;
 
     object->scrollbox.text_style            = malloc(sizeof(TextStyle));
     object->scrollbox.text_style->font_size = 40;
@@ -1019,9 +1049,9 @@ DrawObject *CreateScrollBoxObject()
     object->scrollbox.text_style->g         = 0;
     object->scrollbox.text_style->b         = 0;
     object->scrollbox.text_style->font_path = "assets/font/DanielLinssenM5/m5x7.ttf";
+    object->scrollbox.text_content          = NULL;
 
     return object;
-
 }
 
 DrawObject *FindDrawObject(char *object_name)
