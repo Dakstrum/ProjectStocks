@@ -307,7 +307,7 @@ int GetAmountOfSavesCallback(void *amount_of_saves, int argc, char **argv, char 
 int GetAmountOfSaves()
 {
 
-    int amount_of_saves;
+    int amount_of_saves = 0;
 
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
@@ -354,7 +354,7 @@ int GetAmountOfCompanysCallback(void *amount_of_saves, int argc, char **argv, ch
 int GetAmountOfCompanies()
 {
 
-    int amount_of_companies;
+    int amount_of_companies = 0;
 
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
