@@ -81,7 +81,7 @@ void InitializeMainMenu()
     
     main_menu = GetMenuWithChildsFromJsonLayer("MainMenu");
     AddMenuWithChildsToDrawLayer(main_menu);
-    DisplayTempScrollBox();
+    //DisplayTempScrollBox();
     
     DynamicText();
     MainMenuRenderLogic();

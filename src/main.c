@@ -110,7 +110,7 @@ enum InitializeSuccess Initialize()
     InitializeEventQueue();
     InitializeJson();
     InitializeAudio();
-    CopyPersistentToMemory();
+    //CopyPersistentToMemory();
     InitAccount();
     InitializeSimulation();
     InitializeGameThreads();
