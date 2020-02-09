@@ -210,16 +210,29 @@ void ClearUpDrawLayer(int layer)
 
     }
 
+    MenuWithChilds *menu = NULL;
     for (int j = 0;j < MAX_MENU_WITH_CHILDS_PER_LAYER;j++) {
 
-        if (draw_layers[layer].menu_with_childs[j] != NULL) {
+        menu = draw_layers[layer].menu_with_childs[j];
+        if (menu == NULL)
+            continue;
 
-            free(draw_layers[layer].menu_with_childs[j]->buttons);
-            free(draw_layers[layer].menu_with_childs[j]->text);
-            free(draw_layers[layer].menu_with_childs[j]);
-            draw_layers[layer].menu_with_childs[j] = NULL;
+        if (menu->text != NULL)
+            free(menu->text);
 
-        }
+        if (menu->buttons != NULL)
+            free(menu->buttons);
+
+        if (menu->text_boxes != NULL)
+            free(menu->text_boxes);
+
+        if (menu->scroll_boxes != NULL)
+            free(menu->scroll_boxes);
+
+        if (menu != NULL)
+            free(menu);
+
+        draw_layers[layer].menu_with_childs[j] = NULL;
 
     }
     current_active_textbox.object = NULL;
@@ -992,14 +1005,14 @@ void SetTextContent(DrawObject *object, const char *str, ...)
     va_list args;
     va_start(args, str);
     
-    if (!(object->bit_flags & TEXT_IS_DYNAMIC)) {
+    if (object->bit_flags & TEXT_IS_DYNAMIC) {
         
-        object->bit_flags   |= TEXT_IS_DYNAMIC;
-        object->text.content = GetFormattedPointerVaList(str, args);
+        SetFormattedPointerVaList(object->text.content, str, args);
 
     } else { 
 
-        SetFormattedPointerVaList(object->text.content, str, args);
+        object->bit_flags   |= TEXT_IS_DYNAMIC;
+        object->text.content = GetFormattedPointerVaList(str, args);
 
     }
 

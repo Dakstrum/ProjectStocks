@@ -472,6 +472,7 @@ MenuWithChilds *GetMenuWithChildsFromDrawObjectJson(char *menu_name)
     menu_with_childs->buttons          = malloc(sizeof(DrawObject *) * 256);
     menu_with_childs->text             = malloc(sizeof(DrawObject *) * 256);
     menu_with_childs->text_boxes       = malloc(sizeof(DrawObject *) * 256);
+    menu_with_childs->scroll_boxes     = NULL;
 
     SetAllMenuChilds(menu_with_childs);
     ReclaimUnusedSpaceFromMenuWithChilds(menu_with_childs);

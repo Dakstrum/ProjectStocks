@@ -81,7 +81,6 @@ void InitializeMainMenu()
     
     main_menu = GetMenuWithChildsFromJsonLayer("MainMenu");
     AddMenuWithChildsToDrawLayer(main_menu);
-    //DisplayTempScrollBox();
     
     DynamicText();
     MainMenuRenderLogic();
@@ -101,9 +100,9 @@ void CleanUpMainMenu()
 void MainMenuStartButtonCallBack()
 {
     
-    //SwitchToLoadingScreen();
     ClearDrawLayers();
     InitializeLoadSaveMenu();
+    
 }
 
 void MainMenuOptionsButtonCallBack()

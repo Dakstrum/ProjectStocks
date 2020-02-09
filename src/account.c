@@ -27,9 +27,9 @@ void SaveLoadTest()
 
 #if DEBUGGING
 
-    CreateNewSave("NewDebugSave", "DebugEmma");
-    atomic_store(&game_seed, 0);
-    LoadSave(atomic_load(&save_id));
+    //CreateNewSave("NewDebugSave", "DebugEmma");
+    //atomic_store(&game_seed, 0);
+    //LoadSave(atomic_load(&save_id));
 
 #endif
 

@@ -94,7 +94,6 @@ char *GetFormattedPointer(const char *str, ...)
 void SetFormattedPointerVaList(char *buffer, const char *str, va_list args) 
 {
 
-    //va_start(args, str);
     vsprintf(buffer, str, args);
     va_end(args);
     
