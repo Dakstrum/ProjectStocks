@@ -21,7 +21,8 @@ typedef struct TimeSpanWithDiff
 } TimeSpanWithDiff;
 
 #define NUM_TIMESPANS 11
-static const TimeSpanWithDiff timespans[] = {
+static const TimeSpanWithDiff timespans[] = 
+{
     {ONE_DAY     , 86400},
     {THREE_DAYS  , 259200},
     {ONE_WEEK    , 604800},
