@@ -46,7 +46,6 @@ int InsertSave(char *save_name, char *player_name, unsigned int game_seed)
     }
 
     sqlite3_close(db);
-
     return save_id;
 
 }
@@ -153,7 +152,7 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, int pri
 {
 
     sqlite3 *db;
-    int owned_stock_amount;
+    int owned_stock_amount = 0;
 
      if (OpenConnection(&db, DefaultConnection()) == 0) {
 
@@ -225,7 +224,7 @@ int SetCompanyId(void *company_id, int argc, char **argv, char **col_name)
 int GetCompanyId(char *company_name, sqlite3 *db) 
 {
 
-    int company_id;
+    int company_id = 0;
     ExecuteQuery(GetFormattedPointer("SELECT CompanyId FROM Company WHERE CompanyName='%s'", company_name), &SetCompanyId, &company_id, db);
 
     return company_id;

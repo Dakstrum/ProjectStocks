@@ -53,26 +53,29 @@ int main(int argc, char **argv)
 
 }
 
+void Loop() 
+{
+
+    ALLEGRO_EVENT event = WaitForEvent();
+    if (event.type != ALLEGRO_EVENT_TIMER) {
+
+        HandleInput(event);
+        HandleWindowEvents(event);
+
+    } else {
+
+        HandleMouseLocation();
+        HandleRendering();
+
+    }
+
+}
+
 void GameLoop() 
 {
 
-    while (!ShouldICleanUp()) {
-
-        ALLEGRO_EVENT event = WaitForEvent();
-
-        if (event.type != ALLEGRO_EVENT_TIMER) {
-
-            HandleInput(event);
-            HandleWindowEvents(event);
-
-        } else {
-
-            HandleMouseLocation();
-            HandleRendering();
-
-        }
-
-    }
+    while (!ShouldICleanUp())
+        Loop();
 
 }
 
