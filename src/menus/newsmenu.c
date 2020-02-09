@@ -9,8 +9,6 @@
 #include "drawlayers.h"
 #include "log.h"
 
-static MenuWithChilds *news_menu = NULL;
-
 void InitializeNewsMenu() 
 { 
 
@@ -21,16 +19,7 @@ void InitializeNewsMenu()
 
     }
 
-    news_menu = GetMenuWithChildsFromJsonLayer("NewsMenu");
-    AddMenuWithChildsToDrawLayer(news_menu);
-
-}
-
-
-void CleanUpNewsMenu() 
-{
-
-    free(news_menu);
+    AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("NewsMenu"));
 
 }
 

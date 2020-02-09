@@ -15,42 +15,6 @@
 #include "cardsmenu.h"
 
 
-void StubCallback();
-
-void MainMenuStartButtonCallBack();
-void MainMenuOptionsButtonCallBack();
-void MainMenuExitButtonCallBack();
-void PauseMenuMainMenuButtonCallBack();
-void PauseMenuOptionsButtonCallBack();
-void PauseMenuExitButtonCallBack();
-void OptionsMenuExitButtonCallBack();
-void StocksButtonCallBack();
-void NewsButtonCallBack();
-void AccountButtonCallBack();
-void CardsButtonCallBack();
-void MainMenuGitHubButtonCallBack();
-void MainMenuTwitterButtonCallBack();
-void MainMenuYoutubeButtonCallBack();
-void MainMenuWebsiteButtonCallBack();
-void StocksSellButtonCallBack();
-void StocksBuyButtonCallBack();
-void MakeSellTransactionButtonCallBack();
-void MakeBuyTransactionButtonCallBack();
-void NewSaveButtonCallBack();
-void NewSaveMenuBackButtonCallBack();
-void NewSaveMenuCreateButtonCallBack();
-void LoadSaveMenuLoadButtonCallBack();
-void TempApplyButtonCallBack();
-void CardApplyExitButtonCallBack();
-void LoadSaveMenuBackButtonCallBack();
-void LoadSaveMenuDeleteSaveButtonCallBack();
-
-void OneDButtonCallBack();
-void OneWButtonCallBack();
-void OneMButtonCallBack();
-void OneYButtonCallBack();
-void AllButtonCallBack();
-
 typedef struct ButtonCallsbacks 
 {
 
@@ -58,6 +22,14 @@ typedef struct ButtonCallsbacks
     void (*Callback)();
 
 } ButtonCallsbacks;
+
+
+void StubCallback() 
+{
+
+    Log("STUB: Button may have not been set correctly StubCallback");
+
+}
 
 #define NUM_CALLBACKS 33
 static ButtonCallsbacks callbacks[] = {
@@ -98,6 +70,7 @@ static ButtonCallsbacks callbacks[] = {
 
 };
 
+
 void *GetButtonCallback(char *button_name) 
 {
 
@@ -106,12 +79,5 @@ void *GetButtonCallback(char *button_name)
             return callbacks[i].Callback;
 
     return &StubCallback;
-
-}
-
-void StubCallback() 
-{
-
-    Log("STUB: Button may have not been set correctly StubCallback");
 
 }

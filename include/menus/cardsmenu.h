@@ -5,4 +5,7 @@ void InitializeCardsMenu();
 void ToggleCardsMenu();
 void TempApplyButtonCallBack();
 
+void TempApplyButtonCallBack();
+void CardApplyExitButtonCallBack();
+
 #endif

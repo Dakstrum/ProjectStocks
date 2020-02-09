@@ -291,6 +291,7 @@ char *GetPlayerNameFromSaveName(char *save_name)
     if (OpenConnection(&db, DefaultConnection()) == 0)
         ExecuteQuery(GetFormattedPointer("SELECT PlayerName FROM Saves WHERE SaveName = '%s'", save_name), &GetPlayerNameFromSaveNameCallback, &player_name, db);
 
+    player_name = '\0';
     return player_name;
 
 }

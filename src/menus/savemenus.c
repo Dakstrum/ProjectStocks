@@ -19,7 +19,6 @@
 #include "simulation.h"
 
 static MenuWithChilds *load_save_menu   = NULL;
-static MenuWithChilds *new_save_menu    = NULL;
 
 static DrawObject *SaveNameTextObject   = NULL;
 static DrawObject *PlayerNameTextObject = NULL;
@@ -27,17 +26,13 @@ static DrawObject *PlayerNameTextObject = NULL;
 void UpdateSaveStatsText(char *save_name)
 {
 
+    char *player_name = GetPlayerNameFromSaveName(save_name);
+
     SetTextContent(SaveNameTextObject, "%s",   save_name);
-    SetTextContent(PlayerNameTextObject, "%s", GetPlayerNameFromSaveName(save_name));
+    SetTextContent(PlayerNameTextObject, "%s", player_name);
 
-}
+    free(player_name);
 
-void LoadSaveScrollBoxClick(char *scroll_box_content)
-{
-    
-    LogF("Scrollbox content %s", scroll_box_content);
-    UpdateSaveStatsText(scroll_box_content);
-    
 }
 
 void AddSaveContentToScrollBox(DrawObject *object)
@@ -61,7 +56,7 @@ void DisplayLoadSaveScrollBox()
     object->asset_path = "assets/images/companyicons/SaveBox.png";
 
     object->scrollbox.num_items        = GetAmountOfSaves();
-    object->scrollbox.box_click        = &LoadSaveScrollBoxClick;
+    object->scrollbox.box_click        = &UpdateSaveStatsText;
     object->scrollbox.text_content     = malloc(sizeof(char *) * GetAmountOfSaves());
 
     AddSaveContentToScrollBox(object);
@@ -106,53 +101,26 @@ void InitializeNewSaveMenu()
 
 }
 
-void CleanUpLoadSaveMenu() 
-{
-
-    return;
-    if (load_save_menu != NULL)
-        free(load_save_menu);
-    
-    load_save_menu = NULL;
-
-}
-
-void CleanUpNewSaveMenu() 
-{
-
-    return;
-    if (new_save_menu != NULL)
-        free(new_save_menu);
-    
-    new_save_menu = NULL;
-
-}
-
 
 //LoadSave Button Callbacks
 
 void NewSaveButtonCallBack()
 {
 
-    CreateNewDrawLayer();
-    new_save_menu = GetMenuWithChildsFromJsonLayer("NewSaveMenu");
-    AddMenuWithChildsToDrawLayer(new_save_menu);
+    if (CreateNewDrawLayer() == -1) {
 
-}
+        Log("Error: NewSaveButtonCallBack, could not create drawlayer");
+        return;
 
-void CleanSaveMenu()
-{
-
-    //CleanUpNewSaveMenu();
-    //CleanUpLoadSaveMenu();
-    ClearDrawLayers();
+    }
+    AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("NewSaveMenu"));
 
 }
 
 void StartGame()
 {
 
-    CleanSaveMenu();
+    ClearDrawLayers();
     StartSimulation();
     SwitchToLoadingScreen();
 
@@ -168,7 +136,7 @@ void LoadSaveMenuLoadButtonCallBack()
 void LoadSaveMenuBackButtonCallBack()
 {
 
-    CleanSaveMenu();
+    ClearDrawLayers();
     InitializeMainMenu();
 
 }
@@ -190,9 +158,8 @@ void NewSaveMenuBackButtonCallBack()
 void NewSaveMenuCreateButtonCallBack()
 {
     
-    char *save_name_in_text_box   = GetTextFromTextBox("SaveNameTextBox");
+    char *save_name_in_text_box = GetTextFromTextBox("SaveNameTextBox");
     
-
     if (strlen(save_name_in_text_box) == 0) {
 
         Log("save_name_in_text_box has length of 0");

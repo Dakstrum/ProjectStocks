@@ -6,4 +6,13 @@ void ShowStartMenu();
 void ToggleOptionsMenu();
 void MainMenuRenderLogic();
 
+void MainMenuStartButtonCallBack();
+void MainMenuOptionsButtonCallBack();
+void MainMenuExitButtonCallBack();
+
+void MainMenuGitHubButtonCallBack();
+void MainMenuTwitterButtonCallBack();
+void MainMenuYoutubeButtonCallBack();
+void MainMenuWebsiteButtonCallBack();
+
 #endif

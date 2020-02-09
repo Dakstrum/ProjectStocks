@@ -296,8 +296,6 @@ void CleanUpText(DrawObject *object)
 void CleanUpTextBox(DrawObject *object)
 {
 
-
-
 }
 
 void CleanUpScrollbox(DrawObject *object)
@@ -309,7 +307,7 @@ void CleanUpScrollbox(DrawObject *object)
     if (object->scrollbox.text_style != NULL)
         free(object->scrollbox.text_style);
 
-    for (unsigned short int i = 0; i < object->scrollbox.num_items;i++) {
+    for (unsigned short int i = 0; i < object->scrollbox.num_items; i++) {
 
         free(object->scrollbox.text_content[i]);
         object->scrollbox.text_content[i] = NULL;
