@@ -4,6 +4,7 @@
 #include <stdatomic.h>
 
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_primitives.h>
 
 #include "log.h"
 #include "graph.h"
@@ -101,5 +102,37 @@ DrawObject *GetGraphDrawObject(char *company_name, TimeSpan timespan, int width,
     }
 
     return graph_object;
+
+}
+
+DrawObject *PollForNewGraphObject(DrawObject *object) 
+{
+
+    if (object->graph.next_refresh <= time(NULL)) {
+
+        free(object->graph.points);
+        DrawObject *graph_object   = GetGraphDrawObject(object->graph.company, object->graph.timespan, object->width, object->height);
+        object->graph              = graph_object->graph;
+        free(graph_object);
+
+    }
+    return object;
+
+}
+
+void DrawGraph(DrawObject *object) 
+{
+
+    object = PollForNewGraphObject(object);
+    Point *points = object->graph.points;
+
+    if (points == NULL || object->graph.num_points == 0)
+        return;
+
+    const float x             = object->x;
+    const float y_start_point = object->y + object->height;
+    ALLEGRO_COLOR color       = al_map_rgba(255, 255, 255, 255);
+    for (unsigned short int i = 0;i < object->graph.num_points - 1;i++)
+        al_draw_line(x + points[i].x, y_start_point - points[i].y, x + points[i+1].x, y_start_point - points[i+1].y, color , 2);
 
 }

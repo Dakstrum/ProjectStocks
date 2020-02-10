@@ -28,3 +28,9 @@ void DrawButton(DrawObject *object)
     }
 
 }
+
+void CleanUpButton(DrawObject *object) 
+{
+
+
+}

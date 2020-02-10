@@ -7,4 +7,6 @@ void InitScrollbox(DrawObject *object);
 void DrawScrollBox(DrawObject *object);
 void CleanUpScrollbox(DrawObject *object);
 
+DrawObject *CreateScrollBoxObject();
+
 #endif

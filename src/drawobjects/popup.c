@@ -159,3 +159,9 @@ void DrawPopUp(DrawObject *object)
     DrawGenericWithWidth(object->popup.popup_bitmap, (int)object->popup.current_x, (int)object->popup.current_y, object->width, object->height);
 
 }
+
+void CleanUpPopUp(DrawObject *object) 
+{
+    
+
+}

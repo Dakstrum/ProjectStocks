@@ -103,3 +103,40 @@ void CleanUpScrollbox(DrawObject *object)
     object->scrollbox.icon_paths   = NULL;
     
 }
+
+DrawObject *CreateScrollBoxObject()
+{
+
+    DrawObject *object = CreateNewDrawObject();
+
+    object->x                               = 0;
+    object->y                               = 0;
+    object->width                           = 0;
+    object->height                          = 0;
+    object->asset_path                      = NULL;
+    object->type                            = SCROLLBOX;
+
+    object->scrollbox.num_items             = 0;
+    object->scrollbox.currently_tinted      = -1;
+    object->scrollbox.box_click             = NULL;
+    object->scrollbox.vertical_spacing      = 85;
+    object->scrollbox.vertical_offset       = 0;
+    object->scrollbox.min_vertical_offset   = 0;
+    object->scrollbox.max_vertical_offset   = 0;
+    object->scrollbox.box_click             = NULL;
+    object->scrollbox.text_content          = NULL;
+    object->scrollbox.boxes_bitmap          = NULL;
+    object->scrollbox.icons                 = NULL;
+    object->scrollbox.icon_paths            = NULL;
+
+    object->scrollbox.text_style            = malloc(sizeof(TextStyle));
+    object->scrollbox.text_style->font_size = 40;
+    object->scrollbox.text_style->a         = 255;
+    object->scrollbox.text_style->r         = 0;
+    object->scrollbox.text_style->g         = 0;
+    object->scrollbox.text_style->b         = 0;
+    object->scrollbox.text_style->font_path = "assets/font/DanielLinssenM5/m5x7.ttf";
+    object->scrollbox.text_content          = NULL;
+
+    return object;
+}

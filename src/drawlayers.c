@@ -13,10 +13,16 @@
 #include "log.h"
 #include "audio.h"
 #include "cache.h"
-#include "graph.h"
 #include "drawlayers.h"
 
+#include "draw.h"
+#include "text.h"
+#include "menu.h"
+#include "graph.h"
+#include "popup.h"
+#include "video.h"
 #include "button.h"
+#include "textbox.h"
 #include "scrollbox.h"
 
 #define MAX_DRAW_LAYERS 10
@@ -49,12 +55,6 @@ static ALLEGRO_BITMAP *video_buffer;
 void SetObjectPointersToNull();
 
 void ClearUpDrawLayer(int layer);
-void CleanUpButton(DrawObject *object);
-void CleanUpMenu(DrawObject *object);
-void CleanUpPopUp(DrawObject *object);
-void CleanUpVideo(DrawObject *object);
-void CleanUpText(DrawObject *object);
-void CleanUpTextBox(DrawObject *object);
 void ClearUpGeneric(DrawObject *object);
 
 bool HandleMouseClick(DrawObject *object, int x, int y);
@@ -65,15 +65,6 @@ int AddDrawObjectToDrawLayer(DrawObject *object);
 void DrawSingleLayer(DrawLayer *layer);
 void DrawObjectOfTypeGen(DrawObject *object);
 void DrawMenu(DrawObject *object);
-void DrawPopUp(DrawObject *object);
-void DrawVideo(DrawObject *object);
-void DrawText(DrawObject *object);
-void DrawTextBox(DrawObject *object);
-void DrawGraph(DrawObject *object);
-void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y);
-void DrawGenericTinted(ALLEGRO_BITMAP *bitmap, float x, float y, ALLEGRO_COLOR tint);
-void DrawBackBuffer(ALLEGRO_BITMAP *bitmap);
-void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width, float height);
 
 void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display) 
 {
@@ -195,20 +186,8 @@ void ClearDrawLayers()
 
 }
 
-void ClearUpDrawLayer(int layer) 
+void ClearUpMenuWithChilds(int layer)
 {
-
-    for (int j = 0; j < MAX_OBJECTS_PER_LAYER; j++) {
-
-        if (draw_layers[layer].objects[j] != NULL) {
-
-            ClearUpGeneric(draw_layers[layer].objects[j]);
-            free(draw_layers[layer].objects[j]);
-            draw_layers[layer].objects[j] = NULL;
-
-        }
-
-    }
 
     MenuWithChilds *menu = NULL;
     for (int j = 0;j < MAX_MENU_WITH_CHILDS_PER_LAYER;j++) {
@@ -235,6 +214,31 @@ void ClearUpDrawLayer(int layer)
         draw_layers[layer].menu_with_childs[j] = NULL;
 
     }
+
+}
+
+void ClearUpDrawObjects(int layer)
+{
+
+    for (int j = 0; j < MAX_OBJECTS_PER_LAYER; j++) {
+
+        if (draw_layers[layer].objects[j] != NULL) {
+
+            ClearUpGeneric(draw_layers[layer].objects[j]);
+            free(draw_layers[layer].objects[j]);
+            draw_layers[layer].objects[j] = NULL;
+
+        }
+
+    }
+
+}
+
+void ClearUpDrawLayer(int layer) 
+{
+
+    ClearUpDrawObjects(layer);
+    ClearUpMenuWithChilds(layer);
     current_active_textbox.object = NULL;
 
 }
@@ -257,47 +261,6 @@ void ClearUpGeneric(DrawObject *object)
 
 }
 
-void CleanUpButton(DrawObject *object) 
-{
-
-
-}
-
-void CleanUpMenu(DrawObject *object) 
-{
-
-
-}
-
-void CleanUpPopUp(DrawObject *object) 
-{
-    
-
-}
-
-void CleanUpVideo(DrawObject *object) 
-{
-
-    al_close_video(object->video.video);
-
-}
-
-void CleanUpText(DrawObject *object) 
-{
-
-    if (object->bit_flags & TEXT_IS_DYNAMIC)
-        free(object->text.content);
-
-    object->text.content = NULL;
-    object->text.font    = NULL;
-
-}
-
-void CleanUpTextBox(DrawObject *object)
-{
-
-}
-
 
 /* SECTION: Add Objects to Current Draw Layer */
 int AddButtonToDrawLayer(DrawObject *object) 
@@ -311,16 +274,7 @@ int AddButtonToDrawLayer(DrawObject *object)
 int AddTextBoxToDrawLayers(DrawObject *object)
 {
 
-    if (object->asset_path != NULL)
-        object->textbox.bitmap = GetBitmapFromCache(object->asset_path);
-
-    memset(object->textbox.text, '\0', 128);
-
-    object->textbox.text_style->font  = GetFontFromCache(object->textbox.text_style->font_path, object->textbox.text_style->font_size);
-    object->textbox.text_style->color = al_map_rgba(object->textbox.text_style->r, object->textbox.text_style->g, object->textbox.text_style->b, object->textbox.text_style->a);
-
-    object->textbox.placeholder_style->font  = GetFontFromCache(object->textbox.placeholder_style->font_path, object->textbox.placeholder_style->font_size);
-    object->textbox.placeholder_style->color = al_map_rgba(object->textbox.placeholder_style->r, object->textbox.placeholder_style->g, object->textbox.placeholder_style->b, object->textbox.placeholder_style->a); 
+    InitTextBox(object);
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -417,14 +371,13 @@ int AddObjectToDrawLayer(DrawObject *object)
 int AddMenuToDrawLayer(DrawObject *object) 
 {
 
-    object->menu.menu_bitmap = GetBitmapFromCache(object->asset_path);
+    InitMenu(object);
     if (object->menu.menu_bitmap == NULL) {
 
         Log("Could not create menu_bitmap");
         return -1;
 
     }
-
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -432,16 +385,13 @@ int AddMenuToDrawLayer(DrawObject *object)
 int AddVideoToDrawLayer(DrawObject *object) 
 {
 
-    object->video.video = al_open_video(object->asset_path);
+    InitVideo(object);
     if (object->video.video == NULL) {
 
         LogF("Unable to open %s", object->asset_path);
         return -1;
-    }
-    
-    if (object->bit_flags & VIDEO_SHOULD_START_IMMEDIATELY)
-        al_start_video(object->video.video, al_get_default_mixer());
 
+    }
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -470,9 +420,7 @@ int AddDrawObjectToDrawLayer(DrawObject *object)
 int AddTextToDrawLayer(DrawObject *object)
 {
 
-    object->text.font  = GetFontFromCache(object->asset_path, object->text.font_size);
-    object->text.color = al_map_rgba(object->text.r, object->text.g, object->text.b, object->text.a);
-
+    InitText(object);
     if (object->text.font == NULL) {
 
         LogF("Unable to open font %s", object->asset_path);
@@ -535,127 +483,6 @@ void DrawObjectOfTypeGen(DrawObject *object)
 
 }
 
-DrawObject *PollForNewGraphObject(DrawObject *object) 
-{
-
-    if (object->graph.next_refresh <= time(NULL)) {
-
-        DrawObject *graph_object = GetGraphDrawObject(object->graph.company, object->graph.timespan, object->width, object->height);
-        draw_layers[object->layer_index].objects[object->object_index] = graph_object;
-        graph_object->x            = object->x;
-        graph_object->y            = object->y;
-        graph_object->layer_index  = object->layer_index;
-        graph_object->object_index = object->object_index;
-
-        free(object->graph.points);
-        free(object);
-        
-        return graph_object;
-
-    }
-    return object;
-
-}
-
-void DrawGraph(DrawObject *object) 
-{
-
-    object        = PollForNewGraphObject(object);
-    Point *points = object->graph.points;
-
-    if (points == NULL || object->graph.num_points == 0)
-        return;
-
-    const float x             = object->x;
-    const float y_start_point = object->y + object->height;
-    ALLEGRO_COLOR color       = al_map_rgba(255, 255, 255, 255);
-    for (unsigned short int i = 0;i < object->graph.num_points - 1;i++)
-        al_draw_line(x + points[i].x, y_start_point - points[i].y, x + points[i+1].x, y_start_point - points[i+1].y, color , 2);
-
-}
-
-
-void DrawMenu(DrawObject *object) 
-{
-
-    if (object->width != 0.0f && object->height != 0.0f)
-        DrawGenericWithWidth(object->menu.menu_bitmap, object->x, object->y, object->width, object->height);
-    else
-        DrawGeneric(object->menu.menu_bitmap, object->x, object->y);
-
-}
-
-void DrawVideo(DrawObject *object) 
-{
-
-    if (!al_is_video_playing(object->video.video) && object->bit_flags & VIDEO_SHOULD_REPEAT) {
-
-        al_seek_video(object->video.video, 0.0);
-        al_set_video_playing(object->video.video, true);
-
-    }
-
-    DrawGenericWithWidth(al_get_video_frame(object->video.video), object->x, object->y, object->width, object->height);
-    
-}
-
-void DrawText(DrawObject *object) 
-{
-
-    al_draw_text(object->text.font, object->text.color, object->x, object->y, 0, object->text.content);
-
-}
-
-void SetModifiedTextBoxWithFlicker(DrawObject *object)
-{
-
-    struct timespec current_time = GetCurrentTime();
-    if (object->bit_flags & TEXTBOX_FLICKER_DRAWING) {
- 
-        if (GetMillDiff(&object->textbox.flicker, &current_time) >= 500) {
-
-            object->bit_flags      ^= (object->bit_flags & TEXTBOX_FLICKER_DRAWING);
-            object->textbox.flicker = GetCurrentTime();
-
-        } else {
-
-            object->textbox.text[object->textbox.current_character + 1] = '|';
-
-        }
-
-    } else {
-
-        if (GetMillDiff(&object->textbox.flicker, &current_time) >= 250) {
-
-            object->bit_flags       |= TEXTBOX_FLICKER_DRAWING;
-            object->textbox.flicker  = GetCurrentTime();
-
-        }
-
-    }
-
-}
-
-void DrawTextBox(DrawObject *object)
-{
-
-    DrawGeneric(object->textbox.bitmap, object->x, object->y);
-    if (object->textbox.current_character == -1 && !(object->bit_flags & TEXTBOX_ACTIVE)) {
-
-        al_draw_text(object->textbox.placeholder_style->font, object->textbox.placeholder_style->color, object->x, object->y, 0, object->textbox.placeholder_text);
-
-    } else {
-
-        if (object->bit_flags & TEXTBOX_ACTIVE)
-            SetModifiedTextBoxWithFlicker(object);
-
-        al_draw_text(object->textbox.text_style->font, object->textbox.text_style->color, object->x, object->y, 0, object->textbox.text);
-        object->textbox.text[object->textbox.current_character + 1] = '\0';
-
-    }
-
-}
-
 DrawObject *GetDrawObject(int layer, int object) 
 {
 
@@ -695,84 +522,6 @@ int RemoveDrawObject(DrawObject *object)
     
     return 0;
 
-}
-
-void SetTextContent(DrawObject *object, const char *str, ...) 
-{
-
-    if (object == NULL)
-        return;
-
-    if (object->type != TEXT)
-        return;
-
-    va_list args;
-    va_start(args, str);
-    
-    if (object->bit_flags & TEXT_IS_DYNAMIC) {
-        
-        SetFormattedPointerVaList(object->text.content, str, args);
-
-    } else { 
-
-        object->bit_flags   |= TEXT_IS_DYNAMIC;
-        object->text.content = GetFormattedPointerVaList(str, args);
-
-    }
-
-}
-
-DrawObject *CreateNewDrawObject() 
-{
-
-    DrawObject *object   = malloc(sizeof(DrawObject));
-    object->name         = NULL;
-    object->asset_path   = NULL;
-    object->child_of     = NULL;
-    object->type         = -1;
-    object->bit_flags    = SHOULD_BE_DRAWN;
-    object->layer_index  = 0;
-    object->object_index = 0;
-
-    return object;
-
-}
-
-DrawObject *CreateScrollBoxObject()
-{
-
-    DrawObject *object = CreateNewDrawObject();
-
-    object->x                               = 0;
-    object->y                               = 0;
-    object->width                           = 0;
-    object->height                          = 0;
-    object->asset_path                      = NULL;
-    object->type                            = SCROLLBOX;
-
-    object->scrollbox.num_items             = 0;
-    object->scrollbox.currently_tinted      = -1;
-    object->scrollbox.box_click             = NULL;
-    object->scrollbox.vertical_spacing      = 85;
-    object->scrollbox.vertical_offset       = 0;
-    object->scrollbox.min_vertical_offset   = 0;
-    object->scrollbox.max_vertical_offset   = 0;
-    object->scrollbox.box_click             = NULL;
-    object->scrollbox.text_content          = NULL;
-    object->scrollbox.boxes_bitmap          = NULL;
-    object->scrollbox.icons                 = NULL;
-    object->scrollbox.icon_paths            = NULL;
-
-    object->scrollbox.text_style            = malloc(sizeof(TextStyle));
-    object->scrollbox.text_style->font_size = 40;
-    object->scrollbox.text_style->a         = 255;
-    object->scrollbox.text_style->r         = 0;
-    object->scrollbox.text_style->g         = 0;
-    object->scrollbox.text_style->b         = 0;
-    object->scrollbox.text_style->font_path = "assets/font/DanielLinssenM5/m5x7.ttf";
-    object->scrollbox.text_content          = NULL;
-
-    return object;
 }
 
 DrawObject *FindDrawObject(char *object_name)

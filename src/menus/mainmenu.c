@@ -7,6 +7,7 @@
 
 #include "jsonlayer.h"
 
+#include "text.h"
 #include "drawobject.h"
 #include "scrollbox.h"
 #include "drawlayers.h"

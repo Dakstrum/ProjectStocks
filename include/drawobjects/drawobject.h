@@ -240,4 +240,6 @@ typedef struct DrawObjectTypeCollection {
 
 } DrawObjectTypeCollection;
 
+DrawObject *CreateNewDrawObject();
+
 #endif

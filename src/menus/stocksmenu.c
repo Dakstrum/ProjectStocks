@@ -5,6 +5,7 @@
 
 #include <allegro5/allegro.h>
 
+#include "text.h"
 #include "jsonlayer.h"
 #include "drawlayers.h"
 #include "log.h"
