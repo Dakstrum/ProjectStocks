@@ -6,14 +6,20 @@
 #include <allegro5/allegro.h>
 
 #include "jsonlayer.h"
+
+#include "drawobject.h"
+#include "scrollbox.h"
 #include "drawlayers.h"
+
 #include "log.h"
 #include "shared.h"
+
 #include "stocksmenu.h"
 #include "generalpurposemenus.h"
+#include "savemenus.h"
+
 #include "linkopener.h"
 #include "rendering.h"
-#include "savemenus.h"
 #include "dbaccess.h"
 
 static MenuWithChilds *main_menu = NULL;

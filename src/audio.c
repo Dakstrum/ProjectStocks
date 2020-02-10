@@ -89,7 +89,7 @@ void PlaySample(AudioSample sample)
 
         if (sample_paths[i].sample == sample) {
 
-            SetInstanceAndStartSample(idx);
+            SetInstanceAndStartSample(i);
             break;
 
         }

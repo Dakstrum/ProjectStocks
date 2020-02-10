@@ -8,13 +8,16 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_video.h>
-#include<allegro5/allegro_primitives.h>
+#include <allegro5/allegro_primitives.h>
 
 #include "log.h"
 #include "audio.h"
 #include "cache.h"
 #include "graph.h"
 #include "drawlayers.h"
+
+#include "button.h"
+#include "scrollbox.h"
 
 #define MAX_DRAW_LAYERS 10
 #define MAX_OBJECTS_PER_LAYER 256
@@ -41,7 +44,6 @@ static int current_draw_layer = -1;
 static ALLEGRO_DISPLAY *display = NULL;
 
 static ActiveTextBox current_active_textbox;
-static WindowScale scale;
 static ALLEGRO_BITMAP *video_buffer;
 
 void SetObjectPointersToNull();
@@ -53,7 +55,6 @@ void CleanUpPopUp(DrawObject *object);
 void CleanUpVideo(DrawObject *object);
 void CleanUpText(DrawObject *object);
 void CleanUpTextBox(DrawObject *object);
-void CleanUpScrollbox(DrawObject *object);
 void ClearUpGeneric(DrawObject *object);
 
 bool HandleMouseClick(DrawObject *object, int x, int y);
@@ -64,13 +65,11 @@ int AddDrawObjectToDrawLayer(DrawObject *object);
 void DrawSingleLayer(DrawLayer *layer);
 void DrawObjectOfTypeGen(DrawObject *object);
 void DrawMenu(DrawObject *object);
-void DrawButton(DrawObject *object);
 void DrawPopUp(DrawObject *object);
 void DrawVideo(DrawObject *object);
 void DrawText(DrawObject *object);
 void DrawTextBox(DrawObject *object);
 void DrawGraph(DrawObject *object);
-void DrawScrollBox(DrawObject *object);
 void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y);
 void DrawGenericTinted(ALLEGRO_BITMAP *bitmap, float x, float y, ALLEGRO_COLOR tint);
 void DrawBackBuffer(ALLEGRO_BITMAP *bitmap);
@@ -82,8 +81,9 @@ void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display)
     al_destroy_bitmap(video_buffer);
     video_buffer = al_create_bitmap(1920, 1080);
     al_set_new_bitmap_flags(ALLEGRO_NO_PRESERVE_TEXTURE);
-    display      = active_display;
-    draw_layers  = malloc(sizeof(DrawLayer) * MAX_DRAW_LAYERS);
+
+    display            = active_display;
+    draw_layers        = malloc(sizeof(DrawLayer) * MAX_DRAW_LAYERS);
     current_draw_layer = -1;
     SetObjectPointersToNull();
 
@@ -298,43 +298,12 @@ void CleanUpTextBox(DrawObject *object)
 
 }
 
-void CleanUpScrollbox(DrawObject *object)
-{
-
-    if (object->scrollbox.icons != NULL)
-        free(object->scrollbox.icons);
-    
-    if (object->scrollbox.text_style != NULL)
-        free(object->scrollbox.text_style);
-
-    for (unsigned short int i = 0; i < object->scrollbox.num_items; i++) {
-
-        free(object->scrollbox.text_content[i]);
-        object->scrollbox.text_content[i] = NULL;
-
-    }
-
-    if (object->scrollbox.text_content != NULL)
-        free(object->scrollbox.text_content);
-
-    if (object->scrollbox.icon_paths != NULL)
-        free(object->scrollbox.icon_paths);
-
-    object->scrollbox.icons        = NULL;
-    object->scrollbox.text_style   = NULL;
-    object->scrollbox.text_content = NULL;
-    object->scrollbox.icon_paths   = NULL;
-    
-}
-
 
 /* SECTION: Add Objects to Current Draw Layer */
 int AddButtonToDrawLayer(DrawObject *object) 
 {
 
-    if (object->asset_path != NULL)
-        object->button.button_bitmap = GetBitmapFromCache(object->asset_path);
-
+    InitButton(object);
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -356,93 +325,12 @@ int AddTextBoxToDrawLayers(DrawObject *object)
 
 }
 
-void PopupSetUpDy(void *gen_object, int x, int y)
-{
-    
-    DrawObject *object = (DrawObject *)gen_object;
-    object->popup.dy   = -(float)(object->popup.current_y - y)/(object->popup.diff_time_left_to_animate);
-
-}
-
-void PopupSetDownDy(void *gen_object, int x,  int y)
-{
-
-    DrawObject *object = (DrawObject *)gen_object;
-    object->popup.dy   = (float)(y - object->popup.current_y)/(object->popup.diff_time_left_to_animate);
-
-}
-
-void PopupSetLeftDx(void *gen_object, int x, int y)
-{
-
-    DrawObject *object = (DrawObject *)gen_object;
-    object->popup.dx   = -(float)(object->popup.current_x - x)/(object->popup.diff_time_left_to_animate);
-
-}
-
-void PopupSetRightDx(void *gen_object, int x, int y)
-{
-
-    DrawObject *object = (DrawObject *)gen_object;
-    object->popup.dx   = (float)(x - object->popup.current_x)/(object->popup.diff_time_left_to_animate);
-    
-}
-
-void PopupSetInitialPositionAndAnimationFunction(DrawObject *object)
-{
-
-    object->popup.dx        = 0;
-    object->popup.dy        = 0;
-    object->popup.current_x = (float)object->x;
-    object->popup.current_y = (float)object->y;
-    int display_width       = al_get_display_width(display);
-    int display_height      = al_get_display_height(display);
-
-    if (strcmp(object->popup.direction, "Up") == 0) {
-
-        object->popup.current_y         = display_height;
-        object->popup.set_dx_dy         = &PopupSetUpDy;
-        object->popup.set_dx_dy_reverse = &PopupSetDownDy;
-
-    } else if (strcmp(object->popup.direction, "Down") == 0) {
-
-        object->popup.current_y         = -object->height;
-        object->popup.set_dx_dy         = &PopupSetDownDy;
-        object->popup.set_dx_dy_reverse = &PopupSetUpDy;
-
-    } else if (strcmp(object->popup.direction, "Left") == 0) {
-
-        object->popup.current_x         = display_width;
-        object->popup.set_dx_dy         = &PopupSetLeftDx;
-        object->popup.set_dx_dy_reverse = &PopupSetRightDx;
-
-    } else if (strcmp(object->popup.direction, "Right") == 0) {
-
-        object->popup.current_x         = -object->width;
-        object->popup.set_dx_dy         = &PopupSetRightDx;
-        object->popup.set_dx_dy_reverse = &PopupSetLeftDx;
-
-    }
-
-    object->popup.start_x = object->popup.current_x;
-    object->popup.start_y = object->popup.current_y;
-
-}
 
 int AddPopUpToDrawLayer(DrawObject *object)
 {
 
-    if (object->asset_path != NULL)
-        object->popup.popup_bitmap = GetBitmapFromCache(object->asset_path);
-
-    object->popup.last_animation_time       = GetCurrentTime();
-    object->popup.diff_time_left_to_animate = object->popup.diff_time_to_animate;
-    object->popup.diff_time_left_to_stay    = object->popup.diff_time_to_stay;
-
-    PopupSetInitialPositionAndAnimationFunction(object);
-
+    InitPopup(object, al_get_display_width(display), al_get_display_height(display));
     return AddDrawObjectToDrawLayer(object);
-
 
 }
 
@@ -462,28 +350,8 @@ int AddScrollBoxToDrawLayer(DrawObject *object)
         return -1;
 
     }
-    
-    object->scrollbox.boxes_bitmap = GetBitmapFromCache(object->asset_path);
-    object->scrollbox.box_width    = al_get_bitmap_width(object->scrollbox.boxes_bitmap);
-    object->scrollbox.box_height   = al_get_bitmap_height(object->scrollbox.boxes_bitmap);
 
-    ScrollBox *scrollbox           = &object->scrollbox;
-    TextStyle *text_style          = scrollbox->text_style;
-    text_style->font               = GetFontFromCache(text_style->font_path, text_style->font_size);
-    text_style->color              = al_map_rgba(text_style->r, text_style->g, text_style->b, text_style->a);
-
-    if (object->scrollbox.box_height * object->scrollbox.num_items > object->height) {
-
-        int diff          = object->scrollbox.box_height * object->scrollbox.num_items - object->height;
-        int boxes_in_diff = (int)ceil((double)diff / (object->scrollbox.box_height));
-        scrollbox->min_vertical_offset = -boxes_in_diff * scrollbox->vertical_spacing;
-        scrollbox->max_vertical_offset = 0;
-
-    }
-
-    if (object->scrollbox.text_style->font == NULL)
-        Log("font is null");
-
+    InitScrollbox(object);
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -621,7 +489,7 @@ int AddTextToDrawLayer(DrawObject *object)
 void DrawLayers() 
 {
 
-    scale = GetWindowScale();
+    RefreshDrawScale();
     al_set_target_bitmap(video_buffer);
 
     for (int i = 0; i < current_draw_layer+1; i++)
@@ -641,6 +509,14 @@ void DrawSingleLayer(DrawLayer *layer)
 
 }
 
+void CheckToRemovePopup(DrawObject *object)
+{
+
+    if (object->bit_flags & CAN_BE_REMOVED)
+        RemoveDrawObject(object);
+
+}
+
 void DrawObjectOfTypeGen(DrawObject *object) 
 {
 
@@ -648,7 +524,7 @@ void DrawObjectOfTypeGen(DrawObject *object)
 
         case MENU:      DrawMenu(object);      break;
         case BUTTON:    DrawButton(object);    break;
-        case POPUP:     DrawPopUp(object);     break;
+        case POPUP:     DrawPopUp(object); CheckToRemovePopup(object); break;
         case VIDEO:     DrawVideo(object);     break;
         case TEXT:      DrawText(object);      break;
         case TEXTBOX:   DrawTextBox(object);   break;
@@ -698,74 +574,6 @@ void DrawGraph(DrawObject *object)
 
 }
 
-void MovePopUp(DrawObject *object, void (*set_dx_dy)(void *, int, int), bool reversed, int bit_flag)
-{
-
-    struct timespec current_time = GetCurrentTime();
-    long dt_milli                = GetMillDiff(&current_time, &object->popup.last_animation_time);
-
-    if (dt_milli == 0)
-        return;
-
-    object->popup.diff_time_left_to_animate -= dt_milli;
-    if (object->popup.diff_time_left_to_animate > 0) {
-
-        object->popup.last_animation_time = current_time;
-        if (!reversed)
-            set_dx_dy(object, object->x, object->y);
-        else
-            set_dx_dy(object, object->popup.start_x, object->popup.start_y);
-
-        object->popup.current_x += object->popup.dx * dt_milli;
-        object->popup.current_y += object->popup.dy * dt_milli;
-
-    } else {
-
-        object->bit_flags |= bit_flag;
-        object->popup.diff_time_left_to_animate = object->popup.diff_time_to_animate;
-
-    }
-
-}
-
-void WaitPopUp(DrawObject *object)
-{
-
-    struct timespec current_time = GetCurrentTime();
-    if (GetMillDiff(&current_time, &object->popup.last_stay_time) >= object->popup.diff_time_to_stay)
-        object->bit_flags |= POPUP_DONE_STAYING;
-
-}
-
-void DrawPopUp(DrawObject *object)
-{
-
-    if (!(object->bit_flags & POPUP_DONE_INTRO_ANIMATION)) {
-
-        MovePopUp(object, object->popup.set_dx_dy, false, POPUP_DONE_INTRO_ANIMATION);
-        if (object->bit_flags & POPUP_DONE_INTRO_ANIMATION)
-            object->popup.last_stay_time = GetCurrentTime();
-
-    } else if (!(object->bit_flags & POPUP_DONE_STAYING)) {
-
-        WaitPopUp(object);
-        if (object->bit_flags & POPUP_DONE_STAYING)
-            object->popup.last_animation_time = GetCurrentTime();
-
-    } else if (!(object->bit_flags & POPUP_DONE_OUTRO_ANIMATION)) {
-
-        MovePopUp(object, object->popup.set_dx_dy_reverse, true, POPUP_DONE_OUTRO_ANIMATION);
-
-    } else {
-
-        RemoveDrawObject(object);
-        return;
-
-    }
-
-    DrawGenericWithWidth(object->popup.popup_bitmap, (int)object->popup.current_x, (int)object->popup.current_y, object->width, object->height);
-
-}
 
 void DrawMenu(DrawObject *object) 
 {
@@ -774,23 +582,6 @@ void DrawMenu(DrawObject *object)
         DrawGenericWithWidth(object->menu.menu_bitmap, object->x, object->y, object->width, object->height);
     else
         DrawGeneric(object->menu.menu_bitmap, object->x, object->y);
-
-}
-
-void DrawButton(DrawObject *object) 
-{
-
-    if (object->bit_flags & BUTTON_MOUSE_HOVERING) {
-
-        al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
-        DrawGenericTinted(object->button.button_bitmap, object->x, object->y, al_map_rgba(255, 255, 255, 225));
-        al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_INVERSE_ALPHA);
-
-    } else {
-
-        DrawGeneric(object->button.button_bitmap, object->x, object->y);
-
-    }
 
 }
 
@@ -862,91 +653,6 @@ void DrawTextBox(DrawObject *object)
         object->textbox.text[object->textbox.current_character + 1] = '\0';
 
     }
-
-}
-
-void DrawScrollBox(DrawObject *object) 
-{
-
-    const int x = object->x;
-    const int vertical_spacing = object->scrollbox.vertical_spacing;
-    const int vertical_offset  = object->scrollbox.vertical_offset;
-
-    int box_y = 0;
-    for (int i = 0; i < object->scrollbox.num_items; i++) {
-
-        box_y = i * vertical_spacing + vertical_offset + object->y;
-
-        if (box_y < object->y || box_y > object->y + object->height)
-            continue;
-
-        float box_with_vertical  = box_y + vertical_spacing;
-        float object_with_height = object->y + object->height;
-        float crossing_diff      = box_with_vertical - object_with_height;
-        if (crossing_diff > 0) {
-
-            float percent_diff       = (crossing_diff / ((box_with_vertical + object_with_height) / 2));
-            unsigned char alpha_mask = 255 - (unsigned char)(percent_diff * 255.0 * 4.0);
-            float x_offset           = percent_diff * 400.0;
-
-            DrawGenericTinted(object->scrollbox.boxes_bitmap, x + x_offset, box_y, al_map_rgba(255, 255, 255, alpha_mask));
-            al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30 + x_offset, box_y + 20, 0, object->scrollbox.text_content[i]);
-
-        } else {
-
-            al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
-            DrawGenericTinted(object->scrollbox.boxes_bitmap, x, box_y, al_map_rgba(255, 255, 255, object->scrollbox.currently_tinted == i ? 150 : 255));
-            al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30, box_y + 20, 0, object->scrollbox.text_content[i]);
-            al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_INVERSE_ALPHA);
-
-        }
-
-    }
-
-}
-
-void DrawGeneric(ALLEGRO_BITMAP *bitmap, float x, float y) 
-{
-
-    if (bitmap == NULL)
-        return;
-
-    const float scale_width  = al_get_bitmap_width(bitmap);
-    const float scale_height = al_get_bitmap_height(bitmap);
-    al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_height, x, y, scale_width, scale_height, 0);
-
-}
-
-void DrawGenericTinted(ALLEGRO_BITMAP *bitmap, float x, float y, ALLEGRO_COLOR tint)
-{
-
-    if (bitmap == NULL)
-        return;
-
-    const float scale_width  = al_get_bitmap_width(bitmap);
-    const float scale_height = al_get_bitmap_height(bitmap);
-    al_draw_tinted_scaled_bitmap(bitmap, tint, 0, 0, scale_width, scale_height, x, y, scale_width, scale_height, 0);
-
-}
-
-void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width, float height) 
-{
-
-    if (bitmap == NULL)
-        return;
-
-    const float scale_width  = al_get_bitmap_width(bitmap);
-    const float scale_height = al_get_bitmap_height(bitmap);
-    al_draw_scaled_bitmap(bitmap, 0, 0, scale_width, scale_height, x, y, width, height, 0);
-
-}
-
-void DrawBackBuffer(ALLEGRO_BITMAP *bitmap) 
-{
-
-    const float scale_width  = (float)al_get_bitmap_width(bitmap)  * scale.x_scale;
-    const float scale_height = (float)al_get_bitmap_height(bitmap) * scale.y_scale;
-    al_draw_scaled_bitmap(bitmap, 0, 0, 1920, 1080, 0, 0, scale_width, scale_height, 0);
 
 }
 
