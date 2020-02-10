@@ -38,7 +38,7 @@ static ButtonCallsbacks callbacks[] = {
 
     //Main Menu
     {"StartButton",                        &Start_BCB},
-    {"OptionsButton",                      &OptionsMenu_BCB},
+    {"OptionsButton",                      &MainMenuOptions_BCB},
     {"ExitButton",                         &MainMenuExit_BCB},
     {"GitHubButton",                       &GitHub_BCB},
     {"TwitterButton",                      &Twitter_BCB},

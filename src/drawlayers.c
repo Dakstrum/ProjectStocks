@@ -135,7 +135,7 @@ void SetAllTextBoxesToInactiveInCurrentDrawLayer()
 
 void SetActiveTextBox(DrawObject *object)
 {
-
+    
     if (current_active_textbox.object != NULL)
         current_active_textbox.object->bit_flags ^= (current_active_textbox.object->bit_flags & TEXTBOX_ACTIVE);
 
