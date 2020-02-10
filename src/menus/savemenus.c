@@ -18,8 +18,6 @@
 #include "mainmenu.h"
 #include "simulation.h"
 
-static MenuWithChilds *load_save_menu   = NULL;
-
 static DrawObject *SaveNameTextObject   = NULL;
 static DrawObject *PlayerNameTextObject = NULL;
 
@@ -104,7 +102,7 @@ void InitializeNewSaveMenu()
 
 //LoadSave Button Callbacks
 
-void NewSaveButtonCallBack()
+void NewSaveMenu_BCB()
 {
 
     if (CreateNewDrawLayer() == -1) {
@@ -126,14 +124,14 @@ void StartGame()
 
 }
 
-void LoadSaveMenuLoadButtonCallBack()
+void LoadSaveMenuLoad_BCB()
 {
 
     StartGame();
 
 }
 
-void LoadSaveMenuBackButtonCallBack()
+void LoadSaveMenuBack_BCB()
 {
 
     ClearDrawLayers();
@@ -141,21 +139,21 @@ void LoadSaveMenuBackButtonCallBack()
 
 }
 
-void LoadSaveMenuDeleteSaveButtonCallBack()
+void DeleteSave_BCB()
 {
 
     DeleteSave(SaveNameTextObject->text.content, PlayerNameTextObject->text.content);
 
 }
 
-void NewSaveMenuBackButtonCallBack()
+void NewSaveMenuBack_BCB()
 {
 
     ClearCurrentDrawLayer();
     
 }
 
-void NewSaveMenuCreateButtonCallBack()
+void CreateSave_BCB()
 {
     
     char *save_name_in_text_box = GetTextFromTextBox("SaveNameTextBox");

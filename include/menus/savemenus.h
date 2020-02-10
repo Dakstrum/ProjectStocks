@@ -4,17 +4,14 @@
 void InitializeLoadSaveMenu();
 void InitializeNewSaveMenu();
 
-void NewSaveButtonCallBack();
+void NewSaveMenu_BCB();
 
-void NewSaveMenuCreateButtonCallBack();
-void NewSaveMenuBackButtonCallBack();
+void NewSave_BCB();
+void NewSaveMenuBack_BCB();
+void CreateSave_BCB();
+void LoadSaveMenuLoad_BCB();
 
-void NewSaveButtonCallBack();
-void NewSaveMenuBackButtonCallBack();
-void NewSaveMenuCreateButtonCallBack();
-void LoadSaveMenuLoadButtonCallBack();
-
-void LoadSaveMenuBackButtonCallBack();
-void LoadSaveMenuDeleteSaveButtonCallBack();
+void LoadSaveMenuBack_BCB();
+void DeleteSave_BCB();
 
 #endif

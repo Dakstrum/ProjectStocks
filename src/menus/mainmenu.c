@@ -97,7 +97,7 @@ void CleanUpMainMenu()
 
 }
 
-void MainMenuStartButtonCallBack()
+void Start_BCB()
 {
     
     ClearDrawLayers();
@@ -105,42 +105,42 @@ void MainMenuStartButtonCallBack()
     
 }
 
-void MainMenuOptionsButtonCallBack()
+void MainMenuOptions_BCB()
 {
     
     ToggleOptionsMenu();
 
 }
 
-void MainMenuExitButtonCallBack()
+void MainMenuExit_BCB()
 {
 
     SetCleanUpToTrue();
 
 }
 
-void MainMenuGitHubButtonCallBack()
+void GitHub_BCB()
 {
 
     OpenLink("https://www.github.com");
 
 }
 
-void MainMenuTwitterButtonCallBack()
+void Twitter_BCB()
 {
 
     OpenLink("https://twitter.com/Dakstrum");
 
 }
 
-void MainMenuYoutubeButtonCallBack()
+void Youtube_BCB()
 {
 
     OpenLink("https://www.youtube.com/channel/UCIW4bSzn44v08ttyRMT5z2w");
 
 }
 
-void MainMenuWebsiteButtonCallBack()
+void Website_BCB()
 {
 
     OpenLink("https://www.dakstrum.com");

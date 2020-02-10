@@ -146,7 +146,7 @@ void AddCompanyContentToStocksScrollBox(DrawObject *object)
 
 }
 
-void StocksSellButtonCallBack()
+void SellMenu_BCB()
 {
 
     if (sell_transaction_menu == NULL) {
@@ -167,7 +167,7 @@ void StocksSellButtonCallBack()
 
 }
 
-void StocksBuyButtonCallBack()
+void BuyMenu_BCB()
 {
 
     if (buy_transaction_menu == NULL) {
@@ -188,29 +188,29 @@ void StocksBuyButtonCallBack()
 
 }
 
-void MakeSellTransactionButtonCallBack()
+void Sell_BCB()
 {
 
     int amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));
     AttemptToSubtractFromCurrentStock(current_company_name, amount_in_text_box, price_per_stock);
-    StocksSellButtonCallBack();
+    SellMenu_BCB();
     // TODO tell you what you sold or bought for how much
     DisplayTempPopUp(); 
 
 }
 
-void MakeBuyTransactionButtonCallBack()
+void Buy_BCB()
 {
     
     int amount_in_text_box = atoi(GetTextFromTextBox("BuyTextBox"));
     AttemptToAddFromCurrentStock(current_company_name, amount_in_text_box, price_per_stock);
-    StocksBuyButtonCallBack();
+    BuyMenu_BCB();
     // TODO tell you what you sold or bought for how much
     DisplayTempPopUp(); 
 
 }
 
-void OneDButtonCallBack()
+void OneD_BCB()
 {
     current_company_name = GetCurrentCompanyFromGraph();
     RemoveDrawObject(current_graph);
@@ -219,7 +219,7 @@ void OneDButtonCallBack()
 
 }
 
-void OneWButtonCallBack()
+void OneW_BCB()
 {
 
     current_company_name = GetCurrentCompanyFromGraph();
@@ -229,7 +229,7 @@ void OneWButtonCallBack()
 
 }
 
-void OneMButtonCallBack()
+void OneM_BCB()
 {
 
     current_company_name = GetCurrentCompanyFromGraph();
@@ -239,7 +239,7 @@ void OneMButtonCallBack()
 
 }
 
-void OneYButtonCallBack()
+void OneY_BCB()
 {
 
     current_company_name = GetCurrentCompanyFromGraph();
@@ -249,7 +249,7 @@ void OneYButtonCallBack()
 
 }
 
-void AllButtonCallBack()
+void All_BCB()
 {
 
     current_company_name = GetCurrentCompanyFromGraph();

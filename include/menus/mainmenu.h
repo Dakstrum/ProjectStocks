@@ -6,13 +6,13 @@ void ShowStartMenu();
 void ToggleOptionsMenu();
 void MainMenuRenderLogic();
 
-void MainMenuStartButtonCallBack();
-void MainMenuOptionsButtonCallBack();
-void MainMenuExitButtonCallBack();
+void Start_BCB();
+void MainMenuOptions_BCB();
+void MainMenuExit_BCB();
 
-void MainMenuGitHubButtonCallBack();
-void MainMenuTwitterButtonCallBack();
-void MainMenuYoutubeButtonCallBack();
-void MainMenuWebsiteButtonCallBack();
+void GitHub_BCB();
+void Twitter_BCB();
+void Youtube_BCB();
+void Website_BCB();
 
 #endif

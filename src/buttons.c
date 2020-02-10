@@ -24,7 +24,7 @@ typedef struct ButtonCallsbacks
 } ButtonCallsbacks;
 
 
-void StubCallback() 
+void StubCallBack() 
 {
 
     Log("STUB: Button may have not been set correctly StubCallback");
@@ -34,40 +34,50 @@ void StubCallback()
 #define NUM_CALLBACKS 33
 static ButtonCallsbacks callbacks[] = {
 
-    {"STUB",                               &StubCallback},
-    {"StartButton",                        &MainMenuStartButtonCallBack},
-    {"OptionsButton",                      &MainMenuOptionsButtonCallBack},
-    {"ExitButton",                         &MainMenuExitButtonCallBack},
-    {"PauseMenuMainMenuButton",            &PauseMenuMainMenuButtonCallBack},
-    {"PauseMenuOptionsButton",             &PauseMenuOptionsButtonCallBack},
-    {"PauseMenuExitButton",                &PauseMenuExitButtonCallBack},
-    {"OptionsMenuExitButton",              &OptionsMenuExitButtonCallBack},
-    {"StocksButton",                       &StocksButtonCallBack},
-    {"NewsButton",                         &NewsButtonCallBack},
-    {"AccountButton",                      &AccountButtonCallBack},
-    {"CardsButton",                        &CardsButtonCallBack},
-    {"GitHubButton",                       &MainMenuGitHubButtonCallBack},
-    {"TwitterButton",                      &MainMenuTwitterButtonCallBack},
-    {"YoutubeButton",                      &MainMenuYoutubeButtonCallBack},
-    {"WebsiteButton",                      &MainMenuWebsiteButtonCallBack},
-    {"ToggleTransactionSellButton",        &StocksSellButtonCallBack},
-    {"ToggleTransactionBuyButton",         &StocksBuyButtonCallBack},
-    {"MakeTransactionSellButton",          &MakeSellTransactionButtonCallBack},
-    {"MakeTransactionBuyButton",           &MakeBuyTransactionButtonCallBack},
-    {"LoadSaveMenuNewSaveButton",          &NewSaveButtonCallBack},
-    {"NewSaveMenuBackButton",              &NewSaveMenuBackButtonCallBack},
-    {"NewSaveMenuCreateButton",            &NewSaveMenuCreateButtonCallBack},
-    {"LoadSaveMenuLoadButton",             &LoadSaveMenuLoadButtonCallBack},
-    {"TempApplyButton",                    &TempApplyButtonCallBack},
-    {"CardApplyExitButton",                &CardApplyExitButtonCallBack},
-    {"OneDButton",                         &OneDButtonCallBack},
-    {"OneWButton",                         &OneWButtonCallBack},
-    {"OneMButton",                         &OneMButtonCallBack},
-    {"OneYButton",                         &OneYButtonCallBack},
-    {"AllButton",                          &AllButtonCallBack},
-    {"LoadSaveMenuBackButton",             &LoadSaveMenuBackButtonCallBack},
-    {"LoadSaveMenuDeleteSaveButton",       &LoadSaveMenuDeleteSaveButtonCallBack}
+    {"STUB",                               &StubCallBack},
 
+    //Main Menu
+    {"StartButton",                        &Start_BCB},
+    {"OptionsButton",                      &MainMenuOptions_BCB},
+    {"ExitButton",                         &MainMenuExit_BCB},
+    {"GitHubButton",                       &GitHub_BCB},
+    {"TwitterButton",                      &Twitter_BCB},
+    {"YoutubeButton",                      &Youtube_BCB},
+    {"WebsiteButton",                      &Website_BCB},
+    
+    //Stocks Menu
+    {"ToggleTransactionSellButton",        &SellMenu_BCB},
+    {"ToggleTransactionBuyButton",         &BuyMenu_BCB},
+    {"MakeTransactionSellButton",          &Sell_BCB},
+    {"MakeTransactionBuyButton",           &Buy_BCB},
+    {"OneDButton",                         &OneD_BCB},
+    {"OneWButton",                         &OneW_BCB},
+    {"OneMButton",                         &OneM_BCB},
+    {"OneYButton",                         &OneY_BCB},
+    {"AllButton",                          &All_BCB},
+
+    //General Purpose
+    {"StocksButton",                       &Stocks_BCB},
+    {"NewsButton",                         &News_BCB},
+    {"AccountButton",                      &Account_BCB},
+    {"CardsButton",                        &Cards_BCB},
+    {"PauseMenuMainMenuButton",            &PauseMenuMainMenu_BCB},
+    {"PauseMenuOptionsButton",             &PauseMenuOptions_BCB},
+    {"PauseMenuExitButton",                &PauseMenuExit_BCB},
+    {"OptionsMenuExitButton",              &OptionsMenuExit_BCB},
+
+    //Save Menus
+    {"LoadSaveMenuNewSaveButton",          &NewSaveMenu_BCB},
+    {"NewSaveMenuBackButton",              &NewSaveMenuBack_BCB},
+    {"NewSaveMenuCreateButton",            &CreateSave_BCB},
+    {"LoadSaveMenuLoadButton",             &LoadSaveMenuLoad_BCB},
+    {"LoadSaveMenuBackButton",             &LoadSaveMenuBack_BCB},
+    {"LoadSaveMenuDeleteSaveButton",       &DeleteSave_BCB},
+
+    //Cards Menu
+    {"TempApplyButton",                    &TempApply_BCB},
+    {"CardApplyExitButton",                &CardApplyExit_BCB}
+    
 };
 
 
@@ -78,6 +88,6 @@ void *GetButtonCallback(char *button_name)
         if (strcmp(button_name, callbacks[i].name) == 0) 
             return callbacks[i].Callback;
 
-    return &StubCallback;
+    return &StubCallBack;
 
 }

@@ -6,14 +6,14 @@ void ToggleGeneralPurposeMenus();
 void ToggleOptionsMenu();
 void TogglePauseMenu();
 
-void PauseMenuMainMenuButtonCallBack();
-void PauseMenuOptionsButtonCallBack();
-void PauseMenuExitButtonCallBack();
-void OptionsMenuExitButtonCallBack();
+void PauseMenuMainMenu_BCB();
+void PauseMenuOptions_BCB();
+void PauseMenuExit_BCB();
+void OptionsMenuExit_BCB();
 
-void StocksButtonCallBack();
-void NewsButtonCallBack();
-void AccountButtonCallBack();
-void CardsButtonCallBack();
+void Stocks_BCB();
+void News_BCB();
+void Account_BCB();
+void Cards_BCB();
 
 #endif

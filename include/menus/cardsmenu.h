@@ -3,9 +3,9 @@
 
 void InitializeCardsMenu();
 void ToggleCardsMenu();
-void TempApplyButtonCallBack();
+void TempApply_BCB();
 
-void TempApplyButtonCallBack();
-void CardApplyExitButtonCallBack();
+void TempApply_BCB();
+void CardApplyExit_BCB();
 
 #endif
