@@ -67,7 +67,7 @@ void TogglePauseMenu()
 
 }
 
-void PauseMenuMainMenuButtonCallBack()
+void PauseMenuMainMenu_BCB()
 {
 
     pause_menu = NULL;
@@ -76,21 +76,21 @@ void PauseMenuMainMenuButtonCallBack()
 
 }
 
-void PauseMenuOptionsButtonCallBack()
+void PauseMenuOptions_BCB()
 {
 
     ToggleOptionsMenu();
 
 }
 
-void PauseMenuExitButtonCallBack()
+void PauseMenuExit_BCB()
 {
 
     SetCleanUpToTrue();
 
 }
 
-void OptionsMenuExitButtonCallBack()
+void OptionsMenuExit_BCB()
 {
 
     ToggleOptionsMenu();
@@ -98,7 +98,7 @@ void OptionsMenuExitButtonCallBack()
 }
 
 
-void StocksButtonCallBack()
+void Stocks_BCB()
 {
 
     ClearCurrentDrawLayer();
@@ -106,7 +106,7 @@ void StocksButtonCallBack()
 
 }
 
-void NewsButtonCallBack()
+void News_BCB()
 {
     
     ClearCurrentDrawLayer();
@@ -114,7 +114,7 @@ void NewsButtonCallBack()
     
 }
 
-void AccountButtonCallBack()
+void Account_BCB()
 {
     
     ClearCurrentDrawLayer();
@@ -122,7 +122,7 @@ void AccountButtonCallBack()
     
 }
 
-void CardsButtonCallBack()
+void Cards_BCB()
 {
     
     ClearCurrentDrawLayer();

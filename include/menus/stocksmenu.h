@@ -3,27 +3,19 @@
 
 void InitializeStocksMenu();
 
-void MakeSellTransactionButtonCallBack();
-void MakeBuyTransactionButtonCallBack();
-void OneDButtonCallBack();
-void OneWButtonCallBack();
-void OneMButtonCallBack();
-void OneYButtonCallBack();
-void AllButtonCallBack();
-
 char *GetCurrentCompanyFromGraph();
 void DisplayTempPopUp();
 
-void StocksSellButtonCallBack();
-void StocksBuyButtonCallBack();
+void SellMenu_BCB();
+void BuyMenu_BCB();
 
-void MakeSellTransactionButtonCallBack();
-void MakeBuyTransactionButtonCallBack();
+void Sell_BCB();
+void Buy_BCB();
 
-void OneDButtonCallBack();
-void OneWButtonCallBack();
-void OneMButtonCallBack();
-void OneYButtonCallBack();
-void AllButtonCallBack();
+void OneD_BCB();
+void OneW_BCB();
+void OneM_BCB();
+void OneY_BCB();
+void All_BCB();
 
 #endif

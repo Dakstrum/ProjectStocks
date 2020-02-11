@@ -69,7 +69,7 @@ void AddCompanyContentToApplyCardScrollBox(DrawObject *object)
 
 }
 
-void TempApplyButtonCallBack()
+void TempApply_BCB()
 {
 	//TestCodePleaseKeep
 	if (apply_card_menu == NULL) {
@@ -88,7 +88,7 @@ void TempApplyButtonCallBack()
 
 }
 
-void CardApplyExitButtonCallBack()
+void CardApplyExit_BCB()
 {
     if (apply_card_menu == NULL) {
 
