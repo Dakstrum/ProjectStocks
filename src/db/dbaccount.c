@@ -9,6 +9,7 @@
 #include "dbaccess.h"
 #include "account.h"
 #include "stocksmenu.h"
+#include "dbaccount.h"
 
 void SetupMainDB();
 void SetupLogDB();
@@ -21,57 +22,6 @@ void InsertNewCompany(char *company_name, float ipo, sqlite3 *db);
 int FindOutIfYouCanAddFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name);
 int FindOutIfYouCanSubtractFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name);
 
-
-int GetSaveIdCallback(void *save_id, int argc, char **argv, char **col_name) 
-{
-
-    if (argc > 0)
-        *((int *)save_id) = (unsigned int)atoi(argv[0]);
-
-    return 0;
-
-}
-
-int InsertSave(char *save_name, char *player_name, unsigned int game_seed)
-{
-
-    int save_id = -1;
-
-    sqlite3 *db;
-    if (OpenConnection(&db, DefaultConnection()) == 0) {
-
-        ExecuteQuery(GetFormattedPointer("INSERT INTO Saves (SaveName, PlayerName, RandomSeed) VALUES ('%s', '%s', %d)", save_name, player_name, game_seed), NULL, NULL, db);
-        ExecuteQuery(GetFormattedPointer("SELECT SaveId FROM Saves WHERE RandomSeed = %d AND SaveName = '%s'", game_seed, save_name ), &GetSaveIdCallback, &save_id, db);
-
-    }
-
-    sqlite3_close(db);
-    return save_id;
-
-}
-
-int GetSaveSeedCallback(void *seed, int argc, char **argv, char **col_name) 
-{
-
-    if (argc > 0)
-        *((unsigned int *)seed) = (unsigned int)atoi(argv[0]);
-
-    return 0;
-
-}
-
-unsigned int GetSaveSeedWithSaveId(int save_id)
-{
-
-    unsigned int seed = 0;
-
-    sqlite3 *db;
-    if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("SELECT RandomSeed FROM Saves WHERE SaveId=%d", save_id), &GetSaveSeedCallback, &seed, db);
-
-    return seed;
-
-}
 
 int InsertAndOrSetCompanyToActive(char *company_name, float ipo) 
 {
@@ -152,7 +102,7 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, int pri
 {
 
     sqlite3 *db;
-    int owned_stock_amount = 0;
+    int owned_stock_amount;
 
      if (OpenConnection(&db, DefaultConnection()) == 0) {
 
@@ -224,7 +174,7 @@ int SetCompanyId(void *company_id, int argc, char **argv, char **col_name)
 int GetCompanyId(char *company_name, sqlite3 *db) 
 {
 
-    int company_id = 0;
+    int company_id;
     ExecuteQuery(GetFormattedPointer("SELECT CompanyId FROM Company WHERE CompanyName='%s'", company_name), &SetCompanyId, &company_id, db);
 
     return company_id;
@@ -235,63 +185,6 @@ void InsertStockPrice(int save_id, int company_id, float stock_price, char *time
 {
 
     ExecuteQuery(GetFormattedPointer("INSERT INTO StockPrices (SaveId, CompanyId, Price, Time) VALUES (%d, %d, %f, '%s')", save_id, company_id, stock_price, timestamp), NULL, NULL, db);
-
-}
-
-int GetSaveNameFromSaveIdCallback(void *save_name, int argc, char **argv, char **col_name)
-{
-
-    if (argc > 0) {
-
-        char *temp = *((char **)save_name);
-        strncpy(temp, argv[0], 127);
-        temp[127] = '\0';
-
-    }
-
-    return 0;
-
-}
-
-char *GetSaveNameFromSaveId(int save_id)
-{
-
-    char *save_name = malloc(sizeof(char) * 128);
-
-    sqlite3 *db;
-    if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("SELECT SaveName FROM Saves WHERE SaveId = %d", save_id), &GetSaveNameFromSaveIdCallback, &save_name, db);
-
-    return save_name;
-
-}
-
-int GetPlayerNameFromSaveNameCallback(void *player_name, int argc, char **argv, char **col_name)
-{
-
-    if (argc > 0) {
-
-        char *temp = *((char **)player_name);
-        strncpy(temp, argv[0], 127);
-        temp[127] = '\0';
-
-    }
-
-    return 0;
-
-}
-
-char *GetPlayerNameFromSaveName(char *save_name)
-{
-
-    char *player_name = malloc(sizeof(char) * 128);
-
-    sqlite3 *db;
-    if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("SELECT PlayerName FROM Saves WHERE SaveName = '%s'", save_name), &GetPlayerNameFromSaveNameCallback, &player_name, db);
-
-    player_name = '\0';
-    return player_name;
 
 }
 
@@ -307,7 +200,7 @@ int GetAmountOfSavesCallback(void *amount_of_saves, int argc, char **argv, char 
 int GetAmountOfSaves()
 {
 
-    int amount_of_saves = 0;
+    int amount_of_saves;
 
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
@@ -354,12 +247,29 @@ int GetAmountOfCompanysCallback(void *amount_of_saves, int argc, char **argv, ch
 int GetAmountOfCompanies()
 {
 
-    int amount_of_companies = 0;
+    int amount_of_companies;
 
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
         ExecuteQuery(GetFormattedPointer("SELECT * FROM Company"), &GetAmountOfCompanysCallback, &amount_of_companies, db);
 
     return amount_of_companies;
+
+}
+
+void GetTransactionCallback(void *transaction, int argc, char **argv, char **col_name)
+{
+
+}
+
+struct Transactions *GetTransaction()
+{
+    struct Transactions *transaction = NULL;
+
+    sqlite3 *db;
+    if (OpenConnection(&db, DefaultConnection()) == 0)
+        ExecuteQuery(GetFormattedPointer("SELECT * FROM Transactions WHERE CompanyId=2"), (void *)(&GetTransactionCallback), &transaction, db);
+
+    return transaction;
 
 }
