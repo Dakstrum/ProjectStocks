@@ -10,6 +10,7 @@
 #include "account.h"
 #include "stocksmenu.h"
 #include "dbaccount.h"
+#include "dbsave.h"
 
 void SetupMainDB();
 void SetupLogDB();
@@ -259,6 +260,8 @@ int GetAmountOfCompanies()
 
 void GetTransactionCallback(void *transaction, int argc, char **argv, char **col_name)
 {
+
+
 
 }
 

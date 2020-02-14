@@ -6,17 +6,31 @@
 #include "graph.h"
 #include "shared.h"
 
-void InitializeDatabases();
-void CopyPersistentToMemory();
-int OpenConnection(sqlite3 **db, char *connection_string);
-WindowSettings GetWindowSettingsFromDB();
+typedef enum TransactionType
+{
 
-char *MemoryConnection();
-char *DefaultConnection();
+	BUY,
+	SELL
+
+} TransactionType;
+
+typedef struct Transactions
+{
+
+	TransactionType type;
+    long int *date;
+    short int* shares;
+    short int *pershare;
+    int *transaction;
+
+    short unsigned int num_transactions;
+    short unsigned int size;
+
+} Transaction;
+
+
 
 int InsertAndOrSetCompanyToActive(char *company_name, float ipo);
-unsigned int GetSaveSeedWithSaveId(int save_id);
-int InsertSave(char *save_name, char *player_name, unsigned int game_seed);
 void InsertStockPrice(int save_id, int company_id, float stock_price, char *timestamp, sqlite3 *db);
 StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, char *end_time, TimeSpan timespan);
 
@@ -34,5 +48,6 @@ char *GetStockNameFromStockId(int stock_id);
 
 char *GetPlayerNameFromSaveName(char *save_name);
 int *GetSaveIdFromSaveName(char *save_name);
-void DeleteSave(char *save_name, char *player_name);
+
+struct Transactions *GetTransaction();
 #endif
