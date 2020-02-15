@@ -18,6 +18,7 @@
 #include "dbaccount.h"
 #include "mainmenu.h"
 #include "simulation.h"
+#include "dbsave.h"
 
 static DrawObject *SaveNameTextObject   = NULL;
 static DrawObject *PlayerNameTextObject = NULL;
@@ -143,7 +144,7 @@ void LoadSaveMenuBack_BCB()
 void DeleteSave_BCB()
 {
 
-    DeleteSave(SaveNameTextObject->text.content, PlayerNameTextObject->text.content);
+    DeleteAccountSave(SaveNameTextObject->text.content, PlayerNameTextObject->text.content);
 
 }
 

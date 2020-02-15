@@ -12,6 +12,7 @@
 #include "dbaccount.h"
 #include "dbsave.h"
 
+
 void SetupMainDB();
 void SetupLogDB();
 
@@ -258,20 +259,61 @@ int GetAmountOfCompanies()
 
 }
 
-void GetTransactionCallback(void *transaction, int argc, char **argv, char **col_name)
+int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_name)
 {
+    
+    struct Transactions *transaction_temp = (struct Transactions *)transaction;
 
+    if (argc == 0 )
+        return 0;
 
+    if (transaction_temp->num_transactions == transaction_temp->size){
 
+        transaction_temp->size  += 128;
+        transaction_temp->transaction = realloc(transaction_temp->transaction, sizeof(float) * transaction_temp->size);
+        transaction_temp->shares       = realloc(transaction_temp->shares,       sizeof(short int) * transaction_temp->size);
+        transaction_temp->pershare    = realloc(transaction_temp->pershare,    sizeof(short int) * transaction_temp->size);
+
+    }
+    
+
+    transaction_temp->transaction[transaction_temp->num_transactions] = (float)atof(argv[4]);
+
+    transaction_temp->shares[transaction_temp->num_transactions] = (short int)atof(argv[5]);
+
+    //transaction_temp->pershare[transaction_temp->num_transactions] =  atof(argv[5]) / atof(argv[4]); //Error Here
+
+    LogF("%d", temppershare);
+
+    if(transaction_temp->transaction < 0)
+        transaction_temp->type = BUY;
+    else
+        transaction_temp->type = SELL;
+
+    transaction_temp->num_transactions++;
+    
+    return 0;
 }
 
 struct Transactions *GetTransaction()
 {
-    struct Transactions *transaction = NULL;
+    //struct Transactions *transaction = NULL;
+    struct Transactions *transaction      = malloc(sizeof(struct Transactions));
+    transaction->transaction              = malloc(sizeof(float) * 128);
+    transaction->shares                   = malloc(sizeof(short int) * 128);
+    transaction->pershare                 = malloc(sizeof(short int) * 128);
+    transaction->num_transactions         = 0;
+    transaction->size                     = 128;
 
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("SELECT * FROM Transactions WHERE CompanyId=2"), (void *)(&GetTransactionCallback), &transaction, db);
+        ExecuteQuery(GetFormattedPointer("SELECT * FROM Transactions WHERE CompanyId=2"), &SetTransactionCallback, transaction, db);
+
+    //sqlite3_close(db);
+
+    transaction->transaction = realloc(transaction->transaction, sizeof(float) * transaction->num_transactions);
+
+
 
     return transaction;
 

@@ -19,12 +19,12 @@ typedef struct Transactions
 
 	TransactionType type;
     long int *date;
-    short int* shares;
+    short int *shares;
     short int *pershare;
-    int *transaction;
+    float *transaction;
 
-    short unsigned int num_transactions;
-    short unsigned int size;
+    unsigned int num_transactions;
+    unsigned int size;
 
 } Transaction;
 

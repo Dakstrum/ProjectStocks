@@ -8,6 +8,7 @@
 #include "shared.h"
 #include "account.h"
 #include "dbaccount.h"
+#include "dbsave.h"
 
 static atomic_long game_time;
 static atomic_long game_time_real_dt;
