@@ -17,7 +17,7 @@ typedef enum TransactionType
 typedef struct Transactions
 {
 
-	TransactionType type;
+	TransactionType type[100];
     long int *date;
     short int *shares;
     short int *pershare;
