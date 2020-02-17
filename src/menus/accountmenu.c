@@ -12,7 +12,7 @@
 #include "text.h"
 void PopulateAccountHistoryDisplay();
 
-static MenuWithChilds *account_menu = NULL;
+static MenuWithChilds *account_menu               = NULL;
 
 static DrawObject *AccountMenuActionTextOne       = NULL;
 static DrawObject *AccountMenuSharesTextOne       = NULL;
@@ -116,15 +116,26 @@ void CleanUpAccountMenu()
     
 }
 
+char* GetTransactionAction(TransactionType type)
+{
+
+    if(type == 1)
+        return "Buy";
+
+    if(type == 0)
+        return "Sell";
+    return "error";
+}
+
 void PopulateAccountHistoryDisplay()
 {
 
 	struct Transactions *transaction = GetTransaction();
-    
+
     if(transaction->shares[0])
     {
-
-        SetTextContent(AccountMenuActionTextOne, "%d", transaction->type[0]);
+        Log("0");
+        SetTextContent(AccountMenuActionTextOne, "%s", GetTransactionAction(transaction->type[0]));
         SetTextContent(AccountMenuSharesTextOne, "%d", transaction->shares[0]);
         SetTextContent(AccountMenuTransactionTextOne, "%.2f", transaction->transaction[0]);
 
@@ -132,8 +143,8 @@ void PopulateAccountHistoryDisplay()
 
     if(transaction->shares[1])
     {
-
-        SetTextContent(AccountMenuActionTextTwo, "%d", transaction->type[1]);
+        Log("1");
+        SetTextContent(AccountMenuActionTextTwo, "%s", GetTransactionAction(transaction->type[1]));
         SetTextContent(AccountMenuSharesTextTwo, "%d", transaction->shares[1]);
         SetTextContent(AccountMenuTransactionTextTwo, "%.2f", transaction->transaction[1]);
 
@@ -141,8 +152,8 @@ void PopulateAccountHistoryDisplay()
 
     if(transaction->shares[2])
     {
-
-        SetTextContent(AccountMenuActionTextThree, "%d", transaction->type[2]);
+        Log("2");
+        SetTextContent(AccountMenuActionTextThree, "%s", GetTransactionAction(transaction->type[2]));
         SetTextContent(AccountMenuSharesTextThree, "%d", transaction->shares[2]);
         SetTextContent(AccountMenuTransactionTextThree, "%.2f", transaction->transaction[2]);
 
@@ -150,8 +161,8 @@ void PopulateAccountHistoryDisplay()
 
     if(transaction->shares[3])
     {
-
-        SetTextContent(AccountMenuActionTextFour, "%d", transaction->type[3]);
+        Log("3");
+        SetTextContent(AccountMenuActionTextFour, "%s", GetTransactionAction(transaction->type[3]));
         SetTextContent(AccountMenuSharesTextFour, "%d", transaction->shares[3]);
         SetTextContent(AccountMenuTransactionTextFour, "%.2f", transaction->transaction[3]);
 
@@ -159,8 +170,8 @@ void PopulateAccountHistoryDisplay()
 
     if(transaction->shares[4])
     {
-
-        SetTextContent(AccountMenuActionTextFive, "%d", transaction->type[4]);
+        Log("4");
+        SetTextContent(AccountMenuActionTextFive, "%s", GetTransactionAction(transaction->type[4]));
         SetTextContent(AccountMenuSharesTextFive, "%d", transaction->shares[4]);
         SetTextContent(AccountMenuTransactionTextFive, "%.2f", transaction->transaction[4]);
 

@@ -271,16 +271,13 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
 
         transaction_temp->size  += 128;
         transaction_temp->transaction = realloc(transaction_temp->transaction, sizeof(float) * transaction_temp->size);
-        transaction_temp->shares       = realloc(transaction_temp->shares,     sizeof(short int) * transaction_temp->size);
+        transaction_temp->shares      = realloc(transaction_temp->shares,     sizeof(short int) * transaction_temp->size);
         transaction_temp->pershare    = realloc(transaction_temp->pershare,    sizeof(short int) * transaction_temp->size);
 
     }
-    
-
+    Log("p");
     transaction_temp->transaction[transaction_temp->num_transactions] = (float)atof(argv[4]);
     transaction_temp->shares[transaction_temp->num_transactions] = (short int)atof(argv[5]);
-
-    //transaction_temp->pershare[transaction_temp->num_transactions] =  atof(argv[5]) / atof(argv[4]); //Error Here
 
     if(transaction_temp->transaction < 0)
         transaction_temp->type[transaction_temp->num_transactions] = BUY;
