@@ -259,8 +259,6 @@ int GetAmountOfCompanies()
 
 }
 
-
-
 int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_name)
 {
     
@@ -271,8 +269,8 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
 
     if (transaction_temp->num_transactions == transaction_temp->size){
 
-        transaction_temp->size  += 128;
-        transaction_temp->transaction = realloc(transaction_temp->transaction, sizeof(float) * transaction_temp->size);
+        transaction_temp->size        += 128;
+        transaction_temp->transaction = realloc(transaction_temp->transaction, sizeof(float)     * transaction_temp->size);
         transaction_temp->shares      = realloc(transaction_temp->shares,      sizeof(short int) * transaction_temp->size);
         transaction_temp->pershare    = realloc(transaction_temp->pershare,    sizeof(short int) * transaction_temp->size);
 
@@ -302,13 +300,17 @@ struct Transactions *GetTransaction()
     transaction->size                     = 128;
 
     sqlite3 *db;
-    if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("SELECT * FROM Transactions WHERE CompanyId=2"), &SetTransactionCallback, transaction, db);
+
+     if (OpenConnection(&db, DefaultConnection()) != 0)
+        return transaction;
+
+    
+    ExecuteQuery(GetFormattedPointer("SELECT * FROM Transactions WHERE CompanyId=2"), &SetTransactionCallback, transaction, db);
 
     sqlite3_close(db);
 
     transaction->transaction = realloc(transaction->transaction, sizeof(float) * transaction->num_transactions);
-    
+
     return transaction;
 
 }

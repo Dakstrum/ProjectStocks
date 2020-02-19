@@ -31,7 +31,7 @@ void StubCallBack()
 
 }
 
-#define NUM_CALLBACKS 33
+#define NUM_CALLBACKS 34
 static ButtonCallsbacks callbacks[] = {
 
     {"STUB",                               &StubCallBack},
@@ -55,6 +55,10 @@ static ButtonCallsbacks callbacks[] = {
     {"OneMButton",                         &OneM_BCB},
     {"OneYButton",                         &OneY_BCB},
     {"AllButton",                          &All_BCB},
+
+    //Account Menu
+    {"AccountDownButton",                  &AccountDown_BCB},
+    {"AccountUpButton",                    &AccountUp_BCB},
 
     //General Purpose
     {"StocksButton",                       &Stocks_BCB},
