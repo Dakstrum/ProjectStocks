@@ -259,6 +259,8 @@ int GetAmountOfCompanies()
 
 }
 
+
+
 int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_name)
 {
     
@@ -271,13 +273,13 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
 
         transaction_temp->size  += 128;
         transaction_temp->transaction = realloc(transaction_temp->transaction, sizeof(float) * transaction_temp->size);
-        transaction_temp->shares      = realloc(transaction_temp->shares,     sizeof(short int) * transaction_temp->size);
+        transaction_temp->shares      = realloc(transaction_temp->shares,      sizeof(short int) * transaction_temp->size);
         transaction_temp->pershare    = realloc(transaction_temp->pershare,    sizeof(short int) * transaction_temp->size);
 
     }
-    Log("p");
+
     transaction_temp->transaction[transaction_temp->num_transactions] = (float)atof(argv[4]);
-    transaction_temp->shares[transaction_temp->num_transactions] = (short int)atof(argv[5]);
+    transaction_temp->shares[transaction_temp->num_transactions]      = (short int)atof(argv[5]);
 
     if(transaction_temp->transaction < 0)
         transaction_temp->type[transaction_temp->num_transactions] = BUY;
@@ -291,7 +293,7 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
 
 struct Transactions *GetTransaction()
 {
-    //struct Transactions *transaction = NULL;
+
     struct Transactions *transaction      = malloc(sizeof(struct Transactions));
     transaction->transaction              = malloc(sizeof(float) * 128);
     transaction->shares                   = malloc(sizeof(short int) * 128);
@@ -303,12 +305,10 @@ struct Transactions *GetTransaction()
     if (OpenConnection(&db, DefaultConnection()) == 0)
         ExecuteQuery(GetFormattedPointer("SELECT * FROM Transactions WHERE CompanyId=2"), &SetTransactionCallback, transaction, db);
 
-    //sqlite3_close(db);
+    sqlite3_close(db);
 
     transaction->transaction = realloc(transaction->transaction, sizeof(float) * transaction->num_transactions);
-
-
-
+    
     return transaction;
 
 }
