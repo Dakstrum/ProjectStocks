@@ -14,6 +14,7 @@
 int HistoryDisplayNumber = 0;
 
 void PopulateAccountHistoryDisplay();
+void DisplayAccountCompanyScrollBox();
 
 static MenuWithChilds *account_menu               = NULL;
 
@@ -54,6 +55,8 @@ void InitializeAccountMenu()
 
     account_menu = GetMenuWithChildsFromJsonLayer("AccountMenu");
     AddMenuWithChildsToDrawLayer(account_menu);
+
+    DisplayAccountCompanyScrollBox();
 
     AccountMenuActionTextOne        = GetDrawObjectFromJsonLayer("AccountMenuActionTextOne");
     AccountMenuSharesTextOne        = GetDrawObjectFromJsonLayer("AccountMenuSharesTextOne");
@@ -208,6 +211,42 @@ void PopulateAccountHistoryDisplay()
     //This is nasty. all of it :/ 
 }
 
+void AddAccountCompanyContentToStocksScrollBox(DrawObject *object)
+{
+
+    for(int i = 0; i < GetAmountOfCompanies(); i++)
+        object->scrollbox.text_content[i]  = GetStockNameFromStockId(i+1);
+
+}
+
+void LoadAccountCompanyScrollBoxClick(char *scroll_box_content)
+{
+
+    LogF("COMPANY SELECTED: %s", scroll_box_content);
+
+}
+
+
+
+void DisplayAccountCompanyScrollBox() 
+{
+
+    DrawObject *object = CreateScrollBoxObject();
+
+    object->x          = 2;
+    object->y          = 230;
+    object->width      = 288;
+    object->height     = 603;
+    object->asset_path = "assets/images/companyicons/StocksBox.png";
+
+    object->scrollbox.num_items    = GetAmountOfCompanies();
+    object->scrollbox.box_click    = &LoadAccountCompanyScrollBoxClick;
+    object->scrollbox.text_content = malloc(sizeof(char *) * 2);
+
+    AddAccountCompanyContentToStocksScrollBox(object);
+    AddObjectToDrawLayer(object);
+
+}
 
 
 void AccountDown_BCB()
