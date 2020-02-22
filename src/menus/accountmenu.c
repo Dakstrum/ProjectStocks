@@ -22,15 +22,10 @@ int HistoryDisplayNumber = 0;
 
 static MenuWithChilds *account_menu = NULL;
 
-static char *ActionJsonObjects[DSP_NUM]      = {"AccountMenuActionTextOne", "AccountMenuActionTextTwo", "AccountMenuActionTextThree", "AccountMenuActionTextFour", "AccountMenuActionTextFive"};
-static char *SharesJsonObjects[DSP_NUM]      = {"AccountMenuSharesTextOne", "AccountMenuSharesTextTwo", "AccountMenuSharesTextThree", "AccountMenuSharesTextFour", "AccountMenuSharesTextFive"};
-static char *PerShareJsonObjects[DSP_NUM]    = {"AccountMenuPerShareTextOne", "AccountMenuPerShareTextTwo", "AccountMenuPerShareTextThree", "AccountMenuPerShareTextFour", "AccountMenuPerShareTextFive"};
-static char *TransactionJsonObjects[DSP_NUM] = {"AccountMenuTransactionTextOne", "AccountMenuTransactionTextTwo", "AccountMenuTransactionTextThree", "AccountMenuTransactionTextFour", "AccountMenuTransactionTextFive"};
-
-DrawObject *ActionObjects[DSP_NUM];
-DrawObject *SharesObjects[DSP_NUM];
-DrawObject *PerShareObjects[DSP_NUM];
-DrawObject *TransactionObjects[DSP_NUM];
+static DrawObject *ActionObjects[DSP_NUM];
+static DrawObject *SharesObjects[DSP_NUM];
+static DrawObject *PerShareObjects[DSP_NUM];
+static DrawObject *TransactionObjects[DSP_NUM];
 
 void InitializeAccountMenu() 
 {
@@ -52,6 +47,11 @@ void InitializeAccountMenu()
 
 void InitializeAccountHistoryDisplay()
 {
+
+    static char *ActionJsonObjects[DSP_NUM]      = {"AccountMenuActionTextOne", "AccountMenuActionTextTwo", "AccountMenuActionTextThree", "AccountMenuActionTextFour", "AccountMenuActionTextFive"};
+    static char *SharesJsonObjects[DSP_NUM]      = {"AccountMenuSharesTextOne", "AccountMenuSharesTextTwo", "AccountMenuSharesTextThree", "AccountMenuSharesTextFour", "AccountMenuSharesTextFive"};
+    static char *PerShareJsonObjects[DSP_NUM]    = {"AccountMenuPerShareTextOne", "AccountMenuPerShareTextTwo", "AccountMenuPerShareTextThree", "AccountMenuPerShareTextFour", "AccountMenuPerShareTextFive"};
+    static char *TransactionJsonObjects[DSP_NUM] = {"AccountMenuTransactionTextOne", "AccountMenuTransactionTextTwo", "AccountMenuTransactionTextThree", "AccountMenuTransactionTextFour", "AccountMenuTransactionTextFive"};
 
     for (int i=0; i < DSP_NUM; i++) {
 
