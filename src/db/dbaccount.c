@@ -299,6 +299,14 @@ struct Transactions *GetTransaction()
     transaction->num_transactions         = 0;
     transaction->size                     = 128;
 
+    for(int i=0; i < 128; i++) {
+
+        transaction->transaction[i] = 0;
+        transaction->shares[i]      = 0;
+        transaction->pershare[i]    = 0;
+
+    }
+
     sqlite3 *db;
 
      if (OpenConnection(&db, DefaultConnection()) != 0)

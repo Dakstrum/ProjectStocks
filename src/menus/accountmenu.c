@@ -11,37 +11,24 @@
 #include "dbaccount.h"
 #include "text.h"
 
+char* GetTransactionAction(TransactionType type);
+void DisplayAccountCompanyScrollBox();
+void PopulateAccountHistoryDisplay();
+void InitializeAccountHistoryDisplay();
+
 int HistoryDisplayNumber = 0;
 
-void PopulateAccountHistoryDisplay();
-void DisplayAccountCompanyScrollBox();
+static MenuWithChilds *account_menu = NULL;
 
-static MenuWithChilds *account_menu               = NULL;
+static char *ActionJsonObjects[5]      = {"AccountMenuActionTextOne", "AccountMenuActionTextTwo", "AccountMenuActionTextThree", "AccountMenuActionTextFour", "AccountMenuActionTextFive"};
+static char *SharesJsonObjects[5]      = {"AccountMenuSharesTextOne", "AccountMenuSharesTextTwo", "AccountMenuSharesTextThree", "AccountMenuSharesTextFour", "AccountMenuSharesTextFive"};
+static char *PerShareJsonObjects[5]    = {"AccountMenuPerShareTextOne", "AccountMenuPerShareTextTwo", "AccountMenuPerShareTextThree", "AccountMenuPerShareTextFour", "AccountMenuPerShareTextFive"};
+static char *TransactionJsonObjects[5] = {"AccountMenuTransactionTextOne", "AccountMenuTransactionTextTwo", "AccountMenuTransactionTextThree", "AccountMenuTransactionTextFour", "AccountMenuTransactionTextFive"};
 
-static DrawObject *AccountMenuActionTextOne       = NULL;
-static DrawObject *AccountMenuSharesTextOne       = NULL;
-static DrawObject *AccountMenuPerShareTextOne     = NULL;
-static DrawObject *AccountMenuTransactionTextOne  = NULL;
-
-static DrawObject *AccountMenuActionTextTwo       = NULL;
-static DrawObject *AccountMenuSharesTextTwo       = NULL;
-static DrawObject *AccountMenuPerShareTextTwo     = NULL;
-static DrawObject *AccountMenuTransactionTextTwo  = NULL;
-
-static DrawObject *AccountMenuActionTextThree      = NULL;
-static DrawObject *AccountMenuSharesTextThree      = NULL;
-static DrawObject *AccountMenuPerShareTextThree    = NULL;
-static DrawObject *AccountMenuTransactionTextThree = NULL;
-
-static DrawObject *AccountMenuActionTextFour       = NULL;
-static DrawObject *AccountMenuSharesTextFour       = NULL;
-static DrawObject *AccountMenuPerShareTextFour     = NULL;
-static DrawObject *AccountMenuTransactionTextFour  = NULL;
-
-static DrawObject *AccountMenuActionTextFive       = NULL;
-static DrawObject *AccountMenuSharesTextFive       = NULL;
-static DrawObject *AccountMenuPerShareTextFive     = NULL;
-static DrawObject *AccountMenuTransactionTextFive  = NULL;
+DrawObject *ActionObjects[5];
+DrawObject *SharesObjects[5];
+DrawObject *PerShareObjects[5];
+DrawObject *TransactionObjects[5];
 
 void InitializeAccountMenu() 
 {
@@ -52,63 +39,52 @@ void InitializeAccountMenu()
         return;
     }
 
-
     account_menu = GetMenuWithChildsFromJsonLayer("AccountMenu");
     AddMenuWithChildsToDrawLayer(account_menu);
 
     DisplayAccountCompanyScrollBox();
-
-    AccountMenuActionTextOne        = GetDrawObjectFromJsonLayer("AccountMenuActionTextOne");
-    AccountMenuSharesTextOne        = GetDrawObjectFromJsonLayer("AccountMenuSharesTextOne");
-    AccountMenuPerShareTextOne      = GetDrawObjectFromJsonLayer("AccountMenuPerShareTextOne");
-    AccountMenuTransactionTextOne   = GetDrawObjectFromJsonLayer("AccountMenuTransactionTextOne");
-
-    AccountMenuActionTextTwo        = GetDrawObjectFromJsonLayer("AccountMenuActionTextTwo");
-    AccountMenuSharesTextTwo        = GetDrawObjectFromJsonLayer("AccountMenuSharesTextTwo");
-    AccountMenuPerShareTextTwo      = GetDrawObjectFromJsonLayer("AccountMenuPerShareTextTwo");
-    AccountMenuTransactionTextTwo   = GetDrawObjectFromJsonLayer("AccountMenuTransactionTextTwo");
-
-    AccountMenuActionTextThree      = GetDrawObjectFromJsonLayer("AccountMenuActionTextThree");
-    AccountMenuSharesTextThree      = GetDrawObjectFromJsonLayer("AccountMenuSharesTextThree");
-    AccountMenuPerShareTextThree    = GetDrawObjectFromJsonLayer("AccountMenuPerShareTextThree");
-    AccountMenuTransactionTextThree = GetDrawObjectFromJsonLayer("AccountMenuTransactionTextThree");
-
-    AccountMenuActionTextFour       = GetDrawObjectFromJsonLayer("AccountMenuActionTextFour");
-    AccountMenuSharesTextFour       = GetDrawObjectFromJsonLayer("AccountMenuSharesTextFour");
-    AccountMenuPerShareTextFour     = GetDrawObjectFromJsonLayer("AccountMenuPerShareTextFour");
-    AccountMenuTransactionTextFour  = GetDrawObjectFromJsonLayer("AccountMenuTransactionTextFour");
-
-    AccountMenuActionTextFive       = GetDrawObjectFromJsonLayer("AccountMenuActionTextFive");
-    AccountMenuSharesTextFive       = GetDrawObjectFromJsonLayer("AccountMenuSharesTextFive");
-    AccountMenuPerShareTextFive     = GetDrawObjectFromJsonLayer("AccountMenuPerShareTextFive");
-    AccountMenuTransactionTextFive  = GetDrawObjectFromJsonLayer("AccountMenuTransactionTextFive");
-
-    AddObjectToDrawLayer(AccountMenuActionTextOne);
-    AddObjectToDrawLayer(AccountMenuSharesTextOne);
-    AddObjectToDrawLayer(AccountMenuPerShareTextOne);
-    AddObjectToDrawLayer(AccountMenuTransactionTextOne);
-
-    AddObjectToDrawLayer(AccountMenuActionTextTwo);
-    AddObjectToDrawLayer(AccountMenuSharesTextTwo);
-    AddObjectToDrawLayer(AccountMenuPerShareTextTwo);
-    AddObjectToDrawLayer(AccountMenuTransactionTextTwo);
-
-    AddObjectToDrawLayer(AccountMenuActionTextThree);
-    AddObjectToDrawLayer(AccountMenuSharesTextThree);
-    AddObjectToDrawLayer(AccountMenuPerShareTextThree);
-    AddObjectToDrawLayer(AccountMenuTransactionTextThree);
-
-    AddObjectToDrawLayer(AccountMenuActionTextFour);
-    AddObjectToDrawLayer(AccountMenuSharesTextFour);
-    AddObjectToDrawLayer(AccountMenuPerShareTextFour);
-    AddObjectToDrawLayer(AccountMenuTransactionTextFour);
-
-    AddObjectToDrawLayer(AccountMenuActionTextFive);
-    AddObjectToDrawLayer(AccountMenuSharesTextFive);
-    AddObjectToDrawLayer(AccountMenuPerShareTextFive);
-    AddObjectToDrawLayer(AccountMenuTransactionTextFive);
-
+    InitializeAccountHistoryDisplay();
     PopulateAccountHistoryDisplay();
+
+}
+
+void InitializeAccountHistoryDisplay()
+{
+
+    for (int i=0; i < 5; i++) {
+
+        ActionObjects[i]      = GetDrawObjectFromJsonLayer(ActionJsonObjects[i]);
+        SharesObjects[i]      = GetDrawObjectFromJsonLayer(SharesJsonObjects[i]);
+        PerShareObjects[i]    = GetDrawObjectFromJsonLayer(PerShareJsonObjects[i]);
+        TransactionObjects[i] = GetDrawObjectFromJsonLayer(TransactionJsonObjects[i]);
+
+        AddObjectToDrawLayer(ActionObjects[i]);
+        AddObjectToDrawLayer(SharesObjects[i]);
+        AddObjectToDrawLayer(PerShareObjects[i]);
+        AddObjectToDrawLayer(TransactionObjects[i]);
+
+    }
+
+}
+
+void PopulateAccountHistoryDisplay()
+{
+
+    struct Transactions *transaction[5];
+
+    for (int i=0; i < 5; i++) {
+
+        transaction[i] = GetTransaction();
+        if(transaction[i]->shares[HistoryDisplayNumber + i]) {
+
+            SetTextContent(ActionObjects[i], "%s", GetTransactionAction(transaction[i]->type[HistoryDisplayNumber + i]));
+            SetTextContent(SharesObjects[i], "%d", transaction[i]->shares[HistoryDisplayNumber + i]);
+            SetTextContent(PerShareObjects[i], "%d", transaction[i]->pershare[HistoryDisplayNumber + i]);
+            SetTextContent(TransactionObjects[i], "%.2f", transaction[i]->transaction[HistoryDisplayNumber + i]);
+
+        }
+        
+    }
 
 }
 
@@ -136,79 +112,15 @@ char* GetTransactionAction(TransactionType type)
 void ClearAccountHistoryDisplay()
 {
 
-    SetTextContent(AccountMenuActionTextOne, "%s", NULL);
-    SetTextContent(AccountMenuSharesTextOne, "%d", NULL);
-    SetTextContent(AccountMenuTransactionTextOne, "%.2f", NULL);
+    for (int i=0; i < 5; i++) {
 
-    SetTextContent(AccountMenuActionTextTwo, "%s", NULL);
-    SetTextContent(AccountMenuSharesTextTwo, "%d", NULL);
-    SetTextContent(AccountMenuTransactionTextTwo, "%.2f", NULL);
-
-    SetTextContent(AccountMenuActionTextThree, "%s", NULL);
-    SetTextContent(AccountMenuSharesTextThree, "%d", NULL);
-    SetTextContent(AccountMenuTransactionTextThree, "%.2f", NULL);
-
-    SetTextContent(AccountMenuActionTextFour, "%s", NULL);
-    SetTextContent(AccountMenuSharesTextFour, "%d", NULL);
-    SetTextContent(AccountMenuTransactionTextFour, "%.2f", NULL);
-
-    SetTextContent(AccountMenuActionTextFive, "%s", NULL);
-    SetTextContent(AccountMenuSharesTextFive, "%d", NULL);
-    SetTextContent(AccountMenuTransactionTextFive, "%.2f", NULL);
-
-}
-
-void PopulateAccountHistoryDisplay()
-{
-
-	struct Transactions *transaction = GetTransaction();
-
-    if(transaction->shares[HistoryDisplayNumber])
-    {
-        Log("0");
-        SetTextContent(AccountMenuActionTextOne, "%s", GetTransactionAction(transaction->type[HistoryDisplayNumber]));
-        SetTextContent(AccountMenuSharesTextOne, "%d", transaction->shares[HistoryDisplayNumber]);
-        SetTextContent(AccountMenuTransactionTextOne, "%.2f", transaction->transaction[HistoryDisplayNumber]);
+        SetTextContent(ActionObjects[i], "%s", "");
+        SetTextContent(SharesObjects[i], "%s", "");
+        SetTextContent(PerShareObjects[i], "%s", "");
+        SetTextContent(TransactionObjects[i], "%s", "");
 
     }
 
-    if(transaction->shares[HistoryDisplayNumber+1])
-    {
-        Log("1");
-        SetTextContent(AccountMenuActionTextTwo, "%s", GetTransactionAction(transaction->type[HistoryDisplayNumber+1]));
-        SetTextContent(AccountMenuSharesTextTwo, "%d", transaction->shares[HistoryDisplayNumber+1]);
-        SetTextContent(AccountMenuTransactionTextTwo, "%.2f", transaction->transaction[HistoryDisplayNumber+1]);
-
-    }
-
-    if(transaction->shares[HistoryDisplayNumber+2])
-    {
-        Log("2");
-        SetTextContent(AccountMenuActionTextThree, "%s", GetTransactionAction(transaction->type[HistoryDisplayNumber+2]));
-        SetTextContent(AccountMenuSharesTextThree, "%d", transaction->shares[HistoryDisplayNumber+2]);
-        SetTextContent(AccountMenuTransactionTextThree, "%.2f", transaction->transaction[HistoryDisplayNumber+2]);
-
-    }
-
-    if(transaction->shares[HistoryDisplayNumber+3])
-    {
-        Log("3");
-        SetTextContent(AccountMenuActionTextFour, "%s", GetTransactionAction(transaction->type[HistoryDisplayNumber+3]));
-        SetTextContent(AccountMenuSharesTextFour, "%d", transaction->shares[HistoryDisplayNumber+3]);
-        SetTextContent(AccountMenuTransactionTextFour, "%.2f", transaction->transaction[HistoryDisplayNumber+3]);
-
-    }
-
-    if(transaction->shares[HistoryDisplayNumber+4])
-    {
-        Log("4");
-        SetTextContent(AccountMenuActionTextFive, "%s", GetTransactionAction(transaction->type[HistoryDisplayNumber+4]));
-        SetTextContent(AccountMenuSharesTextFive, "%d", transaction->shares[HistoryDisplayNumber+4]);
-        SetTextContent(AccountMenuTransactionTextFive, "%.2f", transaction->transaction[HistoryDisplayNumber+4]);
-
-    }
-
-    //This is nasty. all of it :/ 
 }
 
 void AddAccountCompanyContentToStocksScrollBox(DrawObject *object)
@@ -225,8 +137,6 @@ void LoadAccountCompanyScrollBoxClick(char *scroll_box_content)
     LogF("COMPANY SELECTED: %s", scroll_box_content);
 
 }
-
-
 
 void DisplayAccountCompanyScrollBox() 
 {
@@ -255,17 +165,16 @@ void AccountDown_BCB()
     HistoryDisplayNumber += 5;
     ClearAccountHistoryDisplay();
     PopulateAccountHistoryDisplay();
-    LogF("NUMBER: %d", HistoryDisplayNumber);
 
 }
 
 void AccountUp_BCB()
 {
-    if(HistoryDisplayNumber >= 5)
-    {
+    if(HistoryDisplayNumber >= 5) {
+
         HistoryDisplayNumber -= 5;
         ClearAccountHistoryDisplay();
         PopulateAccountHistoryDisplay();
-        LogF("NUMBER: %d", HistoryDisplayNumber);
+
     }
 }
