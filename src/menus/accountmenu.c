@@ -11,6 +11,8 @@
 #include "dbaccount.h"
 #include "text.h"
 
+#define DSP_NUM 5
+
 char* GetTransactionAction(TransactionType type);
 void DisplayAccountCompanyScrollBox();
 void PopulateAccountHistoryDisplay();
@@ -20,15 +22,15 @@ int HistoryDisplayNumber = 0;
 
 static MenuWithChilds *account_menu = NULL;
 
-static char *ActionJsonObjects[5]      = {"AccountMenuActionTextOne", "AccountMenuActionTextTwo", "AccountMenuActionTextThree", "AccountMenuActionTextFour", "AccountMenuActionTextFive"};
-static char *SharesJsonObjects[5]      = {"AccountMenuSharesTextOne", "AccountMenuSharesTextTwo", "AccountMenuSharesTextThree", "AccountMenuSharesTextFour", "AccountMenuSharesTextFive"};
-static char *PerShareJsonObjects[5]    = {"AccountMenuPerShareTextOne", "AccountMenuPerShareTextTwo", "AccountMenuPerShareTextThree", "AccountMenuPerShareTextFour", "AccountMenuPerShareTextFive"};
-static char *TransactionJsonObjects[5] = {"AccountMenuTransactionTextOne", "AccountMenuTransactionTextTwo", "AccountMenuTransactionTextThree", "AccountMenuTransactionTextFour", "AccountMenuTransactionTextFive"};
+static char *ActionJsonObjects[DSP_NUM]      = {"AccountMenuActionTextOne", "AccountMenuActionTextTwo", "AccountMenuActionTextThree", "AccountMenuActionTextFour", "AccountMenuActionTextFive"};
+static char *SharesJsonObjects[DSP_NUM]      = {"AccountMenuSharesTextOne", "AccountMenuSharesTextTwo", "AccountMenuSharesTextThree", "AccountMenuSharesTextFour", "AccountMenuSharesTextFive"};
+static char *PerShareJsonObjects[DSP_NUM]    = {"AccountMenuPerShareTextOne", "AccountMenuPerShareTextTwo", "AccountMenuPerShareTextThree", "AccountMenuPerShareTextFour", "AccountMenuPerShareTextFive"};
+static char *TransactionJsonObjects[DSP_NUM] = {"AccountMenuTransactionTextOne", "AccountMenuTransactionTextTwo", "AccountMenuTransactionTextThree", "AccountMenuTransactionTextFour", "AccountMenuTransactionTextFive"};
 
-DrawObject *ActionObjects[5];
-DrawObject *SharesObjects[5];
-DrawObject *PerShareObjects[5];
-DrawObject *TransactionObjects[5];
+DrawObject *ActionObjects[DSP_NUM];
+DrawObject *SharesObjects[DSP_NUM];
+DrawObject *PerShareObjects[DSP_NUM];
+DrawObject *TransactionObjects[DSP_NUM];
 
 void InitializeAccountMenu() 
 {
@@ -51,7 +53,7 @@ void InitializeAccountMenu()
 void InitializeAccountHistoryDisplay()
 {
 
-    for (int i=0; i < 5; i++) {
+    for (int i=0; i < DSP_NUM; i++) {
 
         ActionObjects[i]      = GetDrawObjectFromJsonLayer(ActionJsonObjects[i]);
         SharesObjects[i]      = GetDrawObjectFromJsonLayer(SharesJsonObjects[i]);
@@ -70,9 +72,9 @@ void InitializeAccountHistoryDisplay()
 void PopulateAccountHistoryDisplay()
 {
 
-    struct Transactions *transaction[5];
+    struct Transactions *transaction[DSP_NUM];
 
-    for (int i=0; i < 5; i++) {
+    for (int i=0; i < DSP_NUM; i++) {
 
         transaction[i] = GetTransaction();
         if(transaction[i]->shares[HistoryDisplayNumber + i]) {
@@ -112,7 +114,7 @@ char* GetTransactionAction(TransactionType type)
 void ClearAccountHistoryDisplay()
 {
 
-    for (int i=0; i < 5; i++) {
+    for (int i=0; i < DSP_NUM; i++) {
 
         SetTextContent(ActionObjects[i], "%s", "");
         SetTextContent(SharesObjects[i], "%s", "");
@@ -162,7 +164,7 @@ void DisplayAccountCompanyScrollBox()
 void AccountDown_BCB()
 {
 
-    HistoryDisplayNumber += 5;
+    HistoryDisplayNumber += DSP_NUM;
     ClearAccountHistoryDisplay();
     PopulateAccountHistoryDisplay();
 
@@ -170,9 +172,9 @@ void AccountDown_BCB()
 
 void AccountUp_BCB()
 {
-    if(HistoryDisplayNumber >= 5) {
+    if(HistoryDisplayNumber >= DSP_NUM) {
 
-        HistoryDisplayNumber -= 5;
+        HistoryDisplayNumber -= DSP_NUM;
         ClearAccountHistoryDisplay();
         PopulateAccountHistoryDisplay();
 
