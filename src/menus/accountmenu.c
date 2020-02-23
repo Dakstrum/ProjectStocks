@@ -10,6 +10,7 @@
 #include "log.h"
 #include "dbaccount.h"
 #include "text.h"
+#include "scrollbox.h"
 
 #define DSP_NUM 5
 

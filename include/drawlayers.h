@@ -22,7 +22,6 @@ int AddTextToDrawLayer(DrawObject *object);
 
 void DrawLayers();
 
-DrawObject *CreateScrollBoxObject();
 DrawObject *GetDrawObject(int layer, int object);
 int RemoveDrawObject(DrawObject *object);
 bool DoesObjectExistInCurrentDrawLayer(char *object_name);

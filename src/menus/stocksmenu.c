@@ -6,15 +6,17 @@
 #include <allegro5/allegro.h>
 
 #include "text.h"
+#include "scrollbox.h"
 #include "jsonlayer.h"
 #include "drawlayers.h"
+
 #include "log.h"
-#include "cache.h"
 #include "graph.h"
 #include "startup.h"
+#include "simulation.h"
+
 #include "dbaccount.h"
 #include "account.h"
-#include "simulation.h"
 
 static MenuWithChilds *stocks_menu           = NULL;
 static MenuWithChilds *sell_transaction_menu = NULL;

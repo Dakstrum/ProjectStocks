@@ -8,6 +8,9 @@
 #include "text.h"
 #include "jsonlayer.h"
 #include "drawlayers.h"
+#include "drawobject.h"
+#include "scrollbox.h"
+
 #include "log.h"
 #include "shared.h"
 #include "stocksmenu.h"
@@ -23,14 +26,19 @@
 static DrawObject *SaveNameTextObject   = NULL;
 static DrawObject *PlayerNameTextObject = NULL;
 
+static DrawObject *saves_scrollbox      = NULL;
+
+void SetSaveContent(char *save_name, char *player_name) 
+{
+    SetTextContent(SaveNameTextObject, "%s",   save_name);
+    SetTextContent(PlayerNameTextObject, "%s", player_name);
+}
+
 void UpdateSaveStatsText(char *save_name)
 {
 
     char *player_name = GetPlayerNameFromSaveName(save_name);
-
-    SetTextContent(SaveNameTextObject, "%s",   save_name);
-    SetTextContent(PlayerNameTextObject, "%s", player_name);
-
+    SetSaveContent(save_name, player_name);
     free(player_name);
 
 }
@@ -46,21 +54,21 @@ void AddSaveContentToScrollBox(DrawObject *object)
 void DisplayLoadSaveScrollBox() 
 {
 
-    DrawObject *object = CreateScrollBoxObject();
+    saves_scrollbox = CreateScrollBoxObject();
 
-    object->type = SCROLLBOX;
-    object->x          = 535;
-    object->y          = 226;
-    object->width      = 288;
-    object->height     = 603;
-    object->asset_path = "assets/images/companyicons/SaveBox.png";
+    saves_scrollbox->type       = SCROLLBOX;
+    saves_scrollbox->x          = 535;
+    saves_scrollbox->y          = 226;
+    saves_scrollbox->width      = 288;
+    saves_scrollbox->height     = 603;
+    saves_scrollbox->asset_path = "assets/images/companyicons/SaveBox.png";
 
-    object->scrollbox.num_items        = GetAmountOfSaves();
-    object->scrollbox.box_click        = &UpdateSaveStatsText;
-    object->scrollbox.text_content     = malloc(sizeof(char *) * GetAmountOfSaves());
+    saves_scrollbox->scrollbox.num_items        = GetAmountOfSaves();
+    saves_scrollbox->scrollbox.box_click        = &UpdateSaveStatsText;
+    saves_scrollbox->scrollbox.text_content     = malloc(sizeof(char *) * GetAmountOfSaves());
 
-    AddSaveContentToScrollBox(object);
-    AddObjectToDrawLayer(object);
+    AddSaveContentToScrollBox(saves_scrollbox);
+    AddObjectToDrawLayer(saves_scrollbox);
 
 }
 
@@ -145,6 +153,11 @@ void DeleteSave_BCB()
 {
 
     DeleteAccountSave(SaveNameTextObject->text.content, PlayerNameTextObject->text.content);
+    RemoveDrawObject(saves_scrollbox);
+
+    SetSaveContent("", "");
+    saves_scrollbox = NULL;
+    DisplayLoadSaveScrollBox();
 
 }
 
@@ -163,17 +176,18 @@ void CreateSave_BCB()
     if (strlen(save_name_in_text_box) == 0) {
 
         Log("save_name_in_text_box has length of 0");
-        //return;
+        return;
     }
 
     char *player_name_in_text_box = GetTextFromTextBox("PlayerNameTextBox");
     if (strlen(player_name_in_text_box) == 0) {
 
         Log("player_name_in_text_box has length of 0");
-        //return;
+        // TODO setup popups when textboxes have no value.
+        return;
     }
 
-    //CreateNewSave(save_name_in_text_box, player_name_in_text_box);
+    CreateNewSave(save_name_in_text_box, player_name_in_text_box);
 
     StartGame();
 

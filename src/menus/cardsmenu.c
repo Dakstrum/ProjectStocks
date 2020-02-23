@@ -14,6 +14,7 @@
 #include "dbaccount.h"
 #include "account.h"
 #include "simulation.h"
+#include "scrollbox.h"
 
 static MenuWithChilds *cards_menu      = NULL;
 static MenuWithChilds *apply_card_menu = NULL;

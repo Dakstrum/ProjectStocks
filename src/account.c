@@ -134,7 +134,7 @@ void CreateNewSave(char *save_name, char *player_name)
 void DeleteSave(char *save_name, char *player_name)
 {
     LogF("DeleteSave %s %s", save_name, player_name);
-    //Todo delete save from DB with save_name and player_name
+    DeleteAccountSave(save_name, player_name);
 
 }
 

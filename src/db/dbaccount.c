@@ -141,7 +141,7 @@ void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtrac
 {
 
     sqlite3 *db;
-    int owned_stock_amount;
+    int owned_stock_amount = 0;
     
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
@@ -184,7 +184,7 @@ int SetCompanyId(void *company_id, int argc, char **argv, char **col_name)
 int GetCompanyId(char *company_name, sqlite3 *db) 
 {
 
-    int company_id;
+    int company_id = -1;
     ExecuteQuery(GetFormattedPointer("SELECT CompanyId FROM Company WHERE CompanyName='%s'", company_name), &SetCompanyId, &company_id, db);
 
     return company_id;
@@ -210,7 +210,7 @@ int GetAmountOfSavesCallback(void *amount_of_saves, int argc, char **argv, char 
 int GetAmountOfSaves()
 {
 
-    int amount_of_saves;
+    int amount_of_saves = 0;
 
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
@@ -261,7 +261,7 @@ int GetAmountOfCompanysCallback(void *amount_of_saves, int argc, char **argv, ch
 int GetAmountOfCompanies()
 {
 
-    int amount_of_companies;
+    int amount_of_companies = 0;
 
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
