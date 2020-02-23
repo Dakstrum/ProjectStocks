@@ -351,6 +351,9 @@ int AddMenuWithChildsToDrawLayer(MenuWithChilds *menu_with_childs)
 int AddObjectToDrawLayer(DrawObject *object) 
 {
 
+    if (object == NULL)
+        return -1;
+    
     switch (object->type) {
 
         case MENU:      return AddMenuToDrawLayer(object);      break;
