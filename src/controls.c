@@ -87,7 +87,7 @@ bool ToggledTextBoxActiveFlag(DrawObject *object, int x, int y)
 bool HandledMouseClickInTextbox(int x, int y)
 {
 
-    DrawObjectTypeCollection *collection = GetObjectsByType(BUTTON);
+    DrawObjectTypeCollection *collection = GetObjectsByType(TEXTBOX);
 
     if (collection == NULL)
         return false;
@@ -328,9 +328,8 @@ void HandleTextBoxInput(ALLEGRO_EVENT event)
 
     DrawObject *object = GetActiveTextBox();
 
-    if (object == NULL || !(object->bit_flags & TEXTBOX_ACTIVE)) {
+    if (object == NULL || !(object->bit_flags & TEXTBOX_ACTIVE))
         return;
-    }
 
     if (event.type == ALLEGRO_EVENT_KEY_CHAR)
         ModifyTextBox(object, event);
