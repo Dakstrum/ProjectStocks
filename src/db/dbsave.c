@@ -42,6 +42,8 @@ void DeleteAccountSave(char *save_name, char *player_name)
     if (OpenConnection(&db, DefaultConnection()) == 0)
         ExecuteQuery(GetFormattedPointer("DELETE FROM Saves WHERE SaveName = '%s' AND PlayerName = '%s'", save_name, player_name), NULL, NULL, db);
 
+    sqlite3_close(db);
+
 }
 
 
@@ -63,6 +65,8 @@ unsigned int GetSaveSeedWithSaveId(int save_id)
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
         ExecuteQuery(GetFormattedPointer("SELECT RandomSeed FROM Saves WHERE SaveId=%d", save_id), &GetSaveSeedCallback, &seed, db);
+
+    sqlite3_close(db);
 
     return seed;
 
@@ -92,6 +96,8 @@ char *GetSaveNameFromSaveId(int save_id)
     if (OpenConnection(&db, DefaultConnection()) == 0)
         ExecuteQuery(GetFormattedPointer("SELECT SaveName FROM Saves WHERE SaveId = %d", save_id), &GetSaveNameFromSaveIdCallback, &save_name, db);
 
+    sqlite3_close(db);
+
     return save_name;
 
 }
@@ -119,6 +125,8 @@ char *GetPlayerNameFromSaveName(char *save_name)
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
         ExecuteQuery(GetFormattedPointer("SELECT PlayerName FROM Saves WHERE SaveName = '%s'", save_name), &GetPlayerNameFromSaveNameCallback, &player_name, db);
+
+    sqlite3_close(db);
 
     return player_name;
 

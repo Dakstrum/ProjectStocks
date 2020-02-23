@@ -88,6 +88,8 @@ void AddOwnedStock(char *company_name, int amount_to_own)
     if (OpenConnection(&db, DefaultConnection()) == 0) 
         ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks ( SaveId, PlayerName, CompanyId, HowManyOwned) VALUES (%d, 1, %d, '%d');", GetSaveId(), GetCompanyId(company_name, db), amount_to_own), NULL, NULL, db);
 
+    sqlite3_close(db);
+
 }
 
 void InsertStockTransaction(char *company_name, int transaction_amount, int stocks_exchanged) 
@@ -97,6 +99,8 @@ void InsertStockTransaction(char *company_name, int transaction_amount, int stoc
 
     if (OpenConnection(&db, DefaultConnection()) == 0)
         ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions ( SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, 1, %d, %d, %d, %d);", GetSaveId(), GetCompanyId(company_name, db), transaction_amount, stocks_exchanged, GetGameTime()), NULL, NULL, db);
+
+    sqlite3_close(db);
 
 }
 
@@ -118,6 +122,8 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, int pri
         InsertStockTransaction(company_name, -amount_to_add * price_per_stock, amount_to_add);
 
     }
+
+    sqlite3_close(db);
 
 }
 
@@ -149,6 +155,8 @@ void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtrac
         }
 
     }
+
+    sqlite3_close(db);
 
 }
 
@@ -208,6 +216,8 @@ int GetAmountOfSaves()
     if (OpenConnection(&db, DefaultConnection()) == 0)
         ExecuteQuery(GetFormattedPointer("SELECT * FROM Saves"), &GetAmountOfSavesCallback, &amount_of_saves, db);
 
+    sqlite3_close(db);
+
     return amount_of_saves;
 
 }
@@ -234,6 +244,8 @@ char *GetStockNameFromStockId(int stock_id)
     if (OpenConnection(&db, DefaultConnection()) == 0)
         ExecuteQuery(GetFormattedPointer("SELECT CompanyName FROM Company WHERE CompanyId = %d", stock_id), &GetStockNameFromStockIdCallback, &stock_name, db);
 
+    sqlite3_close(db);
+
     return stock_name;
 }
 
@@ -254,6 +266,8 @@ int GetAmountOfCompanies()
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
         ExecuteQuery(GetFormattedPointer("SELECT * FROM Company"), &GetAmountOfCompanysCallback, &amount_of_companies, db);
+
+    sqlite3_close(db);
 
     return amount_of_companies;
 
