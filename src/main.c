@@ -27,7 +27,6 @@ enum InitializeSuccess
 /* Test code */
 static ALLEGRO_EVENT_QUEUE *event_queue;
 static ALLEGRO_TIMER *timer;
-static ALLEGRO_DISPLAY_MODE mode;
 
 enum InitializeSuccess Initialize();
 void GameLoop();
