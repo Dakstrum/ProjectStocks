@@ -191,6 +191,16 @@ void BuyMenu_BCB()
 
 }
 
+void ChangeGraphTimespan(TimeSpan time_span)
+{
+
+    current_company_name = GetCurrentCompanyFromGraph();
+    RemoveDrawObject(current_graph);
+    DisplayGraph(current_company_name, time_span);
+    UpdateStocksStatsText(current_company_name);
+
+}
+
 void Sell_BCB()
 {
 
@@ -215,50 +225,35 @@ void Buy_BCB()
 
 void OneD_BCB()
 {
-    current_company_name = GetCurrentCompanyFromGraph();
-    RemoveDrawObject(current_graph);
-    DisplayGraph(current_company_name, ONE_DAY);
-    UpdateStocksStatsText(current_company_name);
+    ChangeGraphTimespan(ONE_DAY);
 
 }
 
 void OneW_BCB()
 {
 
-    current_company_name = GetCurrentCompanyFromGraph();
-    RemoveDrawObject(current_graph);
-    DisplayGraph(current_company_name, ONE_WEEK);
-    UpdateStocksStatsText(current_company_name);
+    ChangeGraphTimespan(ONE_WEEK);
 
 }
 
 void OneM_BCB()
 {
 
-    current_company_name = GetCurrentCompanyFromGraph();
-    RemoveDrawObject(current_graph);
-    DisplayGraph(current_company_name, ONE_MONTH);
-    UpdateStocksStatsText(current_company_name);
+    ChangeGraphTimespan(ONE_MONTH);
 
 }
 
 void OneY_BCB()
 {
 
-    current_company_name = GetCurrentCompanyFromGraph();
-    RemoveDrawObject(current_graph);
-    DisplayGraph(current_company_name, ONE_YEAR);
-    UpdateStocksStatsText(current_company_name);
-
+    ChangeGraphTimespan(ONE_YEAR);
+    
 }
 
 void All_BCB()
 {
 
-    current_company_name = GetCurrentCompanyFromGraph();
-    RemoveDrawObject(current_graph);
-    DisplayGraph(current_company_name, ALL_TIME);
-    UpdateStocksStatsText(current_company_name);
+    ChangeGraphTimespan(ALL_TIME);
 
 }
 
