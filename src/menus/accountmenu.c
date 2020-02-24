@@ -16,10 +16,11 @@
 
 char* GetTransactionAction(TransactionType type);
 void DisplayAccountCompanyScrollBox();
-void PopulateAccountHistoryDisplay();
+void PopulateAccountHistoryDisplay(char* company);
 void InitializeAccountHistoryDisplay();
 
 int HistoryDisplayNumber = 0;
+char* CurrentCompanyViewing;
 
 static MenuWithChilds *account_menu = NULL;
 
@@ -40,9 +41,11 @@ void InitializeAccountMenu()
     account_menu = GetMenuWithChildsFromJsonLayer("AccountMenu");
     AddMenuWithChildsToDrawLayer(account_menu);
 
+   CurrentCompanyViewing = GetStockNameFromStockId(1);
+
     DisplayAccountCompanyScrollBox();
     InitializeAccountHistoryDisplay();
-    PopulateAccountHistoryDisplay();
+    PopulateAccountHistoryDisplay(CurrentCompanyViewing);
 
 }
 
@@ -70,14 +73,14 @@ void InitializeAccountHistoryDisplay()
 
 }
 
-void PopulateAccountHistoryDisplay()
+void PopulateAccountHistoryDisplay(char* company)
 {
 
     struct Transactions *transaction[DSP_NUM];
 
     for (int i=0; i < DSP_NUM; i++) {
 
-        transaction[i] = GetTransaction();
+        transaction[i] = GetTransaction(company);
         if(transaction[i]->shares[HistoryDisplayNumber + i]) {
 
             SetTextContent(ActionObjects[i], "%s", GetTransactionAction(transaction[i]->type[HistoryDisplayNumber + i]));
@@ -104,10 +107,10 @@ void CleanUpAccountMenu()
 char* GetTransactionAction(TransactionType type)
 {
 
-    if(type == 1)
+    if(type == 0)
         return "Buy";
 
-    if(type == 0)
+    if(type == 1)
         return "Sell";
     return "error";
 }
@@ -137,7 +140,9 @@ void AddAccountCompanyContentToStocksScrollBox(DrawObject *object)
 void LoadAccountCompanyScrollBoxClick(char *scroll_box_content)
 {
 
-    LogF("COMPANY SELECTED: %s", scroll_box_content);
+    CurrentCompanyViewing = scroll_box_content;
+    ClearAccountHistoryDisplay();
+    PopulateAccountHistoryDisplay(scroll_box_content);
 
 }
 
@@ -167,7 +172,7 @@ void AccountDown_BCB()
 
     HistoryDisplayNumber += DSP_NUM;
     ClearAccountHistoryDisplay();
-    PopulateAccountHistoryDisplay();
+    PopulateAccountHistoryDisplay(CurrentCompanyViewing);
 
 }
 
@@ -177,7 +182,7 @@ void AccountUp_BCB()
 
         HistoryDisplayNumber -= DSP_NUM;
         ClearAccountHistoryDisplay();
-        PopulateAccountHistoryDisplay();
+        PopulateAccountHistoryDisplay(CurrentCompanyViewing);
 
     }
 }

@@ -49,5 +49,5 @@ char *GetStockNameFromStockId(int stock_id);
 char *GetPlayerNameFromSaveName(char *save_name);
 int *GetSaveIdFromSaveName(char *save_name);
 
-struct Transactions *GetTransaction();
+struct Transactions *GetTransaction(char* company);
 #endif

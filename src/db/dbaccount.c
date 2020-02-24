@@ -17,7 +17,7 @@ void SetupMainDB();
 void SetupLogDB();
 
 void InsertDefaultSettingsIfNeeded(sqlite3 *db);
-int GetCompanyId(char *company_name, sqlite3 *db);
+int GetCompanyId(char *company_name);
 bool DoesCompanyExist(char *company_name, sqlite3 *db);
 void SetCompanyToActive(char *company_name, sqlite3 *db);
 void InsertNewCompany(char *company_name, float ipo, sqlite3 *db);
@@ -37,7 +37,7 @@ int InsertAndOrSetCompanyToActive(char *company_name, float ipo)
             InsertNewCompany(company_name, ipo, db);
         
         SetCompanyToActive(company_name, db);
-        company_id = GetCompanyId(company_name, db);
+        company_id = GetCompanyId(company_name);
 
     }
     sqlite3_close(db);
@@ -86,7 +86,7 @@ void AddOwnedStock(char *company_name, int amount_to_own)
     sqlite3 *db;
 
     if (OpenConnection(&db, DefaultConnection()) == 0) 
-        ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks ( SaveId, PlayerName, CompanyId, HowManyOwned) VALUES (%d, 1, %d, '%d');", GetSaveId(), GetCompanyId(company_name, db), amount_to_own), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks ( SaveId, PlayerName, CompanyId, HowManyOwned) VALUES (%d, 1, %d, '%d');", GetSaveId(), GetCompanyId(company_name), amount_to_own), NULL, NULL, db);
 
     sqlite3_close(db);
 
@@ -98,7 +98,7 @@ void InsertStockTransaction(char *company_name, int transaction_amount, int stoc
     sqlite3 *db;
 
     if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions ( SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, 1, %d, %d, %d, %d);", GetSaveId(), GetCompanyId(company_name, db), transaction_amount, stocks_exchanged, GetGameTime()), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions ( SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, 1, %d, %d, %d, %d);", GetSaveId(), GetCompanyId(company_name), transaction_amount, stocks_exchanged, GetGameTime()), NULL, NULL, db);
 
     sqlite3_close(db);
 
@@ -112,12 +112,12 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, int pri
 
      if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId =%d;", GetCompanyId(company_name, db)), &FindOutIfYouCanAddFromCurrentStock, &owned_stock_amount, db);
+        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId =%d;", GetCompanyId(company_name)), &FindOutIfYouCanAddFromCurrentStock, &owned_stock_amount, db);
 
         if(owned_stock_amount <= 0) 
             AddOwnedStock(company_name, amount_to_add);
         else
-            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned + %d  WHERE CompanyId=%d;", amount_to_add, GetCompanyId(company_name, db)), NULL, NULL, db);
+            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned + %d  WHERE CompanyId=%d;", amount_to_add, GetCompanyId(company_name)), NULL, NULL, db);
         
         InsertStockTransaction(company_name, -amount_to_add * price_per_stock, amount_to_add);
 
@@ -145,11 +145,11 @@ void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtrac
     
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d;", GetCompanyId(company_name, db)), &FindOutIfYouCanSubtractFromCurrentStock, &owned_stock_amount, db);
+        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d;", GetCompanyId(company_name)), &FindOutIfYouCanSubtractFromCurrentStock, &owned_stock_amount, db);
 
         if (owned_stock_amount >= amount_to_subtract) {
 
-            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE CompanyId=%d;", amount_to_subtract, GetCompanyId(company_name, db)), NULL, NULL, db);
+            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE CompanyId=%d;", amount_to_subtract, GetCompanyId(company_name)), NULL, NULL, db);
             InsertStockTransaction(company_name, amount_to_subtract * price_per_stock, -amount_to_subtract);
             
         }
@@ -181,11 +181,16 @@ int SetCompanyId(void *company_id, int argc, char **argv, char **col_name)
 
 }
 
-int GetCompanyId(char *company_name, sqlite3 *db) 
+int GetCompanyId(char *company_name) 
 {
 
     int company_id = -1;
-    ExecuteQuery(GetFormattedPointer("SELECT CompanyId FROM Company WHERE CompanyName='%s'", company_name), &SetCompanyId, &company_id, db);
+
+    sqlite3 *db;
+    if (OpenConnection(&db, DefaultConnection()) == 0)
+        ExecuteQuery(GetFormattedPointer("SELECT CompanyId FROM Company WHERE CompanyName='%s'", company_name), &SetCompanyId, &company_id, db);
+
+    sqlite3_close(db);
 
     return company_id;
 
@@ -293,7 +298,7 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
     transaction_temp->transaction[transaction_temp->num_transactions] = (float)atof(argv[4]);
     transaction_temp->shares[transaction_temp->num_transactions]      = (short int)atof(argv[5]);
 
-    if(transaction_temp->transaction < 0)
+    if(transaction_temp->transaction[transaction_temp->num_transactions] < 0)
         transaction_temp->type[transaction_temp->num_transactions] = BUY;
     else
         transaction_temp->type[transaction_temp->num_transactions] = SELL;
@@ -303,7 +308,7 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
     return 0;
 }
 
-struct Transactions *GetTransaction()
+struct Transactions *GetTransaction(char* company)
 {
 
     struct Transactions *transaction      = malloc(sizeof(struct Transactions));
@@ -327,7 +332,7 @@ struct Transactions *GetTransaction()
         return transaction;
 
     
-    ExecuteQuery(GetFormattedPointer("SELECT * FROM Transactions WHERE CompanyId=2"), &SetTransactionCallback, transaction, db);
+    ExecuteQuery(GetFormattedPointer("SELECT * FROM Transactions WHERE CompanyId=%d", GetCompanyId(company)), &SetTransactionCallback, transaction, db);
 
     sqlite3_close(db);
 
