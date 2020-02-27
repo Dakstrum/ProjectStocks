@@ -24,6 +24,8 @@ char* CurrentCompanyViewing;
 
 static MenuWithChilds *account_menu = NULL;
 
+static DrawObject *CompanyNameTextObject  = NULL;
+
 static DrawObject *ActionObjects[DSP_NUM];
 static DrawObject *SharesObjects[DSP_NUM];
 static DrawObject *PerShareObjects[DSP_NUM];
@@ -41,11 +43,14 @@ void InitializeAccountMenu()
     account_menu = GetMenuWithChildsFromJsonLayer("AccountMenu");
     AddMenuWithChildsToDrawLayer(account_menu);
 
-   CurrentCompanyViewing = GetStockNameFromStockId(1);
+    CurrentCompanyViewing = GetStockNameFromStockId(1);
 
     DisplayAccountCompanyScrollBox();
     InitializeAccountHistoryDisplay();
     PopulateAccountHistoryDisplay(CurrentCompanyViewing);
+
+    CompanyNameTextObject  = GetDrawObjectFromJsonLayer("AccountMenuChangingCompanyNameText");
+    AddObjectToDrawLayer(CompanyNameTextObject);
 
 }
 
@@ -143,6 +148,8 @@ void LoadAccountCompanyScrollBoxClick(char *scroll_box_content)
     CurrentCompanyViewing = scroll_box_content;
     ClearAccountHistoryDisplay();
     PopulateAccountHistoryDisplay(scroll_box_content);
+
+    SetTextContent(CompanyNameTextObject, "%s", scroll_box_content);
 
 }
 
