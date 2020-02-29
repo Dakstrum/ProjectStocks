@@ -51,6 +51,7 @@ void InitializeAccountMenu()
 
     CompanyNameTextObject  = GetDrawObjectFromJsonLayer("AccountMenuChangingCompanyNameText");
     AddObjectToDrawLayer(CompanyNameTextObject);
+    SetTextContent(CompanyNameTextObject, "%s", CurrentCompanyViewing);
 
 }
 
