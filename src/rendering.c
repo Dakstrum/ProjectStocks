@@ -31,6 +31,8 @@ void CleanUpRendering();
 void CleanUpDisplay();
 void CleanUpAddons();
 
+void SetDisplayIcon();
+
 static void (*RenderLogic)()    = &StartUpSequence;
 static ALLEGRO_DISPLAY *display = NULL;
 static WindowSettings window_settings;
@@ -51,6 +53,7 @@ void InitializeRendering()
 
     InitializeDisplay();
     InitializeAddons();
+    SetDisplayIcon();
 
 }
 
@@ -152,5 +155,12 @@ ALLEGRO_DISPLAY *GetDisplay()
 {
 
     return display;
+
+}
+
+void SetDisplayIcon()
+{
+
+    al_set_display_icon(display, al_load_bitmap("assets/icon.tga"));
 
 }
