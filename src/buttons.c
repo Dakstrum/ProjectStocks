@@ -31,7 +31,7 @@ void StubCallBack()
 
 }
 
-#define NUM_CALLBACKS 34
+#define NUM_CALLBACKS 35
 static ButtonCallsbacks callbacks[] = {
 
     {"STUB",                               &StubCallBack},
