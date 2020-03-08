@@ -9,6 +9,7 @@
 #include "drawlayers.h"
 #include "log.h"
 #include "text.h"
+#include "account.h"
 
 static DrawObject *AccountMoneyTextObject    = NULL;
 
@@ -38,7 +39,7 @@ void NewsMenuRenderLogic()
     if (AccountMoneyTextObject == NULL)
         return;
     
-    SetTextContent(AccountMoneyTextObject, "1,900");
+    SetTextContent(AccountMoneyTextObject, "%.2f", account_money);
 
 }
 

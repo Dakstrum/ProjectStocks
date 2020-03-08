@@ -22,6 +22,6 @@ time_t GetGameTime();
 
 void SetGameSpeed(const int speed);
 
-int account_money;
+float account_money;
 
 #endif

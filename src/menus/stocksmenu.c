@@ -73,8 +73,8 @@ void StocksMenuRenderLogic()
 
     if (AccountMoneyTextObject == NULL)
         return;
-    
-    //SetTextContent(AccountMoneyTextObject, "%d", account_money);
+
+    SetTextContent(AccountMoneyTextObject, "%.2f", account_money);
 
 }
 

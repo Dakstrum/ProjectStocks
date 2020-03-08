@@ -17,6 +17,8 @@
 #include "dbaccess.h"
 #include "stocksmenu.h"
 #include "newsmenu.h"
+#include "accountmenu.h"
+#include "cardsmenu.h"
 
 typedef struct DisplayFlagMap {
 
@@ -160,6 +162,21 @@ void SwitchToRenderingNewsMenu()
 
 }
 
+void SwitchToRenderingAccountMenu()
+{
+
+    InitializeAccountMenu();
+    RenderLogic = &AccountMenuRenderLogic;
+
+}
+
+void SwitchToRenderingCardsMenu()
+{
+
+    InitializeCardsMenu();
+    RenderLogic = &CardsMenuRenderLogic;
+
+}
 
 ALLEGRO_DISPLAY *GetDisplay() 
 {

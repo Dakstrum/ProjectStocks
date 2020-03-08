@@ -120,6 +120,7 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, int pri
             ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned + %d  WHERE CompanyId=%d;", amount_to_add, GetCompanyId(company_name)), NULL, NULL, db);
         
         InsertStockTransaction(company_name, -amount_to_add * price_per_stock, amount_to_add);
+        account_money += -amount_to_add * price_per_stock;
 
     }
 
@@ -151,6 +152,7 @@ void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtrac
 
             ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE CompanyId=%d;", amount_to_subtract, GetCompanyId(company_name)), NULL, NULL, db);
             InsertStockTransaction(company_name, amount_to_subtract * price_per_stock, -amount_to_subtract);
+            account_money += amount_to_subtract * price_per_stock;
             
         }
 

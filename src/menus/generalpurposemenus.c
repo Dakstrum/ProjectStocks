@@ -20,7 +20,7 @@ static MenuWithChilds *pause_menu   = NULL;
 static MenuWithChilds *options_menu = NULL;
 
 void CleanUpGeneralPurposeMenus() 
-{
+{ 
 
     pause_menu   = NULL;
     options_menu = NULL;
@@ -93,7 +93,6 @@ void OptionsMenuExit_BCB()
 
 }
 
-
 void Stocks_BCB()
 {
 
@@ -114,7 +113,7 @@ void Account_BCB()
 {
     
     ClearCurrentDrawLayer();
-    InitializeAccountMenu();
+    SwitchToRenderingAccountMenu();
     
 }
 
@@ -122,6 +121,6 @@ void Cards_BCB()
 {
     
     ClearCurrentDrawLayer();
-    InitializeCardsMenu();
+    SwitchToRenderingCardsMenu();
     
 }

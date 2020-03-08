@@ -15,11 +15,15 @@
 #include "account.h"
 #include "simulation.h"
 #include "scrollbox.h"
+#include "text.h"
 
 static MenuWithChilds *cards_menu      = NULL;
 static MenuWithChilds *apply_card_menu = NULL;
 
+static DrawObject *AccountMoneyTextObject    = NULL;
+
 void AddCompanyContentToApplyCardScrollBox(DrawObject *object);
+void CardsMenuRenderLogic();
 
 void InitializeCardsMenu() 
 {
@@ -32,6 +36,21 @@ void InitializeCardsMenu()
 
     cards_menu = GetMenuWithChildsFromJsonLayer("CardsMenu");
     AddMenuWithChildsToDrawLayer(cards_menu);
+
+    AccountMoneyTextObject = GetDrawObjectFromJsonLayer("StocksMenuAccountMoneyText");
+    AddObjectToDrawLayer(AccountMoneyTextObject);
+
+    CardsMenuRenderLogic();
+
+}
+
+void CardsMenuRenderLogic()
+{
+
+    if (AccountMoneyTextObject == NULL)
+        return;
+    
+    SetTextContent(AccountMoneyTextObject, "%.2f", account_money);
 
 }
 

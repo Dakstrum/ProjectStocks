@@ -11,6 +11,7 @@
 #include "dbaccount.h"
 #include "text.h"
 #include "scrollbox.h"
+#include "account.h"
 
 #define DSP_NUM 5
 
@@ -20,6 +21,7 @@ char* CurrentCompanyViewing;
 static MenuWithChilds *account_menu       = NULL;
 
 static DrawObject *CompanyNameTextObject  = NULL;
+static DrawObject *AccountMoneyTextObject = NULL;
 
 static DrawObject *ActionObjects[DSP_NUM];
 static DrawObject *SharesObjects[DSP_NUM];
@@ -30,6 +32,7 @@ char* GetTransactionAction(TransactionType type);
 void DisplayAccountCompanyScrollBox();
 void PopulateAccountHistoryDisplay(char* company);
 void InitializeAccountHistoryDisplay();
+void AccountMenuRenderLogic();
 
 void InitializeAccountMenu() 
 {
@@ -50,8 +53,24 @@ void InitializeAccountMenu()
     PopulateAccountHistoryDisplay(CurrentCompanyViewing);
 
     CompanyNameTextObject  = GetDrawObjectFromJsonLayer("AccountMenuChangingCompanyNameText");
+    AccountMoneyTextObject = GetDrawObjectFromJsonLayer("StocksMenuAccountMoneyText");
+
     AddObjectToDrawLayer(CompanyNameTextObject);
+    AddObjectToDrawLayer(AccountMoneyTextObject);
+
     SetTextContent(CompanyNameTextObject, "%s", CurrentCompanyViewing);
+
+    AccountMenuRenderLogic();
+
+}
+
+void AccountMenuRenderLogic()
+{
+
+    if (AccountMoneyTextObject == NULL)
+        return;
+    
+    SetTextContent(AccountMoneyTextObject, "%.2f", account_money);
 
 }
 
