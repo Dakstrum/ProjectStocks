@@ -13,6 +13,7 @@ void InitializeRendering();
 void SwitchToRenderingMainMenu();
 void SwitchToLoadingScreen();
 void SwitchToRenderingStocksMenu();
+void SwitchToRenderingNewsMenu();
 void HandleRendering();
 void HandleWindowEvents(ALLEGRO_EVENT event);
 void CleanUpRendering();

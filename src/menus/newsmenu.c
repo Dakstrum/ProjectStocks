@@ -8,6 +8,11 @@
 #include "jsonlayer.h"
 #include "drawlayers.h"
 #include "log.h"
+#include "text.h"
+
+void NewsMenuRenderLogic();
+
+static DrawObject *AccountMoneyTextObject    = NULL;
 
 void InitializeNewsMenu() 
 { 
@@ -18,8 +23,22 @@ void InitializeNewsMenu()
         return;
 
     }
-
+    
     AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("NewsMenu"));
+
+    AccountMoneyTextObject = GetDrawObjectFromJsonLayer("StocksMenuAccountMoneyText");
+    AddObjectToDrawLayer(AccountMoneyTextObject);
+
+    NewsMenuRenderLogic();
+}
+
+void NewsMenuRenderLogic()
+{
+
+    if (AccountMoneyTextObject == NULL)
+        return;
+    
+    SetTextContent(AccountMoneyTextObject, "1,900");
 
 }
 

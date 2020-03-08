@@ -27,14 +27,17 @@ static char *current_company_name            = NULL;
 static DrawObject  *current_graph            = NULL;
 
 
-static DrawObject *CompanyNameTextObject  = NULL;
-static DrawObject *CompanyAboutTextObject = NULL;
+static DrawObject *CompanyNameTextObject     = NULL;
+static DrawObject *CompanyAboutTextObject    = NULL;
+static DrawObject *CompanyCHGTextObject      = NULL;
+static DrawObject *AccountMoneyTextObject    = NULL;
 
 void DisplayTempPopUp();
 void DisplayGraph(char *company_name, TimeSpan time_span);
 void DisplayCompanyScrollBox();
 void AddCompanyContentToStocksScrollBox(DrawObject *object);
 char *GetCurrentCompanyFromGraph();
+void StocksMenuRenderLogic();
 
 void DisplayTempPopUp()
 {
@@ -60,6 +63,7 @@ void UpdateStocksStatsText(char *company_name)
 
     SetTextContent(CompanyNameTextObject, "%s", company_name);
     SetTextContent(CompanyAboutTextObject, "Dynamic Description of a company");
+    StocksMenuRenderLogic();
 }
 
 void InitializeStocksMenu() 
@@ -80,11 +84,23 @@ void InitializeStocksMenu()
 
     CompanyNameTextObject  = GetDrawObjectFromJsonLayer("StocksMenuChangingCompanyNameText");
     CompanyAboutTextObject = GetDrawObjectFromJsonLayer("StocksMenuChangingAboutText");
+    AccountMoneyTextObject = GetDrawObjectFromJsonLayer("StocksMenuAccountMoneyText");
 
     AddObjectToDrawLayer(CompanyNameTextObject);
     AddObjectToDrawLayer(CompanyAboutTextObject);
+    AddObjectToDrawLayer(AccountMoneyTextObject);
 
     UpdateStocksStatsText(GetStockNameFromStockId(1));
+
+}
+
+void StocksMenuRenderLogic()
+{
+
+    if (AccountMoneyTextObject == NULL)
+        return;
+    
+    SetTextContent(AccountMoneyTextObject, "%d", account_money);
 
 }
 

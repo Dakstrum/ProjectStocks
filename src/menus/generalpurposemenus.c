@@ -14,14 +14,10 @@
 #include "accountmenu.h"
 #include "cardsmenu.h"
 #include "mainmenu.h"
+#include "rendering.h"
 
 static MenuWithChilds *pause_menu   = NULL;
 static MenuWithChilds *options_menu = NULL;
-
-char MenusThatDisablePauseMenuFunctionality[] = 
-{
-    "OptionsMenu"
-};
 
 void CleanUpGeneralPurposeMenus() 
 {
@@ -72,7 +68,7 @@ void PauseMenuMainMenu_BCB()
 
     pause_menu = NULL;
     ClearDrawLayers();
-    InitializeMainMenu();
+    SwitchToRenderingMainMenu();
 
 }
 
@@ -102,7 +98,7 @@ void Stocks_BCB()
 {
 
     ClearCurrentDrawLayer();
-    InitializeStocksMenu();
+    SwitchToRenderingStocksMenu();
 
 }
 
@@ -110,7 +106,7 @@ void News_BCB()
 {
     
     ClearCurrentDrawLayer();
-    InitializeNewsMenu();
+    SwitchToRenderingNewsMenu();
     
 }
 
