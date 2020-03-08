@@ -10,9 +10,9 @@
 #include "log.h"
 #include "text.h"
 
-void NewsMenuRenderLogic();
-
 static DrawObject *AccountMoneyTextObject    = NULL;
+
+void NewsMenuRenderLogic();
 
 void InitializeNewsMenu() 
 { 

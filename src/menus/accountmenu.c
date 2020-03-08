@@ -14,15 +14,10 @@
 
 #define DSP_NUM 5
 
-char* GetTransactionAction(TransactionType type);
-void DisplayAccountCompanyScrollBox();
-void PopulateAccountHistoryDisplay(char* company);
-void InitializeAccountHistoryDisplay();
-
 int HistoryDisplayNumber = 0;
 char* CurrentCompanyViewing;
 
-static MenuWithChilds *account_menu = NULL;
+static MenuWithChilds *account_menu       = NULL;
 
 static DrawObject *CompanyNameTextObject  = NULL;
 
@@ -30,6 +25,11 @@ static DrawObject *ActionObjects[DSP_NUM];
 static DrawObject *SharesObjects[DSP_NUM];
 static DrawObject *PerShareObjects[DSP_NUM];
 static DrawObject *TransactionObjects[DSP_NUM];
+
+char* GetTransactionAction(TransactionType type);
+void DisplayAccountCompanyScrollBox();
+void PopulateAccountHistoryDisplay(char* company);
+void InitializeAccountHistoryDisplay();
 
 void InitializeAccountMenu() 
 {

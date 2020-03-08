@@ -26,6 +26,40 @@
 static MenuWithChilds *main_menu = NULL;
 static DrawObject *VersionObject = NULL;
 
+void DynamicText();
+void MainMenuRenderLogic();
+
+void InitializeMainMenu() 
+{
+
+    
+    if (CreateNewDrawLayer() == -1) {
+
+        Log("ERROR: MainMenu could not create new draw layer");
+        return;
+
+    }
+    
+    main_menu = GetMenuWithChildsFromJsonLayer("MainMenu");
+    AddMenuWithChildsToDrawLayer(main_menu);
+    
+    DynamicText();
+    MainMenuRenderLogic();
+
+}
+
+void MainMenuRenderLogic()
+{
+
+    // TEST CODE
+    if (VersionObject == NULL)
+        return;
+
+    static int i = 0;
+    SetTextContent(VersionObject, "Version is %d", i);
+
+}
+
 void ScrollBoxClick(char *scroll_box_content)
 {
 
@@ -60,37 +94,6 @@ void DynamicText()
     // TEST CODE
     VersionObject = GetDrawObjectFromJsonLayer("MainMenuWebsiteText");
     AddObjectToDrawLayer(VersionObject);
-
-}
-
-void MainMenuRenderLogic()
-{
-
-    // TEST CODE
-    if (VersionObject == NULL)
-        return;
-
-    static int i = 0;
-    SetTextContent(VersionObject, "Version is %d", i);
-
-}
-
-void InitializeMainMenu() 
-{
-
-    
-    if (CreateNewDrawLayer() == -1) {
-
-        Log("ERROR: MainMenu could not create new draw layer");
-        return;
-
-    }
-    
-    main_menu = GetMenuWithChildsFromJsonLayer("MainMenu");
-    AddMenuWithChildsToDrawLayer(main_menu);
-    
-    DynamicText();
-    MainMenuRenderLogic();
 
 }
 

@@ -38,33 +38,7 @@ void DisplayCompanyScrollBox();
 void AddCompanyContentToStocksScrollBox(DrawObject *object);
 char *GetCurrentCompanyFromGraph();
 void StocksMenuRenderLogic();
-
-void DisplayTempPopUp()
-{
-
-    DrawObject *popup_object = CreateNewDrawObject();
-
-    popup_object->type   = POPUP;
-    popup_object->x      = 0;
-    popup_object->y      = 0;
-    popup_object->width  = 1920;
-    popup_object->height = 1080;
-    
-    popup_object->asset_path                 = "assets/images/generalpurposemenus/popups/genericpopup.png";
-    popup_object->popup.diff_time_to_animate = 1000;
-    popup_object->popup.diff_time_to_stay    = 2000;
-    popup_object->popup.direction            = "Up";
-    AddObjectToDrawLayer(popup_object);
-}
-
-void UpdateStocksStatsText(char *company_name)
-{
-    current_company_name = GetCurrentCompanyFromGraph();
-
-    SetTextContent(CompanyNameTextObject, "%s", company_name);
-    SetTextContent(CompanyAboutTextObject, "Dynamic Description of a company");
-    StocksMenuRenderLogic();
-}
+void UpdateStocksStatsText(char *company_name);
 
 void InitializeStocksMenu() 
 { 
@@ -100,9 +74,38 @@ void StocksMenuRenderLogic()
     if (AccountMoneyTextObject == NULL)
         return;
     
-    SetTextContent(AccountMoneyTextObject, "%d", account_money);
+    //SetTextContent(AccountMoneyTextObject, "%d", account_money);
 
 }
+
+void DisplayTempPopUp()
+{
+
+    DrawObject *popup_object = CreateNewDrawObject();
+
+    popup_object->type   = POPUP;
+    popup_object->x      = 0;
+    popup_object->y      = 0;
+    popup_object->width  = 1920;
+    popup_object->height = 1080;
+    
+    popup_object->asset_path                 = "assets/images/generalpurposemenus/popups/genericpopup.png";
+    popup_object->popup.diff_time_to_animate = 1000;
+    popup_object->popup.diff_time_to_stay    = 2000;
+    popup_object->popup.direction            = "Up";
+    AddObjectToDrawLayer(popup_object);
+}
+
+void UpdateStocksStatsText(char *company_name)
+{
+    current_company_name = GetCurrentCompanyFromGraph();
+
+    SetTextContent(CompanyNameTextObject, "%s", company_name);
+    SetTextContent(CompanyAboutTextObject, "Dynamic Description of a company");
+    StocksMenuRenderLogic();
+}
+
+
 
 void DisplayGraph(char *company_name, TimeSpan time_span)
 {
@@ -154,8 +157,6 @@ void DisplayCompanyScrollBox()
     AddObjectToDrawLayer(object);
 
 }
-
-
 
 void AddCompanyContentToStocksScrollBox(DrawObject *object)
 {
