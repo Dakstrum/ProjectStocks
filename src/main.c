@@ -16,6 +16,7 @@
 #include "audio.h"
 #include "jsonlayer.h"
 #include "account.h"
+#include "buttons.h"
 
 enum InitializeSuccess 
 {
@@ -103,6 +104,7 @@ enum InitializeSuccess Initialize()
 
     }
 
+    InitializeButtons();
     InitializeLogging();
     InitializeCache();
     InitializeShared();

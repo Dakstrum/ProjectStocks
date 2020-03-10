@@ -2,6 +2,7 @@
 #define BUTTONS_H
 
 void *GetButtonCallback(char *button_name);
+void InitializeButtons();
 
 
 #endif
