@@ -26,8 +26,8 @@ typedef struct ButtonCallbacks
 
 static ButtonCallbacks *callbacks   = NULL;
 static unsigned short num_callbacks = 0;
-static unsigned short callback_size = 128;
-static const unsigned short CALLBACK_SIZE_INCREMENT = 128;
+static unsigned short callback_size = 16;
+static const unsigned short CALLBACK_SIZE_INCREMENT = 16;
 
 void StubCallBack() 
 {
@@ -62,14 +62,9 @@ void AddButton(char *button_name, void (*Callback)())
 
 }
 
-void InitializeButtons() 
+void InitializeMainMenuButtons() 
 {
 
-    callbacks = malloc(sizeof(ButtonCallbacks) * CALLBACK_SIZE_INCREMENT);
-
-    AddButton("STUB", &StubCallBack);
-
-    //Main Menu
     AddButton("StartButton", &Start_BCB);
     AddButton("OptionsButton", &MainMenuOptions_BCB);
     AddButton("ExitButton", &MainMenuExit_BCB);
@@ -77,8 +72,12 @@ void InitializeButtons()
     AddButton("TwitterButton", &Twitter_BCB);
     AddButton("YoutubeButton", &Youtube_BCB);
     AddButton("WebsiteButton", &Website_BCB);
-    
-    //Stocks Menu
+
+}
+
+void InitializeStocksMenuButtons()
+{
+
     AddButton("ToggleTransactionSellButton", &SellMenu_BCB);
     AddButton("ToggleTransactionBuyButton", &BuyMenu_BCB);
     AddButton("MakeTransactionSellButton", &Sell_BCB);
@@ -89,11 +88,19 @@ void InitializeButtons()
     AddButton("OneYButton", &OneY_BCB);
     AddButton("AllButton", &All_BCB);
 
-    //Account Menu
+}
+
+void InitializeAccountButtons()
+{
+
     AddButton("AccountDownButton", &AccountDown_BCB);
     AddButton("AccountUpButton", &AccountUp_BCB);
 
-    //General Purpose
+}
+
+void InitializeGeneralPurposeButtons()
+{
+
     AddButton("StocksButton", &Stocks_BCB);
     AddButton("NewsButton", &News_BCB);
     AddButton("AccountButton", &Account_BCB);
@@ -103,7 +110,11 @@ void InitializeButtons()
     AddButton("PauseMenuExitButton", &PauseMenuExit_BCB);
     AddButton("OptionsMenuExitButton", &OptionsMenuExit_BCB);
 
-    //Save Menus
+}
+
+void InitializeSaveMenuButtons()
+{
+
     AddButton("LoadSaveMenuNewSaveButton", &NewSaveMenu_BCB);
     AddButton("NewSaveMenuBackButton", &NewSaveMenuBack_BCB);
     AddButton("NewSaveMenuCreateButton", &CreateSave_BCB);
@@ -111,8 +122,27 @@ void InitializeButtons()
     AddButton("LoadSaveMenuBackButton", &LoadSaveMenuBack_BCB);
     AddButton("LoadSaveMenuDeleteSaveButton", &DeleteSave_BCB);
 
-    //Cards Menu
+}
+
+void InitializeCardsMenuButtons()
+{
+
     AddButton("TempApplyButton", &TempApply_BCB);
     AddButton("CardApplyExitButton", &CardApplyExit_BCB);
+
+}
+
+void InitializeButtons() 
+{
+
+    callbacks = malloc(sizeof(ButtonCallbacks) * CALLBACK_SIZE_INCREMENT);
+
+    AddButton("STUB", &StubCallBack);
+
+    InitializeMainMenuButtons();
+    InitializeStocksMenuButtons();
+    InitializeAccountButtons();
+    InitializeGeneralPurposeButtons();
+    InitializeSaveMenuButtons();
 
 }
