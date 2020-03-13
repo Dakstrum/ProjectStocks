@@ -18,12 +18,12 @@ static unsigned int num_companies = 0;
 void InitializeCompaniesJson() 
 {
 
-    SetJsonObjectFromFile(&companies   , "assets/config/companies.json");
+    SetJsonObjectFromFile(&companies , "assets/config/companies.json");
 
     if (companies == NULL)
         return;
 
-    array_list *companies_list = GetArrayList(companies, "/Companies");
+    array_list *companies_list = JsonObjectGetArrayList(companies, "/Companies");
     if (companies_list == NULL)
         return;
     else
@@ -45,12 +45,11 @@ void SetCompanyProducts(int company_index, array_list *products)
     if (products == NULL)
         return;
 
-    char buffer[512];
     parsed_companies[company_index].products       = malloc(sizeof(char *) * products->length);
     parsed_companies[company_index].total_products = products->length;
     for (size_t i = 0; i < products->length; i++) {
 
-        parsed_companies[company_index].products[i] = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/Products/%d/ProductName", company_index, i));
+        parsed_companies[company_index].products[i] = JsonObjectGetString(companies, "/Companies/%d/Products/%d/ProductName", company_index, i);
 
     }
 
@@ -61,15 +60,14 @@ void ParseCompanyJsonObject(array_list *companies_list)
 
     num_companies    = companies_list->length;
     parsed_companies = malloc(sizeof(Company) * companies_list->length);
-    char buffer[512];
     for (size_t i = 0; i < companies_list->length; i++) {
 
-        parsed_companies[i].company_name = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/CompanyName", i));
-        parsed_companies[i].ipo          = GetFloatFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/IPO", i));
-        parsed_companies[i].category     = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/Category", i));
-        parsed_companies[i].description  = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/Description", i));
-        parsed_companies[i].start_date   = GetStringFromJsonObject(companies, GetFormattedBuffer(buffer, "/Companies/%d/StartDate", i));
-        SetCompanyProducts(i, GetJsonObjectArray(companies, GetFormattedBuffer(buffer, "/Companies/%d/Products", i)));
+        parsed_companies[i].company_name = JsonObjectGetString(companies, "/Companies/%d/CompanyName", i);
+        parsed_companies[i].ipo          = JsonObjectGetFloat(companies, "/Companies/%d/IPO", i);
+        parsed_companies[i].category     = JsonObjectGetString(companies, "/Companies/%d/Category", i);
+        parsed_companies[i].description  = JsonObjectGetString(companies, "/Companies/%d/Description", i);
+        parsed_companies[i].start_date   = JsonObjectGetString(companies, "/Companies/%d/StartDate", i);
+        SetCompanyProducts(i, JsonObjectGetArray(companies, "/Companies/%d/Products", i));
         parsed_companies[i].company_id   = InsertAndOrSetCompanyToActive(parsed_companies[i].company_name, parsed_companies[i].ipo);
 
     }

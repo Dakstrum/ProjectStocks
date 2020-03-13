@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
@@ -8,9 +9,7 @@
 
 #include "log.h"
 #include "shared.h"
-
-array_list *GetJsonObjectArray(json_object *object, const char *json_path);
-double GetDoubleFromJsonObject(json_object *object, const char *json_path);
+#include "jsoncommon.h"
 
 void SetJsonObjectFromFile(json_object **object, const char *file) 
 {
@@ -25,22 +24,7 @@ void SetJsonObjectFromFile(json_object **object, const char *file)
 
 }
 
-
-array_list *GetArrayList(json_object *object, const char *json_path) 
-{
-
-    array_list *list = GetJsonObjectArray(object, json_path);
-
-    if (list == NULL)
-        LogF("No %d found in configuration.", json_path);
-    else
-        return list;
-
-    return NULL;
-
-}
-
-array_list *GetJsonObjectArray(json_object *object, const char *json_path) 
+array_list *GetArray(json_object *object, const char *json_path) 
 {
 
     json_object *store_object = NULL;
@@ -52,7 +36,21 @@ array_list *GetJsonObjectArray(json_object *object, const char *json_path)
 
 }
 
-char* GetStringFromJsonObject(json_object *object, const char *json_path) 
+array_list *GetArrayList(json_object *object, const char *json_path) 
+{
+
+    array_list *list = GetArray(object, json_path);
+
+    if (list == NULL)
+        LogF("No %d found in configuration.", json_path);
+    else
+        return list;
+
+    return NULL;
+
+}
+
+char* GetString(json_object *object, const char *json_path) 
 {
 
     json_object *store_object = NULL;
@@ -68,21 +66,7 @@ char* GetStringFromJsonObject(json_object *object, const char *json_path)
 
 }
 
-int GetIntFromJsonObject(json_object *object, const char *json_path) 
-{
-
-    return (int)GetDoubleFromJsonObject(object, json_path);
-
-}
-
-float GetFloatFromJsonObject(json_object *object, const char *json_path) 
-{
-
-    return (float)GetDoubleFromJsonObject(object, json_path);
-
-}
-
-double GetDoubleFromJsonObject(json_object *object, const char *json_path) 
+double GetDouble(json_object *object, const char *json_path) 
 {
 
     json_object *store_object = NULL;
@@ -95,5 +79,103 @@ double GetDoubleFromJsonObject(json_object *object, const char *json_path)
         return json_object_get_double(store_object);
         
     return -1;
+
+}
+
+int GetInt(json_object *object, const char *json_path) 
+{
+
+    return (int)GetDouble(object, json_path);
+
+}
+
+float GetFloat(json_object *object, const char *json_path) 
+{
+
+    return (float)GetDouble(object, json_path);
+
+}
+
+array_list *JsonObjectGetArrayList(json_object *object, const char *json_path, ...)
+{
+
+    va_list args;
+    va_start(args, json_path);
+
+    char *buffer      = GetFormattedPointerVaList(json_path, args);
+    array_list *value = GetArrayList(object, buffer);
+    free(buffer);
+
+    return value;
+
+}
+
+array_list *JsonObjectGetArray(json_object *object, const char *json_path, ...)
+{
+
+    va_list args;
+    va_start(args, json_path);
+
+    char *buffer      = GetFormattedPointerVaList(json_path, args);
+    array_list *value = GetArray(object, buffer);
+    free(buffer);
+
+    return value;
+
+}
+
+char *JsonObjectGetString(json_object *object, const char *json_path, ...)
+{
+
+    va_list args;
+    va_start(args, json_path);
+
+    char *buffer = GetFormattedPointerVaList(json_path, args);
+    char *value  = GetString(object, buffer);
+    free(buffer);
+
+    return value;
+
+}
+
+int JsonObjectGetInt(json_object *object, const char *json_path, ...) 
+{
+
+    va_list args;
+    va_start(args, json_path);
+
+    char *buffer = GetFormattedPointerVaList(json_path, args);
+    int value    = GetInt(object, buffer);
+    free(buffer);
+
+    return value;
+
+}
+
+float JsonObjectGetFloat(json_object *object, const char *json_path, ...)
+{
+
+    va_list args;
+    va_start(args, json_path);
+
+    char *buffer = GetFormattedPointerVaList(json_path, args);
+    float value  = GetFloat(object, buffer);
+    free(buffer);
+
+    return value;
+
+}
+
+double JsonObjectGetDouble(json_object *object, const char *json_path, ...)
+{
+
+    va_list args;
+    va_start(args, json_path);
+
+    char *buffer = GetFormattedPointerVaList(json_path, args);
+    double value = GetDouble(object, buffer);
+    free(buffer);
+
+    return value;
 
 }

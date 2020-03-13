@@ -41,7 +41,7 @@ void InitialzeDrawObjectsJson()
     if (draw_objects == NULL)
         return;
 
-    array_list *objects_list = GetArrayList(draw_objects, "/Objects");
+    array_list *objects_list = JsonObjectGetArrayList(draw_objects, "/Objects");
     if (objects_list == NULL)
         return;
     else
@@ -56,9 +56,8 @@ void ParseJsonDrawObject(array_list *objects_list)
     parsed_objects = malloc(sizeof(DrawObject) * MAX_PARSED_OBJECTS);
     SetParsedObjectsNull();
 
-    char buffer[BUFFER_SIZE];
     for (size_t i = 0; i < objects_list->length; i++)
-        WithTypeSetDrawObject(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Type", i)), i);
+        WithTypeSetDrawObject(JsonObjectGetString(draw_objects, "/Objects/%d/Type", i), i);
 
 }
 
@@ -98,16 +97,15 @@ void SetCommonObjectProperties(int idx, char *path, char *child_of)
     else
         strcpy(base_path, path);
 
-    char buffer[BUFFER_SIZE];
     char appended_path[256];
 
     parsed_objects[num_objects].bit_flags  = SHOULD_BE_DRAWN;
-    parsed_objects[num_objects].name       = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Name"), idx));
-    parsed_objects[num_objects].asset_path = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Path"), idx));
-    parsed_objects[num_objects].x          = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "X"), idx));
-    parsed_objects[num_objects].y          = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Y"), idx));
-    parsed_objects[num_objects].width      = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Width"), idx));
-    parsed_objects[num_objects].height     = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(buffer, strcat(strcpy(appended_path, base_path), "Height"), idx));
+    parsed_objects[num_objects].name       = JsonObjectGetString(draw_objects, strcat(strcpy(appended_path, base_path), "Name"), idx);
+    parsed_objects[num_objects].asset_path = JsonObjectGetString(draw_objects, strcat(strcpy(appended_path, base_path), "Path"), idx);
+    parsed_objects[num_objects].x          = JsonObjectGetFloat(draw_objects, strcat(strcpy(appended_path, base_path), "X"), idx);
+    parsed_objects[num_objects].y          = JsonObjectGetFloat(draw_objects, strcat(strcpy(appended_path, base_path), "Y"), idx);
+    parsed_objects[num_objects].width      = JsonObjectGetFloat(draw_objects, strcat(strcpy(appended_path, base_path), "Width"), idx);
+    parsed_objects[num_objects].height     = JsonObjectGetFloat(draw_objects, strcat(strcpy(appended_path, base_path), "Height"), idx);
     parsed_objects[num_objects].child_of   = child_of;
 
 }
@@ -144,9 +142,9 @@ void SetMenuButtonObject(int idx, int button_idx, char *child_of)
 
     char path[128];
     SetCommonObjectProperties(idx, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/", idx, button_idx), child_of);
-    parsed_objects[num_objects].type     = BUTTON;
-    parsed_objects[num_objects].x        = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/RX", idx, button_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/X", idx));
-    parsed_objects[num_objects].y        = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Buttons/%d/RY", idx, button_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Y", idx));
+    parsed_objects[num_objects].type = BUTTON;
+    parsed_objects[num_objects].x    = JsonObjectGetFloat(draw_objects, "/Objects/%d/Buttons/%d/RX", idx, button_idx) + JsonObjectGetFloat(draw_objects, "/Objects/%d/X", idx);
+    parsed_objects[num_objects].y    = JsonObjectGetFloat(draw_objects, "/Objects/%d/Buttons/%d/RY", idx, button_idx) + JsonObjectGetFloat(draw_objects, "/Objects/%d/Y", idx);
     num_objects++;
 
 }
@@ -154,9 +152,7 @@ void SetMenuButtonObject(int idx, int button_idx, char *child_of)
 void CheckAndSetMenuButtons(int idx, char *child_of) 
 {
 
-    char buffer[BUFFER_SIZE];
-    array_list *button_list = GetArrayList(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Buttons", idx));
-
+    array_list *button_list = JsonObjectGetArrayList(draw_objects, "/Objects/%d/Buttons", idx);
     if (button_list == NULL)
         return;
 
@@ -174,24 +170,23 @@ void SetTextObject(int idx)
 void SetMenuTextObject(int idx, int text_idx, char *child_of) 
 {
 
-    char path[128];
     parsed_objects[num_objects].type                  = TEXT;
-    parsed_objects[num_objects].asset_path            = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Path", idx, text_idx));
-    parsed_objects[num_objects].name                  = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Name", idx, text_idx));
-    parsed_objects[num_objects].x                     = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/RX", idx, text_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/X", idx));
-    parsed_objects[num_objects].y                     = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/RY", idx, text_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Y", idx));
-    parsed_objects[num_objects].text.font_size        = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/FontSize", idx, text_idx));
-    parsed_objects[num_objects].text.content          = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Content", idx, text_idx));
+    parsed_objects[num_objects].asset_path            = JsonObjectGetString(draw_objects, "/Objects/%d/Text/%d/Path", idx, text_idx);
+    parsed_objects[num_objects].name                  = JsonObjectGetString(draw_objects, "/Objects/%d/Text/%d/Name", idx, text_idx);
+    parsed_objects[num_objects].x                     = JsonObjectGetFloat(draw_objects, "/Objects/%d/Text/%d/RX", idx, text_idx)  + JsonObjectGetFloat(draw_objects, "/Objects/%d/X", idx);
+    parsed_objects[num_objects].y                     = JsonObjectGetFloat(draw_objects,  "/Objects/%d/Text/%d/RY", idx, text_idx) + JsonObjectGetFloat(draw_objects, "/Objects/%d/Y", idx);
+    parsed_objects[num_objects].text.font_size        = JsonObjectGetInt(draw_objects, "/Objects/%d/Text/%d/FontSize", idx, text_idx);
+    parsed_objects[num_objects].text.content          = JsonObjectGetString(draw_objects,"/Objects/%d/Text/%d/Content", idx, text_idx);
     parsed_objects[num_objects].child_of              = child_of;
     parsed_objects[num_objects].bit_flags             = SHOULD_BE_DRAWN;
 
-    array_list *colors = GetArrayList(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Color",idx, text_idx));
+    array_list *colors = JsonObjectGetArrayList(draw_objects, "/Objects/%d/Text/%d/Color", idx, text_idx);
     if (colors->length == 4) {
 
-        parsed_objects[num_objects].text.r = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Color/0", idx, text_idx));
-        parsed_objects[num_objects].text.g = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Color/1", idx, text_idx));
-        parsed_objects[num_objects].text.b = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Color/2", idx, text_idx));
-        parsed_objects[num_objects].text.a = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Text/%d/Color/3", idx, text_idx));
+        parsed_objects[num_objects].text.r = JsonObjectGetInt(draw_objects, "/Objects/%d/Text/%d/Color/0", idx, text_idx);
+        parsed_objects[num_objects].text.g = JsonObjectGetInt(draw_objects, "/Objects/%d/Text/%d/Color/1", idx, text_idx);
+        parsed_objects[num_objects].text.b = JsonObjectGetInt(draw_objects, "/Objects/%d/Text/%d/Color/2", idx, text_idx);
+        parsed_objects[num_objects].text.a = JsonObjectGetInt(draw_objects, "/Objects/%d/Text/%d/Color/3", idx, text_idx);
 
     } else {
 
@@ -209,8 +204,7 @@ void SetMenuTextObject(int idx, int text_idx, char *child_of)
 void CheckAndSetMenuText(int idx, char *child_of) 
 {
 
-    char buffer[BUFFER_SIZE];
-    array_list *text_list = GetArrayList(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Text", idx));
+    array_list *text_list = JsonObjectGetArrayList(draw_objects, "/Objects/%d/Text", idx);
 
     if (text_list == NULL) 
         return;
@@ -223,18 +217,17 @@ void CheckAndSetMenuText(int idx, char *child_of)
 void SetFontStyle(TextStyle **style, int idx, int textbox_idx, char *text_field)
 {
 
-    char path[128];
     (*style) = malloc(sizeof(TextStyle));
-    (*style)->font_size = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/%s/FontSize", idx, textbox_idx, text_field));
-    (*style)->font_path = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/%s/Path", idx, textbox_idx, text_field));
+    (*style)->font_size = JsonObjectGetInt(draw_objects, "/Objects/%d/Textbox/%d/%s/FontSize", idx, textbox_idx, text_field);
+    (*style)->font_path = JsonObjectGetString(draw_objects, "/Objects/%d/Textbox/%d/%s/Path", idx, textbox_idx, text_field);
 
-    array_list *colors = GetArrayList(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/%s/Color", idx, textbox_idx, text_field));
+    array_list *colors = JsonObjectGetArrayList(draw_objects, "/Objects/%d/Textbox/%d/%s/Color", idx, textbox_idx, text_field);
     if (colors->length == 4) {
 
-        (*style)->r = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/%s/Color/0", idx, textbox_idx, text_field));
-        (*style)->g = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/%s/Color/1", idx, textbox_idx, text_field));
-        (*style)->b = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/%s/Color/2", idx, textbox_idx, text_field));
-        (*style)->a = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/%s/Color/3", idx, textbox_idx, text_field));
+        (*style)->r = JsonObjectGetInt(draw_objects, "/Objects/%d/Textbox/%d/%s/Color/0", idx, textbox_idx, text_field);
+        (*style)->g = JsonObjectGetInt(draw_objects, "/Objects/%d/Textbox/%d/%s/Color/1", idx, textbox_idx, text_field);
+        (*style)->b = JsonObjectGetInt(draw_objects, "/Objects/%d/Textbox/%d/%s/Color/2", idx, textbox_idx, text_field);
+        (*style)->a = JsonObjectGetInt(draw_objects, "/Objects/%d/Textbox/%d/%s/Color/3", idx, textbox_idx, text_field);
 
     } else {
 
@@ -250,20 +243,19 @@ void SetFontStyle(TextStyle **style, int idx, int textbox_idx, char *text_field)
 void SetMenuTextbox(int idx, int textbox_idx, char *child_of)
 {
 
-    char path[128];
     parsed_objects[num_objects].type                        = TEXTBOX;
-    parsed_objects[num_objects].asset_path                  = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Path", idx, textbox_idx));
-    parsed_objects[num_objects].name                        = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Name", idx, textbox_idx));
-    parsed_objects[num_objects].x                           = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/RX", idx, textbox_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/X", idx));
-    parsed_objects[num_objects].y                           = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/RY", idx, textbox_idx)) + GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Y", idx));
-    parsed_objects[num_objects].width                       = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Width", idx, textbox_idx));
-    parsed_objects[num_objects].height                      = GetFloatFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Height", idx, textbox_idx));
-    parsed_objects[num_objects].textbox.limit_characters_to = GetIntFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Text/CharacterLimit", idx, textbox_idx));
-    parsed_objects[num_objects].textbox.placeholder_text    = GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Placeholder/Content", idx, textbox_idx));
+    parsed_objects[num_objects].asset_path                  = JsonObjectGetString(draw_objects, "/Objects/%d/Textbox/%d/Path", idx, textbox_idx);
+    parsed_objects[num_objects].name                        = JsonObjectGetString(draw_objects, "/Objects/%d/Textbox/%d/Name", idx, textbox_idx);
+    parsed_objects[num_objects].x                           = JsonObjectGetFloat(draw_objects, "/Objects/%d/Textbox/%d/RX", idx, textbox_idx) + JsonObjectGetFloat(draw_objects, "/Objects/%d/X", idx);
+    parsed_objects[num_objects].y                           = JsonObjectGetFloat(draw_objects, "/Objects/%d/Textbox/%d/RY", idx, textbox_idx) + JsonObjectGetFloat(draw_objects, "/Objects/%d/Y", idx);
+    parsed_objects[num_objects].width                       = JsonObjectGetFloat(draw_objects, "/Objects/%d/Textbox/%d/Width", idx, textbox_idx);
+    parsed_objects[num_objects].height                      = JsonObjectGetFloat(draw_objects, "/Objects/%d/Textbox/%d/Height", idx, textbox_idx);
+    parsed_objects[num_objects].textbox.limit_characters_to = JsonObjectGetInt(draw_objects, "/Objects/%d/Textbox/%d/Text/CharacterLimit", idx, textbox_idx);
+    parsed_objects[num_objects].textbox.placeholder_text    = JsonObjectGetString(draw_objects, "/Objects/%d/Textbox/%d/Placeholder/Content", idx, textbox_idx);
     parsed_objects[num_objects].child_of                    = child_of;
     parsed_objects[num_objects].bit_flags                   = SHOULD_BE_DRAWN;
-    parsed_objects[num_objects].bit_flags                  |= strcmp(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Text/AcceptAlphabetCharacters", idx, textbox_idx)), "true") == 0 ? TEXTBOX_ACCEPT_ALPHABET_CHARACTERS : 0;
-    parsed_objects[num_objects].bit_flags                  |= strcmp(GetStringFromJsonObject(draw_objects, GetFormattedBuffer(path, "/Objects/%d/Textbox/%d/Text/AcceptNumberCharacters", idx, textbox_idx)), "true") == 0 ? TEXTBOX_ACCEPT_NUMBER_CHARACTERS : 0;
+    parsed_objects[num_objects].bit_flags                  |= strcmp(JsonObjectGetString(draw_objects, "/Objects/%d/Textbox/%d/Text/AcceptAlphabetCharacters", idx, textbox_idx), "true") == 0 ? TEXTBOX_ACCEPT_ALPHABET_CHARACTERS : 0;
+    parsed_objects[num_objects].bit_flags                  |= strcmp(JsonObjectGetString(draw_objects, "/Objects/%d/Textbox/%d/Text/AcceptNumberCharacters", idx, textbox_idx), "true") == 0 ? TEXTBOX_ACCEPT_NUMBER_CHARACTERS : 0;
 
     SetFontStyle(&parsed_objects[num_objects].textbox.text_style, idx, textbox_idx, "Text");
     SetFontStyle(&parsed_objects[num_objects].textbox.placeholder_style, idx, textbox_idx, "Placeholder");
@@ -275,8 +267,7 @@ void SetMenuTextbox(int idx, int textbox_idx, char *child_of)
 void CheckAndSetTextboxes(int idx, char *child_of) 
 {
 
-    char buffer[BUFFER_SIZE];
-    array_list *text_list = GetArrayList(draw_objects, GetFormattedBuffer(buffer, "/Objects/%d/Textbox", idx));
+    array_list *text_list = JsonObjectGetArrayList(draw_objects, "/Objects/%d/Textbox", idx);
 
     if (text_list == NULL)
         return;
