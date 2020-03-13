@@ -304,15 +304,13 @@ void SetVideoDrawObjectFromJson(DrawObject *draw_object, int object_idx)
 {
 
     draw_object->type = VIDEO;
-    SetCommonDrawObjectPropertiesForGetDrawObject(draw_object, object_idx);
 
 }
 
 void SetButtonDrawObjectFromJson(DrawObject *draw_object, int object_idx) 
 {
 
-    draw_object->type = BUTTON;
-    SetCommonDrawObjectPropertiesForGetDrawObject(draw_object, object_idx);
+    draw_object->type            = BUTTON;
     draw_object->button.Callback = GetButtonCallback(draw_object->name);
 
 }
@@ -321,16 +319,13 @@ void SetMenuDrawObjectFromJson(DrawObject *draw_object, int object_idx)
 {
 
     draw_object->type = MENU;
-    SetCommonDrawObjectPropertiesForGetDrawObject(draw_object, object_idx);
 
 }
 
 void SetTextDrawObjectFromJson(DrawObject *draw_object, int object_idx) 
 {
 
-    draw_object->type = TEXT;
-    SetCommonDrawObjectPropertiesForGetDrawObject(draw_object, object_idx);
-
+    draw_object->type           = TEXT;
     draw_object->text.font_size = parsed_objects[object_idx].text.font_size;
     draw_object->text.content   = parsed_objects[object_idx].text.content;
     draw_object->text.r         = parsed_objects[object_idx].text.r;
@@ -343,9 +338,7 @@ void SetTextDrawObjectFromJson(DrawObject *draw_object, int object_idx)
 void SetTextboxDrawObjectFromJson(DrawObject *draw_object, int object_idx)
 {
 
-    SetCommonDrawObjectPropertiesForGetDrawObject(draw_object, object_idx);
-
-    draw_object->type = TEXTBOX;
+    draw_object->type                        = TEXTBOX;
     draw_object->textbox.placeholder_text    = parsed_objects[object_idx].textbox.placeholder_text;
     draw_object->textbox.current_character   = -1;
     draw_object->textbox.limit_characters_to = parsed_objects[object_idx].textbox.limit_characters_to;
@@ -355,18 +348,25 @@ void SetTextboxDrawObjectFromJson(DrawObject *draw_object, int object_idx)
 
 }
 
+void JsonSetDrawObject(DrawObject *draw_object, int object_idx, void (*SetDrawObject)(DrawObject *, int))
+{
+
+    SetCommonDrawObjectPropertiesForGetDrawObject(draw_object, object_idx);
+    SetDrawObject(draw_object, object_idx);
+
+}
+
 DrawObject *CreateDrawObjectFromJson(int object_idx) 
 {
 
     DrawObject *draw_object = CreateNewDrawObject();
-
     switch (parsed_objects[object_idx].type) {
 
-        case VIDEO:   SetVideoDrawObjectFromJson(draw_object, object_idx);   break;
-        case BUTTON:  SetButtonDrawObjectFromJson(draw_object, object_idx);  break;
-        case MENU:    SetMenuDrawObjectFromJson(draw_object, object_idx);    break;
-        case TEXT:    SetTextDrawObjectFromJson(draw_object, object_idx);    break;
-        case TEXTBOX: SetTextboxDrawObjectFromJson(draw_object, object_idx); break;
+        case VIDEO:   JsonSetDrawObject(draw_object, object_idx, &SetVideoDrawObjectFromJson);   break;
+        case BUTTON:  JsonSetDrawObject(draw_object, object_idx, &SetButtonDrawObjectFromJson);  break;
+        case MENU:    JsonSetDrawObject(draw_object, object_idx, &SetMenuDrawObjectFromJson);    break;
+        case TEXT:    JsonSetDrawObject(draw_object, object_idx, &SetTextDrawObjectFromJson);    break;
+        case TEXTBOX: JsonSetDrawObject(draw_object, object_idx, &SetTextboxDrawObjectFromJson); break;
 
     }
 
