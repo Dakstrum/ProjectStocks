@@ -110,7 +110,7 @@ void PopulateAccountHistoryDisplay(char* company)
 
             SetTextContent(ActionObjects[i], "%s", GetTransactionAction(transaction[i]->type[HistoryDisplayNumber + i]));
             SetTextContent(SharesObjects[i], "%d", transaction[i]->shares[HistoryDisplayNumber + i]);
-            SetTextContent(PerShareObjects[i], "%d", transaction[i]->pershare[HistoryDisplayNumber + i]);
+            SetTextContent(PerShareObjects[i], "%.2f", transaction[i]->pershare[HistoryDisplayNumber + i]);
             SetTextContent(TransactionObjects[i], "%.2f", transaction[i]->transaction[HistoryDisplayNumber + i]);
 
         }

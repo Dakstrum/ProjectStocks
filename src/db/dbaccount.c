@@ -11,6 +11,7 @@
 #include "stocksmenu.h"
 #include "dbaccount.h"
 #include "dbsave.h"
+#include "math.h"
 
 
 void SetupMainDB();
@@ -92,19 +93,19 @@ void AddOwnedStock(char *company_name, int amount_to_own)
 
 }
 
-void InsertStockTransaction(char *company_name, int transaction_amount, int stocks_exchanged) 
+void InsertStockTransaction(char *company_name, float transaction_amount, int stocks_exchanged) 
 {
 
     sqlite3 *db;
 
     if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions ( SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, 1, %d, %d, %d, %d);", GetSaveId(), GetCompanyId(company_name), transaction_amount, stocks_exchanged, GetGameTime()), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions ( SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, 1, %d, %.2f, %d, %d);", GetSaveId(), GetCompanyId(company_name), transaction_amount, stocks_exchanged, GetGameTime()), NULL, NULL, db);
 
     sqlite3_close(db);
 
 }
 
-void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, int price_per_stock)
+void AttemptToAddFromCurrentStock(char *company_name, float amount_to_add, float price_per_stock)
 {
 
     sqlite3 *db;
@@ -292,19 +293,21 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
 
         transaction_temp->size        += 128;
         transaction_temp->transaction = realloc(transaction_temp->transaction, sizeof(float)     * transaction_temp->size);
-        transaction_temp->shares      = realloc(transaction_temp->shares,      sizeof(short int) * transaction_temp->size);
-        transaction_temp->pershare    = realloc(transaction_temp->pershare,    sizeof(short int) * transaction_temp->size);
+        transaction_temp->shares      = realloc(transaction_temp->shares,      sizeof(int) * transaction_temp->size);
+        transaction_temp->pershare    = realloc(transaction_temp->pershare,    sizeof(float) * transaction_temp->size);
 
     }
 
     transaction_temp->transaction[transaction_temp->num_transactions] = (float)atof(argv[4]);
-    transaction_temp->shares[transaction_temp->num_transactions]      = (short int)atof(argv[5]);
+    transaction_temp->shares[transaction_temp->num_transactions]      = (int)atof(argv[5]);
 
     if(transaction_temp->transaction[transaction_temp->num_transactions] < 0)
         transaction_temp->type[transaction_temp->num_transactions] = BUY;
     else
         transaction_temp->type[transaction_temp->num_transactions] = SELL;
 
+    transaction_temp->pershare[transaction_temp->num_transactions] = fabs(transaction_temp->transaction[transaction_temp->num_transactions] / (float)transaction_temp->shares[transaction_temp->num_transactions]);
+    
     transaction_temp->num_transactions++;
     
     return 0;
@@ -315,8 +318,8 @@ struct Transactions *GetTransaction(char* company)
 
     struct Transactions *transaction      = malloc(sizeof(struct Transactions));
     transaction->transaction              = malloc(sizeof(float) * 128);
-    transaction->shares                   = malloc(sizeof(short int) * 128);
-    transaction->pershare                 = malloc(sizeof(short int) * 128);
+    transaction->shares                   = malloc(sizeof(int) * 128);
+    transaction->pershare                 = malloc(sizeof(float) * 128);
     transaction->num_transactions         = 0;
     transaction->size                     = 128;
 

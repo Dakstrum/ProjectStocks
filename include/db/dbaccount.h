@@ -19,8 +19,8 @@ typedef struct Transactions
 
 	TransactionType type[100];
     long int *date;
-    short int *shares;
-    short int *pershare;
+    int *shares;
+    float *pershare;
     float *transaction;
 
     unsigned int num_transactions;
@@ -35,7 +35,7 @@ void InsertStockPrice(int save_id, int company_id, float stock_price, char *time
 StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, char *end_time, TimeSpan timespan);
 
 void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtract, int price_per_stock);
-void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, int price_per_stock);
+void AttemptToAddFromCurrentStock(char *company_name, float amount_to_add, float price_per_stock);
 
 char *GetStockNameFromStockId(int stock_id);
 int GetAmountOfCompanies();

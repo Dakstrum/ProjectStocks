@@ -32,6 +32,8 @@ static DrawObject *CompanyAboutTextObject    = NULL;
 static DrawObject *CompanyCHGTextObject      = NULL;
 static DrawObject *AccountMoneyTextObject    = NULL;
 
+static DrawObject *StockPriceTextObject      = NULL;
+
 void DisplayTempPopUp();
 void DisplayGraph(char *company_name, TimeSpan time_span);
 void DisplayCompanyScrollBox();
@@ -59,10 +61,12 @@ void InitializeStocksMenu()
     CompanyNameTextObject  = GetDrawObjectFromJsonLayer("StocksMenuChangingCompanyNameText");
     CompanyAboutTextObject = GetDrawObjectFromJsonLayer("StocksMenuChangingAboutText");
     AccountMoneyTextObject = GetDrawObjectFromJsonLayer("StocksMenuAccountMoneyText");
+    StockPriceTextObject = GetDrawObjectFromJsonLayer("StocksMenuCurrentStockPriceText");
 
     AddObjectToDrawLayer(CompanyNameTextObject);
     AddObjectToDrawLayer(CompanyAboutTextObject);
     AddObjectToDrawLayer(AccountMoneyTextObject);
+    AddObjectToDrawLayer(StockPriceTextObject);
 
     UpdateStocksStatsText(GetStockNameFromStockId(1));
 
@@ -75,6 +79,7 @@ void StocksMenuRenderLogic()
         return;
 
     SetTextContent(AccountMoneyTextObject, "%.2f", account_money);
+    SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(current_company_name));
 
 }
 
