@@ -93,6 +93,33 @@ void AddOwnedStock(char *company_name, int amount_to_own)
 
 }
 
+int GetOwnedStockAmountCallback(void *owned_stock_amount, int argc, char **argv, char **col_name) 
+{
+
+    if (argc == 0)
+        *((int *)owned_stock_amount) = -1;
+    else
+        *((int *)owned_stock_amount) = atoi(argv[0]);
+
+    return 0;
+
+}
+
+int GetOwnedStockAmount(char *company_name) 
+{
+
+    sqlite3 *db;
+    int owned_stock_amount = 0;
+
+    if (OpenConnection(&db, DefaultConnection()) == 0) 
+        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId =%d;", GetCompanyId(company_name)), &GetOwnedStockAmountCallback, &owned_stock_amount, db);
+
+    sqlite3_close(db);
+    LogF("OwnedStocks: %d", owned_stock_amount);
+    return owned_stock_amount;
+
+}
+
 void InsertStockTransaction(char *company_name, float transaction_amount, int stocks_exchanged) 
 {
 

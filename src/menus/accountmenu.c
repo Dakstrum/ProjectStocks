@@ -12,16 +12,19 @@
 #include "text.h"
 #include "scrollbox.h"
 #include "account.h"
+#include "simulation.h"
 
 #define DSP_NUM 5
 
 int HistoryDisplayNumber = 0;
 char* CurrentCompanyViewing;
 
-static MenuWithChilds *account_menu       = NULL;
+static MenuWithChilds *account_menu           = NULL;
 
-static DrawObject *CompanyNameTextObject  = NULL;
-static DrawObject *AccountMoneyTextObject = NULL;
+static DrawObject *CompanyNameTextObject      = NULL;
+static DrawObject *AccountMoneyTextObject     = NULL;
+static DrawObject *StockPriceTextObject       = NULL;
+static DrawObject *OwnedStockAmountTextObject = NULL;
 
 static DrawObject *ActionObjects[DSP_NUM];
 static DrawObject *SharesObjects[DSP_NUM];
@@ -52,11 +55,15 @@ void InitializeAccountMenu()
     InitializeAccountHistoryDisplay();
     PopulateAccountHistoryDisplay(CurrentCompanyViewing);
 
-    CompanyNameTextObject  = GetDrawObjectFromJsonLayer("AccountMenuChangingCompanyNameText");
-    AccountMoneyTextObject = GetDrawObjectFromJsonLayer("StocksMenuAccountMoneyText");
-
+    CompanyNameTextObject        = GetDrawObjectFromJsonLayer("AccountMenuChangingCompanyNameText");
+    AccountMoneyTextObject       = GetDrawObjectFromJsonLayer("StocksMenuAccountMoneyText");
+    StockPriceTextObject         = GetDrawObjectFromJsonLayer("AccountMenuCurrentStockPriceText");
+    OwnedStockAmountTextObject   = GetDrawObjectFromJsonLayer("AccountMenuOwnedStockAmountText");
+    
     AddObjectToDrawLayer(CompanyNameTextObject);
     AddObjectToDrawLayer(AccountMoneyTextObject);
+    AddObjectToDrawLayer(StockPriceTextObject);
+    AddObjectToDrawLayer(OwnedStockAmountTextObject);
 
     SetTextContent(CompanyNameTextObject, "%s", CurrentCompanyViewing);
 
@@ -70,7 +77,9 @@ void AccountMenuRenderLogic()
     if (AccountMoneyTextObject == NULL)
         return;
     
-    SetTextContent(AccountMoneyTextObject, "%.2f", account_money);
+    SetTextContent(AccountMoneyTextObject,     "%.2f", account_money);
+    SetTextContent(StockPriceTextObject,       "%.2f", CurrentStockPrice(CurrentCompanyViewing));
+    SetTextContent(OwnedStockAmountTextObject, "%d",   GetOwnedStockAmount(CurrentCompanyViewing));
 
 }
 

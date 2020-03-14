@@ -50,4 +50,6 @@ char *GetPlayerNameFromSaveName(char *save_name);
 int *GetSaveIdFromSaveName(char *save_name);
 
 struct Transactions *GetTransaction(char* company);
+
+int GetOwnedStockAmount(char *company_name);
 #endif
