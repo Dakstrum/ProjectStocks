@@ -23,6 +23,7 @@ int AddTextToDrawLayer(DrawObject *object);
 void DrawLayers();
 
 DrawObject *GetDrawObject(int layer, int object);
+DrawObject *GetDrawObjectByName(char *object_name);
 int RemoveDrawObject(DrawObject *object);
 bool DoesObjectExistInCurrentDrawLayer(char *object_name);
 
@@ -33,4 +34,7 @@ char *GetTextFromTextBox(char *object_name);
 
 DrawObjectTypeCollection *GetObjectsByType(DrawType type);
 void DisposeDrawObjectTypeCollection(DrawObjectTypeCollection *collection);
+
+RGBA *GetRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+
 #endif

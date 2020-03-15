@@ -9,6 +9,7 @@
 
 #include "text.h"
 #include "drawobject.h"
+#include "button.h"
 #include "scrollbox.h"
 #include "drawlayers.h"
 
@@ -75,6 +76,17 @@ void MainMenuRenderLogic()
 
 }
 
+void ButtonTintTest() 
+{
+
+    // TEST CODE
+    DrawObject *object = GetDrawObjectByName("StartButton");
+    if (object == NULL)
+        return;
+
+    SetButtonTint(object, GetRGBA(217, 17, 39, 255));
+}
+
 void InitializeMainMenu() 
 {
 
@@ -91,6 +103,7 @@ void InitializeMainMenu()
     
     DynamicText();
     MainMenuRenderLogic();
+    ButtonTintTest();
 
 }
 

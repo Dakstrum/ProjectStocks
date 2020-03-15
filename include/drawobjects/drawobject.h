@@ -8,6 +8,15 @@
 
 #include "shared.h"
 
+typedef struct RGBA {
+
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char a;
+
+} RGBA;
+
 typedef enum DrawType 
 {
 
@@ -37,7 +46,8 @@ typedef enum DrawBitFlags
     VIDEO_SHOULD_REPEAT                = 512,
     VIDEO_SHOULD_START_IMMEDIATELY     = 1024,
     BUTTON_MOUSE_HOVERING              = 2048,
-    CAN_BE_REMOVED                     = 4096
+    CAN_BE_REMOVED                     = 4096,
+    BUTTON_HAS_TINT                    = 8192
 
 } DrawBitFlags;
 
@@ -86,6 +96,7 @@ typedef struct Button
 
     void (*Callback)();
     ALLEGRO_BITMAP *button_bitmap;
+    RGBA *tint_color;
 
 } Button;
 
@@ -202,13 +213,13 @@ typedef struct DrawObject
 
     union {
 
-        Menu   menu;
-        Button button;
-        PopUp  popup;
-        Video  video;
-        Text   text;
-        Graph graph;
-        TextBox textbox;
+        Menu      menu;
+        Button    button;
+        PopUp     popup;
+        Video     video;
+        Text      text;
+        Graph     graph;
+        TextBox   textbox;
         ScrollBox scrollbox;
 
     };

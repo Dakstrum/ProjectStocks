@@ -493,6 +493,26 @@ DrawObject *GetDrawObject(int layer, int object)
 
 }
 
+DrawObject *GetDrawObjectByName(char *object_name)
+{
+
+    if (current_draw_layer == -1)
+        return NULL;
+
+    DrawObject *object = NULL;
+    for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++) {
+
+        object = draw_layers[current_draw_layer].objects[i];
+        if (object != NULL && object->name != NULL)
+            if (strcmp(object->name, object_name) == 0)
+                return object;
+
+    }
+
+    return NULL;
+
+}
+
 int RemoveDrawObject(DrawObject *object) 
 {
 
@@ -527,37 +547,17 @@ int RemoveDrawObject(DrawObject *object)
 
 }
 
-DrawObject *FindDrawObject(char *object_name)
-{
-
-    if (current_draw_layer == -1)
-        return NULL;
-
-    DrawObject *object = NULL;
-    for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++) {
-
-        object = draw_layers[current_draw_layer].objects[i];
-        if (object != NULL && object->name != NULL)
-            if (strcmp(object->name, object_name) == 0)
-                return object;
-
-    }
-
-    return NULL;
-
-}
-
 bool DoesObjectExistInCurrentDrawLayer(char *object_name)
 {
  
-    return FindDrawObject(object_name) != NULL ? true : false;
+    return GetDrawObjectByName(object_name) != NULL ? true : false;
 
 }
 
 char *GetTextFromTextBox(char *object_name) 
 {
 
-    DrawObject *object = FindDrawObject(object_name);
+    DrawObject *object = GetDrawObjectByName(object_name);
     if (object == NULL)
         return NULL;
 
@@ -602,5 +602,18 @@ void DisposeDrawObjectTypeCollection(DrawObjectTypeCollection *collection)
         free(collection->objects);
 
     free(collection);
+
+}
+
+RGBA *GetRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+{
+
+    RGBA *color = malloc(sizeof(RGBA));
+    color->r = r;
+    color->g = g;
+    color->b = b;
+    color->a = a;
+
+    return color;
 
 }
