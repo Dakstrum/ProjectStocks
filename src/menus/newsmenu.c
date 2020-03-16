@@ -27,9 +27,8 @@ void InitializeNewsMenu()
     
     AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("NewsMenu"));
 
-    AccountMoneyTextObject = GetDrawObjectFromJsonLayer("StocksMenuAccountMoneyText");
-    AddObjectToDrawLayer(AccountMoneyTextObject);
-
+    AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
+    
     NewsMenuRenderLogic();
 }
 

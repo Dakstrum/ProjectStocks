@@ -37,8 +37,7 @@ void InitializeCardsMenu()
     cards_menu = GetMenuWithChildsFromJsonLayer("CardsMenu");
     AddMenuWithChildsToDrawLayer(cards_menu);
 
-    AccountMoneyTextObject = GetDrawObjectFromJsonLayer("StocksMenuAccountMoneyText");
-    AddObjectToDrawLayer(AccountMoneyTextObject);
+    AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
 
     CardsMenuRenderLogic();
 

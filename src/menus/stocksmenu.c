@@ -57,15 +57,10 @@ void InitializeStocksMenu()
     DisplayCompanyScrollBox();
     DisplayGraph(GetStockNameFromStockId(1), ONE_DAY);
 
-    CompanyNameTextObject  = GetDrawObjectFromJsonLayer("StocksMenuChangingCompanyNameText");
-    CompanyAboutTextObject = GetDrawObjectFromJsonLayer("StocksMenuChangingAboutText");
-    AccountMoneyTextObject = GetDrawObjectFromJsonLayer("StocksMenuAccountMoneyText");
-    StockPriceTextObject   = GetDrawObjectFromJsonLayer("StocksMenuCurrentStockPriceText");
-
-    AddObjectToDrawLayer(CompanyNameTextObject);
-    AddObjectToDrawLayer(CompanyAboutTextObject);
-    AddObjectToDrawLayer(AccountMoneyTextObject);
-    AddObjectToDrawLayer(StockPriceTextObject);
+    CompanyNameTextObject  = GetObjectAndDraw("StocksMenuChangingCompanyNameText");
+    CompanyAboutTextObject = GetObjectAndDraw("StocksMenuChangingAboutText");
+    AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
+    StockPriceTextObject   = GetObjectAndDraw("StocksMenuCurrentStockPriceText");
 
     UpdateStocksStatsText(GetStockNameFromStockId(1));
 

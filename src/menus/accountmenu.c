@@ -55,15 +55,10 @@ void InitializeAccountMenu()
     InitializeAccountHistoryDisplay();
     PopulateAccountHistoryDisplay(CurrentCompanyViewing);
 
-    CompanyNameTextObject        = GetDrawObjectFromJsonLayer("AccountMenuChangingCompanyNameText");
-    AccountMoneyTextObject       = GetDrawObjectFromJsonLayer("StocksMenuAccountMoneyText");
-    StockPriceTextObject         = GetDrawObjectFromJsonLayer("AccountMenuCurrentStockPriceText");
-    OwnedStockAmountTextObject   = GetDrawObjectFromJsonLayer("AccountMenuOwnedStockAmountText");
-    
-    AddObjectToDrawLayer(CompanyNameTextObject);
-    AddObjectToDrawLayer(AccountMoneyTextObject);
-    AddObjectToDrawLayer(StockPriceTextObject);
-    AddObjectToDrawLayer(OwnedStockAmountTextObject);
+    CompanyNameTextObject        = GetObjectAndDraw("AccountMenuChangingCompanyNameText");
+    AccountMoneyTextObject       = GetObjectAndDraw("StocksMenuAccountMoneyText");
+    StockPriceTextObject         = GetObjectAndDraw("AccountMenuCurrentStockPriceText");
+    OwnedStockAmountTextObject   = GetObjectAndDraw("AccountMenuOwnedStockAmountText");
 
     SetTextContent(CompanyNameTextObject, "%s", CurrentCompanyViewing);
 
