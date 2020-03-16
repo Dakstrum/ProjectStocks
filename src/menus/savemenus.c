@@ -30,6 +30,15 @@ static DrawObject *saves_scrollbox      = NULL;
 
 void DisplayLoadSaveScrollBox();
 
+DrawObject *Test(char* object_name)
+{
+
+    DrawObject *object = GetDrawObjectFromJsonLayer(object_name);
+    AddObjectToDrawLayer(object);
+    return object;
+
+}
+
 void InitializeLoadSaveMenu() 
 {
 
@@ -43,10 +52,10 @@ void InitializeLoadSaveMenu()
 
     AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("LoadSaveMenu"));
 
-    SaveNameTextObject   = GetDrawObjectFromJsonLayer("LoadSaveMenuSaveNameText");
+    SaveNameTextObject   = Test("LoadSaveMenuSaveNameText");
     PlayerNameTextObject = GetDrawObjectFromJsonLayer("LoadSaveMenuPlayerNameText");
 
-    AddObjectToDrawLayer(SaveNameTextObject);
+    //AddObjectToDrawLayer(SaveNameTextObject);
     AddObjectToDrawLayer(PlayerNameTextObject);
     DisplayLoadSaveScrollBox();
     

@@ -109,23 +109,28 @@ void InitializeAccountHistoryDisplay()
 
 void PopulateAccountHistoryDisplay(char* company)
 {
-
-    struct Transactions *transaction[DSP_NUM];
+    
+    struct Transactions *transaction = GetTransaction(company);
 
     for (int i=0; i < DSP_NUM; i++) {
 
-        transaction[i] = GetTransaction(company);
-        if(transaction[i]->shares[HistoryDisplayNumber + i]) {
+        if(transaction->shares[HistoryDisplayNumber + i]) {
 
-            SetTextContent(ActionObjects[i], "%s", GetTransactionAction(transaction[i]->type[HistoryDisplayNumber + i]));
-            SetTextContent(SharesObjects[i], "%d", transaction[i]->shares[HistoryDisplayNumber + i]);
-            SetTextContent(PerShareObjects[i], "%.2f", transaction[i]->pershare[HistoryDisplayNumber + i]);
-            SetTextContent(TransactionObjects[i], "%.2f", transaction[i]->transaction[HistoryDisplayNumber + i]);
+            SetTextContent(ActionObjects[i], "%s", GetTransactionAction(transaction->type[HistoryDisplayNumber + i]));
+            SetTextContent(SharesObjects[i], "%d", transaction->shares[HistoryDisplayNumber + i]);
+            SetTextContent(PerShareObjects[i], "%.2f", transaction->pershare[HistoryDisplayNumber + i]);
+            SetTextContent(TransactionObjects[i], "%.2f", transaction->transaction[HistoryDisplayNumber + i]);
 
         }
         
     }
 
+    free(transaction->pershare);
+    free(transaction->shares);
+    free(transaction->transaction);
+    free(transaction->type);
+    free(transaction);
+    
 }
 
 void CleanUpAccountMenu() 

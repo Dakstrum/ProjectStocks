@@ -115,7 +115,6 @@ int GetOwnedStockAmount(char *company_name)
         ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId =%d;", GetCompanyId(company_name)), &GetOwnedStockAmountCallback, &owned_stock_amount, db);
 
     sqlite3_close(db);
-    LogF("OwnedStocks: %d", owned_stock_amount);
     return owned_stock_amount;
 
 }
@@ -132,7 +131,7 @@ void InsertStockTransaction(char *company_name, float transaction_amount, int st
 
 }
 
-void AttemptToAddFromCurrentStock(char *company_name, float amount_to_add, float price_per_stock)
+void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float price_per_stock)
 {
 
     sqlite3 *db;
@@ -166,7 +165,7 @@ int FindOutIfYouCanAddFromCurrentStock(void *owned_stock_amount, int argc, char 
 
 }
 
-void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtract, int price_per_stock)
+void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtract, float price_per_stock)
 {
 
     sqlite3 *db;
@@ -319,9 +318,10 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
     if (transaction_temp->num_transactions == transaction_temp->size){
 
         transaction_temp->size        += 128;
-        transaction_temp->transaction = realloc(transaction_temp->transaction, sizeof(float)     * transaction_temp->size);
+        transaction_temp->transaction = realloc(transaction_temp->transaction, sizeof(float)  * transaction_temp->size);
         transaction_temp->shares      = realloc(transaction_temp->shares,      sizeof(int) * transaction_temp->size);
         transaction_temp->pershare    = realloc(transaction_temp->pershare,    sizeof(float) * transaction_temp->size);
+        transaction_temp->type        = realloc(transaction_temp->type,        sizeof(TransactionType) * transaction_temp->size);
 
     }
 
@@ -347,6 +347,7 @@ struct Transactions *GetTransaction(char* company)
     transaction->transaction              = malloc(sizeof(float) * 128);
     transaction->shares                   = malloc(sizeof(int) * 128);
     transaction->pershare                 = malloc(sizeof(float) * 128);
+    transaction->type                     = malloc(sizeof(TransactionType) * 128);
     transaction->num_transactions         = 0;
     transaction->size                     = 128;
 
@@ -355,15 +356,17 @@ struct Transactions *GetTransaction(char* company)
         transaction->transaction[i] = 0;
         transaction->shares[i]      = 0;
         transaction->pershare[i]    = 0;
+        transaction->type[i]        = BUY;
 
     }
 
+
+
     sqlite3 *db;
 
-     if (OpenConnection(&db, DefaultConnection()) != 0)
+    if (OpenConnection(&db, DefaultConnection()) != 0)
         return transaction;
 
-    
     ExecuteQuery(GetFormattedPointer("SELECT * FROM Transactions WHERE CompanyId=%d", GetCompanyId(company)), &SetTransactionCallback, transaction, db);
 
     sqlite3_close(db);

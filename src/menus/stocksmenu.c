@@ -26,10 +26,9 @@ static float price_per_stock                 = 0.0;
 static char *current_company_name            = NULL;
 static DrawObject  *current_graph            = NULL;
 
-
 static DrawObject *CompanyNameTextObject     = NULL;
 static DrawObject *CompanyAboutTextObject    = NULL;
-static DrawObject *CompanyCHGTextObject      = NULL;
+//static DrawObject *CompanyCHGTextObject      = NULL;
 static DrawObject *AccountMoneyTextObject    = NULL;
 
 static DrawObject *StockPriceTextObject      = NULL;
@@ -61,7 +60,7 @@ void InitializeStocksMenu()
     CompanyNameTextObject  = GetDrawObjectFromJsonLayer("StocksMenuChangingCompanyNameText");
     CompanyAboutTextObject = GetDrawObjectFromJsonLayer("StocksMenuChangingAboutText");
     AccountMoneyTextObject = GetDrawObjectFromJsonLayer("StocksMenuAccountMoneyText");
-    StockPriceTextObject = GetDrawObjectFromJsonLayer("StocksMenuCurrentStockPriceText");
+    StockPriceTextObject   = GetDrawObjectFromJsonLayer("StocksMenuCurrentStockPriceText");
 
     AddObjectToDrawLayer(CompanyNameTextObject);
     AddObjectToDrawLayer(CompanyAboutTextObject);
