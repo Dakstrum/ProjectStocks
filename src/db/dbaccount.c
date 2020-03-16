@@ -24,6 +24,8 @@ void SetCompanyToActive(char *company_name, sqlite3 *db);
 void InsertNewCompany(char *company_name, float ipo, sqlite3 *db);
 int FindOutIfYouCanAddFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name);
 int FindOutIfYouCanSubtractFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name);
+TransactionType GetTransactionType(struct Transactions *transaction_temp);
+float GetAmountPerShare(struct Transactions *transaction_temp);
 
 
 int InsertAndOrSetCompanyToActive(char *company_name, float ipo) 
@@ -327,17 +329,29 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
 
     transaction_temp->transaction[transaction_temp->num_transactions] = (float)atof(argv[4]);
     transaction_temp->shares[transaction_temp->num_transactions]      = (int)atof(argv[5]);
-
-    if(transaction_temp->transaction[transaction_temp->num_transactions] < 0)
-        transaction_temp->type[transaction_temp->num_transactions] = BUY;
-    else
-        transaction_temp->type[transaction_temp->num_transactions] = SELL;
-
-    transaction_temp->pershare[transaction_temp->num_transactions] = fabs(transaction_temp->transaction[transaction_temp->num_transactions] / (float)transaction_temp->shares[transaction_temp->num_transactions]);
+    transaction_temp->type[transaction_temp->num_transactions]        = GetTransactionType(transaction_temp);
+    transaction_temp->pershare[transaction_temp->num_transactions]    = GetAmountPerShare(transaction_temp);
     
     transaction_temp->num_transactions++;
     
     return 0;
+}
+
+TransactionType GetTransactionType(struct Transactions *transaction_temp)
+{
+
+    if(transaction_temp->transaction[transaction_temp->num_transactions] < 0)
+        return BUY;
+    else
+        return SELL;
+
+}
+
+float GetAmountPerShare(struct Transactions *transaction_temp)
+{
+
+    return fabs(transaction_temp->transaction[transaction_temp->num_transactions] / (float)transaction_temp->shares[transaction_temp->num_transactions]);
+
 }
 
 struct Transactions *GetTransaction(char* company)
