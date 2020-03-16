@@ -32,5 +32,6 @@ DrawObject *GetActiveTextBox();
 char *GetTextFromTextBox(char *object_name);
 
 DrawObjectTypeCollection *GetObjectsByType(DrawType type);
+DrawObject *GetObjectAndDraw(char* object_name);
 void DisposeDrawObjectTypeCollection(DrawObjectTypeCollection *collection);
 #endif

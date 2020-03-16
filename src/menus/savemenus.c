@@ -30,15 +30,6 @@ static DrawObject *saves_scrollbox      = NULL;
 
 void DisplayLoadSaveScrollBox();
 
-DrawObject *Test(char* object_name)
-{
-
-    DrawObject *object = GetDrawObjectFromJsonLayer(object_name);
-    AddObjectToDrawLayer(object);
-    return object;
-
-}
-
 void InitializeLoadSaveMenu() 
 {
 
@@ -52,11 +43,9 @@ void InitializeLoadSaveMenu()
 
     AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("LoadSaveMenu"));
 
-    SaveNameTextObject   = Test("LoadSaveMenuSaveNameText");
-    PlayerNameTextObject = GetDrawObjectFromJsonLayer("LoadSaveMenuPlayerNameText");
+    SaveNameTextObject   = GetObjectAndDraw("LoadSaveMenuSaveNameText");
+    PlayerNameTextObject = GetObjectAndDraw("LoadSaveMenuPlayerNameText");
 
-    //AddObjectToDrawLayer(SaveNameTextObject);
-    AddObjectToDrawLayer(PlayerNameTextObject);
     DisplayLoadSaveScrollBox();
     
 }
@@ -180,7 +169,7 @@ void NewSaveMenuBack_BCB()
 
 void CreateSave_BCB()
 {
-    
+
     char *save_name_in_text_box = GetTextFromTextBox("SaveNameTextBox");
     
     if (strlen(save_name_in_text_box) == 0) {
@@ -196,7 +185,6 @@ void CreateSave_BCB()
         // TODO setup popups when textboxes have no value.
         return;
     }
-
     CreateNewSave(save_name_in_text_box, player_name_in_text_box);
 
     StartGame();
