@@ -354,7 +354,7 @@ float GetAmountPerShare(struct Transactions *transaction_temp)
 
 }
 
-struct Transactions *GetTransaction(char* company)
+struct Transactions *GetTransactions(char* company)
 {
 
     struct Transactions *transaction      = malloc(sizeof(struct Transactions));

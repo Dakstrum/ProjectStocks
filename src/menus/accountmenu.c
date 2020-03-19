@@ -105,7 +105,7 @@ void InitializeAccountHistoryDisplay()
 void PopulateAccountHistoryDisplay(char* company)
 {
     
-    struct Transactions *transaction = GetTransaction(company);
+    struct Transactions *transaction = GetTransactions(company);
 
     for (int i=0; i < DSP_NUM; i++) {
 
