@@ -3,6 +3,7 @@
 
 void InitializeAccountMenu();
 void ToggleAccountMenu();
+void AccountMenuRenderLogic();
 
 void AccountDown_BCB();
 void AccountUp_BCB();

@@ -26,15 +26,56 @@ static float price_per_stock                 = 0.0;
 static char *current_company_name            = NULL;
 static DrawObject  *current_graph            = NULL;
 
+static DrawObject *CompanyNameTextObject     = NULL;
+static DrawObject *CompanyAboutTextObject    = NULL;
+//static DrawObject *CompanyCHGTextObject      = NULL;
+static DrawObject *AccountMoneyTextObject    = NULL;
 
-static DrawObject *CompanyNameTextObject  = NULL;
-static DrawObject *CompanyAboutTextObject = NULL;
+static DrawObject *StockPriceTextObject      = NULL;
 
 void DisplayTempPopUp();
 void DisplayGraph(char *company_name, TimeSpan time_span);
 void DisplayCompanyScrollBox();
 void AddCompanyContentToStocksScrollBox(DrawObject *object);
 char *GetCurrentCompanyFromGraph();
+void StocksMenuRenderLogic();
+void UpdateStocksStatsText(char *company_name);
+
+void InitializeStocksMenu() 
+{ 
+    
+    if (CreateNewDrawLayer() == -1) {
+
+        Log("STUB: StocksMenu could not create new draw layer");
+        return;
+
+    }
+
+    stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
+
+    AddMenuWithChildsToDrawLayer(stocks_menu);
+    DisplayCompanyScrollBox();
+    DisplayGraph(GetStockNameFromStockId(1), ONE_DAY);
+
+    CompanyNameTextObject  = GetObjectAndDraw("StocksMenuChangingCompanyNameText");
+    CompanyAboutTextObject = GetObjectAndDraw("StocksMenuChangingAboutText");
+    AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
+    StockPriceTextObject   = GetObjectAndDraw("StocksMenuCurrentStockPriceText");
+
+    UpdateStocksStatsText(GetStockNameFromStockId(1));
+
+}
+
+void StocksMenuRenderLogic()
+{
+
+    if (AccountMoneyTextObject == NULL)
+        return;
+
+    SetTextContent(AccountMoneyTextObject, "%.2f", account_money);
+    SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(current_company_name));
+
+}
 
 void DisplayTempPopUp()
 {
@@ -60,33 +101,10 @@ void UpdateStocksStatsText(char *company_name)
 
     SetTextContent(CompanyNameTextObject, "%s", company_name);
     SetTextContent(CompanyAboutTextObject, "Dynamic Description of a company");
+    StocksMenuRenderLogic();
 }
 
-void InitializeStocksMenu() 
-{ 
-    
-    if (CreateNewDrawLayer() == -1) {
 
-        Log("STUB: StocksMenu could not create new draw layer");
-        return;
-
-    }
-
-    stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
-
-    AddMenuWithChildsToDrawLayer(stocks_menu);
-    DisplayCompanyScrollBox();
-    DisplayGraph(GetStockNameFromStockId(1), ONE_DAY);
-
-    CompanyNameTextObject  = GetDrawObjectFromJsonLayer("StocksMenuChangingCompanyNameText");
-    CompanyAboutTextObject = GetDrawObjectFromJsonLayer("StocksMenuChangingAboutText");
-
-    AddObjectToDrawLayer(CompanyNameTextObject);
-    AddObjectToDrawLayer(CompanyAboutTextObject);
-
-    UpdateStocksStatsText(GetStockNameFromStockId(1));
-
-}
 
 void DisplayGraph(char *company_name, TimeSpan time_span)
 {
@@ -138,8 +156,6 @@ void DisplayCompanyScrollBox()
     AddObjectToDrawLayer(object);
 
 }
-
-
 
 void AddCompanyContentToStocksScrollBox(DrawObject *object)
 {

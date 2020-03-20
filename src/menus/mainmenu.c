@@ -27,6 +27,10 @@
 static MenuWithChilds *main_menu = NULL;
 static DrawObject *VersionObject = NULL;
 
+void DynamicText();
+void MainMenuRenderLogic();
+
+
 void ScrollBoxClick(char *scroll_box_content)
 {
 

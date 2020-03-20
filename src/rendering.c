@@ -16,6 +16,9 @@
 #include "startup.h"
 #include "dbaccess.h"
 #include "stocksmenu.h"
+#include "newsmenu.h"
+#include "accountmenu.h"
+#include "cardsmenu.h"
 
 typedef struct DisplayFlagMap {
 
@@ -147,7 +150,31 @@ void SwitchToRenderingStocksMenu()
 {
 
     InitializeStocksMenu();
-    RenderLogic = NULL;
+    RenderLogic = &StocksMenuRenderLogic;
+
+}
+
+void SwitchToRenderingNewsMenu()
+{
+
+    InitializeNewsMenu();
+    RenderLogic = &NewsMenuRenderLogic;
+
+}
+
+void SwitchToRenderingAccountMenu()
+{
+
+    InitializeAccountMenu();
+    RenderLogic = &AccountMenuRenderLogic;
+
+}
+
+void SwitchToRenderingCardsMenu()
+{
+
+    InitializeCardsMenu();
+    RenderLogic = &CardsMenuRenderLogic;
 
 }
 

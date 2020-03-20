@@ -19,6 +19,8 @@ static atomic_int  save_id;
 
 static ALLEGRO_THREAD *account_thread = NULL;
 
+float account_money = 0;
+
 static const long ONE_HOUR = 3600;
 
 void *AccountEntry(ALLEGRO_THREAD *thread, void *arg);

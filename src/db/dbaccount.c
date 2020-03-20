@@ -11,6 +11,7 @@
 #include "stocksmenu.h"
 #include "dbaccount.h"
 #include "dbsave.h"
+#include "math.h"
 
 
 void SetupMainDB();
@@ -23,6 +24,8 @@ void SetCompanyToActive(char *company_name, sqlite3 *db);
 void InsertNewCompany(char *company_name, float ipo, sqlite3 *db);
 int FindOutIfYouCanAddFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name);
 int FindOutIfYouCanSubtractFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name);
+TransactionType GetTransactionType(struct Transactions *transaction_temp);
+float GetAmountPerShare(struct Transactions *transaction_temp);
 
 
 int InsertAndOrSetCompanyToActive(char *company_name, float ipo) 
@@ -92,19 +95,45 @@ void AddOwnedStock(char *company_name, int amount_to_own)
 
 }
 
-void InsertStockTransaction(char *company_name, int transaction_amount, int stocks_exchanged) 
+int GetOwnedStockAmountCallback(void *owned_stock_amount, int argc, char **argv, char **col_name) 
+{
+
+    if (argc == 0)
+        *((int *)owned_stock_amount) = -1;
+    else
+        *((int *)owned_stock_amount) = atoi(argv[0]);
+
+    return 0;
+
+}
+
+int GetOwnedStockAmount(char *company_name) 
+{
+
+    sqlite3 *db;
+    int owned_stock_amount = 0;
+
+    if (OpenConnection(&db, DefaultConnection()) == 0) 
+        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId =%d;", GetCompanyId(company_name)), &GetOwnedStockAmountCallback, &owned_stock_amount, db);
+
+    sqlite3_close(db);
+    return owned_stock_amount;
+
+}
+
+void InsertStockTransaction(char *company_name, float transaction_amount, int stocks_exchanged) 
 {
 
     sqlite3 *db;
 
     if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions ( SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, 1, %d, %d, %d, %d);", GetSaveId(), GetCompanyId(company_name), transaction_amount, stocks_exchanged, GetGameTime()), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions ( SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, 1, %d, %.2f, %d, %d);", GetSaveId(), GetCompanyId(company_name), transaction_amount, stocks_exchanged, GetGameTime()), NULL, NULL, db);
 
     sqlite3_close(db);
 
 }
 
-void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, int price_per_stock)
+void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float price_per_stock)
 {
 
     sqlite3 *db;
@@ -120,6 +149,7 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, int pri
             ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned + %d  WHERE CompanyId=%d;", amount_to_add, GetCompanyId(company_name)), NULL, NULL, db);
         
         InsertStockTransaction(company_name, -amount_to_add * price_per_stock, amount_to_add);
+        account_money += -amount_to_add * price_per_stock;
 
     }
 
@@ -137,7 +167,7 @@ int FindOutIfYouCanAddFromCurrentStock(void *owned_stock_amount, int argc, char 
 
 }
 
-void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtract, int price_per_stock)
+void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtract, float price_per_stock)
 {
 
     sqlite3 *db;
@@ -151,6 +181,7 @@ void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtrac
 
             ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE CompanyId=%d;", amount_to_subtract, GetCompanyId(company_name)), NULL, NULL, db);
             InsertStockTransaction(company_name, amount_to_subtract * price_per_stock, -amount_to_subtract);
+            account_money += amount_to_subtract * price_per_stock;
             
         }
 
@@ -289,32 +320,48 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
     if (transaction_temp->num_transactions == transaction_temp->size){
 
         transaction_temp->size        += 128;
-        transaction_temp->transaction = realloc(transaction_temp->transaction, sizeof(float)     * transaction_temp->size);
-        transaction_temp->shares      = realloc(transaction_temp->shares,      sizeof(short int) * transaction_temp->size);
-        transaction_temp->pershare    = realloc(transaction_temp->pershare,    sizeof(short int) * transaction_temp->size);
+        transaction_temp->transaction = realloc(transaction_temp->transaction, sizeof(float)  * transaction_temp->size);
+        transaction_temp->shares      = realloc(transaction_temp->shares,      sizeof(int) * transaction_temp->size);
+        transaction_temp->pershare    = realloc(transaction_temp->pershare,    sizeof(float) * transaction_temp->size);
+        transaction_temp->type        = realloc(transaction_temp->type,        sizeof(TransactionType) * transaction_temp->size);
 
     }
 
     transaction_temp->transaction[transaction_temp->num_transactions] = (float)atof(argv[4]);
-    transaction_temp->shares[transaction_temp->num_transactions]      = (short int)atof(argv[5]);
-
-    if(transaction_temp->transaction[transaction_temp->num_transactions] < 0)
-        transaction_temp->type[transaction_temp->num_transactions] = BUY;
-    else
-        transaction_temp->type[transaction_temp->num_transactions] = SELL;
-
+    transaction_temp->shares[transaction_temp->num_transactions]      = (int)atof(argv[5]);
+    transaction_temp->type[transaction_temp->num_transactions]        = GetTransactionType(transaction_temp);
+    transaction_temp->pershare[transaction_temp->num_transactions]    = GetAmountPerShare(transaction_temp);
+    
     transaction_temp->num_transactions++;
     
     return 0;
 }
 
-struct Transactions *GetTransaction(char* company)
+TransactionType GetTransactionType(struct Transactions *transaction_temp)
+{
+
+    if(transaction_temp->transaction[transaction_temp->num_transactions] < 0)
+        return BUY;
+    else
+        return SELL;
+
+}
+
+float GetAmountPerShare(struct Transactions *transaction_temp)
+{
+
+    return fabs(transaction_temp->transaction[transaction_temp->num_transactions] / (float)transaction_temp->shares[transaction_temp->num_transactions]);
+
+}
+
+struct Transactions *GetTransactions(char* company)
 {
 
     struct Transactions *transaction      = malloc(sizeof(struct Transactions));
     transaction->transaction              = malloc(sizeof(float) * 128);
-    transaction->shares                   = malloc(sizeof(short int) * 128);
-    transaction->pershare                 = malloc(sizeof(short int) * 128);
+    transaction->shares                   = malloc(sizeof(int) * 128);
+    transaction->pershare                 = malloc(sizeof(float) * 128);
+    transaction->type                     = malloc(sizeof(TransactionType) * 128);
     transaction->num_transactions         = 0;
     transaction->size                     = 128;
 
@@ -323,15 +370,17 @@ struct Transactions *GetTransaction(char* company)
         transaction->transaction[i] = 0;
         transaction->shares[i]      = 0;
         transaction->pershare[i]    = 0;
+        transaction->type[i]        = BUY;
 
     }
 
+
+
     sqlite3 *db;
 
-     if (OpenConnection(&db, DefaultConnection()) != 0)
+    if (OpenConnection(&db, DefaultConnection()) != 0)
         return transaction;
 
-    
     ExecuteQuery(GetFormattedPointer("SELECT * FROM Transactions WHERE CompanyId=%d", GetCompanyId(company)), &SetTransactionCallback, transaction, db);
 
     sqlite3_close(db);

@@ -28,6 +28,43 @@ static DrawObject *PlayerNameTextObject = NULL;
 
 static DrawObject *saves_scrollbox      = NULL;
 
+void DisplayLoadSaveScrollBox();
+
+void InitializeLoadSaveMenu() 
+{
+
+    
+    if (CreateNewDrawLayer() == -1) {
+
+        Log("ERROR: LoadMenu could not create new draw layer");
+        return;
+
+    }
+
+    AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("LoadSaveMenu"));
+
+    SaveNameTextObject   = GetObjectAndDraw("LoadSaveMenuSaveNameText");
+    PlayerNameTextObject = GetObjectAndDraw("LoadSaveMenuPlayerNameText");
+
+    DisplayLoadSaveScrollBox();
+    
+}
+
+void InitializeNewSaveMenu() 
+{
+
+    
+    if (CreateNewDrawLayer() == -1) {
+
+        Log("ERROR: NewMenu could not create new draw layer");
+        return;
+
+    }
+
+    AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("NewSaveMenu"));
+
+}
+
 void SetSaveContent(char *save_name, char *player_name) 
 {
     SetTextContent(SaveNameTextObject, "%s",   save_name);
@@ -71,44 +108,6 @@ void DisplayLoadSaveScrollBox()
     AddObjectToDrawLayer(saves_scrollbox);
 
 }
-
-void InitializeLoadSaveMenu() 
-{
-
-    
-    if (CreateNewDrawLayer() == -1) {
-
-        Log("ERROR: LoadMenu could not create new draw layer");
-        return;
-
-    }
-
-    AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("LoadSaveMenu"));
-
-    SaveNameTextObject   = GetDrawObjectFromJsonLayer("LoadSaveMenuSaveNameText");
-    PlayerNameTextObject = GetDrawObjectFromJsonLayer("LoadSaveMenuPlayerNameText");
-
-    AddObjectToDrawLayer(SaveNameTextObject);
-    AddObjectToDrawLayer(PlayerNameTextObject);
-    DisplayLoadSaveScrollBox();
-    
-}
-
-void InitializeNewSaveMenu() 
-{
-
-    
-    if (CreateNewDrawLayer() == -1) {
-
-        Log("ERROR: NewMenu could not create new draw layer");
-        return;
-
-    }
-
-    AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("NewSaveMenu"));
-
-}
-
 
 //LoadSave Button Callbacks
 
@@ -170,7 +169,7 @@ void NewSaveMenuBack_BCB()
 
 void CreateSave_BCB()
 {
-    
+
     char *save_name_in_text_box = GetTextFromTextBox("SaveNameTextBox");
     
     if (strlen(save_name_in_text_box) == 0) {
@@ -186,7 +185,6 @@ void CreateSave_BCB()
         // TODO setup popups when textboxes have no value.
         return;
     }
-
     CreateNewSave(save_name_in_text_box, player_name_in_text_box);
 
     StartGame();

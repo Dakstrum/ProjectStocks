@@ -11,25 +11,31 @@
 #include "dbaccount.h"
 #include "text.h"
 #include "scrollbox.h"
+#include "account.h"
+#include "simulation.h"
 
 #define DSP_NUM 5
-
-char* GetTransactionAction(TransactionType type);
-void DisplayAccountCompanyScrollBox();
-void PopulateAccountHistoryDisplay(char* company);
-void InitializeAccountHistoryDisplay();
 
 int HistoryDisplayNumber = 0;
 char* CurrentCompanyViewing;
 
-static MenuWithChilds *account_menu = NULL;
+static MenuWithChilds *account_menu           = NULL;
 
-static DrawObject *CompanyNameTextObject  = NULL;
+static DrawObject *CompanyNameTextObject      = NULL;
+static DrawObject *AccountMoneyTextObject     = NULL;
+static DrawObject *StockPriceTextObject       = NULL;
+static DrawObject *OwnedStockAmountTextObject = NULL;
 
 static DrawObject *ActionObjects[DSP_NUM];
 static DrawObject *SharesObjects[DSP_NUM];
 static DrawObject *PerShareObjects[DSP_NUM];
 static DrawObject *TransactionObjects[DSP_NUM];
+
+char* GetTransactionAction(TransactionType type);
+void DisplayAccountCompanyScrollBox();
+void PopulateAccountHistoryDisplay(char* company);
+void InitializeAccountHistoryDisplay();
+void AccountMenuRenderLogic();
 
 void InitializeAccountMenu() 
 {
@@ -49,9 +55,26 @@ void InitializeAccountMenu()
     InitializeAccountHistoryDisplay();
     PopulateAccountHistoryDisplay(CurrentCompanyViewing);
 
-    CompanyNameTextObject  = GetDrawObjectFromJsonLayer("AccountMenuChangingCompanyNameText");
-    AddObjectToDrawLayer(CompanyNameTextObject);
+    CompanyNameTextObject        = GetObjectAndDraw("AccountMenuChangingCompanyNameText");
+    AccountMoneyTextObject       = GetObjectAndDraw("StocksMenuAccountMoneyText");
+    StockPriceTextObject         = GetObjectAndDraw("AccountMenuCurrentStockPriceText");
+    OwnedStockAmountTextObject   = GetObjectAndDraw("AccountMenuOwnedStockAmountText");
+
     SetTextContent(CompanyNameTextObject, "%s", CurrentCompanyViewing);
+
+    AccountMenuRenderLogic();
+
+}
+
+void AccountMenuRenderLogic()
+{
+
+    if (AccountMoneyTextObject == NULL)
+        return;
+    
+    SetTextContent(AccountMoneyTextObject,     "%.2f", account_money);
+    SetTextContent(StockPriceTextObject,       "%.2f", CurrentStockPrice(CurrentCompanyViewing));
+    SetTextContent(OwnedStockAmountTextObject, "%d",   GetOwnedStockAmount(CurrentCompanyViewing));
 
 }
 
@@ -81,23 +104,28 @@ void InitializeAccountHistoryDisplay()
 
 void PopulateAccountHistoryDisplay(char* company)
 {
-
-    struct Transactions *transaction[DSP_NUM];
+    
+    struct Transactions *transaction = GetTransactions(company);
 
     for (int i=0; i < DSP_NUM; i++) {
 
-        transaction[i] = GetTransaction(company);
-        if(transaction[i]->shares[HistoryDisplayNumber + i]) {
+        if(transaction->shares[HistoryDisplayNumber + i]) {
 
-            SetTextContent(ActionObjects[i], "%s", GetTransactionAction(transaction[i]->type[HistoryDisplayNumber + i]));
-            SetTextContent(SharesObjects[i], "%d", transaction[i]->shares[HistoryDisplayNumber + i]);
-            SetTextContent(PerShareObjects[i], "%d", transaction[i]->pershare[HistoryDisplayNumber + i]);
-            SetTextContent(TransactionObjects[i], "%.2f", transaction[i]->transaction[HistoryDisplayNumber + i]);
+            SetTextContent(ActionObjects[i], "%s", GetTransactionAction(transaction->type[HistoryDisplayNumber + i]));
+            SetTextContent(SharesObjects[i], "%d", transaction->shares[HistoryDisplayNumber + i]);
+            SetTextContent(PerShareObjects[i], "%.2f", transaction->pershare[HistoryDisplayNumber + i]);
+            SetTextContent(TransactionObjects[i], "%.2f", transaction->transaction[HistoryDisplayNumber + i]);
 
         }
         
     }
 
+    free(transaction->pershare);
+    free(transaction->shares);
+    free(transaction->transaction);
+    free(transaction->type);
+    free(transaction);
+    
 }
 
 void CleanUpAccountMenu() 

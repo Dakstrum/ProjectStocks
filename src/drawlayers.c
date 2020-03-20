@@ -24,6 +24,7 @@
 #include "button.h"
 #include "textbox.h"
 #include "scrollbox.h"
+#include "jsonlayer.h"
 
 #define MAX_DRAW_LAYERS 10
 #define MAX_OBJECTS_PER_LAYER 256
@@ -589,6 +590,15 @@ DrawObjectTypeCollection *GetObjectsByType(DrawType type)
     }
     collection->objects = realloc(collection->objects, sizeof(DrawObject *) * collection->num_objects + 1);
     return collection;
+
+}
+
+DrawObject *GetObjectAndDraw(char* object_name)
+{
+
+    DrawObject *object = GetDrawObjectFromJsonLayer(object_name);
+    AddObjectToDrawLayer(object);
+    return object;
 
 }
 

@@ -2,6 +2,6 @@
 #define NEWSMENU_H
 
 void InitializeNewsMenu();
-void ToggleNewsMenu();
+void NewsMenuRenderLogic();
 
 #endif
