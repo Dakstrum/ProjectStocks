@@ -110,6 +110,11 @@ void InitializeGeneralPurposeButtons()
     AddButton("PauseMenuExitButton", &PauseMenuExit_BCB);
     AddButton("OptionsMenuExitButton", &OptionsMenuExit_BCB);
 
+    AddButton("PauseSpeedButton", &PauseSpeed_BCB);
+    AddButton("SpeedOneButton", &SpeedOne_BCB);
+    AddButton("SpeedTwoButton", &SpeedTwo_BCB);
+    AddButton("SpeedThreeButton", &SpeedThree_BCB);
+
 }
 
 void InitializeSaveMenuButtons()

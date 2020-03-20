@@ -131,6 +131,7 @@ void StartGame()
     StartSimulation();
     SwitchToLoadingScreen();
 
+
 }
 
 void LoadSaveMenuLoad_BCB()

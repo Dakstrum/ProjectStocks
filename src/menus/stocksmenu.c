@@ -17,6 +17,7 @@
 
 #include "dbaccount.h"
 #include "account.h"
+#include "generalpurposemenus.h"
 
 static MenuWithChilds *stocks_menu           = NULL;
 static MenuWithChilds *sell_transaction_menu = NULL;
@@ -63,6 +64,8 @@ void InitializeStocksMenu()
     StockPriceTextObject   = GetObjectAndDraw("StocksMenuCurrentStockPriceText");
 
     UpdateStocksStatsText(GetStockNameFromStockId(1));
+
+    InitializeDynamicObjects();
 
 }
 
