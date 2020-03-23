@@ -16,6 +16,7 @@
 #include "simulation.h"
 #include "scrollbox.h"
 #include "text.h"
+#include "generalpurposemenus.h"
 
 static MenuWithChilds *cards_menu      = NULL;
 static MenuWithChilds *apply_card_menu = NULL;
@@ -40,6 +41,7 @@ void InitializeCardsMenu()
     AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
 
     CardsMenuRenderLogic();
+    InitializeDynamicObjects();
 
 }
 

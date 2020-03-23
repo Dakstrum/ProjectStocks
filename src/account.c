@@ -20,6 +20,7 @@ static atomic_int  save_id;
 static ALLEGRO_THREAD *account_thread = NULL;
 
 float account_money = 0;
+int account_timespeed = 1;
 
 static const long ONE_HOUR = 3600;
 

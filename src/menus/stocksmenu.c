@@ -96,6 +96,7 @@ void DisplayTempPopUp()
     popup_object->popup.diff_time_to_stay    = 2000;
     popup_object->popup.direction            = "Up";
     AddObjectToDrawLayer(popup_object);
+    
 }
 
 void UpdateStocksStatsText(char *company_name)

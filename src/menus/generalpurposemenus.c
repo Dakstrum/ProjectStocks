@@ -18,6 +18,10 @@
 #include "account.h"
 #include "button.h"
 
+void SpeedOne_BCB();
+void SpeedTwo_BCB();
+void SpeedThree_BCB();
+
 static MenuWithChilds *pause_menu     = NULL;
 static MenuWithChilds *options_menu   = NULL;
 
@@ -45,6 +49,18 @@ void InitializeDynamicObjects()
     if (pause_button == NULL)
         return;
 
+    if(account_timespeed == 1)
+    {
+        SpeedOne_BCB();
+    }
+    if(account_timespeed == 2)
+    {
+        SpeedTwo_BCB();
+    }
+    if(account_timespeed == 3)
+    {
+        SpeedThree_BCB();
+    }
     
 }
 
@@ -149,11 +165,10 @@ void Cards_BCB()
 void PauseSpeed_BCB()
 {
 
-    SetButtonTint(pause_button, GetRGBA(255, 0, 0, 200));
-    SetButtonTint(speed_one_button, GetRGBA(38, 50, 56, 180));
-    SetButtonTint(speed_two_button, GetRGBA(38, 50, 56, 180));
+    SetButtonTint(pause_button,       GetRGBA(255, 0, 0, 200));
+    SetButtonTint(speed_one_button,   GetRGBA(38, 50, 56, 180));
+    SetButtonTint(speed_two_button,   GetRGBA(38, 50, 56, 180));
     SetButtonTint(speed_three_button, GetRGBA(38, 50, 56, 180));
-
 
 }
 void SpeedOne_BCB()
@@ -164,6 +179,7 @@ void SpeedOne_BCB()
     SetButtonTint(speed_two_button,   GetRGBA(38, 50, 56, 180));
     SetButtonTint(speed_three_button, GetRGBA(38, 50, 56, 180));
     SetGameSpeed(1);
+    account_timespeed = 1;
     
 
 }
@@ -175,6 +191,7 @@ void SpeedTwo_BCB()
     SetButtonTint(speed_two_button,   GetRGBA(0, 255, 0, 200));
     SetButtonTint(speed_three_button, GetRGBA(38, 50, 56, 180));
     SetGameSpeed(2);
+    account_timespeed = 2;
 
 }
 void SpeedThree_BCB()
@@ -185,5 +202,6 @@ void SpeedThree_BCB()
     SetButtonTint(speed_two_button,   GetRGBA(0, 255, 0, 200));
     SetButtonTint(speed_three_button, GetRGBA(0, 255, 0, 200));
     SetGameSpeed(3);
+    account_timespeed = 3;
 
 }
