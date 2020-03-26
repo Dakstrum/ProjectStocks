@@ -1,5 +1,6 @@
 
 #include <time.h>
+#include <stdlib.h>
 #include <stdatomic.h>
 
 #include <allegro5/allegro.h>
@@ -20,6 +21,8 @@ static atomic_int  save_id;
 static ALLEGRO_THREAD *account_thread = NULL;
 
 float account_money = 0;
+
+static char *current_time_buf = NULL;
 
 static const long ONE_HOUR = 3600;
 
@@ -50,6 +53,8 @@ void InitAccount()
 
     account_thread = al_create_thread(&AccountEntry, NULL);
     al_start_thread(account_thread);
+
+    current_time_buf = malloc(128);
     SaveLoadTest();
 
 }
@@ -162,5 +167,16 @@ void SetGameSpeed(const int speed)
         default: atomic_store(&game_time_game_dt, ONE_HOUR); break;
 
     }
+
+}
+
+
+char *GetDate()
+{
+
+    time_t current_time = GetGameTime();
+    strftime(current_time_buf, 128, "%HH %x", localtime(&current_time));
+    Log(current_time_buf);
+    return current_time_buf;
 
 }

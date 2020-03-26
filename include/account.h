@@ -19,6 +19,7 @@ void TogglePauseGameTime();
 void SetGameTime(time_t time_to_set);
 
 time_t GetGameTime();
+char *GetDate();
 
 void SetGameSpeed(const int speed);
 
