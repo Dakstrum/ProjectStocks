@@ -85,7 +85,7 @@ ALLEGRO_BITMAP *GetBitmapFromCache(char *asset_path)
 
     }
 
-    LogF("Returning new bitmap %s", asset_path);
+    //LogF("Returning new bitmap %s", asset_path);
     return GetNewlyAddedBitmapFromCache(asset_path);
 
 }
@@ -117,7 +117,7 @@ ALLEGRO_FONT *GetFontFromCache(char *asset_path, int font_size)
             return font_cache[i].font;
 
     }
-    LogF("Returning new font %s with size %d", asset_path, font_size);
+    //LogF("Returning new font %s with size %d", asset_path, font_size);
 
     return GetNewlyAddedFontFromCache(asset_path, font_size);
 

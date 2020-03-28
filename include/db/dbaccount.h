@@ -52,4 +52,6 @@ int *GetSaveIdFromSaveName(char *save_name);
 struct Transactions *GetTransactions(char* company);
 
 int GetOwnedStockAmount(char *company_name);
+
+int GetCompanyId(char *company_name);
 #endif

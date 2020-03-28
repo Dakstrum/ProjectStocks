@@ -22,15 +22,14 @@ static MenuWithChilds *stocks_menu           = NULL;
 static MenuWithChilds *sell_transaction_menu = NULL;
 static MenuWithChilds *buy_transaction_menu  = NULL;
 
-static float price_per_stock                 = 0.0;
-static char *current_company_name            = NULL;
+static float selected_company_perstock_price = 0.0;
+static char *selected_company_name           = NULL;
+
 static DrawObject  *current_graph            = NULL;
 
 static DrawObject *CompanyNameTextObject     = NULL;
 static DrawObject *CompanyAboutTextObject    = NULL;
-//static DrawObject *CompanyCHGTextObject      = NULL;
 static DrawObject *AccountMoneyTextObject    = NULL;
-
 static DrawObject *StockPriceTextObject      = NULL;
 
 void DisplayTempPopUp();
@@ -43,7 +42,7 @@ void UpdateStocksStatsText(char *company_name);
 
 void InitializeStocksMenu() 
 { 
-    
+
     if (CreateNewDrawLayer() == -1) {
 
         Log("STUB: StocksMenu could not create new draw layer");
@@ -55,14 +54,14 @@ void InitializeStocksMenu()
 
     AddMenuWithChildsToDrawLayer(stocks_menu);
     DisplayCompanyScrollBox();
-    DisplayGraph(GetStockNameFromStockId(1), ONE_DAY);
+    DisplayGraph(GetStockNameFromStockId(companyid_viewing), ONE_DAY);
 
     CompanyNameTextObject  = GetObjectAndDraw("StocksMenuChangingCompanyNameText");
     CompanyAboutTextObject = GetObjectAndDraw("StocksMenuChangingAboutText");
     AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
     StockPriceTextObject   = GetObjectAndDraw("StocksMenuCurrentStockPriceText");
 
-    UpdateStocksStatsText(GetStockNameFromStockId(1));
+    UpdateStocksStatsText(GetStockNameFromStockId(companyid_viewing));
 
 }
 
@@ -73,7 +72,7 @@ void StocksMenuRenderLogic()
         return;
 
     SetTextContent(AccountMoneyTextObject, "%.2f", account_money);
-    SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(current_company_name));
+    SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(GetStockNameFromStockId(companyid_viewing)));
 
 }
 
@@ -93,15 +92,16 @@ void DisplayTempPopUp()
     popup_object->popup.diff_time_to_stay    = 2000;
     popup_object->popup.direction            = "Up";
     AddObjectToDrawLayer(popup_object);
+
 }
 
 void UpdateStocksStatsText(char *company_name)
 {
-    current_company_name = GetCurrentCompanyFromGraph();
 
     SetTextContent(CompanyNameTextObject, "%s", company_name);
     SetTextContent(CompanyAboutTextObject, "Dynamic Description of a company");
     StocksMenuRenderLogic();
+
 }
 
 
@@ -130,6 +130,8 @@ char *GetCurrentCompanyFromGraph()
 
 void LoadCompanyScrollBoxClick(char *scroll_box_content)
 {
+
+    companyid_viewing = GetCompanyId(scroll_box_content);
 
     RemoveDrawObject(current_graph);
     DisplayGraph(scroll_box_content, ONE_DAY);
@@ -170,8 +172,8 @@ void SellMenu_BCB()
 
     if (sell_transaction_menu == NULL) {
 
-        current_company_name = GetCurrentCompanyFromGraph();
-        price_per_stock      = CurrentStockPrice(current_company_name);
+        selected_company_name           = GetCurrentCompanyFromGraph();
+        selected_company_perstock_price = CurrentStockPrice(selected_company_name);
 
         CreateNewDrawLayer();
         sell_transaction_menu = GetMenuWithChildsFromJsonLayer("SellTransactionMenu");
@@ -191,8 +193,8 @@ void BuyMenu_BCB()
 
     if (buy_transaction_menu == NULL) {
 
-        current_company_name   = GetCurrentCompanyFromGraph();
-        price_per_stock        = CurrentStockPrice(current_company_name);
+        selected_company_name           = GetCurrentCompanyFromGraph();
+        selected_company_perstock_price = CurrentStockPrice(selected_company_name);
 
         CreateNewDrawLayer();
         buy_transaction_menu = GetMenuWithChildsFromJsonLayer("BuyTransactionMenu");
@@ -210,10 +212,9 @@ void BuyMenu_BCB()
 void ChangeGraphTimespan(TimeSpan time_span)
 {
 
-    current_company_name = GetCurrentCompanyFromGraph();
     RemoveDrawObject(current_graph);
-    DisplayGraph(current_company_name, time_span);
-    UpdateStocksStatsText(current_company_name);
+    DisplayGraph(GetStockNameFromStockId(companyid_viewing), time_span);
+    UpdateStocksStatsText(GetStockNameFromStockId(companyid_viewing));
 
 }
 
@@ -221,7 +222,7 @@ void Sell_BCB()
 {
 
     int amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));
-    AttemptToSubtractFromCurrentStock(current_company_name, amount_in_text_box, price_per_stock);
+    AttemptToSubtractFromCurrentStock(GetStockNameFromStockId(companyid_viewing), amount_in_text_box, selected_company_perstock_price);
     SellMenu_BCB();
     // TODO tell you what you sold or bought for how much
     DisplayTempPopUp(); 
@@ -232,7 +233,7 @@ void Buy_BCB()
 {
     
     int amount_in_text_box = atoi(GetTextFromTextBox("BuyTextBox"));
-    AttemptToAddFromCurrentStock(current_company_name, amount_in_text_box, price_per_stock);
+    AttemptToAddFromCurrentStock(GetStockNameFromStockId(companyid_viewing), amount_in_text_box, selected_company_perstock_price);
     BuyMenu_BCB();
     // TODO tell you what you sold or bought for how much
     DisplayTempPopUp(); 

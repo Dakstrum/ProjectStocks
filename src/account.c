@@ -20,7 +20,8 @@ static atomic_int  save_id;
 
 static ALLEGRO_THREAD *account_thread = NULL;
 
-float account_money = 0;
+float account_money   = 0;
+int companyid_viewing = 1;
 
 static char *current_time_buf = NULL;
 
