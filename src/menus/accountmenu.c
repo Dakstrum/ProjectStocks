@@ -35,6 +35,7 @@ void DisplayAccountCompanyScrollBox();
 void PopulateAccountHistoryDisplay(char* company);
 void InitializeAccountHistoryDisplay();
 void AccountMenuRenderLogic();
+void InitalizeAccountMenuText();
 
 void InitializeAccountMenu() 
 {
@@ -52,13 +53,7 @@ void InitializeAccountMenu()
     InitializeAccountHistoryDisplay();
     PopulateAccountHistoryDisplay(GetStockNameFromStockId(companyid_viewing));
 
-    CompanyNameTextObject        = GetObjectAndDraw("AccountMenuChangingCompanyNameText");
-    AccountMoneyTextObject       = GetObjectAndDraw("StocksMenuAccountMoneyText");
-    StockPriceTextObject         = GetObjectAndDraw("AccountMenuCurrentStockPriceText");
-    OwnedStockAmountTextObject   = GetObjectAndDraw("AccountMenuOwnedStockAmountText");
-
-    SetTextContent(CompanyNameTextObject, "%s", GetStockNameFromStockId(companyid_viewing));
-
+    InitalizeAccountMenuText();
     AccountMenuRenderLogic();
 
 }
@@ -75,6 +70,18 @@ void AccountMenuRenderLogic()
 
 }
 
+void InitalizeAccountMenuText()
+{
+
+    CompanyNameTextObject        = GetObjectAndDraw("AccountMenuChangingCompanyNameText");
+    AccountMoneyTextObject       = GetObjectAndDraw("StocksMenuAccountMoneyText");
+    StockPriceTextObject         = GetObjectAndDraw("AccountMenuCurrentStockPriceText");
+    OwnedStockAmountTextObject   = GetObjectAndDraw("AccountMenuOwnedStockAmountText");
+
+    SetTextContent(CompanyNameTextObject, "%s", GetStockNameFromStockId(companyid_viewing));
+
+}
+
 void InitializeAccountHistoryDisplay()
 {
 
@@ -85,15 +92,10 @@ void InitializeAccountHistoryDisplay()
 
     for (int i=0; i < DSP_NUM; i++) {
 
-        ActionObjects[i]      = GetDrawObjectFromJsonLayer(ActionJsonObjects[i]);
-        SharesObjects[i]      = GetDrawObjectFromJsonLayer(SharesJsonObjects[i]);
-        PerShareObjects[i]    = GetDrawObjectFromJsonLayer(PerShareJsonObjects[i]);
-        TransactionObjects[i] = GetDrawObjectFromJsonLayer(TransactionJsonObjects[i]);
-
-        AddObjectToDrawLayer(ActionObjects[i]);
-        AddObjectToDrawLayer(SharesObjects[i]);
-        AddObjectToDrawLayer(PerShareObjects[i]);
-        AddObjectToDrawLayer(TransactionObjects[i]);
+        ActionObjects[i]      = GetObjectAndDraw(ActionJsonObjects[i]);
+        SharesObjects[i]      = GetObjectAndDraw(SharesJsonObjects[i]);
+        PerShareObjects[i]    = GetObjectAndDraw(PerShareJsonObjects[i]);
+        TransactionObjects[i] = GetObjectAndDraw(TransactionJsonObjects[i]);
 
     }
 

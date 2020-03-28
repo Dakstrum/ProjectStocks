@@ -25,7 +25,7 @@ static MenuWithChilds *buy_transaction_menu  = NULL;
 static float selected_company_perstock_price = 0.0;
 static char *selected_company_name           = NULL;
 
-static DrawObject  *current_graph            = NULL;
+static DrawObject *current_graph             = NULL;
 
 static DrawObject *CompanyNameTextObject     = NULL;
 static DrawObject *CompanyAboutTextObject    = NULL;
@@ -39,6 +39,7 @@ void AddCompanyContentToStocksScrollBox(DrawObject *object);
 char *GetCurrentCompanyFromGraph();
 void StocksMenuRenderLogic();
 void UpdateStocksStatsText(char *company_name);
+void InitalizeStocksMenuText();
 
 void InitializeStocksMenu() 
 { 
@@ -56,11 +57,7 @@ void InitializeStocksMenu()
     DisplayCompanyScrollBox();
     DisplayGraph(GetStockNameFromStockId(companyid_viewing), ONE_DAY);
 
-    CompanyNameTextObject  = GetObjectAndDraw("StocksMenuChangingCompanyNameText");
-    CompanyAboutTextObject = GetObjectAndDraw("StocksMenuChangingAboutText");
-    AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
-    StockPriceTextObject   = GetObjectAndDraw("StocksMenuCurrentStockPriceText");
-
+    InitalizeStocksMenuText();
     UpdateStocksStatsText(GetStockNameFromStockId(companyid_viewing));
 
 }
@@ -73,6 +70,16 @@ void StocksMenuRenderLogic()
 
     SetTextContent(AccountMoneyTextObject, "%.2f", account_money);
     SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(GetStockNameFromStockId(companyid_viewing)));
+
+}
+
+void InitalizeStocksMenuText()
+{
+
+    CompanyNameTextObject  = GetObjectAndDraw("StocksMenuChangingCompanyNameText");
+    CompanyAboutTextObject = GetObjectAndDraw("StocksMenuChangingAboutText");
+    AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
+    StockPriceTextObject   = GetObjectAndDraw("StocksMenuCurrentStockPriceText");
 
 }
 
