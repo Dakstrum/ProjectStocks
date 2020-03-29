@@ -18,19 +18,22 @@
 #include "dbaccount.h"
 #include "account.h"
 
-static MenuWithChilds *stocks_menu           = NULL;
-static MenuWithChilds *sell_transaction_menu = NULL;
-static MenuWithChilds *buy_transaction_menu  = NULL;
+static MenuWithChilds *stocks_menu            = NULL;
+static MenuWithChilds *sell_transaction_menu  = NULL;
+static MenuWithChilds *buy_transaction_menu   = NULL;
 
-static float selected_company_perstock_price = 0.0;
-static char *selected_company_name           = NULL;
+static float selected_company_perstock_price  = 0.0;
+static char *selected_company_name            = NULL;
 
-static DrawObject *current_graph             = NULL;
+static DrawObject *current_graph              = NULL;
 
-static DrawObject *CompanyNameTextObject     = NULL;
-static DrawObject *CompanyAboutTextObject    = NULL;
-static DrawObject *AccountMoneyTextObject    = NULL;
-static DrawObject *StockPriceTextObject      = NULL;
+static DrawObject *CompanyNameTextObject                  = NULL;
+static DrawObject *CompanyAboutTextObject                 = NULL;
+static DrawObject *AccountMoneyTextObject                 = NULL;
+static DrawObject *StockPriceTextObject                   = NULL;
+
+static DrawObject *SelectedCompanyNameTextObject          = NULL;
+static DrawObject *SelectedCompanyPerStockPriceTextObject = NULL;
 
 void DisplayTempPopUp();
 void DisplayGraph(char *company_name, TimeSpan time_span);
@@ -40,6 +43,7 @@ char *GetCurrentCompanyFromGraph();
 void StocksMenuRenderLogic();
 void UpdateStocksStatsText(char *company_name);
 void InitalizeStocksMenuText();
+void ApplySelectedCompanyText();
 
 void InitializeStocksMenu() 
 { 
@@ -179,19 +183,34 @@ void SellMenu_BCB()
 
     if (sell_transaction_menu == NULL) {
 
+
         selected_company_name           = GetCurrentCompanyFromGraph();
         selected_company_perstock_price = CurrentStockPrice(selected_company_name);
 
         CreateNewDrawLayer();
+
         sell_transaction_menu = GetMenuWithChildsFromJsonLayer("SellTransactionMenu");
         AddMenuWithChildsToDrawLayer(sell_transaction_menu);
         
+        ApplySelectedCompanyText();
+
     } else {
 
         ClearCurrentDrawLayer();
         sell_transaction_menu = NULL;
 
     }
+
+}
+
+void ApplySelectedCompanyText()
+{
+
+    SelectedCompanyNameTextObject          = GetObjectAndDraw("SellTransactionMenuCompanyNameText");
+    SelectedCompanyPerStockPriceTextObject = GetObjectAndDraw("SellTransactionMenuPerShareText");
+
+    SetTextContent(SelectedCompanyNameTextObject  , "%s", selected_company_name);
+    SetTextContent(SelectedCompanyPerStockPriceTextObject, "%.2f", selected_company_perstock_price);
 
 }
 
@@ -204,9 +223,12 @@ void BuyMenu_BCB()
         selected_company_perstock_price = CurrentStockPrice(selected_company_name);
 
         CreateNewDrawLayer();
+
         buy_transaction_menu = GetMenuWithChildsFromJsonLayer("BuyTransactionMenu");
         AddMenuWithChildsToDrawLayer(buy_transaction_menu);
-        
+
+        ApplySelectedCompanyText();
+
     } else {
 
         ClearCurrentDrawLayer();
