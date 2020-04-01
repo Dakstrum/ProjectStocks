@@ -51,7 +51,7 @@ void InitializeAccountMenu()
 
     DisplayAccountCompanyScrollBox();
     InitializeAccountHistoryDisplay();
-    PopulateAccountHistoryDisplay(GetStockNameFromStockId(GetCompanyIdViewing()));
+    PopulateAccountHistoryDisplay(GetCompanyNameViewing());
 
     InitalizeAccountMenuText();
     AccountMenuRenderLogic();
@@ -65,8 +65,8 @@ void AccountMenuRenderLogic()
         return;
     
     SetTextContent(AccountMoneyTextObject,     "%.2f", GetAccountMoney());
-    SetTextContent(StockPriceTextObject,       "%.2f", CurrentStockPrice(GetStockNameFromStockId(GetCompanyIdViewing())));
-    SetTextContent(OwnedStockAmountTextObject, "%d",   GetOwnedStockAmount(GetStockNameFromStockId(GetCompanyIdViewing())));
+    SetTextContent(StockPriceTextObject,       "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
+    SetTextContent(OwnedStockAmountTextObject, "%d",   GetOwnedStockAmount(GetCompanyNameViewing()));
 
 }
 
@@ -78,7 +78,7 @@ void InitalizeAccountMenuText()
     StockPriceTextObject         = GetObjectAndDraw("AccountMenuCurrentStockPriceText");
     OwnedStockAmountTextObject   = GetObjectAndDraw("AccountMenuOwnedStockAmountText");
 
-    SetTextContent(CompanyNameTextObject, "%s", GetStockNameFromStockId(GetCompanyIdViewing()));
+    SetTextContent(CompanyNameTextObject, "%s", GetCompanyNameViewing());
 
 }
 
@@ -207,7 +207,7 @@ void AccountDown_BCB()
 
     HistoryDisplayNumber += DSP_NUM;
     ClearAccountHistoryDisplay();
-    PopulateAccountHistoryDisplay(GetStockNameFromStockId(GetCompanyIdViewing()));
+    PopulateAccountHistoryDisplay(GetCompanyNameViewing());
 
 }
 
@@ -217,7 +217,7 @@ void AccountUp_BCB()
 
         HistoryDisplayNumber -= DSP_NUM;
         ClearAccountHistoryDisplay();
-        PopulateAccountHistoryDisplay(GetStockNameFromStockId(GetCompanyIdViewing()));
+        PopulateAccountHistoryDisplay(GetCompanyNameViewing());
 
     }
 }

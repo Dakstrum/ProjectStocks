@@ -27,5 +27,6 @@ void SetCompanyIdViewing(int id);
 int GetCompanyIdViewing();
 void SetAccountMoney(int amount);
 int GetAccountMoney();
+char *GetCompanyNameViewing();
 
 #endif

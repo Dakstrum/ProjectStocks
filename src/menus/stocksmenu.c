@@ -59,10 +59,10 @@ void InitializeStocksMenu()
 
     AddMenuWithChildsToDrawLayer(stocks_menu);
     DisplayCompanyScrollBox();
-    DisplayGraph(GetStockNameFromStockId(GetCompanyIdViewing()), ONE_DAY);
+    DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
 
     InitalizeStocksMenuText();
-    UpdateStocksStatsText(GetStockNameFromStockId(GetCompanyIdViewing()));
+    UpdateStocksStatsText(GetCompanyNameViewing());
 
 }
 
@@ -73,7 +73,7 @@ void StocksMenuRenderLogic()
         return;
 
     SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
-    SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(GetStockNameFromStockId(GetCompanyIdViewing())));
+    SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
 
 }
 
@@ -242,8 +242,8 @@ void ChangeGraphTimespan(TimeSpan time_span)
 {
 
     RemoveDrawObject(current_graph);
-    DisplayGraph(GetStockNameFromStockId(GetCompanyIdViewing()), time_span);
-    UpdateStocksStatsText(GetStockNameFromStockId(GetCompanyIdViewing()));
+    DisplayGraph(GetCompanyNameViewing(), time_span);
+    UpdateStocksStatsText(GetCompanyNameViewing());
 
 }
 
@@ -251,7 +251,7 @@ void Sell_BCB()
 {
 
     int amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));
-    AttemptToSubtractFromCurrentStock(GetStockNameFromStockId(GetCompanyIdViewing()), amount_in_text_box, selected_company_perstock_price);
+    AttemptToSubtractFromCurrentStock(GetCompanyNameViewing(), amount_in_text_box, selected_company_perstock_price);
     SellMenu_BCB();
     // TODO tell you what you sold or bought for how much
     DisplayTempPopUp(); 
@@ -262,7 +262,7 @@ void Buy_BCB()
 {
     
     int amount_in_text_box = atoi(GetTextFromTextBox("BuyTextBox"));
-    AttemptToAddFromCurrentStock(GetStockNameFromStockId(GetCompanyIdViewing()), amount_in_text_box, selected_company_perstock_price);
+    AttemptToAddFromCurrentStock(GetCompanyNameViewing(), amount_in_text_box, selected_company_perstock_price);
     BuyMenu_BCB();
     // TODO tell you what you sold or bought for how much
     DisplayTempPopUp(); 

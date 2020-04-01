@@ -57,6 +57,13 @@ int GetAccountMoney()
 
 }
 
+char *GetCompanyNameViewing()
+{
+
+    return GetStockNameFromStockId(GetCompanyIdViewing());
+
+}
+
 void SaveLoadTest()
 {
 
