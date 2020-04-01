@@ -49,7 +49,7 @@ void CardsMenuRenderLogic()
     if (AccountMoneyTextObject == NULL)
         return;
     
-    SetTextContent(AccountMoneyTextObject, "%.2f", account_money);
+    SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
 
 }
 

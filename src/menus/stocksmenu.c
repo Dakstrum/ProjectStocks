@@ -59,10 +59,10 @@ void InitializeStocksMenu()
 
     AddMenuWithChildsToDrawLayer(stocks_menu);
     DisplayCompanyScrollBox();
-    DisplayGraph(GetStockNameFromStockId(companyid_viewing), ONE_DAY);
+    DisplayGraph(GetStockNameFromStockId(GetCompanyIdViewing()), ONE_DAY);
 
     InitalizeStocksMenuText();
-    UpdateStocksStatsText(GetStockNameFromStockId(companyid_viewing));
+    UpdateStocksStatsText(GetStockNameFromStockId(GetCompanyIdViewing()));
 
 }
 
@@ -72,8 +72,8 @@ void StocksMenuRenderLogic()
     if (AccountMoneyTextObject == NULL)
         return;
 
-    SetTextContent(AccountMoneyTextObject, "%.2f", account_money);
-    SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(GetStockNameFromStockId(companyid_viewing)));
+    SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
+    SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(GetStockNameFromStockId(GetCompanyIdViewing())));
 
 }
 
@@ -142,7 +142,7 @@ char *GetCurrentCompanyFromGraph()
 void LoadCompanyScrollBoxClick(char *scroll_box_content)
 {
 
-    companyid_viewing = GetCompanyId(scroll_box_content);
+    SetCompanyIdViewing(GetCompanyId(scroll_box_content));
 
     RemoveDrawObject(current_graph);
     DisplayGraph(scroll_box_content, ONE_DAY);
@@ -242,8 +242,8 @@ void ChangeGraphTimespan(TimeSpan time_span)
 {
 
     RemoveDrawObject(current_graph);
-    DisplayGraph(GetStockNameFromStockId(companyid_viewing), time_span);
-    UpdateStocksStatsText(GetStockNameFromStockId(companyid_viewing));
+    DisplayGraph(GetStockNameFromStockId(GetCompanyIdViewing()), time_span);
+    UpdateStocksStatsText(GetStockNameFromStockId(GetCompanyIdViewing()));
 
 }
 
@@ -251,7 +251,7 @@ void Sell_BCB()
 {
 
     int amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));
-    AttemptToSubtractFromCurrentStock(GetStockNameFromStockId(companyid_viewing), amount_in_text_box, selected_company_perstock_price);
+    AttemptToSubtractFromCurrentStock(GetStockNameFromStockId(GetCompanyIdViewing()), amount_in_text_box, selected_company_perstock_price);
     SellMenu_BCB();
     // TODO tell you what you sold or bought for how much
     DisplayTempPopUp(); 
@@ -262,7 +262,7 @@ void Buy_BCB()
 {
     
     int amount_in_text_box = atoi(GetTextFromTextBox("BuyTextBox"));
-    AttemptToAddFromCurrentStock(GetStockNameFromStockId(companyid_viewing), amount_in_text_box, selected_company_perstock_price);
+    AttemptToAddFromCurrentStock(GetStockNameFromStockId(GetCompanyIdViewing()), amount_in_text_box, selected_company_perstock_price);
     BuyMenu_BCB();
     // TODO tell you what you sold or bought for how much
     DisplayTempPopUp(); 

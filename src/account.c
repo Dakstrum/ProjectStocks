@@ -20,8 +20,8 @@ static atomic_int  save_id;
 
 static ALLEGRO_THREAD *account_thread = NULL;
 
-float account_money   = 0;
-int companyid_viewing = 1;
+static float account_money   = 0;
+static int companyid_viewing = 1;
 
 static char *current_time_buf = NULL;
 
@@ -29,8 +29,40 @@ static const long ONE_HOUR = 3600;
 
 void *AccountEntry(ALLEGRO_THREAD *thread, void *arg);
 
+void SetCompanyIdViewing(int id)
+{
+
+    companyid_viewing = id;
+
+}
+
+int GetCompanyIdViewing()
+{
+
+    return companyid_viewing;
+
+}
+
+void SetAccountMoney(int amount)
+{
+
+    account_money = amount;
+
+}
+
+int GetAccountMoney()
+{
+
+    return account_money;
+
+}
+
 void SaveLoadTest()
 {
+
+    
+
+}
 
 #if DEBUGGING
 
@@ -40,7 +72,6 @@ void SaveLoadTest()
 
 #endif
 
-}
 
 void InitAccount() 
 {
