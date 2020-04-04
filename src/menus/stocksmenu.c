@@ -32,6 +32,7 @@ static DrawObject *CompanyAboutTextObject    = NULL;
 static DrawObject *AccountMoneyTextObject    = NULL;
 
 static DrawObject *StockPriceTextObject      = NULL;
+static DrawObject *StockChangeTextObject     = NULL;
 
 void DisplayTempPopUp();
 void DisplayGraph(char *company_name, TimeSpan time_span);
@@ -61,6 +62,7 @@ void InitializeStocksMenu()
     CompanyAboutTextObject = GetObjectAndDraw("StocksMenuChangingAboutText");
     AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
     StockPriceTextObject   = GetObjectAndDraw("StocksMenuCurrentStockPriceText");
+    StockChangeTextObject  = GetObjectAndDraw("StocksMenuStockChangeText");
 
     UpdateStocksStatsText(GetStockNameFromStockId(1));
 
@@ -72,6 +74,7 @@ void StocksMenuRenderLogic()
     if (AccountMoneyTextObject == NULL)
         return;
 
+    SetTextContent(StockChangeTextObject, "%.2f", GetCurrentStockChange(current_company_name));
     SetTextContent(AccountMoneyTextObject, "%.2f", account_money);
     SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(current_company_name));
 
