@@ -377,11 +377,6 @@ float GetCurrentStockChange(char *company_name)
     current_price = CurrentStockPrice(company_name);
 
     change = current_price - last_price;
-
-    LogF("Last_Price: %.2f", last_price);
-    LogF("current_price: %.2f", current_price);
-    LogF("chnage: %.2f", change);
-
     
     return change;
 }
