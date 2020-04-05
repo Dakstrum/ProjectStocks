@@ -371,15 +371,10 @@ float GetCurrentStockChange(char *company_name)
     static float current_price = 0.0;
     static float change        = 0.0;
 
-    if(last_price == 0.0)
-        last_price = CurrentStockPrice(company_name); 
+    if(current_price != CurrentStockPrice(company_name))
+        last_price = current_price;
 
-    if(last_price != CurrentStockPrice(company_name))
-        current_price = CurrentStockPrice(company_name);
-    
-    if(last_price != current_price)
-        //last_price = current_price;
-
+    current_price = CurrentStockPrice(company_name);
 
     change = current_price - last_price;
 
