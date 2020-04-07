@@ -30,6 +30,8 @@ static DrawObject *speed_one_button   = NULL;
 static DrawObject *speed_two_button   = NULL;
 static DrawObject *speed_three_button = NULL;
 
+static int account_timespeed          = 1;
+
 void CleanUpGeneralPurposeMenus() 
 { 
 
