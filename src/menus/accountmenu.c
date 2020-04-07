@@ -18,7 +18,6 @@
 #define DSP_NUM 5
 
 int HistoryDisplayNumber = 0;
-char* CurrentCompanyViewing;
 
 static MenuWithChilds *account_menu           = NULL;
 
@@ -37,6 +36,7 @@ void DisplayAccountCompanyScrollBox();
 void PopulateAccountHistoryDisplay(char* company);
 void InitializeAccountHistoryDisplay();
 void AccountMenuRenderLogic();
+void InitalizeAccountMenuText();
 
 void InitializeAccountMenu() 
 {
@@ -50,19 +50,11 @@ void InitializeAccountMenu()
     account_menu = GetMenuWithChildsFromJsonLayer("AccountMenu");
     AddMenuWithChildsToDrawLayer(account_menu);
 
-    CurrentCompanyViewing = GetStockNameFromStockId(1);
-
     DisplayAccountCompanyScrollBox();
     InitializeAccountHistoryDisplay();
-    PopulateAccountHistoryDisplay(CurrentCompanyViewing);
+    PopulateAccountHistoryDisplay(GetCompanyNameViewing());
 
-    CompanyNameTextObject        = GetObjectAndDraw("AccountMenuChangingCompanyNameText");
-    AccountMoneyTextObject       = GetObjectAndDraw("StocksMenuAccountMoneyText");
-    StockPriceTextObject         = GetObjectAndDraw("AccountMenuCurrentStockPriceText");
-    OwnedStockAmountTextObject   = GetObjectAndDraw("AccountMenuOwnedStockAmountText");
-
-    SetTextContent(CompanyNameTextObject, "%s", CurrentCompanyViewing);
-
+    InitalizeAccountMenuText();
     AccountMenuRenderLogic();
     InitializeDynamicObjects();
 
@@ -74,9 +66,21 @@ void AccountMenuRenderLogic()
     if (AccountMoneyTextObject == NULL)
         return;
     
-    SetTextContent(AccountMoneyTextObject,     "%.2f", account_money);
-    SetTextContent(StockPriceTextObject,       "%.2f", CurrentStockPrice(CurrentCompanyViewing));
-    SetTextContent(OwnedStockAmountTextObject, "%d",   GetOwnedStockAmount(CurrentCompanyViewing));
+    SetTextContent(AccountMoneyTextObject,     "%.2f", GetAccountMoney());
+    SetTextContent(StockPriceTextObject,       "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
+    SetTextContent(OwnedStockAmountTextObject, "%d",   GetOwnedStockAmount(GetCompanyNameViewing()));
+
+}
+
+void InitalizeAccountMenuText()
+{
+
+    CompanyNameTextObject        = GetObjectAndDraw("AccountMenuChangingCompanyNameText");
+    AccountMoneyTextObject       = GetObjectAndDraw("StocksMenuAccountMoneyText");
+    StockPriceTextObject         = GetObjectAndDraw("AccountMenuCurrentStockPriceText");
+    OwnedStockAmountTextObject   = GetObjectAndDraw("AccountMenuOwnedStockAmountText");
+
+    SetTextContent(CompanyNameTextObject, "%s", GetCompanyNameViewing());
 
 }
 
@@ -90,15 +94,10 @@ void InitializeAccountHistoryDisplay()
 
     for (int i=0; i < DSP_NUM; i++) {
 
-        ActionObjects[i]      = GetDrawObjectFromJsonLayer(ActionJsonObjects[i]);
-        SharesObjects[i]      = GetDrawObjectFromJsonLayer(SharesJsonObjects[i]);
-        PerShareObjects[i]    = GetDrawObjectFromJsonLayer(PerShareJsonObjects[i]);
-        TransactionObjects[i] = GetDrawObjectFromJsonLayer(TransactionJsonObjects[i]);
-
-        AddObjectToDrawLayer(ActionObjects[i]);
-        AddObjectToDrawLayer(SharesObjects[i]);
-        AddObjectToDrawLayer(PerShareObjects[i]);
-        AddObjectToDrawLayer(TransactionObjects[i]);
+        ActionObjects[i]      = GetObjectAndDraw(ActionJsonObjects[i]);
+        SharesObjects[i]      = GetObjectAndDraw(SharesJsonObjects[i]);
+        PerShareObjects[i]    = GetObjectAndDraw(PerShareJsonObjects[i]);
+        TransactionObjects[i] = GetObjectAndDraw(TransactionJsonObjects[i]);
 
     }
 
@@ -176,7 +175,7 @@ void AddAccountCompanyContentToStocksScrollBox(DrawObject *object)
 void LoadAccountCompanyScrollBoxClick(char *scroll_box_content)
 {
 
-    CurrentCompanyViewing = scroll_box_content;
+    SetCompanyIdViewing(GetCompanyId(scroll_box_content));
     ClearAccountHistoryDisplay();
     PopulateAccountHistoryDisplay(scroll_box_content);
 
@@ -210,7 +209,7 @@ void AccountDown_BCB()
 
     HistoryDisplayNumber += DSP_NUM;
     ClearAccountHistoryDisplay();
-    PopulateAccountHistoryDisplay(CurrentCompanyViewing);
+    PopulateAccountHistoryDisplay(GetCompanyNameViewing());
 
 }
 
@@ -220,7 +219,7 @@ void AccountUp_BCB()
 
         HistoryDisplayNumber -= DSP_NUM;
         ClearAccountHistoryDisplay();
-        PopulateAccountHistoryDisplay(CurrentCompanyViewing);
+        PopulateAccountHistoryDisplay(GetCompanyNameViewing());
 
     }
 }

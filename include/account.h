@@ -23,7 +23,10 @@ char *GetDate();
 
 void SetGameSpeed(const int speed);
 
-float account_money;
-int account_timespeed;
+void SetCompanyIdViewing(int id);
+int GetCompanyIdViewing();
+void SetAccountMoney(int amount);
+int GetAccountMoney();
+char *GetCompanyNameViewing();
 
 #endif
