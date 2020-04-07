@@ -10,6 +10,7 @@
 #include "log.h"
 #include "text.h"
 #include "account.h"
+#include "generalpurposemenus.h"
 
 static DrawObject *AccountMoneyTextObject    = NULL;
 
@@ -30,6 +31,7 @@ void InitializeNewsMenu()
     AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
     
     NewsMenuRenderLogic();
+    InitializeDynamicObjects();
 }
 
 void NewsMenuRenderLogic()

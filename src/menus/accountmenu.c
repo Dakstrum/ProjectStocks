@@ -13,6 +13,7 @@
 #include "scrollbox.h"
 #include "account.h"
 #include "simulation.h"
+#include "generalpurposemenus.h"
 
 #define DSP_NUM 5
 
@@ -63,6 +64,7 @@ void InitializeAccountMenu()
     SetTextContent(CompanyNameTextObject, "%s", CurrentCompanyViewing);
 
     AccountMenuRenderLogic();
+    InitializeDynamicObjects();
 
 }
 

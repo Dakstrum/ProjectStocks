@@ -21,6 +21,7 @@ static atomic_int  save_id;
 static ALLEGRO_THREAD *account_thread = NULL;
 
 float account_money = 0;
+int account_timespeed = 1;
 
 static char *current_time_buf = NULL;
 
@@ -157,13 +158,13 @@ void LoadSave(int load_save_id)
 void SetGameSpeed(const int speed) 
 {
 
-    static const long ONE_HOUR_AND_HALF = ONE_HOUR * 1.5;
-    static const long TWO_HOURS         = ONE_HOUR * 2;
+    static const long TWO_HOURS  = ONE_HOUR * 2;
+    static const long FOUR_HOURS = ONE_HOUR * 4;
 
     switch (speed) {
 
-        case 2:  atomic_store(&game_time_game_dt, ONE_HOUR_AND_HALF); break;
-        case 3:  atomic_store(&game_time_game_dt, TWO_HOURS); break;
+        case 2:  atomic_store(&game_time_game_dt, TWO_HOURS); break;
+        case 3:  atomic_store(&game_time_game_dt, FOUR_HOURS); break;
         default: atomic_store(&game_time_game_dt, ONE_HOUR); break;
 
     }

@@ -24,5 +24,6 @@ char *GetDate();
 void SetGameSpeed(const int speed);
 
 float account_money;
+int account_timespeed;
 
 #endif
