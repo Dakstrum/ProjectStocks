@@ -137,11 +137,11 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float p
 {
 
     sqlite3 *db;
-    int owned_stock_amount;
+    int owned_stock_amount = 0;
 
      if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId =%d;", GetCompanyId(company_name)), &FindOutIfYouCanAddFromCurrentStock, &owned_stock_amount, db);
+        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d;", GetCompanyId(company_name)), &FindOutIfYouCanAddFromCurrentStock, &owned_stock_amount, db);
 
         if(owned_stock_amount <= 0) 
             AddOwnedStock(company_name, amount_to_add);
