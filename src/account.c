@@ -1,5 +1,6 @@
 
 #include <time.h>
+#include <string.h>
 #include <stdlib.h>
 #include <stdatomic.h>
 
@@ -24,8 +25,10 @@ static float account_money   = 0;
 static int companyid_viewing = 1;
 
 static char *current_time_buf = NULL;
-
 static const long ONE_HOUR = 3600;
+
+static char *current_player_name = NULL;
+static char *current_save_name   = NULL;
 
 void *AccountEntry(ALLEGRO_THREAD *thread, void *arg);
 
@@ -93,7 +96,9 @@ void InitAccount()
     account_thread = al_create_thread(&AccountEntry, NULL);
     al_start_thread(account_thread);
 
-    current_time_buf = malloc(128);
+    current_time_buf    = malloc(128);
+    current_save_name   = malloc(64);
+    current_player_name = malloc(64);
     SaveLoadTest();
 
 }
@@ -160,7 +165,6 @@ void *AccountEntry(ALLEGRO_THREAD *thread, void *arg)
         if (CheckToIncrementGametime(dt))
             dt = 0;
 
-
     }
     return NULL;
 
@@ -171,6 +175,8 @@ void CreateNewSave(char *save_name, char *player_name)
 {
 
     unsigned int new_game_seed = time(NULL);
+    strncpy(current_save_name, save_name, 64);
+    strncpy(current_player_name, player_name, 64);
     atomic_store(&save_id, InsertSave(save_name, player_name, new_game_seed));
     atomic_store(&game_seed, new_game_seed);
     LogF("CreateNewSave save_id = %d, game_seed = %u", atomic_load(&save_id), atomic_load(&game_seed));
@@ -181,7 +187,6 @@ void DeleteSave(char *save_name, char *player_name)
 {
     LogF("DeleteSave %s %s", save_name, player_name);
     DeleteAccountSave(save_name, player_name);
-
 }
 
 void LoadSave(int load_save_id)
@@ -218,4 +223,18 @@ char *GetDate()
     Log(current_time_buf);
     return current_time_buf;
 
+}
+
+char *GetCurrentSaveName() 
+{
+
+    return current_save_name;
+
+}
+
+char *GetCurrentPlayerName()
+{
+
+    return current_player_name;
+    
 }

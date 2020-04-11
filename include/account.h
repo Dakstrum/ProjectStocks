@@ -29,4 +29,7 @@ void SetAccountMoney(int amount);
 int GetAccountMoney();
 char *GetCompanyNameViewing();
 
+char *GetCurrentSaveName();
+char *GetCurrentPlayerName();
+
 #endif
