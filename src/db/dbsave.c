@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
 #include <sqlite3.h>
 
@@ -143,58 +144,35 @@ char *GetPlayerNameFromSaveName(char *save_name)
 
 }
 
-
-void ResizePlayerSavesElements(PlayerSaves *saves)
-{
-
-    saves->size += 16;
-    saves->save_id            = realloc(saves->save_id, sizeof(int) * saves->size);
-    saves->save_player_id     = realloc(saves->save_player_id, sizeof(int) * saves->size);
-    saves->save_name          = realloc(saves->save_name, sizeof(char *) * saves->size);
-    saves->save_player_name   = realloc(saves->save_player_name, sizeof(char *) * saves->size);
-    saves->save_player_money  = realloc(saves->save_player_money, sizeof(double) * saves->size);
-    saves->time_spent_in_game = realloc(saves->time_spent_in_game, sizeof(unsigned int) * saves->size);
-    saves->game_seed          = realloc(saves->game_seed, sizeof(unsigned int) * saves->size);
-
-}
-
 int GetAllSavesCallback(void *saves, int argc, char **argv, char **col_name)
 {
 
     if (argc == 0)
         return -1;
 
-    PlayerSaves *temp = (PlayerSaves *)saves;
+    LogF("retrieved %d elements", argc);
+    LogF("%s %s %s %s %s %s %s", argv[0], argv[1], argv[2], argv[3], argv[4], argv[5], argv[6]);
+    Vector *temp_vec = (Vector *)saves;
+    PlayerSave save;
+    save.save_id            = atoi(argv[0]);
+    save.time_spent_in_game = atoi(argv[2]);
+    save.game_seed          = atoi(argv[3]);
+    save.save_player_id     = atoi(argv[4]);
+    save.save_player_money  = atof(argv[6]);
 
-    if (temp->num_saves == temp->size)
-        ResizePlayerSavesElements(temp);
+    strncpy(save.save_name, argv[1], 32);
+    strncpy(save.save_player_name, argv[5], 32);
+    save.save_name[31]        = '\0';
+    save.save_player_name[31] = '\0';
 
-    temp->save_id[temp->num_saves]            = atoi(argv[0]);
-    temp->save_name[temp->num_saves]          = NULL;
-    temp->time_spent_in_game[temp->num_saves] = atoi(argv[2]);
-    temp->game_seed[temp->num_saves]          = atoi(argv[3]);
-    temp->save_player_id[temp->num_saves]     = atoi(argv[4]);
-    temp->save_player_name[temp->num_saves]   = NULL;
-    temp->save_player_money[temp->num_saves]  = atof(argv[6]);
-
+    PushBack(temp_vec, &save);
     return 0;
 
 }
 
-PlayerSaves *GetAllSaves() 
+Vector *GetAllSaves() 
 {
-    PlayerSaves *saves = malloc(sizeof(PlayerSaves));
-
-    saves->num_saves          = 0;
-    saves->size               = 16;
-    saves->save_id            = malloc(sizeof(int) * 16);
-    saves->save_player_id     = malloc(sizeof(int) * 16);
-    saves->save_name          = malloc(sizeof(char *) * 16);
-    saves->save_player_name   = malloc(sizeof(char *) * 16);
-    saves->save_player_money  = malloc(sizeof(double) * 16);
-    saves->time_spent_in_game = malloc(sizeof(unsigned int) * 16);
-    saves->game_seed          = malloc(sizeof(unsigned int) * 16);
-
+    Vector *saves = CreateVector(sizeof(PlayerSave), 16);
     sqlite3 *db;
     char *query = "SELECT S.SaveId, S.SaveName, S.TimeSpentInGame, S.RandomSeed, P.PlayerId, P.PlayerName, P.Money FROM Saves S "
                   "INNER JOIN Players P ON P.SaveId = S.SaveId "
