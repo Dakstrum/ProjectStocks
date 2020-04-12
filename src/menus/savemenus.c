@@ -187,7 +187,6 @@ void CreateSave_BCB()
         return;
     }
     CreateNewSave(save_name_in_text_box, player_name_in_text_box);
-
     StartGame();
 
 }
