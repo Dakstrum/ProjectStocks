@@ -17,6 +17,7 @@
 #include "jsonlayer.h"
 #include "account.h"
 #include "buttons.h"
+#include "vector.h"
 
 enum InitializeSuccess 
 {
@@ -38,8 +39,23 @@ void CleanUp();
 void CleanUpThreads();
 void StartInputLoop();
 
+
+void VectorTrial()
+{
+
+    int a = 5;
+    Vector *vector = CreateVector(sizeof(int), 16);
+    PushBack(vector, &a);
+
+    int *array = (int *)vector->elements;
+    LogF("Element 1 = %d", array[0]);
+
+}
+
 int main(int argc, char **argv) 
 {
+
+    VectorTrial();
 
     if (Initialize())
         GameLoop();
