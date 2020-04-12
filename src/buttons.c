@@ -13,6 +13,7 @@
 #include "generalpurposemenus.h"
 #include "savemenus.h"
 #include "cardsmenu.h"
+#include "vector.h"
 
 
 typedef struct ButtonCallbacks 
@@ -23,11 +24,7 @@ typedef struct ButtonCallbacks
 
 } ButtonCallbacks;
 
-
-static ButtonCallbacks *callbacks   = NULL;
-static unsigned short num_callbacks = 0;
-static unsigned short callback_size = 16;
-static const unsigned short CALLBACK_SIZE_INCREMENT = 16;
+static Vector *button_callbacks = NULL;
 
 void StubCallBack() 
 {
@@ -39,7 +36,9 @@ void StubCallBack()
 void *GetButtonCallback(char *button_name) 
 {
 
-    for (int i = 0; i < num_callbacks; i++) 
+    ButtonCallbacks *callbacks = (ButtonCallbacks *)button_callbacks->elements;
+
+    for (int i = 0; i < button_callbacks->num_elements; i++) 
         if (strcmp(button_name, callbacks[i].name) == 0) 
             return callbacks[i].Callback;
 
@@ -50,15 +49,8 @@ void *GetButtonCallback(char *button_name)
 void AddButton(char *button_name, void (*Callback)())
 {
 
-    if (num_callbacks == callback_size) {
-
-        callback_size += CALLBACK_SIZE_INCREMENT;
-        callbacks      = realloc(callbacks, sizeof(ButtonCallbacks) * callback_size);
-
-    }
-    callbacks[num_callbacks].name     = button_name;
-    callbacks[num_callbacks].Callback = Callback;
-    num_callbacks++;
+    ButtonCallbacks button_callback = {button_name, Callback};
+    PushBack(button_callbacks, &button_callback);
 
 }
 
@@ -140,7 +132,7 @@ void InitializeCardsMenuButtons()
 void InitializeButtons() 
 {
 
-    callbacks = malloc(sizeof(ButtonCallbacks) * CALLBACK_SIZE_INCREMENT);
+    button_callbacks = CreateVector(sizeof(ButtonCallbacks), 16);
 
     AddButton("STUB", &StubCallBack);
 
