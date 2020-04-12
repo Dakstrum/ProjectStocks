@@ -365,6 +365,22 @@ float CurrentStockPrice(char *company_name)
 
 }
 
+float GetCurrentStockChange(char *company_name)
+{
+    static float last_price    = 0.0;
+    static float current_price = 0.0;
+    static float change        = 0.0;
+
+    if(current_price != CurrentStockPrice(company_name))
+        last_price = current_price;
+
+    current_price = CurrentStockPrice(company_name);
+
+    change = current_price - last_price;
+    
+    return change;
+}
+
 static ALLEGRO_THREAD *stock_simulation_thread = NULL;
 void StartSimulation()
 {

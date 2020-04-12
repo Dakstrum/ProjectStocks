@@ -23,14 +23,15 @@ static MenuWithChilds *stocks_menu            = NULL;
 static MenuWithChilds *sell_transaction_menu  = NULL;
 static MenuWithChilds *buy_transaction_menu   = NULL;
 
-static char *selected_company_name            = NULL;
+static char *selected_company_name  = NULL;
+static DrawObject *current_graph    = NULL;
 
-static DrawObject *current_graph              = NULL;
+static DrawObject *AccountMoneyTextObject = NULL;
 
-static DrawObject *CompanyNameTextObject                  = NULL;
-static DrawObject *CompanyAboutTextObject                 = NULL;
-static DrawObject *AccountMoneyTextObject                 = NULL;
-static DrawObject *StockPriceTextObject                   = NULL;
+static DrawObject *CompanyNameTextObject  = NULL;
+static DrawObject *CompanyAboutTextObject = NULL;
+static DrawObject *StockPriceTextObject   = NULL;
+static DrawObject *StockChangeTextObject  = NULL;
 
 static DrawObject *SelectedCompanyNameTextObject          = NULL;
 static DrawObject *SelectedCompanyPerStockPriceTextObject = NULL;
@@ -75,6 +76,7 @@ void StocksMenuRenderLogic()
     if (AccountMoneyTextObject == NULL)
         return;
 
+    SetTextContent(StockChangeTextObject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
     SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
     SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
 
@@ -97,6 +99,11 @@ void InitalizeStocksMenuText()
     CompanyAboutTextObject = GetObjectAndDraw("StocksMenuChangingAboutText");
     AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
     StockPriceTextObject   = GetObjectAndDraw("StocksMenuCurrentStockPriceText");
+    StockChangeTextObject  = GetObjectAndDraw("StocksMenuStockChangeText");
+
+    SetTextContent(StockChangeTextObject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
+    SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
+    SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
 
 }
 
