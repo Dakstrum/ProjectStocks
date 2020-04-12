@@ -69,21 +69,6 @@ char *GetCompanyNameViewing()
 
 }
 
-void SaveLoadTest()
-{
-
-    
-
-}
-
-#if DEBUGGING
-
-    //CreateNewSave("NewDebugSave", "DebugEmma");
-    //atomic_store(&game_seed, 0);
-    //LoadSave(atomic_load(&save_id));
-
-#endif
-
 
 void InitAccount() 
 {
@@ -101,7 +86,6 @@ void InitAccount()
     current_time_buf    = malloc(128);
     current_save_name   = malloc(64);
     current_player_name = malloc(64);
-    SaveLoadTest();
 
 }
 
@@ -200,12 +184,6 @@ void CreateNewSave(char *save_name, char *player_name)
     CreateNewSaveEntries(save_name, player_name, game_seed);
     LogF("CreateNewSave save_id = %d, game_seed = %u", atomic_load(&save_id), atomic_load(&game_seed));
 
-}
-
-void DeleteSave(char *save_name, char *player_name)
-{
-    LogF("DeleteSave %s %s", save_name, player_name);
-    DeleteAccountSave(save_name, player_name);
 }
 
 void LoadSave(int load_save_id)

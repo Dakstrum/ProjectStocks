@@ -143,7 +143,7 @@ typedef struct ScrollBox {
     unsigned short int box_width;
     unsigned char box_height;
 
-    void (*box_click)(char *);
+    void (*box_click)(char *, unsigned short int);
 
     unsigned short int num_items;
     short int currently_tinted;

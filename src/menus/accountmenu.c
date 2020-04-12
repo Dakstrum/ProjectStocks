@@ -172,7 +172,7 @@ void AddAccountCompanyContentToStocksScrollBox(DrawObject *object)
 
 }
 
-void LoadAccountCompanyScrollBoxClick(char *scroll_box_content)
+void LoadAccountCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
 
     SetCompanyIdViewing(GetCompanyId(scroll_box_content));

@@ -22,11 +22,14 @@
 #include "mainmenu.h"
 #include "simulation.h"
 #include "dbsave.h"
+#include "vector.h"
 
 static DrawObject *SaveNameTextObject   = NULL;
 static DrawObject *PlayerNameTextObject = NULL;
-
 static DrawObject *saves_scrollbox      = NULL;
+
+static Vector *saves          = NULL;
+static int current_button_idx = -1;
 
 void DisplayLoadSaveScrollBox();
 
@@ -71,26 +74,27 @@ void SetSaveContent(char *save_name, char *player_name)
     SetTextContent(PlayerNameTextObject, "%s", player_name);
 }
 
-void UpdateSaveStatsText(char *save_name)
+void UpdateSaveStatsText(char *save_name, unsigned short int index)
 {
 
-    char *player_name = GetPlayerNameFromSaveName(save_name);
-    SetSaveContent(save_name, player_name);
-    free(player_name);
+    current_button_idx = index;
+    PlayerSave *temp   = (PlayerSave *)saves->elements;
+    SetSaveContent(save_name, temp[index].save_player_name);
 
 }
 
 void AddSaveContentToScrollBox(DrawObject *object)
 {
-
-    for(int i = 0; i < GetAmountOfSaves(); i++)
-        object->scrollbox.text_content[i] = GetSaveNameFromSaveId(i + 1);
+    PlayerSave *temp = (PlayerSave *)saves->elements;
+    for(int i = 0; i < saves->num_elements; i++)
+        object->scrollbox.text_content[i] = temp[i].save_name;
 
 }
 
 void DisplayLoadSaveScrollBox() 
 {
 
+    saves           = GetAllSaves();
     saves_scrollbox = CreateScrollBoxObject();
 
     saves_scrollbox->type       = SCROLLBOX;
@@ -100,9 +104,9 @@ void DisplayLoadSaveScrollBox()
     saves_scrollbox->height     = 603;
     saves_scrollbox->asset_path = "assets/images/companyicons/SaveBox.png";
 
-    saves_scrollbox->scrollbox.num_items        = GetAmountOfSaves();
+    saves_scrollbox->scrollbox.num_items        = saves->num_elements;
     saves_scrollbox->scrollbox.box_click        = &UpdateSaveStatsText;
-    saves_scrollbox->scrollbox.text_content     = malloc(sizeof(char *) * GetAmountOfSaves());
+    saves_scrollbox->scrollbox.text_content     = malloc(sizeof(char *) * saves->num_elements);
 
     AddSaveContentToScrollBox(saves_scrollbox);
     AddObjectToDrawLayer(saves_scrollbox);
@@ -131,7 +135,6 @@ void StartGame()
     StartSimulation();
     SwitchToLoadingScreen();
 
-
 }
 
 void LoadSaveMenuLoad_BCB()
@@ -152,10 +155,16 @@ void LoadSaveMenuBack_BCB()
 void DeleteSave_BCB()
 {
 
-    DeleteAccountSave(SaveNameTextObject->text.content, PlayerNameTextObject->text.content);
+    if (current_button_idx == -1)
+        return;
+
+    PlayerSave *temp = (PlayerSave *)saves->elements;
+    DeleteSave(temp[current_button_idx].save_id);
     RemoveDrawObject(saves_scrollbox);
 
     SetSaveContent("", "");
+    DeleteVector(saves);
+
     saves_scrollbox = NULL;
     DisplayLoadSaveScrollBox();
 

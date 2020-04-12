@@ -31,7 +31,7 @@ void DynamicText();
 void MainMenuRenderLogic();
 
 
-void ScrollBoxClick(char *scroll_box_content)
+void ScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
 
     LogF("Got click %s", scroll_box_content);

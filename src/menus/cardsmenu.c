@@ -55,7 +55,7 @@ void CardsMenuRenderLogic()
 
 }
 
-void LoadCompanyToApplyCardToScrollBoxClick(char *scroll_box_content)
+void LoadCompanyToApplyCardToScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
 
     LogF("TODO: apply card to company");

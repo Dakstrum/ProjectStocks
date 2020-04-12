@@ -47,13 +47,13 @@ int InsertSaveEntry(char *save_name, unsigned int game_seed)
     return save_id;
 }
 
-void DeleteAccountSave(char *save_name, char *player_name)
+void DeleteSave(int save_id)
 {
 
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("DELETE FROM Saves WHERE SaveName = '%s' AND PlayerName = '%s'", save_name, player_name), NULL, NULL, db);
-
+        ExecuteQuery(GetFormattedPointer("DELETE FROM Players WHERE SaveId = %d; DELETE FROM Saves WHERE SaveId = %d;", save_id, save_id), NULL, NULL, db);
+    
     sqlite3_close(db);
 
 }
@@ -150,8 +150,6 @@ int GetAllSavesCallback(void *saves, int argc, char **argv, char **col_name)
     if (argc == 0)
         return -1;
 
-    LogF("retrieved %d elements", argc);
-    LogF("%s %s %s %s %s %s %s", argv[0], argv[1], argv[2], argv[3], argv[4], argv[5], argv[6]);
     Vector *temp_vec = (Vector *)saves;
     PlayerSave save;
     save.save_id            = atoi(argv[0]);
@@ -160,8 +158,12 @@ int GetAllSavesCallback(void *saves, int argc, char **argv, char **col_name)
     save.save_player_id     = atoi(argv[4]);
     save.save_player_money  = atof(argv[6]);
 
+    save.save_name        = malloc(32);
+    save.save_player_name = malloc(32);
+
     strncpy(save.save_name, argv[1], 32);
     strncpy(save.save_player_name, argv[5], 32);
+
     save.save_name[31]        = '\0';
     save.save_player_name[31] = '\0';
 
