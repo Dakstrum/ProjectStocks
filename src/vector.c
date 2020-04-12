@@ -34,3 +34,19 @@ void PushBack(Vector *vector, void *element)
     vector->num_elements += 1;
 
 }
+
+void DeleteVector(Vector *vector)
+{
+
+    free(vector->elements);
+    free(vector);
+
+}
+
+
+void DeleteJustVector(Vector *vector)
+{
+
+    free(vector);
+
+}

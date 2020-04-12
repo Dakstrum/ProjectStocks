@@ -14,4 +14,7 @@ typedef struct Vector {
 Vector *CreateVector(int size_of_single_elem, int initial_mem_size);
 void PushBack(Vector * vector, void *element);
 
+void DeleteVector(Vector *vector);
+void DeleteJustVector(Vector *vector);
+
 #endif

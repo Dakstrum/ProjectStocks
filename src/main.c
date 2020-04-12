@@ -55,8 +55,6 @@ void VectorTrial()
 int main(int argc, char **argv) 
 {
 
-    VectorTrial();
-
     if (Initialize())
         GameLoop();
 
