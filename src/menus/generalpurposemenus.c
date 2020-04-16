@@ -17,13 +17,14 @@
 #include "rendering.h"
 #include "account.h"
 #include "button.h"
+#include "scrollbox.h"
+#include "optionsmenu.h"
 
 void SpeedOne_BCB();
 void SpeedTwo_BCB();
 void SpeedThree_BCB();
 
-static MenuWithChilds *pause_menu     = NULL;
-static MenuWithChilds *options_menu   = NULL;
+static MenuWithChilds *pause_menu        = NULL;
 
 static DrawObject *pause_button       = NULL;
 static DrawObject *speed_one_button   = NULL;
@@ -32,11 +33,14 @@ static DrawObject *speed_three_button = NULL;
 
 static int account_timespeed          = 1;
 
+void AddOptionsContentToOptionsScrollBox(DrawObject *object);
+void DisplayOptionScrollBox();
+void LoadSelectedOptionScrollBoxClick(char *scroll_box_content);
+
 void CleanUpGeneralPurposeMenus() 
 { 
 
     pause_menu   = NULL;
-    options_menu = NULL;
 
 }
   
@@ -51,37 +55,10 @@ void InitializeDynamicObjects()
     if (pause_button == NULL)
         return;
 
-    if(account_timespeed == 1)
-    {
-        SpeedOne_BCB();
-    }
-    if(account_timespeed == 2)
-    {
-        SpeedTwo_BCB();
-    }
-    if(account_timespeed == 3)
-    {
-        SpeedThree_BCB();
-    }
+    if(account_timespeed == 1) SpeedOne_BCB();
+    if(account_timespeed == 2) SpeedTwo_BCB();
+    if(account_timespeed == 3) SpeedThree_BCB();
     
-}
-
-void ToggleOptionsMenu()
-{
-
-    if (options_menu == NULL) {
-
-        CreateNewDrawLayer();
-        options_menu = GetMenuWithChildsFromJsonLayer("OptionsMenu");
-        AddMenuWithChildsToDrawLayer(options_menu);
-        
-    } else {
-
-        ClearCurrentDrawLayer();
-        options_menu = NULL;
-
-    }
-
 }
 
 void TogglePauseMenu()
@@ -125,17 +102,9 @@ void PauseMenuExit_BCB()
 
 }
 
-void OptionsMenuExit_BCB()
-{
-
-    ToggleOptionsMenu();
-
-}
-
 void Stocks_BCB()
 {
 
-    ClearCurrentDrawLayer();
     SwitchToRenderingStocksMenu();
 
 }

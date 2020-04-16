@@ -6,6 +6,7 @@ void InitializeStocksMenu();
 char *GetCurrentCompanyFromGraph();
 void DisplayTempPopUp();
 void StocksMenuRenderLogic();
+void DisplayCompanyScrollBox();
 
 void SellMenu_BCB();
 void BuyMenu_BCB();

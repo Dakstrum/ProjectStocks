@@ -23,6 +23,7 @@
 #include "linkopener.h"
 #include "rendering.h"
 #include "dbaccess.h"
+#include "optionsmenu.h"
 
 static MenuWithChilds *main_menu = NULL;
 static DrawObject *VersionObject = NULL;

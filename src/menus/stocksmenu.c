@@ -58,8 +58,8 @@ void InitializeStocksMenu()
     }
 
     stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
-
     AddMenuWithChildsToDrawLayer(stocks_menu);
+    
     DisplayCompanyScrollBox();
     DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
 
