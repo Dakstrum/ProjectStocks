@@ -85,10 +85,10 @@ void DisplayOptionsScrollBox()
 
     DrawObject *object = CreateScrollBoxObject();
 
-    object->x          = 1000;
-    object->y          = 380;
-    object->width      = 288;
-    object->height     = 310;
+    object->x      = 1000;
+    object->y      = 380;
+    object->width  = 288;
+    object->height = 310;
 
     AddOptionsContentToOptionsScrollBox(object);
     AddObjectToDrawLayer(object);
@@ -110,7 +110,7 @@ void AddOptionsContentToOptionsScrollBox(DrawObject *object)
 void ChangeResolutionOption(char *scroll_box_content)
 {
 
-    Log("Change resolution")
+    Log("Change resolution");
 
 }
 
