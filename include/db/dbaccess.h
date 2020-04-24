@@ -22,5 +22,6 @@ WindowSettings GetSettingsFromDB(sqlite3 *db);
 WindowSettings GetWindowSettingsFromDB();
 void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db);
 void ExecuteQueryF(int (*callback)(void *,int, char**, char **), void *callback_var, const char *query, ...);
+void ExecuteQueryFDB(int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db, const char *query, ...);
 
 #endif

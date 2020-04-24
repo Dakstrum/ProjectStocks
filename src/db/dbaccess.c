@@ -229,8 +229,6 @@ void ExecuteQueryF(int (*callback)(void *,int, char**, char **), void *callback_
 {
 
     sqlite3 *db;
-    char *error = NULL;
-
     va_list args;
     va_start(args, query);
 
@@ -241,13 +239,17 @@ void ExecuteQueryF(int (*callback)(void *,int, char**, char **), void *callback_
 
     }
 
-    char *query_buffer = GetFormattedPointerVaList(query, args);
-    sqlite3_exec(db, query_buffer, callback, callback_var, &error);
-
-    if (error != NULL)
-        LogF("SQL ERROR %s, query = %s", error, query);
-
+    ExecuteQuery(GetFormattedPointerVaList(query, args), callback, callback_var, db);
     sqlite3_close(db);
-    free(query_buffer);
+
+}
+
+void ExecuteQueryFDB(int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db, const char *query, ...)
+{
+
+    va_list args;
+    va_start(args, query);
+
+    ExecuteQuery(GetFormattedPointerVaList(query, args), callback, callback_var, db);
 
 }
