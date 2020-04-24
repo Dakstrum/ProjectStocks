@@ -69,6 +69,13 @@ char *GetCompanyNameViewing()
 
 }
 
+int GetCurrentPlayerId()
+{
+
+    return current_player_id;
+
+}
+
 
 void InitAccount() 
 {
@@ -92,7 +99,7 @@ void InitAccount()
 int GetSaveId() 
 {
 
-    return atomic_load(&save_id);
+    return current_save_id;
 
 }
 

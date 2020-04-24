@@ -89,7 +89,7 @@ void AddOwnedStock(char *company_name, int amount_to_own)
     sqlite3 *db;
 
     if (OpenConnection(&db, DefaultConnection()) == 0) 
-        ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks (SaveId, PlayerName, CompanyId, HowManyOwned) VALUES (%d, 1, %d, '%d');", GetSaveId(), GetCompanyId(company_name), amount_to_own), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO OwnedStocks (SaveId, PlayerId, CompanyId, HowManyOwned) VALUES (%d, %d, %d, '%d');", GetSaveId(), GetCurrentPlayerId(),  GetCompanyId(company_name), amount_to_own), NULL, NULL, db);
 
     sqlite3_close(db);
 
@@ -127,7 +127,7 @@ void InsertStockTransaction(char *company_name, float transaction_amount, int st
     sqlite3 *db;
 
     if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions ( SaveId, PlayerName, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, 1, %d, %.2f, %d, %d);", GetSaveId(), GetCompanyId(company_name), transaction_amount, stocks_exchanged, GetGameTime()), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Transactions (SaveId, PlayerId, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, %d, %d, %.2f, %d, %d);", GetSaveId(), GetCurrentPlayerId(), GetCompanyId(company_name), transaction_amount, stocks_exchanged, GetGameTime()), NULL, NULL, db);
 
     sqlite3_close(db);
 
@@ -141,12 +141,12 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float p
 
      if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d;", GetCompanyId(company_name)), &FindOutIfYouCanAddFromCurrentStock, &owned_stock_amount, db);
+        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId()), &FindOutIfYouCanAddFromCurrentStock, &owned_stock_amount, db);
 
         if(owned_stock_amount <= 0) 
             AddOwnedStock(company_name, amount_to_add);
         else
-            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned + %d  WHERE CompanyId=%d;", amount_to_add, GetCompanyId(company_name)), NULL, NULL, db);
+            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned + %d WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", amount_to_add, GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId()), NULL, NULL, db);
         
         InsertStockTransaction(company_name, -amount_to_add * price_per_stock, amount_to_add);
         SetAccountMoney(GetAccountMoney() + -amount_to_add * price_per_stock);
@@ -160,7 +160,7 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float p
 int FindOutIfYouCanAddFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name)
 {
 
-    if (argc > 0)
+    if (argc > 0) 
         *((int *)owned_stock_amount) = (int)atoi(argv[0]);
     
     return 0;
@@ -175,11 +175,11 @@ void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtrac
     
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d;", GetCompanyId(company_name)), &FindOutIfYouCanSubtractFromCurrentStock, &owned_stock_amount, db);
+        ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId()), &FindOutIfYouCanSubtractFromCurrentStock, &owned_stock_amount, db);
 
         if (owned_stock_amount >= amount_to_subtract) {
 
-            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE CompanyId=%d;", amount_to_subtract, GetCompanyId(company_name)), NULL, NULL, db);
+            ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", amount_to_subtract, GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId()), NULL, NULL, db);
             InsertStockTransaction(company_name, amount_to_subtract * price_per_stock, -amount_to_subtract);
             SetAccountMoney(GetAccountMoney() + amount_to_subtract * price_per_stock);
             
