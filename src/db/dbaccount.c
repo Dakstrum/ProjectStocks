@@ -343,7 +343,7 @@ struct Transactions *GetTransactions(char* company)
 
     }
 
-    ExecuteQueryF(&SetTransactionCallback, transaction, "SELECT * FROM Transactions WHERE CompanyId=%d", GetCompanyId(company));
+    ExecuteQueryF(&SetTransactionCallback, transaction, "SELECT * FROM Transactions WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d", GetCompanyId(company), GetSaveId(), GetCurrentPlayerId());
 
     transaction->transaction = realloc(transaction->transaction, sizeof(float) * transaction->num_transactions);
 
