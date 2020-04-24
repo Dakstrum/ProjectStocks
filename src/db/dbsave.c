@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
 #include <sqlite3.h>
 
+#include "log.h"
+#include "dbsave.h"
 #include "dbaccess.h"
 #include "account.h"
 
@@ -16,32 +19,41 @@ int GetSaveIdCallback(void *save_id, int argc, char **argv, char **col_name)
 
 }
 
-int InsertSave(char *save_name, char *player_name, unsigned int game_seed)
+int InsertPlayerEntry(int save_id, char *player_name, double money, int save_owner)
 {
-
-    int save_id = -1;
-
+    int player_id = -1;
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("INSERT INTO Saves (SaveName, PlayerName, RandomSeed) VALUES ('%s', '%s', %d)", save_name, player_name, game_seed), NULL, NULL, db);
-        ExecuteQuery(GetFormattedPointer("SELECT SaveId FROM Saves WHERE RandomSeed = %d AND SaveName = '%s'", game_seed, save_name ), &GetSaveIdCallback, &save_id, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Players (SaveId, PlayerName, Money, SaveOwner) VALUES (%d, '%s', %.14f, %d)", save_id, player_name, money, save_owner), NULL, NULL, db);
+        player_id = sqlite3_last_insert_rowid(db);
 
     }
-
     sqlite3_close(db);
-
-    return save_id;
-
+    return player_id;
 }
 
-void DeleteAccountSave(char *save_name, char *player_name)
+int InsertSaveEntry(char *save_name, unsigned int game_seed)
+{
+    int save_id = -1;
+    sqlite3 *db;
+    if (OpenConnection(&db, DefaultConnection()) == 0) {
+
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Saves (SaveName, RandomSeed) VALUES ('%s', %d)", save_name, game_seed), NULL, NULL, db);
+        save_id = sqlite3_last_insert_rowid(db);
+
+    }
+    sqlite3_close(db);
+    return save_id;
+}
+
+void DeleteSave(int save_id)
 {
 
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("DELETE FROM Saves WHERE SaveName = '%s' AND PlayerName = '%s'", save_name, player_name), NULL, NULL, db);
-
+        ExecuteQuery(GetFormattedPointer("DELETE FROM Players WHERE SaveId = %d; DELETE FROM Saves WHERE SaveId = %d;", save_id, save_id), NULL, NULL, db);
+    
     sqlite3_close(db);
 
 }
@@ -129,5 +141,50 @@ char *GetPlayerNameFromSaveName(char *save_name)
     sqlite3_close(db);
 
     return player_name;
+
+}
+
+int GetAllSavesCallback(void *saves, int argc, char **argv, char **col_name)
+{
+
+    if (argc == 0)
+        return -1;
+
+    Vector *temp_vec = (Vector *)saves;
+    PlayerSave save;
+    save.save_id            = atoi(argv[0]);
+    save.time_spent_in_game = atoi(argv[2]);
+    save.game_seed          = atoi(argv[3]);
+    save.save_player_id     = atoi(argv[4]);
+    save.save_player_money  = atof(argv[6]);
+
+    save.save_name        = malloc(32);
+    save.save_player_name = malloc(32);
+
+    strncpy(save.save_name, argv[1], 32);
+    strncpy(save.save_player_name, argv[5], 32);
+
+    save.save_name[31]        = '\0';
+    save.save_player_name[31] = '\0';
+
+    PushBack(temp_vec, &save);
+    return 0;
+
+}
+
+Vector *GetAllSaves() 
+{
+    Vector *saves = CreateVector(sizeof(PlayerSave), 16);
+    sqlite3 *db;
+    char *query = "SELECT S.SaveId, S.SaveName, S.TimeSpentInGame, S.RandomSeed, P.PlayerId, P.PlayerName, P.Money FROM Saves S "
+                  "INNER JOIN Players P ON P.SaveId = S.SaveId "
+                  "WHERE P.SaveOwner = 1";
+
+    if (OpenConnection(&db, DefaultConnection()) == 0)
+        ExecuteQuery(GetFormattedPointer(query), &GetAllSavesCallback, saves, db);
+
+    sqlite3_close(db);
+
+    return saves;
 
 }

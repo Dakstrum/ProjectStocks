@@ -29,6 +29,8 @@ static const long ONE_HOUR = 3600;
 
 static char *current_player_name = NULL;
 static char *current_save_name   = NULL;
+static int current_save_id       = -1;
+static int current_player_id     = -1;
 
 void *AccountEntry(ALLEGRO_THREAD *thread, void *arg);
 
@@ -67,20 +69,12 @@ char *GetCompanyNameViewing()
 
 }
 
-void SaveLoadTest()
+int GetCurrentPlayerId()
 {
 
-    
+    return current_player_id;
 
 }
-
-#if DEBUGGING
-
-    //CreateNewSave("NewDebugSave", "DebugEmma");
-    //atomic_store(&game_seed, 0);
-    //LoadSave(atomic_load(&save_id));
-
-#endif
 
 
 void InitAccount() 
@@ -99,14 +93,13 @@ void InitAccount()
     current_time_buf    = malloc(128);
     current_save_name   = malloc(64);
     current_player_name = malloc(64);
-    SaveLoadTest();
 
 }
 
 int GetSaveId() 
 {
 
-    return atomic_load(&save_id);
+    return current_save_id;
 
 }
 
@@ -170,23 +163,34 @@ void *AccountEntry(ALLEGRO_THREAD *thread, void *arg)
 
 }
 
+void CreateNewSaveEntries(char *save_name, char *player_name, unsigned int game_seed) 
+{
+    current_save_id = InsertSaveEntry(save_name, game_seed);
+    if (current_save_id == -1) {
+
+        Log("Unable to create save");
+        return;
+
+    }
+    current_player_id = InsertPlayerEntry(current_save_id, player_name, 3000.0, 1);
+    if (current_player_id == -1)
+        Log("Unable to create player");
+
+}
+
 
 void CreateNewSave(char *save_name, char *player_name)
 {
 
     unsigned int new_game_seed = time(NULL);
+
     strncpy(current_save_name, save_name, 64);
     strncpy(current_player_name, player_name, 64);
-    atomic_store(&save_id, InsertSave(save_name, player_name, new_game_seed));
     atomic_store(&game_seed, new_game_seed);
+
+    CreateNewSaveEntries(save_name, player_name, game_seed);
     LogF("CreateNewSave save_id = %d, game_seed = %u", atomic_load(&save_id), atomic_load(&game_seed));
 
-}
-
-void DeleteSave(char *save_name, char *player_name)
-{
-    LogF("DeleteSave %s %s", save_name, player_name);
-    DeleteAccountSave(save_name, player_name);
 }
 
 void LoadSave(int load_save_id)

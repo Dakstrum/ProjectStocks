@@ -158,7 +158,7 @@ char *GetCurrentCompanyFromGraph()
 
 }
 
-void LoadCompanyScrollBoxClick(char *scroll_box_content)
+void LoadCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
 
     SetCompanyIdViewing(GetCompanyId(scroll_box_content));
