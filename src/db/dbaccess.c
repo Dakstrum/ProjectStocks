@@ -224,3 +224,30 @@ void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), voi
     free(query);
 
 }
+
+void ExecuteQueryF(int (*callback)(void *,int, char**, char **), void *callback_var, const char *query, ...)
+{
+
+    sqlite3 *db;
+    char *error = NULL;
+
+    va_list args;
+    va_start(args, query);
+
+    if (OpenConnection(&db, DefaultConnection()) != 0) {
+
+        LogF("Could not open connection: %s", query);
+        return;
+
+    }
+
+    char *query_buffer = GetFormattedPointerVaList(query, args);
+    sqlite3_exec(db, query_buffer, callback, callback_var, &error);
+
+    if (error != NULL)
+        LogF("SQL ERROR %s, query = %s", error, query);
+
+    sqlite3_close(db);
+    free(query_buffer);
+
+}

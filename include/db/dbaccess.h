@@ -21,5 +21,6 @@ void SetWindowSettingsIfExists(void *settings, int argc, char **argv, char **col
 WindowSettings GetSettingsFromDB(sqlite3 *db);
 WindowSettings GetWindowSettingsFromDB();
 void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db);
+void ExecuteQueryF(int (*callback)(void *,int, char**, char **), void *callback_var, const char *query, ...);
 
 #endif
