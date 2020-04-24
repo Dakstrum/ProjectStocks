@@ -193,10 +193,11 @@ void CreateNewSave(char *save_name, char *player_name)
 
 }
 
-void LoadSave(int load_save_id)
+void LoadSave(int load_save_id, int save_player_id)
 {
 
-    atomic_store(&save_id, load_save_id);
+    current_save_id   = load_save_id;
+    current_player_id = save_player_id;
     atomic_store(&game_seed, GetSaveSeedWithSaveId(load_save_id));
     LogF("LoadSave game_seed = %u", atomic_load(&game_seed));
 

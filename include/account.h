@@ -8,7 +8,7 @@ void InitAccount();
 unsigned int GetSaveSeed();
 int GetSaveId();
 void CreateNewSave(char *save_name, char *player_name);
-void LoadSave(int load_save_id);
+void LoadSave(int load_save_id, int save_player_id);
 int GetCurrentPlayerId();
 // SaveTransaction(int company_id, int stocks_exchanged, double transaction_amount);
 // GetAllTransactionsBetween(time_t start_date_time, time_t end_date_time);

@@ -140,6 +140,13 @@ void StartGame()
 void LoadSaveMenuLoad_BCB()
 {
 
+    if (current_button_idx == -1) {
+        Log("No save selected");
+        return;
+    }
+
+    PlayerSave *temp = (PlayerSave *)saves->elements;
+    LoadSave(temp[current_button_idx].save_id, temp[current_button_idx].save_player_id);
     StartGame();
 
 }
