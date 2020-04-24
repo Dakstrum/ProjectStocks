@@ -63,7 +63,7 @@ bool DoesCompanyExist(char *company_name, sqlite3 *db)
 {
 
     bool exists = false;
-    ExecuteQuery(GetFormattedPointer("SELECT CompanyId FROM Company WHERE CompanyName='%s';", company_name), &FindOutIfCompanyExists, &exists, db);
+    ExecuteQueryFDB(&FindOutIfCompanyExists, &exists, db, "SELECT CompanyId FROM Company WHERE CompanyName='%s';", company_name);
 
     return exists;
 
@@ -72,14 +72,14 @@ bool DoesCompanyExist(char *company_name, sqlite3 *db)
 void SetCompanyToActive(char *company_name, sqlite3 *db) 
 {
 
-    ExecuteQuery(GetFormattedPointer("UPDATE Company SET IsActiveInJson=1 WHERE CompanyName='%s';", company_name), NULL, NULL, db);
+    ExecuteQueryFDB(NULL, NULL, db, "UPDATE Company SET IsActiveInJson=1 WHERE CompanyName='%s';", company_name);
 
 }
 
 void InsertNewCompany(char *company_name, float ipo, sqlite3 *db) 
 {
 
-    ExecuteQuery(GetFormattedPointer("INSERT INTO Company (Ipo, CompanyName, IsActiveInJson) VALUES (%f, '%s', 1);", ipo, company_name), NULL, NULL, db);
+    ExecuteQueryFDB(NULL, NULL, db, "INSERT INTO Company (Ipo, CompanyName, IsActiveInJson) VALUES (%f, '%s', 1);", ipo, company_name);
 
 }
 
@@ -162,11 +162,11 @@ void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtrac
     if (OpenConnection(&db, DefaultConnection()) != 0)
         return;
 
-    ExecuteQuery(GetFormattedPointer("SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId()), &FindOutIfYouCanSubtractFromCurrentStock, &owned_stock_amount, db);
+    ExecuteQueryFDB(&FindOutIfYouCanSubtractFromCurrentStock, &owned_stock_amount, db, "SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
 
     if (owned_stock_amount >= amount_to_subtract) {
 
-        ExecuteQuery(GetFormattedPointer("UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", amount_to_subtract, GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId()), NULL, NULL, db);
+        ExecuteQueryFDB(NULL, NULL, db, "UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", amount_to_subtract, GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
         InsertStockTransaction(company_name, amount_to_subtract * price_per_stock, -amount_to_subtract);
         SetAccountMoney(GetAccountMoney() + amount_to_subtract * price_per_stock);
         
@@ -211,7 +211,7 @@ int GetCompanyId(char *company_name)
 void InsertStockPrice(int save_id, int company_id, float stock_price, char *timestamp, sqlite3 *db) 
 {
 
-    ExecuteQuery(GetFormattedPointer("INSERT INTO StockPrices (SaveId, CompanyId, Price, Time) VALUES (%d, %d, %f, '%s')", save_id, company_id, stock_price, timestamp), NULL, NULL, db);
+    ExecuteQueryFDB(NULL, NULL, db, "INSERT INTO StockPrices (SaveId, CompanyId, Price, Time) VALUES (%d, %d, %f, '%s')", save_id, company_id, stock_price, timestamp);
 
 }
 
