@@ -20,6 +20,7 @@ void SetupLogDB();
 void SetWindowSettingsIfExists(void *settings, int argc, char **argv, char **col_name);
 WindowSettings GetSettingsFromDB(sqlite3 *db);
 WindowSettings GetWindowSettingsFromDB();
+void SetWindowResolutionSettings(int width, int height);
 void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db);
 
 #endif

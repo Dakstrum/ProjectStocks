@@ -67,6 +67,15 @@ void CleanUpDisplay()
 
 }
 
+void ChangeDisplay(int width, int height) 
+{
+   //figureout how to change res
+   al_resize_display(display, width, height);
+   // al_acknowledge_resize(display);
+   // al_flip_display();
+   // InitializeMainMenu();
+}
+
 ALLEGRO_DISPLAY *GetDisplay() 
 {
 

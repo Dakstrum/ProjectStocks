@@ -17,6 +17,9 @@
 #include "scrollbox.h"
 #include "text.h"
 #include "generalpurposemenus.h"
+#include "dbaccess.h"
+#include "rendering.h"
+#include "window.h"
 
 static MenuWithChilds *options_menu      = NULL;
 static int option_id = 0;
@@ -110,7 +113,12 @@ void AddOptionsContentToOptionsScrollBox(DrawObject *object)
 void ChangeResolutionOption(char *scroll_box_content)
 {
 
-    Log("Change resolution");
+    if(strcmp(scroll_box_content, "1920x1080") == 0) SetWindowResolutionSettings(1920, 1080);
+    if(strcmp(scroll_box_content, "1366x768")  == 0) SetWindowResolutionSettings(1366, 768);
+    if(strcmp(scroll_box_content, "1440x900")  == 0) SetWindowResolutionSettings(1440, 900);
+    if(strcmp(scroll_box_content, "1536x864")  == 0) SetWindowResolutionSettings(1536, 864);
+    if(strcmp(scroll_box_content, "1024x768")  == 0) SetWindowResolutionSettings(1024, 768);
+    if(strcmp(scroll_box_content, "1280x720")  == 0) SetWindowResolutionSettings(1280, 720);
 
 }
 

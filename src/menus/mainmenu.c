@@ -36,7 +36,7 @@ void ScrollBoxClick(char *scroll_box_content)
 {
 
     LogF("Got click %s", scroll_box_content);
-
+    
 }
 
 void DisplayTempScrollBox() 

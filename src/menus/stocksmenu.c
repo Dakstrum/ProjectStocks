@@ -284,6 +284,7 @@ void Buy_BCB()
 
 void OneD_BCB()
 {
+    
     ChangeGraphTimespan(ONE_DAY);
 
 }

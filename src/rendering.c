@@ -29,7 +29,7 @@ void CleanUpAddons();
 
 void SetDisplayIcon();
 
-static void (*RenderLogic)()    = &StartUpSequence;
+static void (*RenderLogic)() = &StartUpSequence;
 
 void InitializeRendering() 
 {
