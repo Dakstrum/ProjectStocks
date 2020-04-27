@@ -23,6 +23,7 @@
 #include "linkopener.h"
 #include "rendering.h"
 #include "dbaccess.h"
+#include "optionsmenu.h"
 
 static MenuWithChilds *main_menu = NULL;
 static DrawObject *VersionObject = NULL;
@@ -35,7 +36,7 @@ void ScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
 
     LogF("Got click %s", scroll_box_content);
-
+    
 }
 
 void DisplayTempScrollBox() 

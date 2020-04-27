@@ -58,6 +58,17 @@ WindowSettings GetWindowSettingsFromDB()
 
 }
 
+void SetWindowResolutionSettings(int width, int height)
+{
+
+    sqlite3 *db; 
+    if (OpenConnection(&db, DefaultConnection()) == 0) 
+        ExecuteQuery(GetFormattedPointer("UPDATE Settings SET WindowWidth = %d, WindowHeight = %d WHERE SettingsId = 1;", width, height ), NULL, NULL, db);
+
+    sqlite3_close(db);
+
+}
+
 void InitializeDatabases() 
 {
 

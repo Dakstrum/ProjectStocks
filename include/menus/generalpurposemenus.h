@@ -5,13 +5,11 @@ void InitializeGeneralPurposeMenu();
 void InitializeDynamicObjects();
 
 void ToggleGeneralPurposeMenus();
-void ToggleOptionsMenu();
 void TogglePauseMenu();
 
 void PauseMenuMainMenu_BCB();
 void PauseMenuOptions_BCB();
 void PauseMenuExit_BCB();
-void OptionsMenuExit_BCB();
 
 void Stocks_BCB();
 void News_BCB();
@@ -22,5 +20,4 @@ void PauseSpeed_BCB();
 void SpeedOne_BCB();
 void SpeedTwo_BCB();
 void SpeedThree_BCB();
-
 #endif

@@ -65,7 +65,7 @@ void InitializeNewSaveMenu()
     }
 
     AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("NewSaveMenu"));
-
+    
 }
 
 void SetSaveContent(char *save_name, char *player_name) 

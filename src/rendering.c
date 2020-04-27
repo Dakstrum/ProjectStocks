@@ -19,15 +19,8 @@
 #include "newsmenu.h"
 #include "accountmenu.h"
 #include "cardsmenu.h"
+#include "window.h"
 
-typedef struct DisplayFlagMap {
-
-    ScreenSetting display_setting;
-    int allegro_flag;
-
-} DisplayFlagMap;
-
-void InitializeDisplay();
 void InitializeAddons();
 
 void CleanUpRendering();
@@ -36,39 +29,16 @@ void CleanUpAddons();
 
 void SetDisplayIcon();
 
-static void (*RenderLogic)()    = &StartUpSequence;
-static ALLEGRO_DISPLAY *display = NULL;
-static WindowSettings window_settings;
-static DisplayFlagMap flag_maps[3] = 
-{
-
-    {FULLSCREEN, ALLEGRO_FULLSCREEN},
-    {WINDOWED, ALLEGRO_WINDOWED},
-    {BORDERLESS, ALLEGRO_FRAMELESS}
-
-};
+static void (*RenderLogic)() = &StartUpSequence;
 
 void InitializeRendering() 
 {
 
     SetWindowSettings(GetWindowSettingsFromDB());
-    window_settings = GetWindowSettings();
 
     InitializeDisplay();
     InitializeAddons();
     SetDisplayIcon();
-
-}
-
-void InitializeDisplay() 
-{
-    
-    
-    al_set_new_display_flags(flag_maps[window_settings.screen_flag].allegro_flag);
-    
-    display = al_create_display(window_settings.width, window_settings.height);
-    InitializeDrawLayers(display);
-    //al_add_new_bitmap_flag(ALLEGRO_NO_PRESERVE_TEXTURE);
 
 }
 
@@ -98,26 +68,11 @@ void HandleRendering()
 
 }
 
-void HandleWindowEvents(ALLEGRO_EVENT event) 
-{
-
-    if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
-        SetCleanUpToTrue();
-
-}
-
 void CleanUpRendering() 
 {
 
     CleanUpDisplay();
     CleanUpAddons();
-
-}
-
-void CleanUpDisplay() 
-{
-
-    al_destroy_display(display);
 
 }
 
@@ -175,19 +130,5 @@ void SwitchToRenderingCardsMenu()
 
     InitializeCardsMenu();
     RenderLogic = &CardsMenuRenderLogic;
-
-}
-
-ALLEGRO_DISPLAY *GetDisplay() 
-{
-
-    return display;
-
-}
-
-void SetDisplayIcon()
-{
-
-    al_set_display_icon(display, al_load_bitmap("assets/icon.tga"));
 
 }
