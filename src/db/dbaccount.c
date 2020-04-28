@@ -138,7 +138,7 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float p
     
     InsertStockTransaction(company_name, -amount_to_add * price_per_stock, amount_to_add);
     SetAccountMoney(GetAccountMoney() + -amount_to_add * price_per_stock);
-
+    Log("SetAccountMoneyFunctionForADD");
     sqlite3_close(db);
 
 }
@@ -169,6 +169,7 @@ void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtrac
         ExecuteQueryFDB(NULL, NULL, db, "UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", amount_to_subtract, GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
         InsertStockTransaction(company_name, amount_to_subtract * price_per_stock, -amount_to_subtract);
         SetAccountMoney(GetAccountMoney() + amount_to_subtract * price_per_stock);
+        Log("SetAccountMoneyFunctionForSUB");
         
     }
 

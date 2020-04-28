@@ -26,8 +26,8 @@ void SetGameSpeed(const int speed);
 
 void SetCompanyIdViewing(int id);
 int GetCompanyIdViewing();
-void SetAccountMoney(int amount);
-int GetAccountMoney();
+void SetAccountMoney(float amount);
+float GetAccountMoney();
 char *GetCompanyNameViewing();
 
 char *GetCurrentSaveName();
