@@ -131,6 +131,9 @@ void NewSaveMenu_BCB()
 void StartGame()
 {
 
+    SetInGameStatus(1);
+    SetAccountMoneyToDBAmount(GetCurrentPlayerId());
+
     ClearDrawLayers();
     StartSimulation();
     SwitchToLoadingScreen();
@@ -148,6 +151,8 @@ void LoadSaveMenuLoad_BCB()
     PlayerSave *temp = (PlayerSave *)saves->elements;
     LoadSave(temp[current_button_idx].save_id, temp[current_button_idx].save_player_id);
     StartGame();
+
+
 
 }
 

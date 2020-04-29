@@ -54,4 +54,6 @@ struct Transactions *GetTransactions(char* company);
 int GetOwnedStockAmount(char *company_name);
 
 int GetCompanyId(char *company_name);
+
+void SetAccountMoneyToDBAmount(int player_id);
 #endif

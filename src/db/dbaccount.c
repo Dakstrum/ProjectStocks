@@ -278,6 +278,26 @@ int GetAmountOfCompanies()
 
 }
 
+int GetMoneyFromPlayersCallback(void *money, int argc, char **argv, char **col_name)
+{
+
+    if (argc > 0) 
+       *((float *)money) = atof(argv[0]);
+    
+    return 0;
+
+}
+
+void SetAccountMoneyToDBAmount(int player_id)
+{
+    float money = 0.0;
+
+    ExecuteQueryF(&GetMoneyFromPlayersCallback, &money, "SELECT Money FROM Players WHERE PlayerId = %d", player_id);
+
+    SetAccountMoney(*((float *)&money));
+
+}
+
 int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_name)
 {
     

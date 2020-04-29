@@ -57,8 +57,6 @@ void InitializeStocksMenu()
 
     }
 
-    SetInGameStatus(1);
-
     stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
     AddMenuWithChildsToDrawLayer(stocks_menu);
     
