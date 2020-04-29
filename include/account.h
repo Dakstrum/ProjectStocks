@@ -22,8 +22,10 @@ void SetGameTime(time_t time_to_set);
 time_t GetGameTime();
 char *GetDate();
 
-void SetGameSpeed(const int speed);
+void SetInGameStatus(int status);
+int GetInGameStatus();
 
+void SetGameSpeed(const int speed);
 void SetCompanyIdViewing(int id);
 int GetCompanyIdViewing();
 void SetAccountMoney(float amount);

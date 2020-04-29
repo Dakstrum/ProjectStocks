@@ -5,11 +5,6 @@ void InitializeGeneralPurposeMenu();
 void InitializeDynamicObjects();
 
 void ToggleGeneralPurposeMenus();
-void TogglePauseMenu();
-
-void PauseMenuMainMenu_BCB();
-void PauseMenuOptions_BCB();
-void PauseMenuExit_BCB();
 
 void Stocks_BCB();
 void News_BCB();

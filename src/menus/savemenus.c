@@ -177,13 +177,6 @@ void DeleteSave_BCB()
 
 }
 
-void NewSaveMenuBack_BCB()
-{
-
-    ClearCurrentDrawLayer();
-    
-}
-
 void CreateSave_BCB()
 {
 
@@ -206,3 +199,19 @@ void CreateSave_BCB()
     StartGame();
 
 }
+
+
+void NewSaveMenuBack_BCB()
+{
+
+    ClearCurrentDrawLayer();
+    
+}
+
+void PauseMenuSave_BCB()
+{
+
+    Log("saving from pause menu button :))");
+    
+}
+

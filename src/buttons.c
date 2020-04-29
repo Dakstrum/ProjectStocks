@@ -15,6 +15,7 @@
 #include "cardsmenu.h"
 #include "vector.h"
 #include "optionsmenu.h"
+#include "pausemenus.h"
 
 
 typedef struct ButtonCallbacks 
@@ -98,14 +99,21 @@ void InitializeGeneralPurposeButtons()
     AddButton("NewsButton", &News_BCB);
     AddButton("AccountButton", &Account_BCB);
     AddButton("CardsButton", &Cards_BCB);
-    AddButton("PauseMenuMainMenuButton", &PauseMenuMainMenu_BCB);
-    AddButton("PauseMenuOptionsButton", &PauseMenuOptions_BCB);
-    AddButton("PauseMenuExitButton", &PauseMenuExit_BCB);
 
     AddButton("PauseSpeedButton", &PauseSpeed_BCB);
     AddButton("SpeedOneButton", &SpeedOne_BCB);
     AddButton("SpeedTwoButton", &SpeedTwo_BCB);
     AddButton("SpeedThreeButton", &SpeedThree_BCB);
+
+}
+
+void InitializePauseMenusButtons()
+{
+
+    AddButton("PauseMenuMainMenuButton", &PauseMenuMainMenu_BCB);
+    AddButton("PauseMenuOptionsButton", &PauseMenuOptions_BCB);
+    AddButton("PauseMenuSaveButton", &PauseMenuSave_BCB);
+    AddButton("PauseMenuExitButton", &PauseMenuExit_BCB);
 
 }
 
@@ -148,6 +156,7 @@ void InitializeButtons()
     InitializeStocksMenuButtons();
     InitializeAccountButtons();
     InitializeGeneralPurposeButtons();
+    InitializePauseMenusButtons();
     InitializeOptionsButtons();
     InitializeSaveMenuButtons();
 

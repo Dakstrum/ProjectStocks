@@ -11,6 +11,8 @@
 #include "mainmenu.h"
 #include "drawlayers.h"
 #include "generalpurposemenus.h"
+#include "account.h"
+#include "pausemenus.h"
 
 static int MAX_OBJECTS_PER_LAYER = 0;
 // leave last character as null character. Leave one character for flicker;
@@ -239,9 +241,16 @@ void HandlePauseMenu(ALLEGRO_EVENT event)
 
         if(DoesObjectExistInCurrentDrawLayer("LoadingVideo") || DoesObjectExistInCurrentDrawLayer("StartUpVideo") || DoesObjectExistInCurrentDrawLayer("SelectOptionMenu"))
             return;
-        if(!DoesObjectExistInCurrentDrawLayer("OptionsMenu"))
-            TogglePauseMenu();
-   
+
+        if(GetInGameStatus() == 1)
+        {
+            if(!DoesObjectExistInCurrentDrawLayer("OptionsMenu"))
+                ToggleInGamePauseMenu();
+        }
+
+        else
+            Log("Toggle OutOfGamePauseMenu if needed in the future");
+
     }
 
 }

@@ -23,6 +23,7 @@ static ALLEGRO_THREAD *account_thread = NULL;
 
 static float account_money   = 0;
 static int companyid_viewing = 1;
+static int in_game           = 0;
 
 static char *current_time_buf = NULL;
 static const long ONE_HOUR = 3600;
@@ -33,6 +34,20 @@ static int current_save_id       = -1;
 static int current_player_id     = -1;
 
 void *AccountEntry(ALLEGRO_THREAD *thread, void *arg);
+
+void SetInGameStatus(int status)
+{
+
+    in_game = status;
+
+}
+
+int GetInGameStatus()
+{
+
+    return in_game;
+
+}
 
 void SetCompanyIdViewing(int id)
 {

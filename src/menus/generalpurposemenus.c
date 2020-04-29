@@ -24,8 +24,6 @@ void SpeedOne_BCB();
 void SpeedTwo_BCB();
 void SpeedThree_BCB();
 
-static MenuWithChilds *pause_menu        = NULL;
-
 static DrawObject *pause_button       = NULL;
 static DrawObject *speed_one_button   = NULL;
 static DrawObject *speed_two_button   = NULL;
@@ -33,17 +31,6 @@ static DrawObject *speed_three_button = NULL;
 
 static int account_timespeed          = 1;
 
-void AddOptionsContentToOptionsScrollBox(DrawObject *object);
-void DisplayOptionScrollBox();
-void LoadSelectedOptionScrollBoxClick(char *scroll_box_content);
-
-void CleanUpGeneralPurposeMenus() 
-{ 
-
-    pause_menu   = NULL;
-
-}
-  
 void InitializeDynamicObjects()
 {
 
@@ -59,47 +46,6 @@ void InitializeDynamicObjects()
     if(account_timespeed == 2) SpeedTwo_BCB();
     if(account_timespeed == 3) SpeedThree_BCB();
     
-}
-
-void TogglePauseMenu()
-{
-
-    if (pause_menu == NULL) {
-
-        CreateNewDrawLayer();
-        pause_menu = GetMenuWithChildsFromJsonLayer("PauseMenu");
-        AddMenuWithChildsToDrawLayer(pause_menu);
-        
-    } else {
-
-        ClearCurrentDrawLayer();
-        pause_menu = NULL;
-
-    }
-
-}
-
-void PauseMenuMainMenu_BCB()
-{
-
-    pause_menu = NULL;
-    ClearDrawLayers();
-    SwitchToRenderingMainMenu();
-
-}
-
-void PauseMenuOptions_BCB()
-{
-
-    ToggleOptionsMenu();
-
-}
-
-void PauseMenuExit_BCB()
-{
-
-    SetCleanUpToTrue();
-
 }
 
 void Stocks_BCB()

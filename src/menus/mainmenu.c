@@ -24,6 +24,7 @@
 #include "rendering.h"
 #include "dbaccess.h"
 #include "optionsmenu.h"
+#include "account.h"
 
 static MenuWithChilds *main_menu = NULL;
 static DrawObject *VersionObject = NULL;
@@ -102,6 +103,8 @@ void InitializeMainMenu()
         return;
 
     }
+
+    SetInGameStatus(0);
     
     main_menu = GetMenuWithChildsFromJsonLayer("MainMenu");
     AddMenuWithChildsToDrawLayer(main_menu);
