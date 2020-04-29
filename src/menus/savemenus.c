@@ -205,18 +205,9 @@ void CreateSave_BCB()
 
 }
 
-
 void NewSaveMenuBack_BCB()
 {
 
     ClearCurrentDrawLayer();
     
 }
-
-void PauseMenuSave_BCB()
-{
-
-    Log("saving from pause menu button :))");
-    
-}
-

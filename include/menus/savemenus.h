@@ -14,6 +14,4 @@ void LoadSaveMenuLoad_BCB();
 void LoadSaveMenuBack_BCB();
 void DeleteSave_BCB();
 
-void PauseMenuSave_BCB();
-
 #endif

@@ -298,6 +298,19 @@ void SetAccountMoneyToDBAmount(int player_id)
 
 }
 
+void SetDBAmountToAccountMoney(int player_id)
+{
+    sqlite3 *db;
+
+    if (OpenConnection(&db, DefaultConnection()) != 0)
+        return;
+
+    ExecuteQueryFDB(NULL, NULL, db, "UPDATE Players SET Money = %.2f WHERE PlayerId = %d;", GetAccountMoney(), player_id);
+
+    sqlite3_close(db);
+
+}
+
 int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_name)
 {
     

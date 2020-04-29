@@ -19,6 +19,7 @@
 #include "button.h"
 #include "scrollbox.h"
 #include "optionsmenu.h"
+#include "dbaccount.h"
 
 static MenuWithChilds *in_game_pause_menu = NULL;
 
@@ -55,9 +56,18 @@ void PauseMenuOptions_BCB()
 
 }
 
+void PauseMenuSave_BCB()
+{
+
+    Log("saving from pause menu button :))");
+    
+}
+
+
 void PauseMenuExit_BCB()
 {
 
+    SetDBAmountToAccountMoney(GetCurrentPlayerId());
     SetCleanUpToTrue();
 
 }
