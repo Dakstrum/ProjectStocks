@@ -50,14 +50,14 @@ int GetCompanyIdViewing()
 
 void SetAccountMoney(float amount)
 {
-    LogF("set amount to %.2f", amount);
+
     account_money = amount;
 
 }
 
 float GetAccountMoney()
 {
-    LogF("%.2f", account_money);
+
     return account_money;
 
 }
