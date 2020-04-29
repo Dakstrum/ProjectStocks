@@ -288,7 +288,7 @@ int GetMoneyFromPlayersCallback(void *money, int argc, char **argv, char **col_n
 
 }
 
-void SetAccountMoneyToDBAmount(int player_id)
+void SetLocalMoneyFromDb(int player_id)
 {
     float money = 0.0;
 
@@ -298,7 +298,7 @@ void SetAccountMoneyToDBAmount(int player_id)
 
 }
 
-void SetDBAmountToAccountMoney(int player_id)
+void SetDBMoneyToLocalMoney(int player_id)
 {
     sqlite3 *db;
 

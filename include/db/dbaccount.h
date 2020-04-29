@@ -55,6 +55,6 @@ int GetOwnedStockAmount(char *company_name);
 
 int GetCompanyId(char *company_name);
 
-void SetAccountMoneyToDBAmount(int player_id);
-void SetDBAmountToAccountMoney(int player_id);
+void SetLocalMoneyFromDb(int player_id);
+void SetDBMoneyToLocalMoney(int player_id);
 #endif

@@ -44,6 +44,7 @@ void ToggleInGamePauseMenu()
 void PauseMenuMainMenu_BCB()
 {
 
+    SetDBMoneyToLocalMoney(GetCurrentPlayerId());
     ClearDrawLayers();
     SwitchToRenderingMainMenu();
 
@@ -67,7 +68,7 @@ void PauseMenuSave_BCB()
 void PauseMenuExit_BCB()
 {
 
-    SetDBAmountToAccountMoney(GetCurrentPlayerId());
+    SetDBMoneyToLocalMoney(GetCurrentPlayerId());
     SetCleanUpToTrue();
 
 }

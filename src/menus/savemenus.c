@@ -132,7 +132,7 @@ void StartGame()
 {
 
     SetInGameStatus(1);
-    SetAccountMoneyToDBAmount(GetCurrentPlayerId());
+    SetLocalMoneyFromDb(GetCurrentPlayerId());
 
     ClearDrawLayers();
     StartSimulation();
