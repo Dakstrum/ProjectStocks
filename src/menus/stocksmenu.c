@@ -35,6 +35,7 @@ static DrawObject *StockChangeTextObject  = NULL;
 
 static DrawObject *SelectedCompanyNameTextObject          = NULL;
 static DrawObject *SelectedCompanyPerStockPriceTextObject = NULL;
+static DrawObject *SelectedCompanyProjectedCostTextObject = NULL;
 
 void DisplayTempPopUp();
 void DisplayGraph(char *company_name, TimeSpan time_span);
@@ -76,7 +77,7 @@ void StocksMenuRenderLogic()
     if (AccountMoneyTextObject == NULL)
         return;
 
-    SetTextContent(StockChangeTextObject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
+    SetTextContent(StockChangeTextObject,  "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
     SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
     SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
 
@@ -86,9 +87,18 @@ void StocksMenuRenderLogic()
 
 void TransactionMenusRenderLogic()
 {
-
-    if(sell_transaction_menu || buy_transaction_menu)
+    
+    if(buy_transaction_menu)
+    {
         SetTextContent(SelectedCompanyPerStockPriceTextObject, "%.2f", CurrentStockPrice(selected_company_name));
+        SetTextContent(SelectedCompanyProjectedCostTextObject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("BuyTextBox")));
+    }
+    if(sell_transaction_menu)
+    {
+        SetTextContent(SelectedCompanyPerStockPriceTextObject, "%.2f", CurrentStockPrice(selected_company_name));
+        SetTextContent(SelectedCompanyProjectedCostTextObject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("SellTextBox")));
+
+    }
 
 }
 
@@ -222,8 +232,9 @@ void SellMenu_BCB()
 void ApplySelectedCompanyText()
 {
 
-    SelectedCompanyNameTextObject          = GetObjectAndDraw("SellTransactionMenuCompanyNameText");
-    SelectedCompanyPerStockPriceTextObject = GetObjectAndDraw("SellTransactionMenuPerShareText");
+    SelectedCompanyNameTextObject           = GetObjectAndDraw("SellTransactionMenuCompanyNameText");
+    SelectedCompanyPerStockPriceTextObject  = GetObjectAndDraw("SellTransactionMenuPerShareText");
+    SelectedCompanyProjectedCostTextObject  = GetObjectAndDraw("BuyTransactionMenuProjectedCostText");
 
     SetTextContent(SelectedCompanyNameTextObject  , "%s", selected_company_name);
 
