@@ -107,7 +107,7 @@ int GetOwnedStockAmount(char *company_name)
 
     int owned_stock_amount = 0;
 
-    ExecuteQueryF(&GetOwnedStockAmountCallback, &owned_stock_amount, "SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId = %d;", GetCompanyId(company_name));
+    ExecuteQueryF(&GetOwnedStockAmountCallback, &owned_stock_amount, "SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId = %d AND SaveId=%d;", GetCompanyId(company_name), GetSaveId());
 
     return owned_stock_amount;
 
@@ -124,14 +124,14 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float p
 {
 
     sqlite3 *db;
-    int owned_stock_amount = 0;
+    int owned_stock_amount = -1;
 
      if (OpenConnection(&db, DefaultConnection()) != 0)
         return;
 
     ExecuteQueryFDB(&FindOutIfYouCanAddFromCurrentStock, &owned_stock_amount, db, "SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
-
-    if(owned_stock_amount <= 0) 
+    LogF("%d", owned_stock_amount);
+    if(owned_stock_amount <= -1) 
         AddOwnedStock(company_name, amount_to_add);
     else
         ExecuteQueryFDB(NULL, NULL, db, "UPDATE OwnedStocks SET HowManyOwned = HowManyOwned + %d WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", amount_to_add, GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
