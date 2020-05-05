@@ -26,6 +26,10 @@ static DrawObject *AccountMoneyTextObject    = NULL;
 void AddCompanyContentToApplyCardScrollBox(DrawObject *object);
 void CardsMenuRenderLogic();
 
+void DisplayPositiveCardsScrollBox();
+void DisplayNegativeCardsScrollBox();
+void DisplayCompanyToApplyCardToScrollBox();
+
 void InitializeCardsMenu() 
 {
 
@@ -43,6 +47,8 @@ void InitializeCardsMenu()
     CardsMenuRenderLogic();
     InitializeDynamicObjects();
 
+    DisplayPositiveCardsScrollBox();
+    DisplayNegativeCardsScrollBox();
 }
 
 void CardsMenuRenderLogic()
@@ -55,32 +61,9 @@ void CardsMenuRenderLogic()
 
 }
 
-void LoadCompanyToApplyCardToScrollBoxClick(char *scroll_box_content, unsigned short int index)
-{
 
-    LogF("TODO: apply card to company");
 
-}
 
-void DisplayCompanyToApplyCardToScrollBox() 
-{
-
-    DrawObject *object = CreateScrollBoxObject();
-
-    object->x          = 757;
-    object->y          = 363;
-    object->width      = 288;
-    object->height     = 200;
-    object->asset_path = "assets/images/companyicons/StocksBox.png";
-
-    object->scrollbox.num_items        = GetAmountOfCompanies();
-    object->scrollbox.box_click        = &LoadCompanyToApplyCardToScrollBoxClick;
-    object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
-
-    AddCompanyContentToApplyCardScrollBox(object);
-    AddObjectToDrawLayer(object);
-
-}
 
 void AddCompanyContentToApplyCardScrollBox(DrawObject *object)
 {
@@ -135,4 +118,82 @@ void CleanUpCardsMenu()
 
     cards_menu = NULL;
     
+}
+
+void LoadCompanyToApplyCardToScrollBoxClick(char *scroll_box_content, unsigned short int index)
+{
+
+    LogF("TODO: apply card to company");
+
+}
+
+void DisplayCompanyToApplyCardToScrollBox() 
+{
+
+    DrawObject *object = CreateScrollBoxObject();
+
+    object->x          = 757;
+    object->y          = 363;
+    object->width      = 288;
+    object->height     = 200;
+    object->asset_path = "assets/images/companyicons/StocksBox.png";
+
+    object->scrollbox.num_items        = GetAmountOfCompanies();
+    object->scrollbox.box_click        = &LoadCompanyToApplyCardToScrollBoxClick;
+    object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
+
+    AddCompanyContentToApplyCardScrollBox(object);
+    AddObjectToDrawLayer(object);
+
+}
+
+void LoadNewActiveCard(char *scroll_box_content, unsigned short int index)
+{
+
+    LogF("TODO: Change Active Card displayed");
+
+}
+
+void DisplayPositiveCardsScrollBox() 
+{
+
+    DrawObject *object = CreateScrollBoxObject();
+
+    object->x          = 50;
+    object->y          = 233;
+    object->width      = 288;
+    object->height     = 200;
+    object->asset_path = "assets/images/companyicons/StocksBox.png";
+
+    object->scrollbox.num_items        = 2;
+    object->scrollbox.box_click        = &LoadNewActiveCard;
+    object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
+
+    object->scrollbox.text_content[0]  = GetFormattedPointer("Fake Quarter Earnings");
+    object->scrollbox.text_content[1]  = GetFormattedPointer("Level 1 Advertising");
+
+    AddObjectToDrawLayer(object);
+
+}
+
+void DisplayNegativeCardsScrollBox() 
+{
+
+    DrawObject *object = CreateScrollBoxObject();
+
+    object->x          = 480;
+    object->y          = 233;
+    object->width      = 288;
+    object->height     = 200;
+    object->asset_path = "assets/images/companyicons/StocksBox.png";
+
+    object->scrollbox.num_items        = 2;
+    object->scrollbox.box_click        = &LoadNewActiveCard;
+    object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
+
+    object->scrollbox.text_content[0]  = GetFormattedPointer("Damaging Product");
+    object->scrollbox.text_content[1]  = GetFormattedPointer("Level 1 Defamation");
+
+    AddObjectToDrawLayer(object);
+
 }
