@@ -300,14 +300,8 @@ void SetLocalMoneyFromDb(int player_id)
 
 void SetDBMoneyToLocalMoney(int player_id)
 {
-    sqlite3 *db;
 
-    if (OpenConnection(&db, DefaultConnection()) != 0)
-        return;
-
-    ExecuteQueryFDB(NULL, NULL, db, "UPDATE Players SET Money = %.2f WHERE PlayerId = %d;", GetAccountMoney(), player_id);
-
-    sqlite3_close(db);
+    ExecuteQueryF(NULL, NULL, "UPDATE Players SET Money = %.2f WHERE PlayerId = %d;", GetAccountMoney(), player_id);
 
 }
 
