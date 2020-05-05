@@ -159,5 +159,6 @@ void InitializeButtons()
     InitializePauseMenusButtons();
     InitializeOptionsButtons();
     InitializeSaveMenuButtons();
+    InitializeCardsMenuButtons();
 
 }
