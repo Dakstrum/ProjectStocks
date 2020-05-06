@@ -18,10 +18,13 @@
 #include "text.h"
 #include "generalpurposemenus.h"
 
-static MenuWithChilds *cards_menu      = NULL;
-static MenuWithChilds *apply_card_menu = NULL;
+static MenuWithChilds *cards_menu         = NULL;
+static MenuWithChilds *apply_card_menu    = NULL;
 
-static DrawObject *AccountMoneyTextObject    = NULL;
+static DrawObject *AccountMoneyTextObject = NULL;
+
+static DrawObject *CardTitleTextObject    = NULL;
+static DrawObject *CardDescTextObject     = NULL;
 
 void AddCompanyContentToApplyCardScrollBox(DrawObject *object);
 void CardsMenuRenderLogic();
@@ -43,6 +46,8 @@ void InitializeCardsMenu()
     AddMenuWithChildsToDrawLayer(cards_menu);
 
     AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
+    CardTitleTextObject    = GetObjectAndDraw("CardTitleText");
+    CardDescTextObject     = GetObjectAndDraw("CardDescText");
 
     CardsMenuRenderLogic();
     InitializeDynamicObjects();
@@ -60,10 +65,6 @@ void CardsMenuRenderLogic()
     SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
 
 }
-
-
-
-
 
 void AddCompanyContentToApplyCardScrollBox(DrawObject *object)
 {
@@ -125,6 +126,8 @@ void LoadCompanyToApplyCardToScrollBoxClick(char *scroll_box_content, unsigned s
 
     LogF("TODO: apply card to company");
 
+
+
 }
 
 void DisplayCompanyToApplyCardToScrollBox() 
@@ -150,7 +153,8 @@ void DisplayCompanyToApplyCardToScrollBox()
 void LoadNewActiveCard(char *scroll_box_content, unsigned short int index)
 {
 
-    LogF("TODO: Change Active Card displayed");
+    SetTextContent(CardTitleTextObject, "%s", scroll_box_content);
+    SetTextContent(CardDescTextObject, "%s", scroll_box_content);
 
 }
 
