@@ -50,13 +50,11 @@ endif()
 add_executable(projectstocks ${sources} ${headers})
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-
     target_link_libraries(projectstocks -lallegro_main -lallegro -lallegro_audio -lallegro_acodec -lallegro_image -lallegro_video -lallegro_font -lallegro_ttf -lallegro_primitives -lsqlite3 -ljson-c)
-
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_link_libraries(projectstocks -lm -lallegro -lallegro_audio -lallegro_acodec -lallegro_image -lallegro_video -lallegro_font -lallegro_ttf -lallegro_primitives -lsqlite3 -ljson-c)
 else()
-
-    target_link_libraries(projectstocks -lallegro -lallegro_audio -lallegro_acodec -lallegro_image -lallegro_video -lallegro_font -lallegro_ttf -lallegro_primitives -lsqlite3 -ljson-c)
-    
+    target_link_libraries(projectstocks -lallegro -lallegro_audio -lallegro_acodec -lallegro_image -lallegro_video -lallegro_font -lallegro_ttf -lallegro_primitives -lsqlite3 -ljson-c)    
 endif()
 
 
