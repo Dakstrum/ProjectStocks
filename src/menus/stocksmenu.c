@@ -118,11 +118,24 @@ void InitalizeStocksMenuText()
 
 }
 
-void DisplayTempPopUp()
+void DisplayBuyPopUp(int stock_amount, char *stock_name)
 {
 
     DrawObject *object = CreateNewPopup();
-    SetPopupText(object, "You bought stuff!");
+    char str[50];
+    sprintf(str, "Bought %d of %s", stock_amount, stock_name);
+    SetPopupText(object, str); //Mem leak
+    AddObjectToDrawLayer(object);
+
+}
+
+void DisplaySellPopUp(int stock_amount, char *stock_name)
+{
+
+    DrawObject *object = CreateNewPopup();
+    char str[50];
+    sprintf(str, "Sold %d of %s", stock_amount, stock_name);
+    SetPopupText(object, str); //Mem leak
     AddObjectToDrawLayer(object);
 
 }
@@ -269,7 +282,7 @@ void Sell_BCB()
     AttemptToSubtractFromCurrentStock(GetCompanyNameViewing(), amount_in_text_box, CurrentStockPrice(selected_company_name));
     SellMenu_BCB();
     // TODO tell you what you sold or bought for how much
-    DisplayTempPopUp(); 
+    DisplaySellPopUp(amount_in_text_box, GetCompanyNameViewing()); 
 
 }
 
@@ -280,7 +293,7 @@ void Buy_BCB()
     AttemptToAddFromCurrentStock(GetCompanyNameViewing(), amount_in_text_box, CurrentStockPrice(selected_company_name));
     BuyMenu_BCB();
     // TODO tell you what you sold or bought for how much
-    DisplayTempPopUp(); 
+    DisplayBuyPopUp(amount_in_text_box, GetCompanyNameViewing()); 
 
 }
 
