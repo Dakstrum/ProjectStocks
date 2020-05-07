@@ -122,8 +122,9 @@ void DisplayTempPopUp()
 {
 
     DrawObject *object = CreateNewPopup();
+    SetPopupText(object, "You bought stuff!");
     AddObjectToDrawLayer(object);
-    
+
 }
 
 void UpdateStocksStatsText(char *company_name)

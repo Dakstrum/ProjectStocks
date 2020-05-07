@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <string.h>
 
 #include <allegro5/allegro.h>
@@ -158,6 +159,7 @@ void DrawPopUp(DrawObject *object)
     }
 
     DrawGenericWithWidth(object->popup.popup_bitmap, (int)object->popup.current_x, (int)object->popup.current_y, object->width, object->height);
+    al_draw_text(object->popup.text_style->font, object->popup.text_style->color, (int)object->popup.current_x+650, (int)object->popup.current_y+(1000), 0, object->popup.text);
 
 }
 
@@ -184,7 +186,11 @@ DrawObject *CreateNewPopup()
     object->popup.diff_time_to_animate = 1000;
     object->popup.diff_time_to_stay    = 2000;
     object->popup.direction            = "Up";
+    object->popup.text_style           = malloc(sizeof(TextStyle));
     memset(object->popup.text, '\0', 128);
+
+    object->popup.text_style->font  = GetFontFromCache("assets/font/DanielLinssenM5/m5x7.ttf", 48);
+    object->popup.text_style->color = al_map_rgba(0, 0, 0, 255);
 
     return object;
 
@@ -193,5 +199,9 @@ DrawObject *CreateNewPopup()
 void CleanUpPopUp(DrawObject *object) 
 {
     
+    if (object == NULL)
+        return;
+
+    free(object->popup.text_style);
 
 }
