@@ -14,6 +14,7 @@
 #include "graph.h"
 #include "startup.h"
 #include "simulation.h"
+#include "popup.h"
 
 #include "dbaccount.h"
 #include "account.h"
@@ -120,19 +121,9 @@ void InitalizeStocksMenuText()
 void DisplayTempPopUp()
 {
 
-    DrawObject *popup_object = CreateNewDrawObject();
-
-    popup_object->type   = POPUP;
-    popup_object->x      = 0;
-    popup_object->y      = 0;
-    popup_object->width  = 1920;
-    popup_object->height = 1080;
+    DrawObject *object = CreateNewPopup();
+    AddObjectToDrawLayer(object);
     
-    popup_object->asset_path                 = "assets/images/generalpurposemenus/popups/genericpopup.png";
-    popup_object->popup.diff_time_to_animate = 1000;
-    popup_object->popup.diff_time_to_stay    = 2000;
-    popup_object->popup.direction            = "Up";
-    AddObjectToDrawLayer(popup_object);
 }
 
 void UpdateStocksStatsText(char *company_name)
@@ -143,7 +134,6 @@ void UpdateStocksStatsText(char *company_name)
     StocksMenuRenderLogic();
 
 }
-
 
 
 void DisplayGraph(char *company_name, TimeSpan time_span)

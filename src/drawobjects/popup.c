@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include <allegro5/allegro.h>
 
 #include "draw.h"
@@ -156,6 +158,35 @@ void DrawPopUp(DrawObject *object)
     }
 
     DrawGenericWithWidth(object->popup.popup_bitmap, (int)object->popup.current_x, (int)object->popup.current_y, object->width, object->height);
+
+}
+
+void SetPopupText(DrawObject *object, const char *text)
+{
+
+    strncpy(object->popup.text, text, 128);
+    object->popup.text[127] = '\0';
+
+}
+
+DrawObject *CreateNewPopup()
+{
+
+    DrawObject *object = CreateNewDrawObject();
+
+    object->type   = POPUP;
+    object->x      = 0;
+    object->y      = 0;
+    object->width  = 1920;
+    object->height = 1080;
+    
+    object->asset_path                 = "assets/images/generalpurposemenus/popups/genericpopup.png";
+    object->popup.diff_time_to_animate = 1000;
+    object->popup.diff_time_to_stay    = 2000;
+    object->popup.direction            = "Up";
+    memset(object->popup.text, '\0', 128);
+
+    return object;
 
 }
 

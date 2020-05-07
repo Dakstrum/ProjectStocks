@@ -127,6 +127,7 @@ typedef struct PopUp {
     float dx;
     float dy;
 
+    char text[128];
     char *direction;
     void (*set_dx_dy)(void *, int, int);
     void (*set_dx_dy_reverse)(void *, int, int);
