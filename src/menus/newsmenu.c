@@ -12,7 +12,8 @@
 #include "account.h"
 #include "generalpurposemenus.h"
 
-static DrawObject *AccountMoneyTextObject    = NULL;
+static DrawObject *AccountMoneyTextObject = NULL;
+static DrawObject *AccountDateTextObject  = NULL; 
 
 void NewsMenuRenderLogic();
 
@@ -29,6 +30,7 @@ void InitializeNewsMenu()
     AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("NewsMenu"));
 
     AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
+    AccountDateTextObject  = GetObjectAndDraw("StocksMenuAccountDateText");
     
     NewsMenuRenderLogic();
     InitializeDynamicObjects();
@@ -41,6 +43,7 @@ void NewsMenuRenderLogic()
         return;
     
     SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
+    SetTextContent(AccountDateTextObject,  "%s",   GetDate());
 
 }
 

@@ -22,6 +22,7 @@ static MenuWithChilds *cards_menu         = NULL;
 static MenuWithChilds *apply_card_menu    = NULL;
 
 static DrawObject *AccountMoneyTextObject = NULL;
+static DrawObject *AccountDateTextObject  = NULL; 
 
 static DrawObject *CardTitleTextObject    = NULL;
 static DrawObject *CardDescTextObject     = NULL;
@@ -46,6 +47,7 @@ void InitializeCardsMenu()
     AddMenuWithChildsToDrawLayer(cards_menu);
 
     AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
+    AccountDateTextObject  = GetObjectAndDraw("StocksMenuAccountDateText");
     CardTitleTextObject    = GetObjectAndDraw("CardTitleText");
     CardDescTextObject     = GetObjectAndDraw("CardDescText");
 
@@ -63,6 +65,7 @@ void CardsMenuRenderLogic()
         return;
     
     SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
+    SetTextContent(AccountDateTextObject,  "%s",   GetDate());
 
 }
 

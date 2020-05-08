@@ -23,6 +23,7 @@ static MenuWithChilds *account_menu           = NULL;
 
 static DrawObject *CompanyNameTextObject      = NULL;
 static DrawObject *AccountMoneyTextObject     = NULL;
+static DrawObject *AccountDateTextObject      = NULL; 
 static DrawObject *StockPriceTextObject       = NULL;
 static DrawObject *OwnedStockAmountTextObject = NULL;
 
@@ -67,6 +68,7 @@ void AccountMenuRenderLogic()
         return;
     
     SetTextContent(AccountMoneyTextObject,     "%.2f", GetAccountMoney());
+    SetTextContent(AccountDateTextObject,      "%s",   GetDate());
     SetTextContent(StockPriceTextObject,       "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
     SetTextContent(OwnedStockAmountTextObject, "%d",   GetOwnedStockAmount(GetCompanyNameViewing()));
 
@@ -77,6 +79,7 @@ void InitalizeAccountMenuText()
 
     CompanyNameTextObject        = GetObjectAndDraw("AccountMenuChangingCompanyNameText");
     AccountMoneyTextObject       = GetObjectAndDraw("StocksMenuAccountMoneyText");
+    AccountDateTextObject        = GetObjectAndDraw("StocksMenuAccountDateText");
     StockPriceTextObject         = GetObjectAndDraw("AccountMenuCurrentStockPriceText");
     OwnedStockAmountTextObject   = GetObjectAndDraw("AccountMenuOwnedStockAmountText");
 
