@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdint.h>
 
 #include "vector.h"
 
@@ -28,7 +27,7 @@ void PushBack(Vector *vector, void *element)
         vector->elements  = realloc(vector->elements, vector->size_of_single_elem * vector->mem_size);
 
     }
-    
+
     unsigned char *temp        = (unsigned char *)vector->elements;
     unsigned char *new_element = (unsigned char *)element;
 
@@ -41,26 +40,10 @@ void PushBack(Vector *vector, void *element)
 
 void FreeVectorPtrElements(Vector *vector)
 {
-    uintptr_t ptr           = 0;
-    unsigned char byte      = 0;
-    unsigned char *array    = (unsigned char *)vector->elements;
-    int size_of_single_elem = vector->size_of_single_elem;
+    void **array = (void **)vector->elements;
 
-    for (int i = 0;i < vector->num_elements;i++) {
-
-        for (int j = 0; j < size_of_single_elem;j++) {
-            
-            byte  = array[i * size_of_single_elem + j];
-            ptr   = ptr << 8;
-            ptr  |= byte;
-
-        }
-
-        void **to_be_freed = (void **)ptr;
-        free(*to_be_freed);
-        ptr = 0;
-
-    }
+    for (int i = 0;i < vector->num_elements;i++)
+        free(array[i]);
 
 }
 
