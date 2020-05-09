@@ -53,14 +53,8 @@ Vector *GetDirectoryJsonFiles(const char *dirpath)
 
 }
 
-void InitialzeDrawObjectsJson() 
+void SetJsonObjectsFromFiles(const char *dirpath, Vector *files)
 {
-
-    const char *dirpath = "assets/config/drawobjects/";
-    Vector *files       = GetDirectoryJsonFiles(dirpath);
-
-    if (files == NULL)
-        return;
 
     char filepath[128];
     char **filenames = (char **)files->elements;
@@ -82,16 +76,31 @@ void InitialzeDrawObjectsJson()
         else
             ParseJsonDrawObject(objects_list);
 
+        draw_objects = NULL;
+
     }
 
 }
 
-void ParseJsonDrawObject(array_list *objects_list) 
+void InitialzeDrawObjectsJson() 
 {
 
     // TODO PARSE HOW MANY OBJECTS ARE ACTUALLY DEFINED IN JSON FILE
     parsed_objects = malloc(sizeof(DrawObject) * MAX_PARSED_OBJECTS);
     SetParsedObjectsNull();
+
+    const char *dirpath = "assets/config/drawobjects/";
+    Vector *files       = GetDirectoryJsonFiles(dirpath);
+
+    if (files == NULL)
+        return;
+
+    SetJsonObjectsFromFiles(dirpath, files);
+
+}
+
+void ParseJsonDrawObject(array_list *objects_list) 
+{
 
     for (size_t i = 0; i < objects_list->length; i++)
         WithTypeSetDrawObject(JsonObjectGetString(draw_objects, "/Objects/%d/Type", i), i);
