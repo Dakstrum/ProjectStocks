@@ -33,7 +33,7 @@ void CheckAndSetMenuButtons(int idx, char *child_of);
 void CheckAndSetMenuText(int idx, char *child_of);
 void CheckAndSetTextboxes(int idx, char *child_of);
 
-void CheckDirectories()
+Vector *GetDirectoryJsonFiles(const char *dirpath)
 {
     Vector *files = NULL;
     #if defined(_WIN32) || defined(_WIN64)
@@ -41,33 +41,48 @@ void CheckDirectories()
     #elif defined(__APPLE__) || defined(__MACH__)
         // Mac stuff
     #else
-        files = Unix_GetJsonFilesInDirectory("assets/config/");
+        files = Unix_GetJsonFilesInDirectory(dirpath);
     #endif
 
-    char **filenames = (char **)files->elements;
-    for (int i = 0; i < files->num_elements;i++)
-        LogF("Converted back files %s", filenames[i]);
+    if (files == NULL) {
+        Log("Files vector never initialized");
+    }
 
+    return files;
 
-    FreeVectorPtrElements(files);
-    DeleteVector(files);
 
 }
 
 void InitialzeDrawObjectsJson() 
 {
 
-    CheckDirectories();
-    SetJsonObjectFromFile(&draw_objects, "assets/config/drawobjects.json");
+    const char *dirpath = "assets/config/drawobjects/";
+    Vector *files       = GetDirectoryJsonFiles(dirpath);
 
-    if (draw_objects == NULL)
+    if (files == NULL)
         return;
 
-    array_list *objects_list = JsonObjectGetArrayList(draw_objects, "/Objects");
-    if (objects_list == NULL)
-        return;
-    else
-       ParseJsonDrawObject(objects_list);
+    char filepath[128];
+    char **filenames = (char **)files->elements;
+    for (int i = 0; i < files->num_elements;i++) {
+
+        memset(filepath, 0, 128);
+        strcpy(filepath, dirpath);
+        strcat(filepath, filenames[i]);
+        filepath[127] = '\0';
+
+        SetJsonObjectFromFile(&draw_objects, filepath);
+
+        if (draw_objects == NULL)
+            continue;
+
+        array_list *objects_list = JsonObjectGetArrayList(draw_objects, "/Objects");
+        if (objects_list == NULL)
+            continue;
+        else
+            ParseJsonDrawObject(objects_list);
+
+    }
 
 }
 
