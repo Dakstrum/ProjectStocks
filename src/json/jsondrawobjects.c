@@ -33,18 +33,31 @@ void CheckAndSetMenuButtons(int idx, char *child_of);
 void CheckAndSetMenuText(int idx, char *child_of);
 void CheckAndSetTextboxes(int idx, char *child_of);
 
-void InitialzeDrawObjectsJson() 
+void CheckDirectories()
 {
-
     Vector *files = NULL;
     #if defined(_WIN32) || defined(_WIN64)
         // Windows stuff
     #elif defined(__APPLE__) || defined(__MACH__)
         // Mac stuff
     #else
-        files = Unix_GetJsonFilesInDirectory("assets/config/drawobjects/");
+        files = Unix_GetJsonFilesInDirectory("assets/config/");
     #endif
 
+    char **filenames = (char **)files->elements;
+    for (int i = 0; i < files->num_elements;i++)
+        LogF("Converted back files %s", filenames[i]);
+
+
+    FreeVectorPtrElements(files);
+    DeleteVector(files);
+
+}
+
+void InitialzeDrawObjectsJson() 
+{
+
+    CheckDirectories();
     SetJsonObjectFromFile(&draw_objects, "assets/config/drawobjects.json");
 
     if (draw_objects == NULL)

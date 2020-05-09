@@ -24,7 +24,7 @@ Vector *Unix_GetJsonFilesInDirectory(const char *path)
 
     const int FILENAME_BUFF_SIZE = 32;
 
-    Vector *files = CreateVector(sizeof(char) * FILENAME_BUFF_SIZE, 8);
+    Vector *files = CreateVector(sizeof(char *), 8);
     DIR *dp;
     struct dirent *ep;
 
@@ -36,16 +36,17 @@ Vector *Unix_GetJsonFilesInDirectory(const char *path)
 
     }
 
-    char filename[FILENAME_BUFF_SIZE];
-    while (ep = readdir(dp))
+    char *filename = NULL;
+    while ((ep = readdir(dp)))
     {
 
         if (strstr(ep->d_name, ".json") == NULL)
             continue;
 
-        strncpy(filename, ep->d_name, 32);
+        filename = malloc(FILENAME_BUFF_SIZE);
+        strncpy(filename, ep->d_name, FILENAME_BUFF_SIZE);
         filename[31] = '\0';
-        PushBack(files, filename);
+        PushBack(files, &filename);
 
     }
     closedir(dp);
