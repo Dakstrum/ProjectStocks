@@ -3,6 +3,14 @@
 #include <string.h>
 #include <stdbool.h>
 
+#if defined(_WIN32) || defined(_WIN64)
+    // Windows stuff
+#elif defined(__APPLE__) || defined(__MACH__)
+    // Mac stuff
+#else
+    #include <dirent.h>
+#endif
+
 #include <json-c/json.h>
 #include <json-c/json_util.h>
 #include <json-c/json_object.h>
@@ -10,6 +18,41 @@
 #include "log.h"
 #include "shared.h"
 #include "jsoncommon.h"
+
+Vector *GetJsonFilesInDirectory(const char *path) 
+{
+
+    const int FILENAME_BUFF_SIZE = 32;
+
+    Vector *files = CreateVector(sizeof(char) * FILENAME_BUFF_SIZE, 8);
+    DIR *dp;
+    struct dirent *ep;
+
+    dp = opendir(path);
+    if (dp == NULL) {
+
+        LogF("Unable to open directory %s", path);
+        return files;
+
+    }
+
+    char filename[FILENAME_BUFF_SIZE];
+    while (ep = readdir(dp))
+    {
+
+        if (strstr(ep->d_name, ".json") == NULL)
+            continue;
+
+        strncpy(filename, ep->d_name, 32);
+        filename[31] = '\0';
+        PushBack(files, filename);
+
+    }
+    closedir(dp);
+
+    return files;
+
+}
 
 void SetJsonObjectFromFile(json_object **object, const char *file) 
 {

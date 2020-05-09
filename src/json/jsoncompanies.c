@@ -33,10 +33,7 @@ void InitializeCompaniesJson()
 
 void LogCompanyValues(int company_index) 
 {
-    
     Company c = parsed_companies[company_index];
-    LogF("Retrieved CompanyName = %s, IPO = %lf, Category = %s, Description = %s, StartDate = %s, TotalProducts = %d", c.company_name, c.ipo, c.category, c.description, c.start_date, c.total_products);
-
 }
 
 void SetCompanyProducts(int company_index, array_list *products) 
@@ -47,11 +44,8 @@ void SetCompanyProducts(int company_index, array_list *products)
 
     parsed_companies[company_index].products       = malloc(sizeof(char *) * products->length);
     parsed_companies[company_index].total_products = products->length;
-    for (size_t i = 0; i < products->length; i++) {
-
+    for (size_t i = 0; i < products->length; i++)
         parsed_companies[company_index].products[i] = JsonObjectGetString(companies, "/Companies/%d/Products/%d/ProductName", company_index, i);
-
-    }
 
 }
 
