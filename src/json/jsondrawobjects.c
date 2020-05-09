@@ -36,7 +36,15 @@ void CheckAndSetTextboxes(int idx, char *child_of);
 void InitialzeDrawObjectsJson() 
 {
 
-    Vector *files = GetJsonFilesInDirectory("assets/config/");
+    Vector *files = NULL;
+    #if defined(_WIN32) || defined(_WIN64)
+        // Windows stuff
+    #elif defined(__APPLE__) || defined(__MACH__)
+        // Mac stuff
+    #else
+        files = Unix_GetJsonFilesInDirectory("assets/config/drawobjects/");
+    #endif
+
     SetJsonObjectFromFile(&draw_objects, "assets/config/drawobjects.json");
 
     if (draw_objects == NULL)

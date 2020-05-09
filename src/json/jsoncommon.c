@@ -19,7 +19,7 @@
 #include "shared.h"
 #include "jsoncommon.h"
 
-Vector *GetJsonFilesInDirectory(const char *path) 
+Vector *Unix_GetJsonFilesInDirectory(const char *path) 
 {
 
     const int FILENAME_BUFF_SIZE = 32;

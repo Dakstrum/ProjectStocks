@@ -3,7 +3,7 @@
 
 #include "vector.h"
 
-Vector *GetJsonFilesInDirectory(const char *path);
+Vector *Unix_GetJsonFilesInDirectory(const char *path);
 void SetJsonObjectFromFile(json_object **object, const char *file);
 
 array_list *JsonObjectGetArrayList(json_object *object, const char *json_path, ...);
