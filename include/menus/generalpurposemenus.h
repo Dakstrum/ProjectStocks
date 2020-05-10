@@ -2,7 +2,7 @@
 #define GENERALPURPOSEMENUS_H
 
 void InitializeGeneralPurposeMenu();
-void InitializeDynamicObjects();
+void InitializeSpeedSelectObject();
 
 void ToggleGeneralPurposeMenus();
 

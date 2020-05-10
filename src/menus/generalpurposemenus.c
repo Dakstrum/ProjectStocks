@@ -31,7 +31,7 @@ static DrawObject *speed_three_button = NULL;
 
 static int account_timespeed          = 1;
 
-void InitializeDynamicObjects()
+void InitializeSpeedSelectObject()
 {
 
     pause_button       = GetDrawObjectByName("PauseSpeedButton");

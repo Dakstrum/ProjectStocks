@@ -52,7 +52,7 @@ void InitializeCardsMenu()
     CardDescTextObject     = GetObjectAndDraw("CardDescText");
 
     CardsMenuRenderLogic();
-    InitializeDynamicObjects();
+    InitializeSpeedSelectObject();
 
     DisplayPositiveCardsScrollBox();
     DisplayNegativeCardsScrollBox();

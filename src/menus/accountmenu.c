@@ -57,7 +57,7 @@ void InitializeAccountMenu()
 
     InitalizeAccountMenuText();
     AccountMenuRenderLogic();
-    InitializeDynamicObjects();
+    InitializeSpeedSelectObject();
 
 }
 

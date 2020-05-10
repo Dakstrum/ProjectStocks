@@ -33,7 +33,7 @@ void InitializeNewsMenu()
     AccountDateTextObject  = GetObjectAndDraw("StocksMenuAccountDateText");
     
     NewsMenuRenderLogic();
-    InitializeDynamicObjects();
+    InitializeSpeedSelectObject();
 }
 
 void NewsMenuRenderLogic()
