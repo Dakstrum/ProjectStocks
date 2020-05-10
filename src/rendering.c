@@ -105,7 +105,7 @@ void SwitchToRenderingStocksMenu()
 {
 
     InitializeStocksMenu();
-    RenderLogic = &StocksMenuRenderLogic;
+    RenderLogic = &StocksMenusRenderLogic;
 
 }
 
