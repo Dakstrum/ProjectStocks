@@ -2,14 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-
-#if defined(_WIN32) || defined(_WIN64)
-    // Windows stuff
-#elif defined(__APPLE__) || defined(__MACH__)
-    // Mac stuff
-#else
-    #include <dirent.h>
-#endif
+#include <dirent.h>
 
 #include <json-c/json.h>
 #include <json-c/json_util.h>

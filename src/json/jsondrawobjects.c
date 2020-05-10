@@ -35,18 +35,11 @@ void CheckAndSetTextboxes(int idx, char *child_of);
 
 Vector *GetDirectoryJsonFiles(const char *dirpath)
 {
-    Vector *files = NULL;
-    #if defined(_WIN32) || defined(_WIN64)
-        // Windows stuff
-    #elif defined(__APPLE__) || defined(__MACH__)
-        // Mac stuff
-    #else
-        files = Unix_GetJsonFilesInDirectory(dirpath);
-    #endif
 
-    if (files == NULL) {
+    Vector *files = Unix_GetJsonFilesInDirectory(dirpath);
+
+    if (files == NULL)
         Log("Files vector never initialized");
-    }
 
     return files;
 
