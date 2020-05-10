@@ -593,15 +593,6 @@ DrawObjectTypeCollection *GetObjectsByType(DrawType type)
 
 }
 
-DrawObject *GetObjectAndDraw(char* object_name)
-{
-
-    DrawObject *object = GetDrawObjectFromJsonLayer(object_name);
-    AddObjectToDrawLayer(object);
-    return object;
-
-}
-
 void DisposeDrawObjectTypeCollection(DrawObjectTypeCollection *collection)
 {
 

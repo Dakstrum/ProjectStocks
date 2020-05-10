@@ -19,6 +19,7 @@
 #include "button.h"
 #include "scrollbox.h"
 #include "optionsmenu.h"
+#include "drawlayerutils.h"
 
 void SpeedOne_BCB();
 void SpeedTwo_BCB();

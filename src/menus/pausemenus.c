@@ -20,6 +20,7 @@
 #include "scrollbox.h"
 #include "optionsmenu.h"
 #include "dbaccount.h"
+#include "drawlayerutils.h"
 
 static MenuWithChilds *in_game_pause_menu = NULL;
 
