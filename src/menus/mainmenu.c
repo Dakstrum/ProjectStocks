@@ -25,6 +25,7 @@
 #include "dbaccess.h"
 #include "optionsmenu.h"
 #include "account.h"
+#include "drawlayerutils.h"
 
 static MenuWithChilds *main_menu = NULL;
 static DrawObject *VersionObject = NULL;

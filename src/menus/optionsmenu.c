@@ -20,6 +20,7 @@
 #include "dbaccess.h"
 #include "rendering.h"
 #include "window.h"
+#include "drawlayerutils.h"
 
 static MenuWithChilds *options_menu      = NULL;
 static int option_id = 0;

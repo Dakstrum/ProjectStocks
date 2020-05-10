@@ -33,7 +33,6 @@ DrawObject *GetActiveTextBox();
 char *GetTextFromTextBox(char *object_name);
 
 DrawObjectTypeCollection *GetObjectsByType(DrawType type);
-DrawObject *GetObjectAndDraw(char* object_name);
 void DisposeDrawObjectTypeCollection(DrawObjectTypeCollection *collection);
 
 RGBA *GetRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a);

@@ -19,6 +19,7 @@
 #include "dbaccount.h"
 #include "account.h"
 #include "generalpurposemenus.h"
+#include "drawlayerutils.h"
 
 static MenuWithChilds *stocks_menu            = NULL;
 static MenuWithChilds *sell_transaction_menu  = NULL;
@@ -46,7 +47,7 @@ char *GetCurrentCompanyFromGraph();
 void StocksMenusRenderLogic();
 void UpdateStocksStatsText(char *company_name);
 void InitalizeStocksMenuText();
-void ApplySelectedCompanyText();
+void InitializeTransactionMenuText();
 
 void InitializeStocksMenu() 
 { 
@@ -109,12 +110,12 @@ void StocksMenusRenderLogic()
 void InitalizeStocksMenuText()
 {
 
-    CompanyNameTextObject  = GetObjectAndDraw("StocksMenuChangingCompanyNameText");
-    CompanyAboutTextObject = GetObjectAndDraw("StocksMenuChangingAboutText");
-    AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
-    AccountDateTextObject  = GetObjectAndDraw("StocksMenuAccountDateText");
-    StockPriceTextObject   = GetObjectAndDraw("StocksMenuCurrentStockPriceText");
-    StockChangeTextObject  = GetObjectAndDraw("StocksMenuStockChangeText");
+    CompanyNameTextObject  = GetJSONObjectAndAddToDrawLayer("StocksMenuChangingCompanyNameText");
+    CompanyAboutTextObject = GetJSONObjectAndAddToDrawLayer("StocksMenuChangingAboutText");
+    AccountMoneyTextObject = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
+    AccountDateTextObject  = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
+    StockPriceTextObject   = GetJSONObjectAndAddToDrawLayer("StocksMenuCurrentStockPriceText");
+    StockChangeTextObject  = GetJSONObjectAndAddToDrawLayer("StocksMenuStockChangeText");
 
     SetTextContent(StockChangeTextObject,  "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
     SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
@@ -125,9 +126,9 @@ void InitalizeStocksMenuText()
 void InitializeTransactionMenuText()
 {
 
-    SelectedCompanyNameTextObject           = GetObjectAndDraw("TransactionMenuCompanyNameText");
-    SelectedCompanyPerStockPriceTextObject  = GetObjectAndDraw("TransactionMenuPerShareText");
-    SelectedCompanyProjectedCostTextObject  = GetObjectAndDraw("TransactionMenuProjectedCostText");
+    SelectedCompanyNameTextObject           = GetJSONObjectAndAddToDrawLayer("TransactionMenuCompanyNameText");
+    SelectedCompanyPerStockPriceTextObject  = GetJSONObjectAndAddToDrawLayer("TransactionMenuPerShareText");
+    SelectedCompanyProjectedCostTextObject  = GetJSONObjectAndAddToDrawLayer("TransactionMenuProjectedCostText");
 
     SetTextContent(SelectedCompanyNameTextObject  , "%s", selected_company_name);
 
@@ -248,7 +249,7 @@ void SellMenu_BCB()
 
         sell_transaction_menu = GetMenuWithChildsFromJsonLayer("SellTransactionMenu");
         AddMenuWithChildsToDrawLayer(sell_transaction_menu);
-        ApplySelectedCompanyText();
+        InitializeTransactionMenuText();
 
     } else {
 
@@ -270,7 +271,7 @@ void BuyMenu_BCB()
 
         buy_transaction_menu = GetMenuWithChildsFromJsonLayer("BuyTransactionMenu");
         AddMenuWithChildsToDrawLayer(buy_transaction_menu);
-        ApplySelectedCompanyText();
+        InitializeTransactionMenuText();
 
     } else {
 
