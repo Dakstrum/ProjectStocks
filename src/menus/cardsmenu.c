@@ -44,8 +44,7 @@ void InitializeCardsMenu()
         return;
     }
 
-    cards_menu = GetMenuWithChildsFromJsonLayer("CardsMenu");
-    AddMenuWithChildsToDrawLayer(cards_menu);
+    cards_menu = GetJSONMenuAndAddToDrawLayer("CardsMenu");
 
     AccountMoneyTextObject = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
     AccountDateTextObject  = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");

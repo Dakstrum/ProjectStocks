@@ -49,9 +49,7 @@ void ToggleOptionsMenu()
     if (options_menu == NULL) {
 
         CreateNewDrawLayer();
-        options_menu = GetMenuWithChildsFromJsonLayer("OptionsMenu");
-        AddMenuWithChildsToDrawLayer(options_menu);
-
+        options_menu = GetJSONMenuAndAddToDrawLayer("OptionsMenu");
         
     } else {
 

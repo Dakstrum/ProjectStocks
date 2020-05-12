@@ -49,8 +49,7 @@ void InitializeAccountMenu()
         return;
     }
 
-    account_menu = GetMenuWithChildsFromJsonLayer("AccountMenu");
-    AddMenuWithChildsToDrawLayer(account_menu);
+    account_menu = GetJSONMenuAndAddToDrawLayer("AccountMenu");
 
     DisplayAccountCompanyScrollBox();
     InitializeAccountHistoryDisplay();

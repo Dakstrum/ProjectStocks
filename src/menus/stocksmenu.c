@@ -59,13 +59,12 @@ void InitializeStocksMenu()
 
     }
 
-    stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
-    AddMenuWithChildsToDrawLayer(stocks_menu);
+    stocks_menu = GetJSONMenuAndAddToDrawLayer("StocksMenu");
     
-    DisplayCompanyScrollBox();
-    DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
-
     InitalizeStocksMenuText();
+    DisplayCompanyScrollBox();
+
+    DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
     UpdateStocksStatsText(GetCompanyNameViewing());
 
     InitializeSpeedSelectObject();
@@ -130,7 +129,7 @@ void InitializeTransactionMenuText()
     SelectedCompanyPerStockPriceTextObject  = GetJSONObjectAndAddToDrawLayer("TransactionMenuPerShareText");
     SelectedCompanyProjectedCostTextObject  = GetJSONObjectAndAddToDrawLayer("TransactionMenuProjectedCostText");
 
-    SetTextContent(SelectedCompanyNameTextObject  , "%s", selected_company_name);
+    SetTextContent(SelectedCompanyNameTextObject, "%s", selected_company_name);
 
 }
 

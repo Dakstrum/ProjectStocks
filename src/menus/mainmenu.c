@@ -107,8 +107,7 @@ void InitializeMainMenu()
 
     SetInGameStatus(0);
     
-    main_menu = GetMenuWithChildsFromJsonLayer("MainMenu");
-    AddMenuWithChildsToDrawLayer(main_menu);
+    main_menu = GetJSONMenuAndAddToDrawLayer("MainMenu");
     
     DynamicText();
     MainMenuRenderLogic();

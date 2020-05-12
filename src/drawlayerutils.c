@@ -23,3 +23,12 @@ DrawObject *GetJSONObjectAndAddToDrawLayer(char* object_name)
     return object;
 
 }
+
+MenuWithChilds *GetJSONMenuAndAddToDrawLayer(char* menu_name)
+{
+
+    MenuWithChilds *menu_object = GetMenuWithChildsFromJsonLayer(menu_name);
+    AddMenuWithChildsToDrawLayer(menu_object);
+    return menu_object;
+
+}
