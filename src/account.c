@@ -200,8 +200,8 @@ void CreateNewSave(char *save_name, char *player_name)
     strncpy(current_save_name, save_name, 32);
     strncpy(current_player_name, player_name, 32);
 
-    current_save_name[31] = '\0';
-    current_player_name   = '\0';
+    current_save_name[31]   = '\0';
+    current_player_name[31] = '\0';
 
     atomic_store(&game_seed, time(NULL));
     CreateNewSaveEntries(save_name, player_name);
