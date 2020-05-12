@@ -55,7 +55,7 @@ void PauseMenuSave_BCB()
 void PauseMenuExit_BCB()
 {
 
-    SetDBMoneyToLocalMoney(GetCurrentPlayerId());
+    //SetDBMoneyToLocalMoney(GetCurrentPlayerId());
     SetCleanUpToTrue();
 
 }

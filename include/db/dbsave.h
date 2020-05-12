@@ -7,8 +7,8 @@ typedef struct PlayerSave {
 
     int save_id;
     int save_player_id;
-    char *save_name;
-    char *save_player_name;
+    char save_name[32];
+    char save_player_name[32];
     double save_player_money;
     unsigned int time_spent_in_game;
     unsigned int game_seed;
@@ -21,6 +21,8 @@ void DeleteSave(int save_id);
 int InsertSaveEntry(char *save_name, unsigned int game_seed);
 int InsertPlayerEntry(int save_id, char *player_name, double money, int save_owner);
 
+void UpdateSave(int save_id);
 Vector *GetAllSaves();
+PlayerSave GetSaveData(int save_id);
 
 #endif

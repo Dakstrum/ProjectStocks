@@ -18,6 +18,7 @@ static atomic_long game_time_game_dt;
 static atomic_uint game_seed;
 static atomic_bool pause_game_time;
 static atomic_int  save_id;
+static atomic_int  player_id;
 
 static ALLEGRO_THREAD *account_thread = NULL;
 
@@ -30,8 +31,6 @@ static const long ONE_HOUR = 3600;
 
 static char *current_player_name = NULL;
 static char *current_save_name   = NULL;
-static int current_save_id       = -1;
-static int current_player_id     = -1;
 
 void *AccountEntry(ALLEGRO_THREAD *thread, void *arg);
 
@@ -87,10 +86,23 @@ char *GetCompanyNameViewing()
 int GetCurrentPlayerId()
 {
 
-    return current_player_id;
+    return atomic_load(&player_id);
 
 }
 
+int GetSaveId() 
+{
+
+    return atomic_load(&save_id);
+
+}
+
+unsigned int GetSaveSeed() 
+{
+
+    return atomic_load(&game_seed);
+
+}
 
 void InitAccount() 
 {
@@ -108,20 +120,6 @@ void InitAccount()
     current_time_buf    = malloc(128);
     current_save_name   = malloc(64);
     current_player_name = malloc(64);
-
-}
-
-int GetSaveId() 
-{
-
-    return current_save_id;
-
-}
-
-unsigned int GetSaveSeed() 
-{
-
-    return atomic_load(&game_seed);
 
 }
 
@@ -178,17 +176,19 @@ void *AccountEntry(ALLEGRO_THREAD *thread, void *arg)
 
 }
 
-void CreateNewSaveEntries(char *save_name, char *player_name, unsigned int game_seed) 
+void CreateNewSaveEntries(char *save_name, char *player_name) 
 {
-    current_save_id = InsertSaveEntry(save_name, game_seed);
-    if (current_save_id == -1) {
+    atomic_store(&save_id, InsertSaveEntry(save_name, atomic_load(&game_seed)));
+    if (atomic_load(&save_id) == -1) {
 
         Log("Unable to create save");
         return;
 
     }
-    current_player_id = InsertPlayerEntry(current_save_id, player_name, 3000.0, 1);
-    if (current_player_id == -1)
+
+    atomic_store(&player_id, InsertPlayerEntry(save_id, player_name, 3000.0, 1));
+
+    if (atomic_load(&player_id) == -1)
         Log("Unable to create player");
 
 }
@@ -197,24 +197,37 @@ void CreateNewSaveEntries(char *save_name, char *player_name, unsigned int game_
 void CreateNewSave(char *save_name, char *player_name)
 {
 
-    unsigned int new_game_seed = time(NULL);
+    strncpy(current_save_name, save_name, 32);
+    strncpy(current_player_name, player_name, 32);
 
-    strncpy(current_save_name, save_name, 64);
-    strncpy(current_player_name, player_name, 64);
-    atomic_store(&game_seed, new_game_seed);
+    current_save_name[31] = '\0';
+    current_player_name   = '\0';
 
-    CreateNewSaveEntries(save_name, player_name, game_seed);
-    LogF("CreateNewSave save_id = %d, game_seed = %u", atomic_load(&save_id), atomic_load(&game_seed));
+    atomic_store(&game_seed, time(NULL));
+    CreateNewSaveEntries(save_name, player_name);
 
 }
 
 void LoadSave(int load_save_id, int save_player_id)
 {
 
-    current_save_id   = load_save_id;
-    current_player_id = save_player_id;
-    atomic_store(&game_seed, GetSaveSeedWithSaveId(load_save_id));
-    LogF("LoadSave game_seed = %u", atomic_load(&game_seed));
+    atomic_store(&save_id, load_save_id);
+    atomic_store(&player_id, save_player_id);
+
+    PlayerSave save = GetSaveData(load_save_id);
+
+    strncpy(current_save_name, save.save_name, 32);
+    strncpy(current_player_name, save.save_player_name, 32);
+
+    atomic_store(&game_seed, save.game_seed);
+    atomic_store(&game_time, save.time_spent_in_game);
+
+}
+
+void Save() 
+{
+
+
 
 }
 

@@ -31,11 +31,6 @@ void InitializeCompaniesJson()
 
 }
 
-void LogCompanyValues(int company_index) 
-{
-    Company c = parsed_companies[company_index];
-}
-
 void SetCompanyProducts(int company_index, array_list *products) 
 {
 
@@ -70,8 +65,10 @@ void ParseCompanyJsonObject(array_list *companies_list)
 
 void CleanUpComponaniesJson() 
 {
+    
     if (parsed_companies != NULL)
         free(parsed_companies);
+
     parsed_companies = NULL;
 
 }

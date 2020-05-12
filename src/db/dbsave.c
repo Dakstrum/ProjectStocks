@@ -158,9 +158,6 @@ int GetAllSavesCallback(void *saves, int argc, char **argv, char **col_name)
     save.save_player_id     = atoi(argv[4]);
     save.save_player_money  = atof(argv[6]);
 
-    save.save_name        = malloc(32);
-    save.save_player_name = malloc(32);
-
     strncpy(save.save_name, argv[1], 32);
     strncpy(save.save_player_name, argv[5], 32);
 
@@ -175,16 +172,55 @@ int GetAllSavesCallback(void *saves, int argc, char **argv, char **col_name)
 Vector *GetAllSaves() 
 {
     Vector *saves = CreateVector(sizeof(PlayerSave), 16);
-    sqlite3 *db;
+    char *query   = "SELECT S.SaveId, S.SaveName, S.TimeSpentInGame, S.RandomSeed, P.PlayerId, P.PlayerName, P.Money FROM Saves S "
+                    "INNER JOIN Players P ON P.SaveId = S.SaveId "
+                    "WHERE P.SaveOwner = 1";
+
+    ExecuteQueryF(&GetAllSavesCallback, saves, query);
+    return saves;
+
+}
+
+int GetSaveDataCallback(void *save, int argc, char **argv, char **col_name)
+{
+
+    if (argc == 0)
+        return 0;
+
+    PlayerSave *temp = (PlayerSave *)save;
+
+    temp->save_id            = atoi(argv[0]);
+    temp->time_spent_in_game = atoi(argv[2]);
+    temp->game_seed          = atoi(argv[3]);
+    temp->save_player_id     = atoi(argv[4]);
+    temp->save_player_money  = atof(argv[6]);
+
+    strncpy(temp->save_name, argv[1], 32);
+    strncpy(temp->save_player_name, argv[5], 32);
+
+    temp->save_name[31]        = '\0';
+    temp->save_player_name[31] = '\0';
+
+    return 0;
+
+}
+
+
+PlayerSave GetSaveData(int save_id)
+{
+
+    PlayerSave save;
     char *query = "SELECT S.SaveId, S.SaveName, S.TimeSpentInGame, S.RandomSeed, P.PlayerId, P.PlayerName, P.Money FROM Saves S "
                   "INNER JOIN Players P ON P.SaveId = S.SaveId "
-                  "WHERE P.SaveOwner = 1";
+                  "WHERE P.SaveOwner = 1 AND S.SaveId = %d";
+    ExecuteQueryF(&GetSaveDataCallback, &save, query, save_id);
+    return save;
 
-    if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer(query), &GetAllSavesCallback, saves, db);
+}
 
-    sqlite3_close(db);
+void UpdateSave(int save_id)
+{
 
-    return saves;
+
 
 }
