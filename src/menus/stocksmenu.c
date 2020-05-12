@@ -129,7 +129,7 @@ void InitializeTransactionMenuText()
     SelectedCompanyPerStockPriceTextObject  = GetJSONObjectAndAddToDrawLayer("TransactionMenuPerShareText");
     SelectedCompanyProjectedCostTextObject  = GetJSONObjectAndAddToDrawLayer("TransactionMenuProjectedCostText");
 
-    SetTextContent(SelectedCompanyNameTextObject, "%s", selected_company_name);
+    SetTextContent(SelectedCompanyNameTextObject  , "%s", selected_company_name);
 
 }
 
