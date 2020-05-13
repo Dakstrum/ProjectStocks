@@ -32,6 +32,8 @@ static const long ONE_HOUR = 3600;
 static char *current_player_name = NULL;
 static char *current_save_name   = NULL;
 
+static float sleep_time = 1.0;
+
 void *AccountEntry(ALLEGRO_THREAD *thread, void *arg);
 
 void SetInGameStatus(int status)
@@ -163,7 +165,7 @@ void *AccountEntry(ALLEGRO_THREAD *thread, void *arg)
     long int dt = 0;
     while (!ShouldICleanUp()) {
 
-        al_rest(1.0);
+        al_rest(sleep_time);
         if (atomic_load(&pause_game_time))
             continue;
 
@@ -234,14 +236,11 @@ void Save()
 void SetGameSpeed(const int speed) 
 {
 
-    static const long TWO_HOURS  = ONE_HOUR * 2;
-    static const long FOUR_HOURS = ONE_HOUR * 4;
-
     switch (speed) {
 
-        case 2:  atomic_store(&game_time_game_dt, TWO_HOURS); break;
-        case 3:  atomic_store(&game_time_game_dt, FOUR_HOURS); break;
-        default: atomic_store(&game_time_game_dt, ONE_HOUR); break;
+        case 2:  sleep_time = .75; break;
+        case 3:  sleep_time = .5; break;
+        default: sleep_time = 1.5; break;
 
     }
 
