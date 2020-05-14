@@ -41,7 +41,7 @@ static DrawObject *SelectedCompanyPerStockPriceTextObject = NULL;
 static DrawObject *SelectedCompanyProjectedCostTextObject = NULL;
 
 void DisplayGraph(char *company_name, TimeSpan time_span);
-void DisplayCompanyScrollBox();
+void InitializeCompanyScrollBox();
 void AddCompanyContentToStocksScrollBox(DrawObject *object);
 char *GetCurrentCompanyFromGraph();
 void StocksMenusRenderLogic();
@@ -62,7 +62,7 @@ void InitializeStocksMenu()
     stocks_menu = GetJSONMenuAndAddToDrawLayer("StocksMenu");
     
     InitalizeStocksMenuText();
-    DisplayCompanyScrollBox();
+    InitializeCompanyScrollBox();
 
     DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
     UpdateStocksStatsText(GetCompanyNameViewing());
@@ -198,7 +198,7 @@ void LoadCompanyScrollBoxClick(char *scroll_box_content, unsigned short int inde
 
 }
 
-void DisplayCompanyScrollBox() 
+void InitializeCompanyScrollBox()
 {
 
     DrawObject *object = CreateScrollBoxObject();
