@@ -14,6 +14,7 @@
 #include "account.h"
 #include "simulation.h"
 #include "generalpurposemenus.h"
+#include "drawlayerutils.h"
 
 #define DSP_NUM 5
 
@@ -48,8 +49,7 @@ void InitializeAccountMenu()
         return;
     }
 
-    account_menu = GetMenuWithChildsFromJsonLayer("AccountMenu");
-    AddMenuWithChildsToDrawLayer(account_menu);
+    account_menu = GetJSONMenuAndAddToDrawLayer("AccountMenu");
 
     DisplayAccountCompanyScrollBox();
     InitializeAccountHistoryDisplay();
@@ -57,7 +57,7 @@ void InitializeAccountMenu()
 
     InitalizeAccountMenuText();
     AccountMenuRenderLogic();
-    InitializeDynamicObjects();
+    InitializeSpeedSelectObject();
 
 }
 
@@ -77,11 +77,11 @@ void AccountMenuRenderLogic()
 void InitalizeAccountMenuText()
 {
 
-    CompanyNameTextObject        = GetObjectAndDraw("AccountMenuChangingCompanyNameText");
-    AccountMoneyTextObject       = GetObjectAndDraw("StocksMenuAccountMoneyText");
-    AccountDateTextObject        = GetObjectAndDraw("StocksMenuAccountDateText");
-    StockPriceTextObject         = GetObjectAndDraw("AccountMenuCurrentStockPriceText");
-    OwnedStockAmountTextObject   = GetObjectAndDraw("AccountMenuOwnedStockAmountText");
+    CompanyNameTextObject        = GetJSONObjectAndAddToDrawLayer("AccountMenuChangingCompanyNameText");
+    AccountMoneyTextObject       = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
+    AccountDateTextObject        = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
+    StockPriceTextObject         = GetJSONObjectAndAddToDrawLayer("AccountMenuCurrentStockPriceText");
+    OwnedStockAmountTextObject   = GetJSONObjectAndAddToDrawLayer("AccountMenuOwnedStockAmountText");
 
     SetTextContent(CompanyNameTextObject, "%s", GetCompanyNameViewing());
 
@@ -97,10 +97,10 @@ void InitializeAccountHistoryDisplay()
 
     for (int i=0; i < DSP_NUM; i++) {
 
-        ActionObjects[i]      = GetObjectAndDraw(ActionJsonObjects[i]);
-        SharesObjects[i]      = GetObjectAndDraw(SharesJsonObjects[i]);
-        PerShareObjects[i]    = GetObjectAndDraw(PerShareJsonObjects[i]);
-        TransactionObjects[i] = GetObjectAndDraw(TransactionJsonObjects[i]);
+        ActionObjects[i]      = GetJSONObjectAndAddToDrawLayer(ActionJsonObjects[i]);
+        SharesObjects[i]      = GetJSONObjectAndAddToDrawLayer(SharesJsonObjects[i]);
+        PerShareObjects[i]    = GetJSONObjectAndAddToDrawLayer(PerShareJsonObjects[i]);
+        TransactionObjects[i] = GetJSONObjectAndAddToDrawLayer(TransactionJsonObjects[i]);
 
     }
 

@@ -19,6 +19,7 @@
 #include "button.h"
 #include "scrollbox.h"
 #include "optionsmenu.h"
+#include "drawlayerutils.h"
 
 void SpeedOne_BCB();
 void SpeedTwo_BCB();
@@ -31,7 +32,7 @@ static DrawObject *speed_three_button = NULL;
 
 static int account_timespeed          = 1;
 
-void InitializeDynamicObjects()
+void InitializeSpeedSelectObject()
 {
 
     pause_button       = GetDrawObjectByName("PauseSpeedButton");

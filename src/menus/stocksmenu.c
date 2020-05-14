@@ -19,13 +19,14 @@
 #include "dbaccount.h"
 #include "account.h"
 #include "generalpurposemenus.h"
+#include "drawlayerutils.h"
 
 static MenuWithChilds *stocks_menu            = NULL;
 static MenuWithChilds *sell_transaction_menu  = NULL;
 static MenuWithChilds *buy_transaction_menu   = NULL;
 
-static char *selected_company_name  = NULL;
-static DrawObject *current_graph    = NULL;
+static char *selected_company_name        = NULL;
+static DrawObject *current_graph          = NULL;
 
 static DrawObject *AccountMoneyTextObject = NULL;
 static DrawObject *AccountDateTextObject  = NULL; 
@@ -39,17 +40,14 @@ static DrawObject *SelectedCompanyNameTextObject          = NULL;
 static DrawObject *SelectedCompanyPerStockPriceTextObject = NULL;
 static DrawObject *SelectedCompanyProjectedCostTextObject = NULL;
 
-
-void DisplayTempPopUp();
 void DisplayGraph(char *company_name, TimeSpan time_span);
-void DisplayCompanyScrollBox();
+void InitializeCompanyScrollBox();
 void AddCompanyContentToStocksScrollBox(DrawObject *object);
 char *GetCurrentCompanyFromGraph();
-void StocksMenuRenderLogic();
+void StocksMenusRenderLogic();
 void UpdateStocksStatsText(char *company_name);
 void InitalizeStocksMenuText();
-void ApplySelectedCompanyText();
-void TransactionMenusRenderLogic();
+void InitializeTransactionMenuText();
 
 void InitializeStocksMenu() 
 { 
@@ -61,44 +59,45 @@ void InitializeStocksMenu()
 
     }
 
-    stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
-    AddMenuWithChildsToDrawLayer(stocks_menu);
+    stocks_menu = GetJSONMenuAndAddToDrawLayer("StocksMenu");
     
-    DisplayCompanyScrollBox();
-    DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
-
     InitalizeStocksMenuText();
+    InitializeCompanyScrollBox();
+
+    DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
     UpdateStocksStatsText(GetCompanyNameViewing());
 
-    InitializeDynamicObjects();
+    InitializeSpeedSelectObject();
 
 }
 
-void StocksMenuRenderLogic()
+void StocksMenusRenderLogic()
 {
 
     if (AccountMoneyTextObject == NULL)
         return;
 
-    SetTextContent(StockChangeTextObject,  "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
-    SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
-    SetTextContent(AccountDateTextObject,  "%s",   GetDate());
-    SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
+    if(stocks_menu)
+    {
 
-    TransactionMenusRenderLogic();
+        SetTextContent(StockChangeTextObject,  "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
+        SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
+        SetTextContent(AccountDateTextObject,  "%s",   GetDate());
+        SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
 
-}
+    }
 
-void TransactionMenusRenderLogic()
-{
-    
     if(buy_transaction_menu)
     {
+
         SetTextContent(SelectedCompanyPerStockPriceTextObject, "%.2f", CurrentStockPrice(selected_company_name));
         SetTextContent(SelectedCompanyProjectedCostTextObject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("BuyTextBox")));
+
     }
+
     if(sell_transaction_menu)
     {
+
         SetTextContent(SelectedCompanyPerStockPriceTextObject, "%.2f", CurrentStockPrice(selected_company_name));
         SetTextContent(SelectedCompanyProjectedCostTextObject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("SellTextBox")));
 
@@ -106,19 +105,31 @@ void TransactionMenusRenderLogic()
 
 }
 
+
 void InitalizeStocksMenuText()
 {
 
-    CompanyNameTextObject  = GetObjectAndDraw("StocksMenuChangingCompanyNameText");
-    CompanyAboutTextObject = GetObjectAndDraw("StocksMenuChangingAboutText");
-    AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
-    AccountDateTextObject  = GetObjectAndDraw("StocksMenuAccountDateText");
-    StockPriceTextObject   = GetObjectAndDraw("StocksMenuCurrentStockPriceText");
-    StockChangeTextObject  = GetObjectAndDraw("StocksMenuStockChangeText");
+    CompanyNameTextObject  = GetJSONObjectAndAddToDrawLayer("StocksMenuChangingCompanyNameText");
+    CompanyAboutTextObject = GetJSONObjectAndAddToDrawLayer("StocksMenuChangingAboutText");
+    AccountMoneyTextObject = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
+    AccountDateTextObject  = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
+    StockPriceTextObject   = GetJSONObjectAndAddToDrawLayer("StocksMenuCurrentStockPriceText");
+    StockChangeTextObject  = GetJSONObjectAndAddToDrawLayer("StocksMenuStockChangeText");
 
-    SetTextContent(StockChangeTextObject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
+    SetTextContent(StockChangeTextObject,  "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
     SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
     SetTextContent(StockPriceTextObject,   "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
+
+}
+
+void InitializeTransactionMenuText()
+{
+
+    SelectedCompanyNameTextObject           = GetJSONObjectAndAddToDrawLayer("TransactionMenuCompanyNameText");
+    SelectedCompanyPerStockPriceTextObject  = GetJSONObjectAndAddToDrawLayer("TransactionMenuPerShareText");
+    SelectedCompanyProjectedCostTextObject  = GetJSONObjectAndAddToDrawLayer("TransactionMenuProjectedCostText");
+
+    SetTextContent(SelectedCompanyNameTextObject  , "%s", selected_company_name);
 
 }
 
@@ -149,7 +160,7 @@ void UpdateStocksStatsText(char *company_name)
 
     SetTextContent(CompanyNameTextObject, "%s", company_name);
     SetTextContent(CompanyAboutTextObject, "Dynamic Description of a company");
-    StocksMenuRenderLogic();
+    StocksMenusRenderLogic();
 
 }
 
@@ -187,7 +198,7 @@ void LoadCompanyScrollBoxClick(char *scroll_box_content, unsigned short int inde
 
 }
 
-void DisplayCompanyScrollBox() 
+void InitializeCompanyScrollBox()
 {
 
     DrawObject *object = CreateScrollBoxObject();
@@ -215,6 +226,17 @@ void AddCompanyContentToStocksScrollBox(DrawObject *object)
 
 }
 
+
+
+void ChangeGraphTimespan(TimeSpan time_span)
+{
+
+    RemoveDrawObject(current_graph);
+    DisplayGraph(GetCompanyNameViewing(), time_span);
+    UpdateStocksStatsText(GetCompanyNameViewing());
+
+}
+
 void SellMenu_BCB()
 {
 
@@ -226,7 +248,7 @@ void SellMenu_BCB()
 
         sell_transaction_menu = GetMenuWithChildsFromJsonLayer("SellTransactionMenu");
         AddMenuWithChildsToDrawLayer(sell_transaction_menu);
-        ApplySelectedCompanyText();
+        InitializeTransactionMenuText();
 
     } else {
 
@@ -234,17 +256,6 @@ void SellMenu_BCB()
         sell_transaction_menu = NULL;
 
     }
-
-}
-
-void ApplySelectedCompanyText()
-{
-
-    SelectedCompanyNameTextObject           = GetObjectAndDraw("SellTransactionMenuCompanyNameText");
-    SelectedCompanyPerStockPriceTextObject  = GetObjectAndDraw("SellTransactionMenuPerShareText");
-    SelectedCompanyProjectedCostTextObject  = GetObjectAndDraw("BuyTransactionMenuProjectedCostText");
-
-    SetTextContent(SelectedCompanyNameTextObject  , "%s", selected_company_name);
 
 }
 
@@ -259,7 +270,7 @@ void BuyMenu_BCB()
 
         buy_transaction_menu = GetMenuWithChildsFromJsonLayer("BuyTransactionMenu");
         AddMenuWithChildsToDrawLayer(buy_transaction_menu);
-        ApplySelectedCompanyText();
+        InitializeTransactionMenuText();
 
     } else {
 
@@ -267,15 +278,6 @@ void BuyMenu_BCB()
         buy_transaction_menu = NULL;
 
     }
-
-}
-
-void ChangeGraphTimespan(TimeSpan time_span)
-{
-
-    RemoveDrawObject(current_graph);
-    DisplayGraph(GetCompanyNameViewing(), time_span);
-    UpdateStocksStatsText(GetCompanyNameViewing());
 
 }
 

@@ -23,6 +23,7 @@
 #include "simulation.h"
 #include "dbsave.h"
 #include "vector.h"
+#include "drawlayerutils.h"
 
 static DrawObject *SaveNameTextObject   = NULL;
 static DrawObject *PlayerNameTextObject = NULL;
@@ -46,8 +47,8 @@ void InitializeLoadSaveMenu()
 
     AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("LoadSaveMenu"));
 
-    SaveNameTextObject   = GetObjectAndDraw("LoadSaveMenuSaveNameText");
-    PlayerNameTextObject = GetObjectAndDraw("LoadSaveMenuPlayerNameText");
+    SaveNameTextObject   = GetJSONObjectAndAddToDrawLayer("LoadSaveMenuSaveNameText");
+    PlayerNameTextObject = GetJSONObjectAndAddToDrawLayer("LoadSaveMenuPlayerNameText");
 
     DisplayLoadSaveScrollBox();
     

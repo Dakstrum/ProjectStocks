@@ -17,6 +17,7 @@
 #include "scrollbox.h"
 #include "text.h"
 #include "generalpurposemenus.h"
+#include "drawlayerutils.h"
 
 static MenuWithChilds *cards_menu         = NULL;
 static MenuWithChilds *apply_card_menu    = NULL;
@@ -43,16 +44,15 @@ void InitializeCardsMenu()
         return;
     }
 
-    cards_menu = GetMenuWithChildsFromJsonLayer("CardsMenu");
-    AddMenuWithChildsToDrawLayer(cards_menu);
+    cards_menu = GetJSONMenuAndAddToDrawLayer("CardsMenu");
 
-    AccountMoneyTextObject = GetObjectAndDraw("StocksMenuAccountMoneyText");
-    AccountDateTextObject  = GetObjectAndDraw("StocksMenuAccountDateText");
-    CardTitleTextObject    = GetObjectAndDraw("CardTitleText");
-    CardDescTextObject     = GetObjectAndDraw("CardDescText");
+    AccountMoneyTextObject = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
+    AccountDateTextObject  = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
+    CardTitleTextObject    = GetJSONObjectAndAddToDrawLayer("CardTitleText");
+    CardDescTextObject     = GetJSONObjectAndAddToDrawLayer("CardDescText");
 
     CardsMenuRenderLogic();
-    InitializeDynamicObjects();
+    InitializeSpeedSelectObject();
 
     DisplayPositiveCardsScrollBox();
     DisplayNegativeCardsScrollBox();
