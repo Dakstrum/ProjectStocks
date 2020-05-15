@@ -381,6 +381,7 @@ float GetCurrentStockChange(char *company_name)
 }
 
 static ALLEGRO_THREAD *stock_simulation_thread = NULL;
+
 void StartSimulation()
 {
 
@@ -392,7 +393,6 @@ void StartSimulation()
 void CleanSimulation()
 {
 
-
     for (size_t i = 0; i < sim_data.num_companies;i++) {
 
         free(sim_data.prices[i].prices);
@@ -402,7 +402,8 @@ void CleanSimulation()
 
     free(sim_data.prices);
     free(sim_data.random_event_chance);
-    sim_data.prices = NULL;
+    sim_data.num_companies       = 0;
+    sim_data.prices              = NULL;
     sim_data.random_event_chance = NULL;
 
 }
@@ -416,6 +417,7 @@ void StopSimulation()
     al_join_thread(stock_simulation_thread, NULL);
     al_destroy_thread(stock_simulation_thread);
     stock_simulation_thread = NULL;
+    atomic_store(&simulation_finished, false);
     CleanSimulation();
 
 }
