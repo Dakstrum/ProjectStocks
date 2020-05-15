@@ -27,7 +27,7 @@ static int option_id = 0;
 
 void DisplayOptionsScrollBox();
 void AddOptionsContentToOptionsScrollBox(DrawObject *object);
-void ChangeResolutionOption(char *scroll_box_content);
+void ChangeResolutionOption(char *scroll_box_content, unsigned short int index);
 void DisplayResolutionOptionsOnScrollbox(DrawObject *object);
 
 void InitializeOptionsMenu() 
@@ -109,7 +109,7 @@ void AddOptionsContentToOptionsScrollBox(DrawObject *object)
         
 }
 
-void ChangeResolutionOption(char *scroll_box_content)
+void ChangeResolutionOption(char *scroll_box_content, unsigned short int index)
 {
 
     if(strcmp(scroll_box_content, "1920x1080") == 0) SetWindowResolutionSettings(1920, 1080);
