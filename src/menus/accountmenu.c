@@ -29,6 +29,7 @@ static DrawObject *StockPriceTextObject       = NULL;
 static DrawObject *OwnedStockAmountTextObject = NULL;
 
 static DrawObject *ActionObjects[DSP_NUM];
+static DrawObject *DateObjects[DSP_NUM];
 static DrawObject *SharesObjects[DSP_NUM];
 static DrawObject *PerShareObjects[DSP_NUM];
 static DrawObject *TransactionObjects[DSP_NUM];
@@ -91,6 +92,7 @@ void InitializeAccountHistoryDisplay()
 {
 
     static char *ActionJsonObjects[DSP_NUM]      = {"AccountMenuActionTextOne", "AccountMenuActionTextTwo", "AccountMenuActionTextThree", "AccountMenuActionTextFour", "AccountMenuActionTextFive"};
+    static char *DateJsonObjects[DSP_NUM]        = {"AccountMenuDateTextOne", "AccountMenuDateTextTwo", "AccountMenuDateTextThree", "AccountMenuDateTextFour", "AccountMenuDateTextFive"};
     static char *SharesJsonObjects[DSP_NUM]      = {"AccountMenuSharesTextOne", "AccountMenuSharesTextTwo", "AccountMenuSharesTextThree", "AccountMenuSharesTextFour", "AccountMenuSharesTextFive"};
     static char *PerShareJsonObjects[DSP_NUM]    = {"AccountMenuPerShareTextOne", "AccountMenuPerShareTextTwo", "AccountMenuPerShareTextThree", "AccountMenuPerShareTextFour", "AccountMenuPerShareTextFive"};
     static char *TransactionJsonObjects[DSP_NUM] = {"AccountMenuTransactionTextOne", "AccountMenuTransactionTextTwo", "AccountMenuTransactionTextThree", "AccountMenuTransactionTextFour", "AccountMenuTransactionTextFive"};
@@ -98,6 +100,7 @@ void InitializeAccountHistoryDisplay()
     for (int i=0; i < DSP_NUM; i++) {
 
         ActionObjects[i]      = GetJSONObjectAndAddToDrawLayer(ActionJsonObjects[i]);
+        DateObjects[i]        = GetJSONObjectAndAddToDrawLayer(DateJsonObjects[i]);
         SharesObjects[i]      = GetJSONObjectAndAddToDrawLayer(SharesJsonObjects[i]);
         PerShareObjects[i]    = GetJSONObjectAndAddToDrawLayer(PerShareJsonObjects[i]);
         TransactionObjects[i] = GetJSONObjectAndAddToDrawLayer(TransactionJsonObjects[i]);
@@ -111,11 +114,17 @@ void PopulateAccountHistoryDisplay(char* company)
     
     struct Transactions *transaction = GetTransactions(company);
 
+    char transaction_time[128];
+
     for (int i=0; i < DSP_NUM; i++) {
 
         if(transaction->shares[HistoryDisplayNumber + i]) {
 
+            time_t time_buf = transaction->date[HistoryDisplayNumber + i];
+            strftime(transaction_time, 128, "%x", localtime(&time_buf));
+
             SetTextContent(ActionObjects[i], "%s", GetTransactionAction(transaction->type[HistoryDisplayNumber + i]));
+            SetTextContent(DateObjects[i], "%s", transaction_time);
             SetTextContent(SharesObjects[i], "%d", transaction->shares[HistoryDisplayNumber + i]);
             SetTextContent(PerShareObjects[i], "%.2f", transaction->pershare[HistoryDisplayNumber + i]);
             SetTextContent(TransactionObjects[i], "%.2f", transaction->transaction[HistoryDisplayNumber + i]);
@@ -127,6 +136,7 @@ void PopulateAccountHistoryDisplay(char* company)
     free(transaction->pershare);
     free(transaction->shares);
     free(transaction->transaction);
+    free(transaction->date);
     free(transaction->type);
     free(transaction);
     
@@ -159,6 +169,7 @@ void ClearAccountHistoryDisplay()
     for (int i=0; i < DSP_NUM; i++) {
 
         SetTextContent(ActionObjects[i], "%s", "");
+        SetTextContent(DateObjects[i], "%s", "");
         SetTextContent(SharesObjects[i], "%s", "");
         SetTextContent(PerShareObjects[i], "%s", "");
         SetTextContent(TransactionObjects[i], "%s", "");
