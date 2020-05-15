@@ -199,8 +199,8 @@ float GenerateRandomPriceFluctuation(float last_price)
 void SimulationLoop(unsigned int idx) 
 {
 
-    float last_price           = sim_data.companies[idx].ipo;
-    float price                = 0.0;
+    float last_price    = sim_data.companies[idx].ipo;
+    float price         = 0.0;
     time_t current_time = 0;
 
     srand(sim_data.companies[idx].company_id + seed);
@@ -375,8 +375,7 @@ float GetCurrentStockChange(char *company_name)
         last_price = current_price;
 
     current_price = CurrentStockPrice(company_name);
-
-    change = current_price - last_price;
+    change        = current_price - last_price;
     
     return change;
 }
@@ -390,10 +389,33 @@ void StartSimulation()
 
 }
 
+void CleanSimulation()
+{
+
+
+    for (size_t i = 0; i < sim_data.num_companies;i++) {
+
+        free(sim_data.prices[i].prices);
+        free(sim_data.prices[i].times);
+
+    }
+
+    free(sim_data.prices);
+    free(sim_data.random_event_chance);
+    sim_data.prices = NULL;
+    sim_data.random_event_chance = NULL;
+
+}
+
 void StopSimulation()
 {
 
+    if (stock_simulation_thread == NULL)
+        return;
+
     al_join_thread(stock_simulation_thread, NULL);
     al_destroy_thread(stock_simulation_thread);
+    stock_simulation_thread = NULL;
+    CleanSimulation();
 
 }

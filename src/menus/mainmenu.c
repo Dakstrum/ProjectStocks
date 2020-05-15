@@ -19,7 +19,7 @@
 #include "stocksmenu.h"
 #include "generalpurposemenus.h"
 #include "savemenus.h"
-
+#include "simulation.h"
 #include "linkopener.h"
 #include "rendering.h"
 #include "dbaccess.h"
@@ -78,8 +78,7 @@ void MainMenuRenderLogic()
     if (VersionObject == NULL)
         return;
 
-    static int i = 0;
-    SetTextContent(VersionObject, "Version is %d", i);
+    //SetTextContent(VersionObject, "Version is %d", 0);
 
 }
 
@@ -112,6 +111,7 @@ void InitializeMainMenu()
     DynamicText();
     MainMenuRenderLogic();
     ButtonTintTest();
+    StopSimulation();
 
 }
 
