@@ -360,11 +360,11 @@ struct Transactions *GetTransactions(char* company)
     transaction->shares                   = malloc(sizeof(int) * 128);
     transaction->pershare                 = malloc(sizeof(float) * 128);
     transaction->type                     = malloc(sizeof(TransactionType) * 128);
-    transaction->date                     = malloc(sizeof(int) * 128);
+    transaction->date                     = malloc(sizeof(time_t) * 128);
     transaction->num_transactions         = 0;
     transaction->size                     = 128;
 
-    for(int i=0; i < 128; i++) {
+    for(int i = 0; i < 128; i++) {
 
         transaction->transaction[i] = 0;
         transaction->shares[i]      = 0;
@@ -375,9 +375,6 @@ struct Transactions *GetTransactions(char* company)
     }
 
     ExecuteQueryF(&SetTransactionCallback, transaction, "SELECT * FROM Transactions WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d", GetCompanyId(company), GetSaveId(), GetCurrentPlayerId());
-
-    transaction->transaction = realloc(transaction->transaction, sizeof(float) * transaction->num_transactions);
-
     return transaction;
 
 }

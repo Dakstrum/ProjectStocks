@@ -18,7 +18,7 @@ typedef struct Transactions
 {
 
 	TransactionType *type;
-    long int *date;
+    time_t *date;
     int *shares;
     float *pershare;
     float *transaction;
