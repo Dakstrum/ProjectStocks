@@ -317,7 +317,7 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
 
         transaction_temp->size        += 128;
         transaction_temp->transaction = realloc(transaction_temp->transaction, sizeof(float)  * transaction_temp->size);
-        transaction_temp->date        = realloc(transaction_temp->date,        sizeof(int)  * transaction_temp->size);
+        transaction_temp->date        = realloc(transaction_temp->date,        sizeof(time_t)  * transaction_temp->size);
         transaction_temp->shares      = realloc(transaction_temp->shares,      sizeof(int) * transaction_temp->size);
         transaction_temp->pershare    = realloc(transaction_temp->pershare,    sizeof(float) * transaction_temp->size);
         transaction_temp->type        = realloc(transaction_temp->type,        sizeof(TransactionType) * transaction_temp->size);
@@ -326,7 +326,7 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
 
     transaction_temp->transaction[transaction_temp->num_transactions] = (float)atof(argv[4]);
     transaction_temp->shares[transaction_temp->num_transactions]      = (int)atof(argv[5]);
-    transaction_temp->date[transaction_temp->num_transactions]        = (int)atof(argv[6]);
+    transaction_temp->date[transaction_temp->num_transactions]        = (time_t)atof(argv[6]);
     transaction_temp->type[transaction_temp->num_transactions]        = GetTransactionType(transaction_temp);
     transaction_temp->pershare[transaction_temp->num_transactions]    = GetAmountPerShare(transaction_temp);
     
