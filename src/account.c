@@ -253,7 +253,7 @@ char *GetDate()
 
     time_t current_time = GetGameTime();
     strftime(current_time_buf, 128, "%HH %x", localtime(&current_time));
-    Log(current_time_buf);
+    
     return current_time_buf;
 
 }

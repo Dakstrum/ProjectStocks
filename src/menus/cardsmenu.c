@@ -19,21 +19,24 @@
 #include "generalpurposemenus.h"
 #include "drawlayerutils.h"
 
-static MenuWithChilds *cards_menu         = NULL;
-static MenuWithChilds *apply_card_menu    = NULL;
+static MenuWithChilds *cards_menu      = NULL;
+static MenuWithChilds *apply_card_menu = NULL;
 
-static DrawObject *AccountMoneyTextObject = NULL;
-static DrawObject *AccountDateTextObject  = NULL; 
+static DrawObject *player_money_textobject = NULL;
+static DrawObject *player_date_textobject  = NULL; 
 
-static DrawObject *CardTitleTextObject    = NULL;
-static DrawObject *CardDescTextObject     = NULL;
+static DrawObject *card_title_textobject   = NULL;
+static DrawObject *card_desc_textobject    = NULL;
 
-void AddCompanyContentToApplyCardScrollBox(DrawObject *object);
+
 void CardsMenuRenderLogic();
 
-void DisplayPositiveCardsScrollBox();
-void DisplayNegativeCardsScrollBox();
-void DisplayCompanyToApplyCardToScrollBox();
+void InitalizePositiveCardsScrollBox();
+void InitalizeNegativeCardsScrollBox();
+
+void InitializeCardMenuCompanyScrollBox();
+
+void InitializeCardsMenuText();
 
 void InitializeCardsMenu() 
 {
@@ -46,30 +49,39 @@ void InitializeCardsMenu()
 
     cards_menu = GetJSONMenuAndAddToDrawLayer("CardsMenu");
 
-    AccountMoneyTextObject = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
-    AccountDateTextObject  = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
-    CardTitleTextObject    = GetJSONObjectAndAddToDrawLayer("CardTitleText");
-    CardDescTextObject     = GetJSONObjectAndAddToDrawLayer("CardDescText");
+    InitalizePositiveCardsScrollBox();
+    InitalizeNegativeCardsScrollBox();
 
-    CardsMenuRenderLogic();
+    InitializeCardsMenuText(); 
+
     InitializeSpeedSelectObject();
 
-    DisplayPositiveCardsScrollBox();
-    DisplayNegativeCardsScrollBox();
+    CardsMenuRenderLogic();
+
 }
 
 void CardsMenuRenderLogic()
 {
 
-    if (AccountMoneyTextObject == NULL)
+    if (player_money_textobject == NULL)
         return;
     
-    SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
-    SetTextContent(AccountDateTextObject,  "%s",   GetDate());
+    SetTextContent(player_money_textobject, "%.2f", GetAccountMoney());
+    SetTextContent(player_date_textobject,  "%s",   GetDate());
 
 }
 
-void AddCompanyContentToApplyCardScrollBox(DrawObject *object)
+void InitializeCardsMenuText()
+{
+
+    player_money_textobject = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
+    player_date_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
+    card_title_textobject   = GetJSONObjectAndAddToDrawLayer("CardTitleText");
+    card_desc_textobject    = GetJSONObjectAndAddToDrawLayer("CardDescText");
+
+}
+
+void PopulateCardMenuCompanyScrollBox(DrawObject *object)
 {
 
     for(int i = 0; i < GetAmountOfCompanies(); i++)
@@ -77,60 +89,15 @@ void AddCompanyContentToApplyCardScrollBox(DrawObject *object)
 
 }
 
-void TempApply_BCB()
-{
-	//TestCodePleaseKeep
-	if (apply_card_menu == NULL) {
 
-        CreateNewDrawLayer();
-        apply_card_menu = GetMenuWithChildsFromJsonLayer("ApplyCardMenu");
-        AddMenuWithChildsToDrawLayer(apply_card_menu);
-        DisplayCompanyToApplyCardToScrollBox(); 
-        
-    } else {
-
-        ClearCurrentDrawLayer();
-        apply_card_menu = NULL;
-
-    }
-
-}
-
-void CleanUpCardsMenu() 
-{
-
-    cards_menu      = NULL;
-    apply_card_menu = NULL;
-    
-}
-
-void CardApplyExit_BCB()
-{
-    if (apply_card_menu == NULL) {
-
-        CreateNewDrawLayer();
-        apply_card_menu = GetMenuWithChildsFromJsonLayer("ApplyCardMenu");
-        AddMenuWithChildsToDrawLayer(apply_card_menu);
-        DisplayCompanyToApplyCardToScrollBox(); 
-        
-    } else {
-
-        ClearCurrentDrawLayer();
-        apply_card_menu = NULL;
-
-    }
-}
-
-void LoadCompanyToApplyCardToScrollBoxClick(char *scroll_box_content, unsigned short int index)
+void CardMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
 
     LogF("TODO: apply card to company");
 
-
-
 }
 
-void DisplayCompanyToApplyCardToScrollBox() 
+void InitializeCardMenuCompanyScrollBox() 
 {
 
     DrawObject *object = CreateScrollBoxObject();
@@ -141,27 +108,27 @@ void DisplayCompanyToApplyCardToScrollBox()
     object->height     = 200;
     object->asset_path = "assets/images/companyicons/StocksBox.png";
 
-    object->scrollbox.num_items        = GetAmountOfCompanies();
-    object->scrollbox.box_click        = &LoadCompanyToApplyCardToScrollBoxClick;
-    object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
+    object->scrollbox.num_items    = GetAmountOfCompanies();
+    object->scrollbox.box_click    = &CardMenuCompanyScrollBoxClick;
+    object->scrollbox.text_content = malloc(sizeof(char *) * 2);
 
-    AddCompanyContentToApplyCardScrollBox(object);
+    PopulateCardMenuCompanyScrollBox(object);
     AddObjectToDrawLayer(object);
 
 }
 
-void LoadNewActiveCard(char *scroll_box_content, unsigned short int index)
+void LoadCardClick(char *scroll_box_content, unsigned short int index)
 {
 
-    if (CardTitleTextObject == NULL || CardDescTextObject == NULL)
+    if (card_title_textobject == NULL || card_desc_textobject == NULL)
         return;
 
-    SetTextContent(CardTitleTextObject, "%s", scroll_box_content);
-    SetTextContent(CardDescTextObject, "%s", scroll_box_content);
+    SetTextContent(card_title_textobject, "%s", scroll_box_content);
+    SetTextContent(card_desc_textobject,  "%s", scroll_box_content);
 
 }
 
-void DisplayPositiveCardsScrollBox() 
+void InitalizePositiveCardsScrollBox() 
 {
 
     DrawObject *object = CreateScrollBoxObject();
@@ -173,7 +140,7 @@ void DisplayPositiveCardsScrollBox()
     object->asset_path = "assets/images/companyicons/StocksBox.png";
 
     object->scrollbox.num_items        = 2;
-    object->scrollbox.box_click        = &LoadNewActiveCard;
+    object->scrollbox.box_click        = &LoadCardClick;
     object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
 
     object->scrollbox.text_content[0]  = GetFormattedPointer("Fake Quarter Earnings");
@@ -183,7 +150,7 @@ void DisplayPositiveCardsScrollBox()
 
 }
 
-void DisplayNegativeCardsScrollBox() 
+void InitalizeNegativeCardsScrollBox() 
 {
 
     DrawObject *object = CreateScrollBoxObject();
@@ -195,7 +162,7 @@ void DisplayNegativeCardsScrollBox()
     object->asset_path = "assets/images/companyicons/StocksBox.png";
 
     object->scrollbox.num_items        = 2;
-    object->scrollbox.box_click        = &LoadNewActiveCard;
+    object->scrollbox.box_click        = &LoadCardClick;
     object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
 
     object->scrollbox.text_content[0]  = GetFormattedPointer("Damaging Product");
@@ -205,13 +172,51 @@ void DisplayNegativeCardsScrollBox()
 
 }
 
+void TempApply_BCB()
+{
+    //TestCodePleaseKeep
+    if (apply_card_menu == NULL) {
+
+        CreateNewDrawLayer();
+        apply_card_menu = GetMenuWithChildsFromJsonLayer("ApplyCardMenu");
+        AddMenuWithChildsToDrawLayer(apply_card_menu);
+        InitializeCardMenuCompanyScrollBox(); 
+        
+    } else {
+
+        ClearCurrentDrawLayer();
+        apply_card_menu = NULL;
+
+    }
+
+}
+
+void CardApplyExit_BCB()
+{
+    if (apply_card_menu == NULL) {
+
+        CreateNewDrawLayer();
+        apply_card_menu = GetMenuWithChildsFromJsonLayer("ApplyCardMenu");
+        AddMenuWithChildsToDrawLayer(apply_card_menu);
+        InitializeCardMenuCompanyScrollBox(); 
+        
+    } else {
+
+        ClearCurrentDrawLayer();
+        apply_card_menu = NULL;
+
+    }
+}
+
 void CleanCardsMenu()
 {
 
-    CleanUpCardsMenu();
-    AccountMoneyTextObject = NULL;
-    AccountDateTextObject  = NULL; 
-    CardTitleTextObject    = NULL;
-    CardDescTextObject     = NULL;
+    cards_menu      = NULL;
+    apply_card_menu = NULL;
+
+    player_money_textobject  = NULL;
+    player_date_textobject   = NULL; 
+    card_title_textobject    = NULL;
+    card_desc_textobject     = NULL;
 
 }

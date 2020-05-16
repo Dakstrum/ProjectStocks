@@ -22,9 +22,10 @@ int history_display_number = 0;
 
 static MenuWithChilds *account_menu = NULL;
 
+static DrawObject *player_money_textobject       = NULL;
+static DrawObject *player_date_textobject        = NULL; 
+
 static DrawObject *company_name_textobject       = NULL;
-static DrawObject *account_money_textobject      = NULL;
-static DrawObject *account_date_textobject       = NULL; 
 static DrawObject *stock_price_textobject        = NULL;
 static DrawObject *owned_stock_amount_textobject = NULL;
 
@@ -35,7 +36,7 @@ static DrawObject *share_price_objects[DSP_NUM];
 static DrawObject *transaction_objects[DSP_NUM];
 
 char* GetTransactionAction(TransactionType type);
-void InitalizeCompanyScrollbox();
+void InitalizeAccountMenuCompanyScrollbox();
 void PopulateHistoryDisplay(char* company);
 void InitializeHistoryDisplay();
 void AccountMenuRenderLogic();
@@ -52,7 +53,7 @@ void InitializeAccountMenu()
 
     account_menu = GetJSONMenuAndAddToDrawLayer("AccountMenu");
 
-    InitalizeCompanyScrollbox();
+    InitalizeAccountMenuCompanyScrollbox();
     InitalizeAccountMenuText();
     InitializeSpeedSelectObject();
 
@@ -66,11 +67,11 @@ void InitializeAccountMenu()
 void AccountMenuRenderLogic()
 {
 
-    if (account_money_textobject == NULL)
+    if (player_money_textobject == NULL)
         return;
     
-    SetTextContent(account_money_textobject,      "%.2f", GetAccountMoney());
-    SetTextContent(account_date_textobject,       "%s",   GetDate());
+    SetTextContent(player_money_textobject,      "%.2f", GetAccountMoney());
+    SetTextContent(player_date_textobject,       "%s",   GetDate());
     SetTextContent(stock_price_textobject,        "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
     SetTextContent(owned_stock_amount_textobject, "%d",   GetOwnedStockAmount(GetCompanyNameViewing()));
 
@@ -80,8 +81,8 @@ void InitalizeAccountMenuText()
 {
 
     company_name_textobject       = GetJSONObjectAndAddToDrawLayer("AccountMenuChangingCompanyNameText");
-    account_money_textobject      = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
-    account_date_textobject       = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
+    player_money_textobject      = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
+    player_date_textobject       = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
     stock_price_textobject        = GetJSONObjectAndAddToDrawLayer("AccountMenuCurrentStockPriceText");
     owned_stock_amount_textobject = GetJSONObjectAndAddToDrawLayer("AccountMenuOwnedStockAmountText");
 
@@ -169,7 +170,7 @@ void ClearAccountHistoryDisplay()
 
 }
 
-void PopulateCompanyScrollBox(DrawObject *object)
+void PopulateAccountMenuCompanyScrollBox(DrawObject *object)
 {
 
     for(int i = 0; i < GetAmountOfCompanies(); i++)
@@ -177,7 +178,7 @@ void PopulateCompanyScrollBox(DrawObject *object)
 
 }
 
-void CompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
+void AccountMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
 
     SetCompanyIdViewing(GetCompanyId(scroll_box_content));
@@ -188,7 +189,7 @@ void CompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
 
 }
 
-void InitalizeCompanyScrollbox() 
+void InitalizeAccountMenuCompanyScrollbox() 
 {
 
     DrawObject *object = CreateScrollBoxObject();
@@ -200,10 +201,10 @@ void InitalizeCompanyScrollbox()
     object->asset_path = "assets/images/companyicons/StocksBox.png";
 
     object->scrollbox.num_items    = GetAmountOfCompanies();
-    object->scrollbox.box_click    = &CompanyScrollBoxClick;
+    object->scrollbox.box_click    = &AccountMenuCompanyScrollBoxClick;
     object->scrollbox.text_content = malloc(sizeof(char *) * 2);
 
-    PopulateCompanyScrollBox(object);
+    PopulateAccountMenuCompanyScrollBox(object);
     AddObjectToDrawLayer(object);
 
 }
@@ -236,8 +237,8 @@ void CleanAccountMenu()
 
     account_menu                  = NULL;
     company_name_textobject       = NULL;
-    account_money_textobject      = NULL;
-    account_date_textobject       = NULL; 
+    player_money_textobject      = NULL;
+    player_date_textobject       = NULL; 
     stock_price_textobject        = NULL;
     owned_stock_amount_textobject = NULL;
 
