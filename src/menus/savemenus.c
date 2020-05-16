@@ -25,19 +25,22 @@
 #include "vector.h"
 #include "drawlayerutils.h"
 
-static DrawObject *SaveNameTextObject   = NULL;
-static DrawObject *PlayerNameTextObject = NULL;
-static DrawObject *saves_scrollbox      = NULL;
+static MenuWithChilds *load_save_menu = NULL;
+static MenuWithChilds *new_save_menu  = NULL;
+
+static DrawObject *save_name_textobject   = NULL;
+static DrawObject *player_name_textobject = NULL;
+static DrawObject *saves_scrollbox        = NULL;
 
 static Vector *saves          = NULL;
 static int current_button_idx = -1;
 
-void DisplayLoadSaveScrollBox();
+void InitalizeSaveScrollBox();
+void InitializeLoadSaveMenuText();
 
 void InitializeLoadSaveMenu() 
 {
 
-    
     if (CreateNewDrawLayer() == -1) {
 
         Log("ERROR: LoadMenu could not create new draw layer");
@@ -45,13 +48,19 @@ void InitializeLoadSaveMenu()
 
     }
 
-    AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("LoadSaveMenu"));
+    load_save_menu = GetJSONMenuAndAddToDrawLayer("LoadSaveMenu");
 
-    SaveNameTextObject   = GetJSONObjectAndAddToDrawLayer("LoadSaveMenuSaveNameText");
-    PlayerNameTextObject = GetJSONObjectAndAddToDrawLayer("LoadSaveMenuPlayerNameText");
-
-    DisplayLoadSaveScrollBox();
+    InitializeLoadSaveMenuText();
+    InitalizeSaveScrollBox();
     
+}
+
+void InitializeLoadSaveMenuText()
+{
+
+    save_name_textobject   = GetJSONObjectAndAddToDrawLayer("LoadSaveMenuSaveNameText");
+    player_name_textobject = GetJSONObjectAndAddToDrawLayer("LoadSaveMenuPlayerNameText");
+
 }
 
 void InitializeNewSaveMenu() 
@@ -65,26 +74,17 @@ void InitializeNewSaveMenu()
 
     }
 
-    AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("NewSaveMenu"));
+    new_save_menu = GetJSONMenuAndAddToDrawLayer("NewSaveMenu");
     
 }
 
-void SetSaveContent(char *save_name, char *player_name) 
+void SetSaveInfoText(char *save_name, char *player_name) 
 {
-    SetTextContent(SaveNameTextObject, "%s",   save_name);
-    SetTextContent(PlayerNameTextObject, "%s", player_name);
+    SetTextContent(save_name_textobject, "%s",   save_name);
+    SetTextContent(player_name_textobject, "%s", player_name);
 }
 
-void UpdateSaveStatsText(char *save_name, unsigned short int index)
-{
-
-    current_button_idx = index;
-    PlayerSave *temp   = (PlayerSave *)saves->elements;
-    SetSaveContent(save_name, temp[index].save_player_name);
-
-}
-
-void AddSaveContentToScrollBox(DrawObject *object)
+void PopulateSaveScrollBox(DrawObject *object)
 {
     PlayerSave *temp = (PlayerSave *)saves->elements;
     for(int i = 0; i < saves->num_elements; i++)
@@ -92,7 +92,16 @@ void AddSaveContentToScrollBox(DrawObject *object)
 
 }
 
-void DisplayLoadSaveScrollBox() 
+void SelectSaveClick(char *save_name, unsigned short int index)
+{
+
+    current_button_idx = index;
+    PlayerSave *temp   = (PlayerSave *)saves->elements;
+    SetSaveInfoText(save_name, temp[index].save_player_name);
+
+}
+
+void InitalizeSaveScrollBox() 
 {
 
     saves           = GetAllSaves();
@@ -106,11 +115,21 @@ void DisplayLoadSaveScrollBox()
     saves_scrollbox->asset_path = "assets/images/companyicons/SaveBox.png";
 
     saves_scrollbox->scrollbox.num_items    = saves->num_elements;
-    saves_scrollbox->scrollbox.box_click    = &UpdateSaveStatsText;
+    saves_scrollbox->scrollbox.box_click    = &SelectSaveClick;
     saves_scrollbox->scrollbox.text_content = malloc(sizeof(char *) * saves->num_elements);
 
-    AddSaveContentToScrollBox(saves_scrollbox);
+    PopulateSaveScrollBox(saves_scrollbox);
     AddObjectToDrawLayer(saves_scrollbox);
+
+}
+
+void StartGame()
+{
+
+    SetInGameStatus(1);
+    ClearDrawLayers();
+    StartSimulation();
+    SwitchToLoadingScreen();
 
 }
 
@@ -126,16 +145,6 @@ void NewSaveMenu_BCB()
 
     }
     AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("NewSaveMenu"));
-
-}
-
-void StartGame()
-{
-
-    SetInGameStatus(1);
-    ClearDrawLayers();
-    StartSimulation();
-    SwitchToLoadingScreen();
 
 }
 
@@ -171,11 +180,11 @@ void DeleteSave_BCB()
     DeleteSave(temp[current_button_idx].save_id);
     RemoveDrawObject(saves_scrollbox);
 
-    SetSaveContent("", "");
+    SetSaveInfoText("", "");
     DeleteVector(saves);
 
     saves_scrollbox = NULL;
-    DisplayLoadSaveScrollBox();
+    InitalizeSaveScrollBox();
 
 }
 
@@ -215,10 +224,10 @@ void CleanSaveMenu()
     if (saves != NULL)
         DeleteVector(saves);
 
-    SaveNameTextObject   = NULL;
-    PlayerNameTextObject = NULL;
-    saves_scrollbox      = NULL;
-    saves                = NULL;
-    current_button_idx   = -1;
+    save_name_textobject   = NULL;
+    player_name_textobject = NULL;
+    saves_scrollbox        = NULL;
+    saves                  = NULL;
+    current_button_idx     = -1;
 
 }
