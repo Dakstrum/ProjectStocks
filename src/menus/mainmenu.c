@@ -33,11 +33,63 @@
 #include "drawlayerutils.h"
 
 static MenuWithChilds *main_menu = NULL;
-static DrawObject *VersionObject = NULL;
+static DrawObject *verson_object = NULL;
 
 void DynamicText();
 void MainMenuRenderLogic();
+void CleanMenus();
 
+void InitializeMainMenu() 
+{
+
+    if (CreateNewDrawLayer() == -1) {
+
+        Log("ERROR: MainMenu could not create new draw layer");
+        return;
+
+    }
+
+    SetInGameStatus(0);
+    
+    main_menu = GetJSONMenuAndAddToDrawLayer("MainMenu");
+    
+    DynamicText();
+    MainMenuRenderLogic();
+    StopSimulation();
+    CleanMenus();
+
+}
+
+void MainMenuRenderLogic()
+{
+
+    // TEST CODE
+    if (verson_object == NULL)
+        return;
+
+    //SetTextContent(verson_object, "Version is %d", 0);
+
+}
+
+void DynamicText() 
+{
+
+    // TEST CODE
+    verson_object = GetDrawObjectFromJsonLayer("MainMenuWebsiteText");
+    AddObjectToDrawLayer(verson_object);
+
+}
+
+void ButtonTintTest() 
+{
+
+    // TEST CODE
+    DrawObject *object = GetDrawObjectByName("StartButton");
+    if (object == NULL)
+        return;
+
+    SetButtonTint(object, GetRGBA(217, 17, 39, 255));
+}
 
 void ScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
@@ -64,82 +116,6 @@ void DisplayTempScrollBox()
     object->scrollbox.text_content[1]  = GetFormattedPointer("Unimpressive Games");
 
     AddObjectToDrawLayer(object);
-
-}
-
-void DynamicText() 
-{
-
-    // TEST CODE
-    VersionObject = GetDrawObjectFromJsonLayer("MainMenuWebsiteText");
-    AddObjectToDrawLayer(VersionObject);
-
-}
-
-void MainMenuRenderLogic()
-{
-
-    // TEST CODE
-    if (VersionObject == NULL)
-        return;
-
-    //SetTextContent(VersionObject, "Version is %d", 0);
-
-}
-
-void ButtonTintTest() 
-{
-
-    // TEST CODE
-    DrawObject *object = GetDrawObjectByName("StartButton");
-    if (object == NULL)
-        return;
-
-    SetButtonTint(object, GetRGBA(217, 17, 39, 255));
-}
-
-void CleanMenus() 
-{
-
-    CleanAccountMenu();
-    CleanSaveMenu();
-    CleanCardsMenu();
-    CleanGeneralPurposeMenu();
-    CleanOptionsMenu();
-    CleanPauseMenu();
-    CleanStocksMenu();
-
-}
-
-void InitializeMainMenu() 
-{
-
-    
-    if (CreateNewDrawLayer() == -1) {
-
-        Log("ERROR: MainMenu could not create new draw layer");
-        return;
-
-    }
-
-    SetInGameStatus(0);
-    
-    main_menu = GetJSONMenuAndAddToDrawLayer("MainMenu");
-    
-    DynamicText();
-    MainMenuRenderLogic();
-    StopSimulation();
-    CleanMenus();
-
-}
-
-void CleanUpMainMenu() 
-{
-
-    if (main_menu != NULL)
-        free(main_menu);
-    
-    main_menu = NULL;
 
 }
 
@@ -190,5 +166,29 @@ void Website_BCB()
 {
 
     OpenLink("https://www.dakstrum.com");
+
+}
+
+
+void CleanUpMainMenu() 
+{
+
+    if (main_menu != NULL)
+        free(main_menu);
+    
+    main_menu = NULL;
+
+}
+
+void CleanMenus() 
+{
+
+    CleanAccountMenu();
+    CleanSaveMenu();
+    CleanCardsMenu();
+    CleanGeneralPurposeMenu();
+    CleanOptionsMenu();
+    CleanPauseMenu();
+    CleanStocksMenu();
 
 }

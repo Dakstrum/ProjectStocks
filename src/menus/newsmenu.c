@@ -13,19 +13,13 @@
 #include "generalpurposemenus.h"
 #include "drawlayerutils.h"
 
-static DrawObject *AccountMoneyTextObject = NULL;
-static DrawObject *AccountDateTextObject  = NULL; 
+static MenuWithChilds *news_menu = NULL;
 
-void NewsMenuRenderLogic()
-{
+static DrawObject *account_money_textobject = NULL;
+static DrawObject *account_date_textobject  = NULL; 
 
-    if (AccountMoneyTextObject == NULL)
-        return;
-    
-    SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
-    SetTextContent(AccountDateTextObject,  "%s",   GetDate());
-
-}
+void InitalizeNewsMenuText();
+void NewsMenuRenderLogic();
 
 void InitializeNewsMenu() 
 { 
@@ -37,19 +31,37 @@ void InitializeNewsMenu()
 
     }
     
-    AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("NewsMenu"));
+    news_menu = GetJSONMenuAndAddToDrawLayer("NewsMenu");
 
-    AccountMoneyTextObject = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
-    AccountDateTextObject  = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
-    
-    NewsMenuRenderLogic();
+    InitalizeNewsMenuText();
     InitializeSpeedSelectObject();
+
+    NewsMenuRenderLogic();
+}
+
+void InitalizeNewsMenuText()
+{
+
+    account_money_textobject = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
+    account_date_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
+
+}
+
+void NewsMenuRenderLogic()
+{
+
+    if (account_money_textobject == NULL)
+        return;
+    
+    SetTextContent(account_money_textobject, "%.2f", GetAccountMoney());
+    SetTextContent(account_date_textobject,  "%s",   GetDate());
+
 }
 
 void CleanNewsMenu()
 {
 
-    AccountMoneyTextObject = NULL;
-    AccountDateTextObject  = NULL;
+    account_money_textobject = NULL;
+    account_date_textobject  = NULL;
 
 }
