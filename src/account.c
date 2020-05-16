@@ -206,6 +206,7 @@ void CreateNewSave(char *save_name, char *player_name)
     current_player_name[31] = '\0';
 
     atomic_store(&game_seed, time(NULL));
+    atomic_store(&game_time, 0);
     CreateNewSaveEntries(save_name, player_name);
 
 }

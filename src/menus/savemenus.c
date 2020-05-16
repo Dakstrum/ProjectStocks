@@ -105,9 +105,9 @@ void DisplayLoadSaveScrollBox()
     saves_scrollbox->height     = 603;
     saves_scrollbox->asset_path = "assets/images/companyicons/SaveBox.png";
 
-    saves_scrollbox->scrollbox.num_items        = saves->num_elements;
-    saves_scrollbox->scrollbox.box_click        = &UpdateSaveStatsText;
-    saves_scrollbox->scrollbox.text_content     = malloc(sizeof(char *) * saves->num_elements);
+    saves_scrollbox->scrollbox.num_items    = saves->num_elements;
+    saves_scrollbox->scrollbox.box_click    = &UpdateSaveStatsText;
+    saves_scrollbox->scrollbox.text_content = malloc(sizeof(char *) * saves->num_elements);
 
     AddSaveContentToScrollBox(saves_scrollbox);
     AddObjectToDrawLayer(saves_scrollbox);
@@ -133,8 +133,6 @@ void StartGame()
 {
 
     SetInGameStatus(1);
-    SetLocalMoneyFromDb(GetCurrentPlayerId());
-
     ClearDrawLayers();
     StartSimulation();
     SwitchToLoadingScreen();
@@ -152,8 +150,6 @@ void LoadSaveMenuLoad_BCB()
     PlayerSave *temp = (PlayerSave *)saves->elements;
     LoadSave(temp[current_button_idx].save_id, temp[current_button_idx].save_player_id);
     StartGame();
-
-
 
 }
 
@@ -211,4 +207,18 @@ void NewSaveMenuBack_BCB()
 
     ClearCurrentDrawLayer();
     
+}
+
+void CleanSaveMenu()
+{
+
+    if (saves != NULL)
+        DeleteVector(saves);
+
+    SaveNameTextObject   = NULL;
+    PlayerNameTextObject = NULL;
+    saves_scrollbox      = NULL;
+    saves                = NULL;
+    current_button_idx   = -1;
+
 }

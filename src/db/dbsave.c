@@ -157,6 +157,8 @@ int GetAllSavesCallback(void *saves, int argc, char **argv, char **col_name)
     save.game_seed          = atoi(argv[3]);
     save.save_player_id     = atoi(argv[4]);
     save.save_player_money  = atof(argv[6]);
+    save.save_name          = malloc(32);
+    save.save_player_name   = malloc(32);
 
     strncpy(save.save_name, argv[1], 32);
     strncpy(save.save_player_name, argv[5], 32);
@@ -194,6 +196,8 @@ int GetSaveDataCallback(void *save, int argc, char **argv, char **col_name)
     temp->game_seed          = atoi(argv[3]);
     temp->save_player_id     = atoi(argv[4]);
     temp->save_player_money  = atof(argv[6]);
+    temp->save_name           = malloc(32);
+    temp->save_player_name    = malloc(32);
 
     strncpy(temp->save_name, argv[1], 32);
     strncpy(temp->save_player_name, argv[5], 32);

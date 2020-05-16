@@ -8,5 +8,6 @@ void ToggleCardsMenu();
 void TempApply_BCB();
 void CardApplyExit_BCB();
 
+void CleanCardsMenu();
 
 #endif

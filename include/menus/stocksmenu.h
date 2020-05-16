@@ -19,4 +19,6 @@ void OneM_BCB();
 void OneY_BCB();
 void All_BCB();
 
+void CleanStocksMenu();
+
 #endif

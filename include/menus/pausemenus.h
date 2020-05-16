@@ -8,5 +8,6 @@ void PauseMenuOptions_BCB();
 void PauseMenuSave_BCB();
 void PauseMenuExit_BCB();
 
+void CleanPauseMenu();
 
 #endif

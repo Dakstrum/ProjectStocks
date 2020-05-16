@@ -96,6 +96,14 @@ void TempApply_BCB()
 
 }
 
+void CleanUpCardsMenu() 
+{
+
+    cards_menu      = NULL;
+    apply_card_menu = NULL;
+    
+}
+
 void CardApplyExit_BCB()
 {
     if (apply_card_menu == NULL) {
@@ -111,17 +119,6 @@ void CardApplyExit_BCB()
         apply_card_menu = NULL;
 
     }
-}
-
-
-void CleanUpCardsMenu() 
-{
-
-    if (cards_menu != NULL)
-        free(cards_menu);
-
-    cards_menu = NULL;
-    
 }
 
 void LoadCompanyToApplyCardToScrollBoxClick(char *scroll_box_content, unsigned short int index)
@@ -155,6 +152,9 @@ void DisplayCompanyToApplyCardToScrollBox()
 
 void LoadNewActiveCard(char *scroll_box_content, unsigned short int index)
 {
+
+    if (CardTitleTextObject == NULL || CardDescTextObject == NULL)
+        return;
 
     SetTextContent(CardTitleTextObject, "%s", scroll_box_content);
     SetTextContent(CardDescTextObject, "%s", scroll_box_content);
@@ -202,5 +202,16 @@ void DisplayNegativeCardsScrollBox()
     object->scrollbox.text_content[1]  = GetFormattedPointer("Level 1 Defamation");
 
     AddObjectToDrawLayer(object);
+
+}
+
+void CleanCardsMenu()
+{
+
+    CleanUpCardsMenu();
+    AccountMoneyTextObject = NULL;
+    AccountDateTextObject  = NULL; 
+    CardTitleTextObject    = NULL;
+    CardDescTextObject     = NULL;
 
 }

@@ -340,10 +340,31 @@ void All_BCB()
 
 void CleanUpStocksMenu() 
 {
+    
+    stocks_menu           = NULL;
+    sell_transaction_menu = NULL;
+    buy_transaction_menu  = NULL;
+    
+}
 
-    if (stocks_menu != NULL)
-        free(stocks_menu);
-    
-    stocks_menu = NULL;
-    
+void CleanStocksMenu()
+{
+
+    CleanUpStocksMenu();
+
+    selected_company_name  = NULL;
+    current_graph          = NULL;
+
+    AccountMoneyTextObject = NULL;
+    AccountDateTextObject  = NULL; 
+
+    CompanyNameTextObject  = NULL;
+    CompanyAboutTextObject = NULL;
+    StockPriceTextObject   = NULL;
+    StockChangeTextObject  = NULL;
+
+    SelectedCompanyNameTextObject          = NULL;
+    SelectedCompanyPerStockPriceTextObject = NULL;
+    SelectedCompanyProjectedCostTextObject = NULL;
+
 }

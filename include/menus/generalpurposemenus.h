@@ -15,4 +15,6 @@ void PauseSpeed_BCB();
 void SpeedOne_BCB();
 void SpeedTwo_BCB();
 void SpeedThree_BCB();
+
+void CleanGeneralPurposeMenu();
 #endif

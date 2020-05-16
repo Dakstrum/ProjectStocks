@@ -16,7 +16,16 @@
 static DrawObject *AccountMoneyTextObject = NULL;
 static DrawObject *AccountDateTextObject  = NULL; 
 
-void NewsMenuRenderLogic();
+void NewsMenuRenderLogic()
+{
+
+    if (AccountMoneyTextObject == NULL)
+        return;
+    
+    SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
+    SetTextContent(AccountDateTextObject,  "%s",   GetDate());
+
+}
 
 void InitializeNewsMenu() 
 { 
@@ -37,14 +46,10 @@ void InitializeNewsMenu()
     InitializeSpeedSelectObject();
 }
 
-void NewsMenuRenderLogic()
+void CleanNewsMenu()
 {
 
-    if (AccountMoneyTextObject == NULL)
-        return;
-    
-    SetTextContent(AccountMoneyTextObject, "%.2f", GetAccountMoney());
-    SetTextContent(AccountDateTextObject,  "%s",   GetDate());
+    AccountMoneyTextObject = NULL;
+    AccountDateTextObject  = NULL;
 
 }
-

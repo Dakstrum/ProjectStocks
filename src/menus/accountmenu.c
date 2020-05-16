@@ -237,3 +237,17 @@ void AccountUp_BCB()
 
     }
 }
+
+void CleanAccountMenu()
+{
+
+    HistoryDisplayNumber = 0;
+
+    account_menu               = NULL;
+    CompanyNameTextObject      = NULL;
+    AccountMoneyTextObject     = NULL;
+    AccountDateTextObject      = NULL; 
+    StockPriceTextObject       = NULL;
+    OwnedStockAmountTextObject = NULL;
+
+}

@@ -22,7 +22,7 @@
 #include "window.h"
 #include "drawlayerutils.h"
 
-static MenuWithChilds *options_menu      = NULL;
+static MenuWithChilds *options_menu = NULL;
 static int option_id = 0;
 
 void DisplayOptionsScrollBox();
@@ -55,7 +55,6 @@ void ToggleOptionsMenu()
 
         ClearCurrentDrawLayer();
         options_menu = NULL;
-
     }
 
 }
@@ -136,5 +135,13 @@ void DisplayResolutionOptionsOnScrollbox(DrawObject *object)
     object->scrollbox.text_content[3]  = GetFormattedPointer("1536x864");
     object->scrollbox.text_content[4]  = GetFormattedPointer("1024x768");
     object->scrollbox.text_content[5]  = GetFormattedPointer("1280x720");
+
+}
+
+void CleanOptionsMenu()
+{
+
+    option_id    = 0;
+    options_menu = NULL;
 
 }

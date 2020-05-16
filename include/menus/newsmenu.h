@@ -4,4 +4,6 @@
 void InitializeNewsMenu();
 void NewsMenuRenderLogic();
 
+void CleanNewsMenu();
+
 #endif

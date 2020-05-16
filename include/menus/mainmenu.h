@@ -15,4 +15,6 @@ void Twitter_BCB();
 void Youtube_BCB();
 void Website_BCB();
 
+void CleanMainMenu();
+
 #endif

@@ -16,14 +16,19 @@
 #include "log.h"
 #include "shared.h"
 
-#include "stocksmenu.h"
+#include "accountmenu.h"
+#include "cardsmenu.h"
 #include "generalpurposemenus.h"
+#include "newsmenu.h"
+#include "optionsmenu.h"
+#include "pausemenus.h"
 #include "savemenus.h"
+#include "stocksmenu.h"
+
 #include "simulation.h"
 #include "linkopener.h"
 #include "rendering.h"
 #include "dbaccess.h"
-#include "optionsmenu.h"
 #include "account.h"
 #include "drawlayerutils.h"
 
@@ -93,6 +98,19 @@ void ButtonTintTest()
     SetButtonTint(object, GetRGBA(217, 17, 39, 255));
 }
 
+void CleanMenus() 
+{
+
+    CleanAccountMenu();
+    CleanSaveMenu();
+    CleanCardsMenu();
+    CleanGeneralPurposeMenu();
+    CleanOptionsMenu();
+    CleanPauseMenu();
+    CleanStocksMenu();
+
+}
+
 void InitializeMainMenu() 
 {
 
@@ -110,8 +128,8 @@ void InitializeMainMenu()
     
     DynamicText();
     MainMenuRenderLogic();
-    ButtonTintTest();
     StopSimulation();
+    CleanMenus();
 
 }
 

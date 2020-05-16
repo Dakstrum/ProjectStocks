@@ -49,17 +49,31 @@ void InitializeSpeedSelectObject()
     
 }
 
+void CleanAll() 
+{
+
+    ClearDrawLayers();
+
+
+    CleanAccountMenu();
+    CleanCardsMenu();
+    CleanOptionsMenu();
+    CleanStocksMenu();
+
+}
+
 void Stocks_BCB()
 {
 
+    CleanAll();
     SwitchToRenderingStocksMenu();
 
 }
 
 void News_BCB()
 {
-    
-    ClearCurrentDrawLayer();
+
+    CleanAll();
     SwitchToRenderingNewsMenu();
     
 }
@@ -67,7 +81,7 @@ void News_BCB()
 void Account_BCB()
 {
     
-    ClearCurrentDrawLayer();
+    CleanAll();
     SwitchToRenderingAccountMenu();
     
 }
@@ -75,7 +89,7 @@ void Account_BCB()
 void Cards_BCB()
 {
     
-    ClearCurrentDrawLayer();
+    CleanAll();
     SwitchToRenderingCardsMenu();
     
 }
@@ -121,5 +135,15 @@ void SpeedThree_BCB()
     SetButtonTint(speed_three_button, GetRGBA(0, 255, 0, 200));
     SetGameSpeed(3);
     account_timespeed = 3;
+
+}
+
+void CleanGeneralPurposeMenu()
+{
+
+    pause_button       = NULL;
+    speed_one_button   = NULL;
+    speed_two_button   = NULL;
+    speed_three_button = NULL;
 
 }

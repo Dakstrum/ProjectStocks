@@ -8,4 +8,6 @@ void AccountMenuRenderLogic();
 void AccountDown_BCB();
 void AccountUp_BCB();
 
+void CleanAccountMenu();
+
 #endif

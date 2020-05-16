@@ -59,3 +59,8 @@ void PauseMenuExit_BCB()
     SetCleanUpToTrue();
 
 }
+
+void CleanPauseMenu()
+{
+    in_game_pause_menu = NULL;
+}

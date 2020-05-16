@@ -6,4 +6,6 @@ void ToggleOptionsMenu();
 void OptionsMenuExit_BCB();
 void OptionsMenuResolution_BCB();
 
+void CleanOptionsMenu();
+
 #endif

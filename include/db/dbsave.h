@@ -7,8 +7,8 @@ typedef struct PlayerSave {
 
     int save_id;
     int save_player_id;
-    char save_name[32];
-    char save_player_name[32];
+    char *save_name;
+    char *save_player_name;
     double save_player_money;
     unsigned int time_spent_in_game;
     unsigned int game_seed;
