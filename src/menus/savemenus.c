@@ -224,6 +224,8 @@ void CleanSaveMenu()
     if (saves != NULL)
         DeleteVector(saves);
 
+    load_save_menu = NULL;
+    new_save_menu  = NULL;
     save_name_textobject   = NULL;
     player_name_textobject = NULL;
     saves_scrollbox        = NULL;

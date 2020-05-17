@@ -15,8 +15,8 @@
 
 static MenuWithChilds *news_menu = NULL;
 
-static DrawObject *account_money_textobject = NULL;
-static DrawObject *account_date_textobject  = NULL; 
+static DrawObject *player_money_textobject = NULL;
+static DrawObject *player_date_textobject  = NULL; 
 
 void InitalizeNewsMenuText();
 void NewsMenuRenderLogic();
@@ -42,26 +42,26 @@ void InitializeNewsMenu()
 void InitalizeNewsMenuText()
 {
 
-    account_money_textobject = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
-    account_date_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
+    player_money_textobject = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
+    player_date_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
 
 }
 
 void NewsMenuRenderLogic()
 {
 
-    if (account_money_textobject == NULL)
+    if (player_money_textobject == NULL)
         return;
     
-    SetTextContent(account_money_textobject, "%.2f", GetAccountMoney());
-    SetTextContent(account_date_textobject,  "%s",   GetDate());
+    SetTextContent(player_money_textobject, "%.2f", GetAccountMoney());
+    SetTextContent(player_date_textobject,  "%s",   GetDate());
 
 }
 
 void CleanNewsMenu()
 {
 
-    account_money_textobject = NULL;
-    account_date_textobject  = NULL;
+    player_money_textobject = NULL;
+    player_date_textobject  = NULL;
 
 }
