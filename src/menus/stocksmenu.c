@@ -79,10 +79,10 @@ void StocksMenusRenderLogic()
     if(stocks_menu)
     {
 
-        SetTextContent(stock_change_textobject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
+        SetTextContent(stock_change_textobject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing())); //Mem leak
         SetTextContent(player_money_textobject, "%.2f", GetAccountMoney());
         SetTextContent(player_date_textobject,  "%s",   GetDate());
-        SetTextContent(stock_price_textobject,  "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
+        SetTextContent(stock_price_textobject,  "%.2f", CurrentStockPrice(GetCompanyNameViewing())); //Mem leak
 
     }
 
