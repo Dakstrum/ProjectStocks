@@ -172,9 +172,9 @@ void InitalizeNegativeCardsScrollBox()
 
 }
 
-void TempApply_BCB()
+void ApplyMenu_BCB()
 {
-    //TestCodePleaseKeep
+   
     if (apply_card_menu == NULL) {
 
         CreateNewDrawLayer();
@@ -189,23 +189,6 @@ void TempApply_BCB()
 
     }
 
-}
-
-void CardApplyExit_BCB()
-{
-    if (apply_card_menu == NULL) {
-
-        CreateNewDrawLayer();
-        apply_card_menu = GetMenuWithChildsFromJsonLayer("ApplyCardMenu");
-        AddMenuWithChildsToDrawLayer(apply_card_menu);
-        InitializeCardMenuCompanyScrollBox(); 
-        
-    } else {
-
-        ClearCurrentDrawLayer();
-        apply_card_menu = NULL;
-
-    }
 }
 
 void CleanCardsMenu()

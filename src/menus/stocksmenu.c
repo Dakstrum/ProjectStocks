@@ -284,7 +284,6 @@ void Sell_BCB()
     int amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));
     AttemptToSubtractFromCurrentStock(GetCompanyNameViewing(), amount_in_text_box, CurrentStockPrice(selected_company_name));
     SellMenu_BCB();
-    // TODO tell you what you sold or bought for how much
     DisplaySellPopUp(amount_in_text_box, GetCompanyNameViewing()); 
 
 }
@@ -295,7 +294,6 @@ void Buy_BCB()
     int amount_in_text_box = atoi(GetTextFromTextBox("BuyTextBox"));
     AttemptToAddFromCurrentStock(GetCompanyNameViewing(), amount_in_text_box, CurrentStockPrice(selected_company_name));
     BuyMenu_BCB();
-    // TODO tell you what you sold or bought for how much
     DisplayBuyPopUp(amount_in_text_box, GetCompanyNameViewing()); 
 
 }

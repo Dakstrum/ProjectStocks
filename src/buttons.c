@@ -140,8 +140,8 @@ void InitializeSaveMenuButtons()
 void InitializeCardsMenuButtons()
 {
 
-    AddButton("TempApplyButton", &TempApply_BCB);
-    AddButton("CardApplyExitButton", &CardApplyExit_BCB);
+    AddButton("TempApplyButton", &ApplyMenu_BCB);
+    AddButton("CardApplyExitButton", &ApplyMenu_BCB);
 
 }
 
