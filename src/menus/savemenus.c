@@ -186,6 +186,8 @@ void DeleteSave_BCB()
     saves_scrollbox = NULL;
     InitalizeSaveScrollBox();
 
+    current_button_idx = -1;
+
 }
 
 void CreateSave_BCB()
