@@ -70,8 +70,8 @@ void AccountMenuRenderLogic()
     if (player_money_textobject == NULL)
         return;
     
-    SetTextContent(player_money_textobject,      "%.2f", GetAccountMoney());
-    SetTextContent(player_date_textobject,       "%s",   GetDate());
+    SetTextContent(player_money_textobject,       "%.2f", GetAccountMoney());
+    SetTextContent(player_date_textobject,        "%s",   GetDate());
     SetTextContent(stock_price_textobject,        "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
     SetTextContent(owned_stock_amount_textobject, "%d",   GetOwnedStockAmount(GetCompanyNameViewing()));
 
@@ -81,8 +81,8 @@ void InitalizeAccountMenuText()
 {
 
     company_name_textobject       = GetJSONObjectAndAddToDrawLayer("AccountMenuChangingCompanyNameText");
-    player_money_textobject      = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
-    player_date_textobject       = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
+    player_money_textobject       = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
+    player_date_textobject        = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
     stock_price_textobject        = GetJSONObjectAndAddToDrawLayer("AccountMenuCurrentStockPriceText");
     owned_stock_amount_textobject = GetJSONObjectAndAddToDrawLayer("AccountMenuOwnedStockAmountText");
 
@@ -237,8 +237,8 @@ void CleanAccountMenu()
 
     account_menu                  = NULL;
     company_name_textobject       = NULL;
-    player_money_textobject      = NULL;
-    player_date_textobject       = NULL; 
+    player_money_textobject       = NULL;
+    player_date_textobject        = NULL; 
     stock_price_textobject        = NULL;
     owned_stock_amount_textobject = NULL;
 
