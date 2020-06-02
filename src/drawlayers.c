@@ -494,12 +494,11 @@ DrawObject *GetDrawObjectByName(char *object_name)
         return NULL;
 
     DrawObject *object = NULL;
-    for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++) {
+    for (int i = 0; i < draw_layers[current_draw_layer].num_objects; i++) {
 
         object = draw_layers[current_draw_layer].objects[i];
-        if (object != NULL && object->name != NULL)
-            if (strcmp(object->name, object_name) == 0)
-                return object;
+        if (object->name != NULL && strcmp(object->name, object_name) == 0)
+            return object;
 
     }
 
@@ -546,10 +545,10 @@ DrawObjectTypeCollection *GetObjectsByType(DrawType type)
     collection->num_objects = 0;
     collection->objects     = malloc(sizeof(DrawObject *) * MAX_OBJECTS_PER_LAYER);
     DrawObject *object      = NULL;
-    for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++) {
+    for (int i = 0; i < draw_layers[current_draw_layer].num_objects; i++) {
 
         object = draw_layers[current_draw_layer].objects[i];
-        if (object != NULL && object->type == type) {
+        if (object->type == type) {
 
             collection->objects[collection->num_objects] = object;
             collection->num_objects++;
