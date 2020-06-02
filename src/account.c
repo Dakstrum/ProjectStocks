@@ -64,6 +64,27 @@ int GetCompanyIdViewing()
 
 }
 
+bool CanMakeTransaction(float amount) 
+{
+
+    return account_money - amount >= 0.0;
+
+}
+
+void AddMoney(float amount)
+{
+
+    account_money += amount;
+
+}
+
+void SubtractMoney(float amount)
+{
+
+    account_money -= amount;
+
+}
+
 void SetAccountMoney(float amount)
 {
 
@@ -188,7 +209,7 @@ void CreateNewSaveEntries(char *save_name, char *player_name)
 
     }
 
-    atomic_store(&player_id, InsertPlayerEntry(save_id, player_name, 3000.0, 1));
+    atomic_store(&player_id, InsertPlayerEntry(save_id, player_name, account_money, 1));
 
     if (atomic_load(&player_id) == -1)
         Log("Unable to create player");
@@ -199,6 +220,7 @@ void CreateNewSaveEntries(char *save_name, char *player_name)
 void CreateNewSave(char *save_name, char *player_name)
 {
 
+    account_money = 3000.0;
     strncpy(current_save_name, save_name, 32);
     strncpy(current_player_name, player_name, 32);
 
@@ -224,6 +246,8 @@ void LoadSave(int load_save_id, int save_player_id)
 
     atomic_store(&game_seed, save.game_seed);
     atomic_store(&game_time, save.time_spent_in_game);
+
+    account_money = save.save_player_money;
 
 }
 

@@ -123,21 +123,19 @@ void InsertStockTransaction(char *company_name, float transaction_amount, int st
 void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float price_per_stock)
 {
 
-    sqlite3 *db;
+    sqlite3 *db            = NULL;
     int owned_stock_amount = -1;
 
      if (OpenConnection(&db, DefaultConnection()) != 0)
         return;
 
     ExecuteQueryFDB(&FindOutIfYouCanAddFromCurrentStock, &owned_stock_amount, db, "SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
-    LogF("%d", owned_stock_amount);
     if(owned_stock_amount <= -1) 
         AddOwnedStock(company_name, amount_to_add);
     else
         ExecuteQueryFDB(NULL, NULL, db, "UPDATE OwnedStocks SET HowManyOwned = HowManyOwned + %d WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", amount_to_add, GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
     
     InsertStockTransaction(company_name, -amount_to_add * price_per_stock, amount_to_add);
-    SetAccountMoney(GetAccountMoney() + -amount_to_add * price_per_stock);
 
     sqlite3_close(db);
 
@@ -153,14 +151,15 @@ int FindOutIfYouCanAddFromCurrentStock(void *owned_stock_amount, int argc, char 
 
 }
 
-void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtract, float price_per_stock)
+bool AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtract, float price_per_stock)
 {
 
-    sqlite3 *db;
+    sqlite3 *db            = NULL;
     int owned_stock_amount = 0;
+    bool successful        = false;
     
     if (OpenConnection(&db, DefaultConnection()) != 0)
-        return;
+        return false;
 
     ExecuteQueryFDB(&FindOutIfYouCanSubtractFromCurrentStock, &owned_stock_amount, db, "SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
 
@@ -168,11 +167,13 @@ void AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtrac
 
         ExecuteQueryFDB(NULL, NULL, db, "UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", amount_to_subtract, GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
         InsertStockTransaction(company_name, amount_to_subtract * price_per_stock, -amount_to_subtract);
-        SetAccountMoney(GetAccountMoney() + amount_to_subtract * price_per_stock);
-        
+        successful = true;
+
     }
 
     sqlite3_close(db);
+
+    return successful;
 
 }
 

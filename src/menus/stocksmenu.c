@@ -132,23 +132,9 @@ void InitializeTransactionMenuText()
 
 }
 
-void DisplayBuyPopUp(int stock_amount, char *stock_name)
+void DisplayPopup(char str[50]) 
 {
-
     DrawObject *object = CreateNewPopup();
-    char str[50];
-    sprintf(str, "Bought %d of %s", stock_amount, stock_name);
-    SetPopupText(object, str); //Mem leak
-    AddObjectToDrawLayer(object);
-
-}
-
-void DisplaySellPopUp(int stock_amount, char *stock_name)
-{
-
-    DrawObject *object = CreateNewPopup();
-    char str[50];
-    sprintf(str, "Sold %d of %s", stock_amount, stock_name);
     SetPopupText(object, str); //Mem leak
     AddObjectToDrawLayer(object);
 
@@ -282,19 +268,55 @@ void Sell_BCB()
 {
 
     int amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));
-    AttemptToSubtractFromCurrentStock(GetCompanyNameViewing(), amount_in_text_box, CurrentStockPrice(selected_company_name));
-    SellMenu_BCB();
-    DisplaySellPopUp(amount_in_text_box, GetCompanyNameViewing()); 
+    if (amount_in_text_box < 0)
+        return;
+
+    char str[50];
+    float current_stock_price = CurrentStockPrice(selected_company_name);
+    bool successful = AttemptToSubtractFromCurrentStock(GetCompanyNameViewing(), amount_in_text_box, CurrentStockPrice(selected_company_name));
+
+    if (successful) {
+
+        SellMenu_BCB();
+        sprintf(str, "Sold %d of %s", amount_in_text_box, GetCompanyNameViewing());
+        DisplayPopup(str);
+        AddMoney(amount_in_text_box * current_stock_price);
+
+    } else {
+
+        sprintf(str, "Unable to sell stocks");
+        DisplayPopup(str);
+
+    }
+
 
 }
 
 void Buy_BCB()
 {
     
-    int amount_in_text_box = atoi(GetTextFromTextBox("BuyTextBox"));
-    AttemptToAddFromCurrentStock(GetCompanyNameViewing(), amount_in_text_box, CurrentStockPrice(selected_company_name));
-    BuyMenu_BCB();
-    DisplayBuyPopUp(amount_in_text_box, GetCompanyNameViewing()); 
+    int amount_in_text_box    = atoi(GetTextFromTextBox("BuyTextBox"));
+    float current_stock_price = CurrentStockPrice(selected_company_name);
+
+    char str[50];
+    if (CanMakeTransaction(amount_in_text_box * current_stock_price)) {
+
+        AttemptToAddFromCurrentStock(GetCompanyNameViewing(), amount_in_text_box, current_stock_price);
+        BuyMenu_BCB();
+
+        sprintf(str, "Bought %d of %s", amount_in_text_box, GetCompanyNameViewing());
+        DisplayPopup(str);
+
+        SubtractMoney(amount_in_text_box * current_stock_price);
+
+    } else {
+
+        sprintf(str, "Unable to purchase stock");
+        DisplayPopup(str);
+
+    }
+
+
 
 }
 
