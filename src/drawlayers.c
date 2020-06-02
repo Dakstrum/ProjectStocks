@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <assert.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -33,6 +34,7 @@
 typedef struct DrawLayer 
 {
 
+    unsigned char num_objects;
     DrawObject *objects[MAX_OBJECTS_PER_LAYER];
     MenuWithChilds *menu_with_childs[MAX_MENU_WITH_CHILDS_PER_LAYER];
 
@@ -53,7 +55,7 @@ static ALLEGRO_DISPLAY *display = NULL;
 static ActiveTextBox current_active_textbox;
 static ALLEGRO_BITMAP *video_buffer;
 
-void SetObjectPointersToNull();
+void ResetDrawLayers();
 
 void ClearUpDrawLayer(int layer);
 void ClearUpGeneric(DrawObject *object);
@@ -77,7 +79,7 @@ void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display)
     display            = active_display;
     draw_layers        = malloc(sizeof(DrawLayer) * MAX_DRAW_LAYERS);
     current_draw_layer = -1;
-    SetObjectPointersToNull();
+    ResetDrawLayers();
 
 }
 
@@ -88,12 +90,14 @@ int GetMaxObjectsPerDrawLayer()
 
 }
 
-void SetObjectPointersToNull() 
+void ResetDrawLayers() 
 {
 
     current_active_textbox.object = NULL;
 
     for (int i = 0; i < MAX_DRAW_LAYERS;i++) {
+
+        draw_layers[i].num_objects = 0;
 
         for (int j = 0;j < MAX_OBJECTS_PER_LAYER; j++)
             draw_layers[i].objects[j] = NULL;
@@ -109,8 +113,8 @@ void SetAllTextBoxesToInactiveInLayer(int layer)
 {
 
     DrawObject **objects = draw_layers[layer].objects;
-    for (int i = 0;i < MAX_OBJECTS_PER_LAYER;i++)
-        if (objects[i] != NULL && objects[i]->type == TEXTBOX)
+    for (int i = 0;i < draw_layers[layer].num_objects;i++)
+        if (objects[i]->type == TEXTBOX)
             objects[i]->bit_flags ^= (objects[i]->bit_flags & TEXTBOX_ACTIVE);
 
 }
@@ -128,6 +132,8 @@ void SetAllTextBoxesToInactiveInCurrentDrawLayer()
 void SetActiveTextBox(DrawObject *object)
 {
     
+    assert(object != NULL);
+
     if (current_active_textbox.object != NULL)
         current_active_textbox.object->bit_flags ^= (current_active_textbox.object->bit_flags & TEXTBOX_ACTIVE);
 
@@ -221,15 +227,11 @@ void ClearUpMenuWithChilds(int layer)
 void ClearUpDrawObjects(int layer)
 {
 
-    for (int j = 0; j < MAX_OBJECTS_PER_LAYER; j++) {
+    for (int j = 0; j < draw_layers[layer].num_objects; j++) {
 
-        if (draw_layers[layer].objects[j] != NULL) {
-
-            ClearUpGeneric(draw_layers[layer].objects[j]);
-            free(draw_layers[layer].objects[j]);
-            draw_layers[layer].objects[j] = NULL;
-
-        }
+        ClearUpGeneric(draw_layers[layer].objects[j]);
+        free(draw_layers[layer].objects[j]);
+        draw_layers[layer].objects[j] = NULL;
 
     }
 
@@ -352,8 +354,7 @@ int AddMenuWithChildsToDrawLayer(MenuWithChilds *menu_with_childs)
 int AddObjectToDrawLayer(DrawObject *object) 
 {
 
-    if (object == NULL)
-        return -1;
+    assert(object != NULL);
     
     switch (object->type) {
 
@@ -403,20 +404,10 @@ int AddVideoToDrawLayer(DrawObject *object)
 int AddDrawObjectToDrawLayer(DrawObject *object) 
 {
 
-    DrawLayer *layer = &draw_layers[current_draw_layer];
-    for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++) {
-
-        if (layer->objects[i] == NULL) {
-
-            layer->objects[i]    = object;
-            object->layer_index  = current_draw_layer;
-            object->object_index = i;
-            return 0;
-
-        }
-
-    }
-    return -1;
+    const int num_objects = draw_layers[current_draw_layer].num_objects;
+    draw_layers[current_draw_layer].objects[num_objects] = object;
+    draw_layers[current_draw_layer].num_objects++;
+    return 0;
     
 }
 
@@ -431,7 +422,6 @@ int AddTextToDrawLayer(DrawObject *object)
         return -1;
 
     }
-
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -517,32 +507,8 @@ DrawObject *GetDrawObjectByName(char *object_name)
 int RemoveDrawObject(DrawObject *object) 
 {
 
-    if (object == NULL) {
-
-        Log("RemoveDrawObject, object = null");
-        return -1;
-
-    }
-
-    if (object->layer_index > current_draw_layer) {
-
-        Log("Attempt to remove object that does not exist");
-        return -1;
-
-    }
-
-    if (draw_layers[object->layer_index].objects[object->object_index] == NULL) {
-
-        LogF("object with name %s", object->name);
-        return -1;
-
-    }
-    ClearUpGeneric(object);
-
-    const int layer_index  = object->layer_index;
-    const int object_index = object->object_index;
-    free(draw_layers[layer_index].objects[object_index]);
-    draw_layers[layer_index].objects[object_index] = NULL;
+    assert(object != NULL);
+    object->bit_flags ^= 0x01;
     
     return 0;
 

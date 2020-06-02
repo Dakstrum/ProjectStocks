@@ -14,7 +14,6 @@
 #include "account.h"
 #include "pausemenus.h"
 
-static int MAX_OBJECTS_PER_LAYER = 0;
 // leave last character as null character. Leave one character for flicker;
 static const int MAX_CHARS_IN_TEXTBOX  = 126;
 static WindowScale scale;
@@ -147,14 +146,13 @@ bool CheckForScrollboxClick(DrawObject *object, const int x, const int y)
 bool HandledMouseClickInScrollBox(int x, int y)
 {
 
-    DrawObject **objects = GetAllDrawObjectsInCurrentLayer();
-    if (objects == NULL)
+    DrawObjectTypeCollection *collection = GetObjectsByType(SCROLLBOX);
+    if (collection == NULL)
         return false;
 
-    for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++)
-        if (objects[i] != NULL && objects[i]->type == SCROLLBOX)
-            if (CheckForScrollboxClick(objects[i], x, y))
-                return true;
+    for (int i = 0; i < collection->num_objects; i++)
+        if (CheckForScrollboxClick(collection->objects[i], x, y))
+            return true;
 
     return false;
 }
@@ -164,7 +162,6 @@ void InitializeControls()
 
     al_install_mouse();
     al_install_keyboard();
-    MAX_OBJECTS_PER_LAYER = GetMaxObjectsPerDrawLayer();
 
 }
 
@@ -177,32 +174,33 @@ void SetActiveTextBoxToInactive()
         
 }
 
-void HandleScrollEventInArea(DrawObject *object, ALLEGRO_EVENT event)
+bool HandleScrollEventInArea(DrawObject *object, ALLEGRO_EVENT event)
 {
 
-    if (IsMouseCursorInAreaOfObject(object, event.mouse.x, event.mouse.y)) {
+    if (!IsMouseCursorInAreaOfObject(object, event.mouse.x, event.mouse.y))
+        return false;
 
-        object->scrollbox.vertical_offset += event.mouse.dz * 20;
+    object->scrollbox.vertical_offset += event.mouse.dz * 20;
 
-        if (object->scrollbox.vertical_offset < object->scrollbox.min_vertical_offset)
-            object->scrollbox.vertical_offset = object->scrollbox.min_vertical_offset;
-        else if (object->scrollbox.vertical_offset > object->scrollbox.max_vertical_offset)
-            object->scrollbox.vertical_offset = object->scrollbox.max_vertical_offset;
+    if (object->scrollbox.vertical_offset < object->scrollbox.min_vertical_offset)
+        object->scrollbox.vertical_offset = object->scrollbox.min_vertical_offset;
+    else if (object->scrollbox.vertical_offset > object->scrollbox.max_vertical_offset)
+        object->scrollbox.vertical_offset = object->scrollbox.max_vertical_offset;
 
-    }
+    return true;
 
 }
 
 void HandleScrollWheelEvent(ALLEGRO_EVENT event)
 {
 
-    DrawObject **objects = GetAllDrawObjectsInCurrentLayer();
-    if (objects == NULL)
+    DrawObjectTypeCollection *collection = GetObjectsByType(SCROLLBOX);
+    if (collection == NULL)
         return;
 
-    for (int i = 0; i < MAX_OBJECTS_PER_LAYER; i++)
-        if (objects[i] != NULL && objects[i]->type == SCROLLBOX)
-            HandleScrollEventInArea(objects[i], event);
+    for (int i = 0; i < collection->num_objects; i++)
+        if (HandleScrollEventInArea(collection->objects[i], event))
+            break;
 
 }
 
