@@ -234,6 +234,7 @@ void ClearUpDrawObjects(int layer)
         draw_layers[layer].objects[j] = NULL;
 
     }
+    draw_layers[layer].num_objects = 0;
 
 }
 
@@ -248,6 +249,8 @@ void ClearUpDrawLayer(int layer)
 
 void ClearUpGeneric(DrawObject *object) 
 {
+
+    assert(object != NULL);
 
     object->name = NULL;
     switch (object->type) {
