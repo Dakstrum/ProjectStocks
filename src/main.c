@@ -125,11 +125,11 @@ enum InitializeSuccess Initialize()
     InitializeCache();
     InitializeShared();
     InitializeDatabases();
+    InitializeCompanies();
     InitializeControls();
     InitializeRendering();
     InitializeEventQueue();
     InitializeJson();
-    InitializeCompanies();
     InitializeAudio();
     //CopyPersistentToMemory();
     InitAccount();

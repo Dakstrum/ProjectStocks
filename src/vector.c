@@ -34,7 +34,7 @@ void PushBack(Vector *vector, void *element)
     for (int i = 0; i < vector->size_of_single_elem;i++)
         *(temp + vector->num_elements * vector->size_of_single_elem + i) = *(new_element + i);
 
-    vector->num_elements += 1;
+    vector->num_elements++;
 
 }
 

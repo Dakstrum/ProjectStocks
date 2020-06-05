@@ -7,6 +7,7 @@ static Vector *companies = NULL;
 Company *GetAllCompanies()
 {
 
+    assert(companies != NULL);
     return (Company *)companies->elements;
 
 }
@@ -14,6 +15,7 @@ Company *GetAllCompanies()
 int GetNumCompanies()
 {
 
+    assert(companies != NULL);
     return companies->num_elements;
 
 }
@@ -21,14 +23,16 @@ int GetNumCompanies()
 int Company_Callback(void *company, int argc, char **argv, char **col_name) 
 {
 
-    if (argc > 0)
+    if (argc == 0)
         return 0;
 
     Company temp;
-    temp.company_id   = atoi(argv[0]);
-    temp.company_name = argv[1];
-    temp.ipo          = atof(argv[2]);
-    temp.category     = argv[3];
+
+    temp.company_id = atoi(argv[0]);
+    strncpy(temp.company_name, argv[1], 64);
+
+    temp.ipo = atof(argv[2]);
+    strncpy(temp.category, argv[3], 32);
 
     PushBack(companies, &temp);
 
@@ -40,6 +44,6 @@ void InitializeCompanies()
 {
 
     companies = CreateVector(sizeof(Company), 4);
-    ExecuteQueryF(Company_Callback, NULL, "SELECT C.CompanyId, C.CompanyName, C.IPO, CA.CategoryName FROM Company C INNER JOIN Category CA ON CA.CategoryId = C.CategoryId");
+    ExecuteQueryF(&Company_Callback, NULL, "SELECT C.CompanyId, C.CompanyName, C.IPO, CA.CategoryName FROM Company C INNER JOIN Category CA ON CA.CategoryId = C.CategoryId");
 
 }
