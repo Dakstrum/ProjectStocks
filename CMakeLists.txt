@@ -58,3 +58,4 @@ else()
 endif()
 
 
+file(COPY sql DESTINATION ${CMAKE_BINARY_DIR}/assets)
