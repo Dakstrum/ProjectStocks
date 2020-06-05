@@ -6,6 +6,8 @@
 #include <allegro5/allegro.h>
 
 #include "dbaccess.h"
+#include "dbcompany.h"
+
 #include "log.h"
 #include "cache.h"
 #include "graph.h"
@@ -127,6 +129,7 @@ enum InitializeSuccess Initialize()
     InitializeRendering();
     InitializeEventQueue();
     InitializeJson();
+    InitializeCompanies();
     InitializeAudio();
     //CopyPersistentToMemory();
     InitAccount();

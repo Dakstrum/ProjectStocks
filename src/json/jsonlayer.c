@@ -2,13 +2,11 @@
 #include "log.h"
 #include "drawlayers.h"
 #include "jsonlayer.h"
-#include "jsoncompanies.h"
 #include "jsondrawobjects.h"
 
 void InitializeJson()
 {
 
-    InitializeCompaniesJson();
     InitialzeDrawObjectsJson();
 
 }
@@ -17,7 +15,6 @@ void CleanUpJson()
 {
 
     CleanUpDrawObjectJson();
-    CleanUpComponaniesJson();
 
 }
 

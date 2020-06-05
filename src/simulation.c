@@ -11,7 +11,7 @@
 #include "shared.h"
 #include "account.h"
 #include "dbaccess.h"
-#include "jsoncompanies.h"
+#include "dbcompany.h"
 
 #define STOCK_PRICE_SIZE 4096
 

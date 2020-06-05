@@ -8,11 +8,11 @@
 #include "shared.h"
 #include "account.h"
 #include "stocksmenu.h"
+#include "sqlutils.h"
 #include "dbaccess.h"
 
 void SetupMainDB();
 void SetupLogDB();
-void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db);
 
 void SetWindowSettingsIfExists(void *settings, int argc, char **argv, char **col_name) 
 {
@@ -155,6 +155,7 @@ void CopyPersistentToMemory()
 
     if (OpenConnection(&persistent, DefaultConnection()) == -1)
         return;
+
     if (OpenConnection(&memory, MemoryConnection()) == -1) {
 
         sqlite3_close(persistent);
@@ -169,36 +170,56 @@ void CopyPersistentToMemory()
 
 }
 
-void SetUpDB(sqlite3 **db, char *connection_string) 
+void SetUpDB() 
 {
 
-    if (OpenConnectionCreate(db, connection_string) == -1)
+    sqlite3 *db = NULL;
+    if (OpenConnectionCreate(&db, DefaultConnection()) == -1)
         return;
 
-    char *error       = NULL;
-    char *drop_stocks = "DROP TABLE IF EXISTS StockPrices;";
-    sqlite3_exec(*db, drop_stocks, NULL, 0, NULL);
+    char *error = NULL;
+    sqlite3_exec(db, LoadSqlFile("assets/sql/tables.sql"), NULL, NULL, &error);
 
-    char *setup =   "CREATE TABLE IF NOT EXISTS Company(CompanyId INTEGER PRIMARY KEY, Ipo DOUBLE NOT NULL, CompanyName VARCHAR(50) NOT NULL, Category VARCHAR(30), IsActiveInJson INT DEFAULT 0);"
-                    "CREATE TABLE IF NOT EXISTS CompanyMetadata(CompanyMetaId INTEGER PRIMARY KEY, CompanyId INT NOT NULL, SaveId INT NOT NULL, TotalEmployees INT NOT NULL, StocksInMarket UNSIGNED BIG INT, PriceModifier DOUBLE DEFAULT(0.0), EntryTime DATETIME NOT NULL);"
-                    "CREATE TABLE IF NOT EXISTS Players(PlayerId INTEGER PRIMARY KEY, SaveId INT NOT NULL, PlayerName TEXT NOT NULL, Money DOUBLE NOT NULL, SaveOwner INT NOT NULL DEFAULT(0));"
-                    "CREATE TABLE IF NOT EXISTS Saves(SaveId INTEGER PRIMARY KEY, SaveName TEXT NOT NULL, TimeSpentInGame UNSIGNED BIG INT DEFAULT(0), RandomSeed UNSIGNED BIG INT);"
-                    "CREATE TABLE IF NOT EXISTS OwnedStocks(OwnedStockId INTEGER PRIMARY KEY, SaveId INT NOT NULL, PlayerId INT NOT NULL, CompanyId INT NOT NULL, HowManyOwned UNSIGNED BIG INT NOT NULL);"
-                    "CREATE TABLE IF NOT EXISTS Transactions(TransactionId INTEGER PRIMARY KEY, SaveId INT NOT NULL, PlayerId INT NOT NULL, CompanyId INT NOT NULL, TransactionAmount DOUBLE NOT NULL, StocksExchanged INT NOT NULL, TransactionTime DATETIME NOT NULL);"
-                    "CREATE TABLE IF NOT EXISTS Settings(SettingsId INTEGER PRIMARY KEY, WindowWidth UNSIGNED INT NOT NULL, WindowHeight UNSIGNED INT NOT NULL, WindowStyle UNSIGNED INT NOT NULL);"
-                    "UPDATE Company SET IsActiveInJson=0;";
-    sqlite3_exec(*db, setup, NULL, 0, &error);
     if (error != NULL)
-        LogF("Error setting up db %s with %s", connection_string, error);
+        LogF("SQL ERROR %s when creating database/tables", error);
+
+    sqlite3_close(db);
+
+}
+
+int SeedDB_Callback(void *seeded, int argc, char **argv, char **col_name)
+{
+
+    if (argc > 0)
+        *((bool *)seeded) = true;
+
+    return 0;
+
+}
+
+void SeedDB()
+{
+
+    bool seeded = false;
+    ExecuteQueryF(&SeedDB_Callback, &seeded, "SELECT * FROM DBEvents WHERE Event = 'Seeded'");
+    if (seeded) {
+        
+        Log("Already seeded db");
+        return;
+
+    }
+
+    ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/companies-seed.sql"));
+    ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/news-events-seed.sql"));
+    ExecuteQueryF(NULL, NULL, "INSERT INTO DBEvents (Event) VALUES ('Seeded')");
 
 }
 
 void SetupMainDB() 
 {
 
-    sqlite3 *db = NULL;
-    SetUpDB(&db, DefaultConnection());
-    sqlite3_close(db);
+    SetUpDB();
+    SeedDB();
     
 }
 
