@@ -17,6 +17,7 @@
 #include "popup.h"
 
 #include "dbaccount.h"
+#include "dbcompany.h"
 #include "account.h"
 #include "generalpurposemenus.h"
 #include "drawlayerutils.h"
@@ -194,9 +195,9 @@ void InitializeCompanyScrollBox()
     object->height     = 603;
     object->asset_path = "assets/images/companyicons/StocksBox.png";
 
-    object->scrollbox.num_items    = GetAmountOfCompanies();
+    object->scrollbox.num_items    = GetNumCompanies();
     object->scrollbox.box_click    = &LoadCompanyScrollBoxClick;
-    object->scrollbox.text_content = malloc(sizeof(char *) * 2);
+    object->scrollbox.text_content = malloc(sizeof(char *) * GetNumCompanies());
 
     PopulateStocksScrollBox(object);
     AddObjectToDrawLayer(object);
@@ -206,7 +207,7 @@ void InitializeCompanyScrollBox()
 void PopulateStocksScrollBox(DrawObject *object)
 {
 
-    for(int i = 0; i < GetAmountOfCompanies(); i++)
+    for(int i = 0; i < GetNumCompanies(); i++)
         object->scrollbox.text_content[i]  = GetStockNameFromStockId(i+1);
 
 }
