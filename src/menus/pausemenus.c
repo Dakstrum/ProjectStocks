@@ -31,7 +31,6 @@ void ToggleInGamePauseMenu()
 void PauseMenuMainMenu_BCB()
 {
 
-    SetDBMoneyToLocalMoney(GetCurrentPlayerId());
     ClearDrawLayers();
     SwitchToRenderingMainMenu();
 
@@ -47,7 +46,7 @@ void PauseMenuOptions_BCB()
 void PauseMenuSave_BCB()
 {
 
-    Log("saving from pause menu button :))");
+    StorePlayerData();
     
 }
 

@@ -229,7 +229,7 @@ void CreateNewSave(char *save_name, char *player_name)
     current_player_name[31] = '\0';
 
     atomic_store(&game_seed, time(NULL));
-    atomic_store(&game_time, 0);
+    atomic_store(&game_time, ONE_HOUR);
     CreateNewSaveEntries(save_name, player_name);
 
 }
@@ -252,10 +252,19 @@ void LoadSave(int load_save_id, int save_player_id)
 
 }
 
-void Save() 
+void StorePlayerData() 
 {
 
+    PlayerSave save;
+    save.save_name          = current_save_name;
+    save.save_player_name   = current_player_name;
+    save.time_spent_in_game = atomic_load(&game_time);
+    save.game_seed          = game_seed;
+    save.save_player_id     = player_id;
+    save.save_id            = save_id;
+    save.save_player_money  = account_money;
 
+    SavePlayerData(save);
 
 }
 

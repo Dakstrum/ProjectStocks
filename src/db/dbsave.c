@@ -145,7 +145,7 @@ char *GetPlayerNameFromSaveName(char *save_name)
 
 }
 
-int GetAllSavesCallback(void *saves, int argc, char **argv, char **col_name)
+int GetAllSaves_Callback(void *saves, int argc, char **argv, char **col_name)
 {
 
     if (argc == 0)
@@ -179,12 +179,12 @@ Vector *GetAllSaves()
                     "INNER JOIN Players P ON P.SaveId = S.SaveId "
                     "WHERE P.SaveOwner = 1";
 
-    ExecuteQueryF(&GetAllSavesCallback, saves, query);
+    ExecuteQueryF(&GetAllSaves_Callback, saves, query);
     return saves;
 
 }
 
-int GetSaveDataCallback(void *save, int argc, char **argv, char **col_name)
+int GetSaveData_Callback(void *save, int argc, char **argv, char **col_name)
 {
 
     if (argc == 0)
@@ -197,8 +197,8 @@ int GetSaveDataCallback(void *save, int argc, char **argv, char **col_name)
     temp->game_seed          = atoi(argv[3]);
     temp->save_player_id     = atoi(argv[4]);
     temp->save_player_money  = atof(argv[6]);
-    temp->save_name           = malloc(32);
-    temp->save_player_name    = malloc(32);
+    temp->save_name          = malloc(32);
+    temp->save_player_name   = malloc(32);
 
     strncpy(temp->save_name, argv[1], 32);
     strncpy(temp->save_player_name, argv[5], 32);
@@ -218,14 +218,17 @@ PlayerSave GetSaveData(int save_id)
     char *query = "SELECT S.SaveId, S.SaveName, S.TimeSpentInGame, S.RandomSeed, P.PlayerId, P.PlayerName, P.Money FROM Saves S "
                   "INNER JOIN Players P ON P.SaveId = S.SaveId "
                   "WHERE P.SaveOwner = 1 AND S.SaveId = %d";
-    ExecuteQueryF(&GetSaveDataCallback, &save, query, save_id);
+    ExecuteQueryF(&GetSaveData_Callback, &save, query, save_id);
     return save;
 
 }
 
-void UpdateSave(int save_id)
+void SavePlayerData(PlayerSave save)
 {
 
+    char *query = "UPDATE Saves SET TimeSpentInGame = %d WHERE SaveId = %d;"
+                  "UPDATE Players SET Money = %f WHERE PlayerId = %d;";
 
+    ExecuteQueryF(NULL, NULL, query, save.time_spent_in_game, save.save_id, save.save_player_money, save.save_player_id);
 
 }

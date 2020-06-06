@@ -113,7 +113,7 @@ void InsertStockPrice(int save_id, int company_id, float stock_price, char *time
 
 }
 
-int GetAmountOfSavesCallback(void *amount_of_saves, int argc, char **argv, char **col_name)
+int GetAmountOfSaves_Callback(void *amount_of_saves, int argc, char **argv, char **col_name)
 {
 
     if (argc > 0) 
@@ -127,33 +127,9 @@ int GetAmountOfSaves()
 
     int amount_of_saves = 0;
 
-    ExecuteQueryF(&GetAmountOfSavesCallback, &amount_of_saves, "SELECT * FROM Saves");
+    ExecuteQueryF(&GetAmountOfSaves_Callback, &amount_of_saves, "SELECT * FROM Saves");
 
     return amount_of_saves;
-
-}
-
-int GetStockNameFromStockIdCallback(void *stock_name, int argc, char **argv, char **col_name)
-{
-
-    if (argc > 0) {
-
-        char *temp = *((char **)stock_name);
-        strncpy(temp, argv[0], 127);
-        temp[127] = '\0';
-
-    }
-
-    return 0;
-}
-
-int GetMoneyFromPlayersCallback(void *money, int argc, char **argv, char **col_name)
-{
-
-    if (argc > 0) 
-       *((float *)money) = atof(argv[0]);
-    
-    return 0;
 
 }
 
