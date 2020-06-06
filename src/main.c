@@ -131,7 +131,6 @@ enum InitializeSuccess Initialize()
     InitializeEventQueue();
     InitializeJson();
     InitializeAudio();
-    //CopyPersistentToMemory();
     InitAccount();
     InitializeSimulation();
 
