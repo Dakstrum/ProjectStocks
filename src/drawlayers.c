@@ -548,7 +548,7 @@ DrawObjectTypeCollection *GetObjectsByType(DrawType type)
     for (int i = 0; i < draw_layers[current_draw_layer].num_objects; i++) {
 
         object = draw_layers[current_draw_layer].objects[i];
-        if (object->type == type) {
+        if (object->type == type && (object->bit_flags & SHOULD_BE_DRAWN)) {
 
             collection->objects[collection->num_objects] = object;
             collection->num_objects++;
