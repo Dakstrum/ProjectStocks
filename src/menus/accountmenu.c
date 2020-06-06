@@ -30,16 +30,29 @@ static DrawObject *company_name_textobject       = NULL;
 static DrawObject *stock_price_textobject        = NULL;
 static DrawObject *owned_stock_amount_textobject = NULL;
 
-static DrawObject *action_objects[DSP_NUM];
-static DrawObject *date_objects[DSP_NUM];
-static DrawObject *share_amount_objects[DSP_NUM];
-static DrawObject *share_price_objects[DSP_NUM];
-static DrawObject *transaction_objects[DSP_NUM];
+//Selected Stock History Text Objects
+static DrawObject *selected_action_objects[DSP_NUM];
+static DrawObject *selected_date_objects[DSP_NUM];
+static DrawObject *selected_share_amount_objects[DSP_NUM];
+static DrawObject *selected_share_price_objects[DSP_NUM];
+static DrawObject *selected_transaction_objects[DSP_NUM];
+
+//All Stocks History Text Objects
+static DrawObject *all_name_objects[DSP_NUM];
+static DrawObject *all_action_objects[DSP_NUM];
+static DrawObject *all_date_objects[DSP_NUM];
+static DrawObject *all_share_amount_objects[DSP_NUM];
+
 
 char* GetTransactionAction(TransactionType type);
+
 void InitalizeAccountMenuCompanyScrollbox();
-void PopulateHistoryDisplay(char* company);
-void InitializeHistoryDisplay();
+void PopulateSelectedStockHistoryDisplay(char* company);
+
+void InitializeAllStocksHistoryDisplay();
+void PopulateAllStocksHistoryDisplay();
+
+void InitializeSelectedStockHistoryDisplay();
 void AccountMenuRenderLogic();
 void InitalizeAccountMenuText();
 
@@ -58,8 +71,12 @@ void InitializeAccountMenu()
     InitalizeAccountMenuText();
     InitializeSpeedSelectObject();
 
-    InitializeHistoryDisplay();
-    PopulateHistoryDisplay(GetCompanyNameViewing());
+    InitializeSelectedStockHistoryDisplay();
+    PopulateSelectedStockHistoryDisplay(GetCompanyNameViewing());
+
+    InitializeAllStocksHistoryDisplay();
+    PopulateAllStocksHistoryDisplay();
+
 
     AccountMenuRenderLogic(); 
 
@@ -73,7 +90,7 @@ void AccountMenuRenderLogic()
     
     SetTextContent(player_money_textobject,       "%.2f", GetAccountMoney());
     SetTextContent(player_date_textobject,        "%s",   GetDate());
-    SetTextContent(stock_price_textobject,        "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
+    SetTextContent(stock_price_textobject,        "%.2f", CurrentStockPrice(GetCompanyNameViewing())); //Mem leak
     SetTextContent(owned_stock_amount_textobject, "%d",   GetOwnedStockAmount(GetCompanyNameViewing()));
 
 }
@@ -91,7 +108,7 @@ void InitalizeAccountMenuText()
 
 }
 
-void InitializeHistoryDisplay()
+void InitializeSelectedStockHistoryDisplay()
 {
 
     static char *action_json_objects[DSP_NUM]       = {"AccountMenuActionTextOne", "AccountMenuActionTextTwo", "AccountMenuActionTextThree", "AccountMenuActionTextFour", "AccountMenuActionTextFive"};
@@ -102,17 +119,17 @@ void InitializeHistoryDisplay()
 
     for (int i=0; i < DSP_NUM; i++) {
 
-        action_objects[i]       = GetJSONObjectAndAddToDrawLayer(action_json_objects[i]);
-        date_objects[i]         = GetJSONObjectAndAddToDrawLayer(date_json_objects[i]);
-        share_amount_objects[i] = GetJSONObjectAndAddToDrawLayer(share_amount_json_objects[i]);
-        share_price_objects[i]  = GetJSONObjectAndAddToDrawLayer(share_price_json_objects[i]);
-        transaction_objects[i]  = GetJSONObjectAndAddToDrawLayer(transaction_json_objects[i]);
+        selected_action_objects[i]       = GetJSONObjectAndAddToDrawLayer(action_json_objects[i]);
+        selected_date_objects[i]         = GetJSONObjectAndAddToDrawLayer(date_json_objects[i]);
+        selected_share_amount_objects[i] = GetJSONObjectAndAddToDrawLayer(share_amount_json_objects[i]);
+        selected_share_price_objects[i]  = GetJSONObjectAndAddToDrawLayer(share_price_json_objects[i]);
+        selected_transaction_objects[i]  = GetJSONObjectAndAddToDrawLayer(transaction_json_objects[i]);
 
     }
 
 }
 
-void PopulateHistoryDisplay(char* company)
+void PopulateSelectedStockHistoryDisplay(char* company)
 {
     
     struct Transactions *transaction = GetTransactions(company);
@@ -126,16 +143,68 @@ void PopulateHistoryDisplay(char* company)
             time_t time_buf = transaction->date[history_display_number + i];
             strftime(transaction_time, 128, "%x", localtime(&time_buf));
 
-            SetTextContent(action_objects[i],       "%s",   GetTransactionAction(transaction->type[history_display_number + i]));
-            SetTextContent(date_objects[i],         "%s",   transaction_time);
-            SetTextContent(share_amount_objects[i], "%d",   transaction->shares[history_display_number + i]);
-            SetTextContent(share_price_objects[i],  "%.2f", transaction->pershare[history_display_number + i]);
-            SetTextContent(transaction_objects[i],  "%.2f", transaction->transaction[history_display_number + i]);
+            SetTextContent(selected_action_objects[i],       "%s",   GetTransactionAction(transaction->type[history_display_number + i]));
+            SetTextContent(selected_date_objects[i],         "%s",   transaction_time);
+            SetTextContent(selected_share_amount_objects[i], "%d",   transaction->shares[history_display_number + i]);
+            SetTextContent(selected_share_price_objects[i],  "%.2f", transaction->pershare[history_display_number + i]);
+            SetTextContent(selected_transaction_objects[i],  "%.2f", transaction->transaction[history_display_number + i]);
 
         }
         
     }
 
+    free(transaction->id);
+    free(transaction->pershare);
+    free(transaction->shares);
+    free(transaction->transaction);
+    free(transaction->date);
+    free(transaction->type);
+    free(transaction);
+    
+}
+
+void InitializeAllStocksHistoryDisplay()
+{
+
+    static char *name_json_objects[DSP_NUM]         = {"AccountMenuNameOne",   "AccountMenuNameTwo",   "AccountMenuNameThree",   "AccountMenuNameFour",   "AccountMenuNameFive"};
+    static char *action_json_objects[DSP_NUM]       = {"AccountMenuActionOne", "AccountMenuActionTwo", "AccountMenuActionThree", "AccountMenuActionFour", "AccountMenuActionFive"};
+    static char *date_json_objects[DSP_NUM]         = {"AccountMenuDateOne",   "AccountMenuDateTwo",   "AccountMenuDateThree",   "AccountMenuDateFour",   "AccountMenuDateFive"};
+    static char *share_amount_json_objects[DSP_NUM] = {"AccountMenuSharesOne", "AccountMenuSharesTwo", "AccountMenuSharesThree", "AccountMenuSharesFour", "AccountMenuSharesFive"};
+
+    for (int i=0; i < DSP_NUM; i++) {
+
+        all_name_objects[i]         = GetJSONObjectAndAddToDrawLayer(name_json_objects[i]);
+        all_action_objects[i]       = GetJSONObjectAndAddToDrawLayer(action_json_objects[i]);
+        all_date_objects[i]         = GetJSONObjectAndAddToDrawLayer(date_json_objects[i]);
+        all_share_amount_objects[i] = GetJSONObjectAndAddToDrawLayer(share_amount_json_objects[i]);
+        
+    }
+
+}
+
+void PopulateAllStocksHistoryDisplay()
+{
+    
+    struct Transactions *transaction = GetAllTransactions();
+
+    char transaction_time[128];
+
+    for (int i=0; i < DSP_NUM; i++) {
+
+        if(transaction->shares[i]) {
+
+            time_t time_buf = transaction->date[i];
+            strftime(transaction_time, 128, "%x", localtime(&time_buf));
+
+            SetTextContent(all_name_objects[i],         "%s", GetCompanyNameFromCompanyId(transaction->id[i]));
+            SetTextContent(all_action_objects[i],       "%s", GetTransactionAction(transaction->type[i]));
+            SetTextContent(all_date_objects[i],         "%s", transaction_time);
+            SetTextContent(all_share_amount_objects[i], "%d", transaction->shares[i]);
+        }
+        
+    }
+
+    free(transaction->id);
     free(transaction->pershare);
     free(transaction->shares);
     free(transaction->transaction);
@@ -161,11 +230,11 @@ void ClearAccountHistoryDisplay()
 
     for (int i=0; i < DSP_NUM; i++) {
 
-        SetTextContent(action_objects[i],       "%s", "");
-        SetTextContent(date_objects[i],         "%s", "");
-        SetTextContent(share_amount_objects[i], "%s", "");
-        SetTextContent(share_price_objects[i],  "%s", "");
-        SetTextContent(transaction_objects[i],  "%s", "");
+        SetTextContent(selected_action_objects[i],       "%s", "");
+        SetTextContent(selected_date_objects[i],         "%s", "");
+        SetTextContent(selected_share_amount_objects[i], "%s", "");
+        SetTextContent(selected_share_price_objects[i],  "%s", "");
+        SetTextContent(selected_transaction_objects[i],  "%s", "");
 
     }
 
@@ -184,7 +253,7 @@ void AccountMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short i
 
     SetCompanyIdViewing(GetCompanyId(scroll_box_content));
     ClearAccountHistoryDisplay();
-    PopulateHistoryDisplay(scroll_box_content);
+    PopulateSelectedStockHistoryDisplay(scroll_box_content);
 
     SetTextContent(company_name_textobject, "%s", scroll_box_content);
 
@@ -216,7 +285,7 @@ void AccountDown_BCB()
 
     history_display_number += DSP_NUM;
     ClearAccountHistoryDisplay();
-    PopulateHistoryDisplay(GetCompanyNameViewing());
+    PopulateSelectedStockHistoryDisplay(GetCompanyNameViewing());
 
 }
 
@@ -226,7 +295,7 @@ void AccountUp_BCB()
 
         history_display_number -= DSP_NUM;
         ClearAccountHistoryDisplay();
-        PopulateHistoryDisplay(GetCompanyNameViewing());
+        PopulateSelectedStockHistoryDisplay(GetCompanyNameViewing());
 
     }
 }
