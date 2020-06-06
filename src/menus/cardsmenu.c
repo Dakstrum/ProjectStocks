@@ -85,7 +85,7 @@ void PopulateCardMenuCompanyScrollBox(DrawObject *object)
 {
 
     for(int i = 0; i < GetAmountOfCompanies(); i++)
-        object->scrollbox.text_content[i]  = GetStockNameFromStockId(i+1);
+        object->scrollbox.text_content[i]  = GetCompanyNameFromCompanyId(i+1);
 
 }
 

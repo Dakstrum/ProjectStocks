@@ -81,7 +81,7 @@ float GetAccountMoney()
 char *GetCompanyNameViewing()
 {
 
-    return GetStockNameFromStockId(GetCompanyIdViewing());
+    return GetCompanyNameFromCompanyId(GetCompanyIdViewing());
 
 }
 
