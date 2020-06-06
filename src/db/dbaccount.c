@@ -19,69 +19,12 @@ void SetupLogDB();
 
 void InsertDefaultSettingsIfNeeded(sqlite3 *db);
 int GetCompanyId(char *company_name);
-bool DoesCompanyExist(char *company_name, sqlite3 *db);
-void SetCompanyToActive(char *company_name, sqlite3 *db);
-void InsertNewCompany(char *company_name, float ipo, sqlite3 *db);
+
 int FindOutIfYouCanAddFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name);
 int FindOutIfYouCanSubtractFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name);
 TransactionType GetTransactionType(struct Transactions *transaction_temp);
 float GetAmountPerShare(struct Transactions *transaction_temp);
 
-
-int InsertAndOrSetCompanyToActive(char *company_name, float ipo) 
-{
-
-    int company_id = -1;
-
-    sqlite3 *db;
-    if  (OpenConnection(&db, DefaultConnection()) != 0)
-        return -1;
-
-    if (!DoesCompanyExist(company_name, db))
-        InsertNewCompany(company_name, ipo, db);
-    
-    SetCompanyToActive(company_name, db);
-    company_id = GetCompanyId(company_name);
-
-    sqlite3_close(db);
-
-    return company_id;
-
-}
-
-int FindOutIfCompanyExists(void *exists, int argc, char **argv, char **col_name) 
-{
-
-    if (argc > 0)
-        *((bool *)exists) = true;
-    
-    return 0;
-
-}
-
-bool DoesCompanyExist(char *company_name, sqlite3 *db) 
-{
-
-    bool exists = false;
-    ExecuteQueryFDB(&FindOutIfCompanyExists, &exists, db, "SELECT CompanyId FROM Company WHERE CompanyName='%s';", company_name);
-
-    return exists;
-
-}
-
-void SetCompanyToActive(char *company_name, sqlite3 *db) 
-{
-
-    ExecuteQueryFDB(NULL, NULL, db, "UPDATE Company SET IsActiveInJson=1 WHERE CompanyName='%s';", company_name);
-
-}
-
-void InsertNewCompany(char *company_name, float ipo, sqlite3 *db) 
-{
-
-    ExecuteQueryFDB(NULL, NULL, db, "INSERT INTO Company (Ipo, CompanyName, IsActiveInJson) VALUES (%f, '%s', 1);", ipo, company_name);
-
-}
 
 void AddOwnedStock(char *company_name, int amount_to_own) 
 {
@@ -165,7 +108,7 @@ bool AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtrac
 
     if (owned_stock_amount >= amount_to_subtract) {
 
-        ExecuteQueryFDB(NULL, NULL, db, "UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d  WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", amount_to_subtract, GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
+        ExecuteQueryFDB(NULL, NULL, db, "UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", amount_to_subtract, GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
         InsertStockTransaction(company_name, amount_to_subtract * price_per_stock, -amount_to_subtract);
         successful = true;
 
@@ -257,16 +200,6 @@ int GetMoneyFromPlayersCallback(void *money, int argc, char **argv, char **col_n
        *((float *)money) = atof(argv[0]);
     
     return 0;
-
-}
-
-void SetLocalMoneyFromDb(int player_id)
-{
-    float money = 0.0;
-
-    ExecuteQueryF(&GetMoneyFromPlayersCallback, &money, "SELECT Money FROM Players WHERE PlayerId = %d", player_id);
-
-    SetAccountMoney(*((float *)&money));
 
 }
 

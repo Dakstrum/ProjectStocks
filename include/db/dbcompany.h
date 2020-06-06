@@ -5,7 +5,7 @@
 
 typedef struct Company {
 
-    int company_id;
+    unsigned int company_id;
     float ipo;
     char company_name[64];
     char category[32];
