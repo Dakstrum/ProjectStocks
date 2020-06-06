@@ -11,6 +11,17 @@
 #include "dbaccount.h"
 #include "dbsave.h"
 
+typedef struct OwnedStocks
+{
+
+    unsigned int *company_id;
+    unsigned int *owned_amount;
+
+} OwnedStocks;
+
+unsigned int num_companies = 0;
+OwnedStocks owned_stocks = {NULL, NULL};
+
 void AddOwnedStock(char *company_name, int amount_to_own) 
 {
 
@@ -169,6 +180,7 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
 
         transaction_temp->size        += 128;
         transaction_temp->id          = realloc(transaction_temp->id,          sizeof(int)  * transaction_temp->size);
+        transaction_temp->company_id  = realloc(transaction_temp->company_id,  sizeof(int)  * transaction_temp->size);
         transaction_temp->transaction = realloc(transaction_temp->transaction, sizeof(float)  * transaction_temp->size);
         transaction_temp->date        = realloc(transaction_temp->date,        sizeof(time_t)  * transaction_temp->size);
         transaction_temp->shares      = realloc(transaction_temp->shares,      sizeof(int) * transaction_temp->size);
@@ -223,6 +235,7 @@ struct Transactions *GetAllTransactions()
 
     struct Transactions *transaction      = malloc(sizeof(struct Transactions));
     transaction->id                       = malloc(sizeof(int) * 128);
+    transaction->company_id               = malloc(sizeof(int) * 128);
     transaction->transaction              = malloc(sizeof(float) * 128);
     transaction->shares                   = malloc(sizeof(int) * 128);
     transaction->pershare                 = malloc(sizeof(float) * 128);
@@ -234,6 +247,7 @@ struct Transactions *GetAllTransactions()
     for(int i = 0; i < 128; i++) {
 
         transaction->id[i]          = 0;
+        transaction->company_id[i]  = 0;
         transaction->transaction[i] = 0;
         transaction->shares[i]      = 0;
         transaction->pershare[i]    = 0;
@@ -244,5 +258,57 @@ struct Transactions *GetAllTransactions()
 
     ExecuteQueryF(&SetTransactionCallback, transaction, "SELECT * FROM Transactions WHERE SaveId=%d AND PlayerId=%d", GetSaveId(), GetCurrentPlayerId());
     return transaction;
+
+}
+
+int GetOwnedStocks_CallBack(void *owned_amount, int argc, char **argv, char **col_name)
+{
+
+    if (argc == 0)
+        return 0;
+
+    unsigned int company_id = (unsigned int)atoi(argv[1]);
+    for (unsigned int i = 0; i < num_companies;i++) {
+
+        if (owned_stocks.company_id[i] == company_id) {
+
+            owned_stocks.owned_amount[i] = (unsigned int)atoi(argv[0]);
+            break;
+
+        }
+
+    }
+    return 0;
+
+}
+
+void InitializeOwnedStocks()
+{
+
+    Company *companies = GetAllCompanies();
+    if (owned_stocks.company_id == NULL) {
+
+        num_companies = GetNumCompanies();
+        owned_stocks.company_id   = malloc(sizeof(int) * num_companies);
+        owned_stocks.owned_amount = malloc(sizeof(int) * num_companies);
+
+        for (unsigned int i = 0; i< num_companies;i++)
+            owned_stocks.company_id[i] = companies[i].company_id;
+
+    }
+
+    for (unsigned int i = 0; i< num_companies;i++)
+        owned_stocks.owned_amount[i] = 0;
+
+    ExecuteQueryF(&GetOwnedStockAmount_CallBack, NULL, "SELECT HowManyOwned, CompanyId FROM OwnedStocks WHERE SaveId=%d AND PlayerId=%d;", GetSaveId(), GetCurrentPlayerId());
+
+}
+
+void InitialTransactions()
+{
+
+
+    InitializeOwnedStocks();
+
 
 }

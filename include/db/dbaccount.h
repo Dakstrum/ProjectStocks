@@ -18,6 +18,7 @@ typedef struct Transactions
 {
 
 	int *id;
+    int *company_id;
 	TransactionType *type;
     time_t *date;
     int *shares;
