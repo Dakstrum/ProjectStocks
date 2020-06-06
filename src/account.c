@@ -221,7 +221,7 @@ void CreateNewSaveEntries(char *save_name, char *player_name)
 void CreateNewSave(char *save_name, char *player_name)
 {
 
-    account_money = 3000.0;
+    account_money = 15000.0;
     strncpy(current_save_name, save_name, 32);
     strncpy(current_player_name, player_name, 32);
 
