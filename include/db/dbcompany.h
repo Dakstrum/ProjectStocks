@@ -14,6 +14,7 @@ typedef struct Company {
 
 Company *GetAllCompanies();
 char *GetCompanyName(unsigned int company_id);
+unsigned int GetCompanyId(const char *company_name);
 int GetNumCompanies();
 
 void InitializeCompanies();

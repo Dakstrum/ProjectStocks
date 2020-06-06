@@ -1,4 +1,6 @@
 
+#include <string.h>
+
 #include "dbaccess.h"
 #include "dbcompany.h"
 
@@ -21,6 +23,18 @@ char *GetCompanyName(unsigned int company_id)
             return strdup(temp[i].company_name);
 
     return NULL;
+
+}
+
+unsigned int GetCompanyId(const char *company_name)
+{
+
+    Company *temp = (Company *)companies->elements;
+    for (int i = 0; i < companies->num_elements;i++)
+        if (strcmp(temp[i].company_name, company_name) == 0)
+            return temp[i].company_id;
+
+    return 0;
 
 }
 

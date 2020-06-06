@@ -43,9 +43,7 @@ char *GetPlayerNameFromSaveName(char *save_name);
 int *GetSaveIdFromSaveName(char *save_name);
 
 struct Transactions *GetTransactions(char* company);
-
 int GetOwnedStockAmount(char *company_name);
-int GetCompanyId(char *company_name);
 
 void SetDBMoneyToLocalMoney(int player_id);
 

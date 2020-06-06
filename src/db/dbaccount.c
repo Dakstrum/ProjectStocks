@@ -1,30 +1,14 @@
 #include <stdio.h>
+#include <math.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <sqlite3.h>
 
-#include "log.h"
-#include "graph.h"
-#include "shared.h"
-#include "dbaccess.h"
 #include "account.h"
-#include "stocksmenu.h"
+#include "dbaccess.h"
+#include "dbcompany.h"
 #include "dbaccount.h"
 #include "dbsave.h"
-#include "math.h"
-
-
-void SetupMainDB();
-void SetupLogDB();
-
-void InsertDefaultSettingsIfNeeded(sqlite3 *db);
-int GetCompanyId(char *company_name);
-
-int FindOutIfYouCanAddFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name);
-int FindOutIfYouCanSubtractFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name);
-TransactionType GetTransactionType(struct Transactions *transaction_temp);
-float GetAmountPerShare(struct Transactions *transaction_temp);
-
 
 void AddOwnedStock(char *company_name, int amount_to_own) 
 {
@@ -63,6 +47,17 @@ void InsertStockTransaction(char *company_name, float transaction_amount, int st
 
 }
 
+int GetOwnedStockAmount_CallBack(void *owned_stock_amount, int argc, char **argv, char **col_name)
+{
+
+    if (argc > 0) 
+        *((int *)owned_stock_amount) = (int)atoi(argv[0]);
+    
+    return 0;
+
+}
+
+
 void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float price_per_stock)
 {
 
@@ -72,7 +67,7 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float p
      if (OpenConnection(&db, DefaultConnection()) != 0)
         return;
 
-    ExecuteQueryFDB(&FindOutIfYouCanAddFromCurrentStock, &owned_stock_amount, db, "SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
+    ExecuteQueryFDB(&GetOwnedStockAmount_CallBack, &owned_stock_amount, db, "SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
     if(owned_stock_amount <= -1) 
         AddOwnedStock(company_name, amount_to_add);
     else
@@ -81,16 +76,6 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float p
     InsertStockTransaction(company_name, -amount_to_add * price_per_stock, amount_to_add);
 
     sqlite3_close(db);
-
-}
-
-int FindOutIfYouCanAddFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name)
-{
-
-    if (argc > 0) 
-        *((int *)owned_stock_amount) = (int)atoi(argv[0]);
-    
-    return 0;
 
 }
 
@@ -104,7 +89,7 @@ bool AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtrac
     if (OpenConnection(&db, DefaultConnection()) != 0)
         return false;
 
-    ExecuteQueryFDB(&FindOutIfYouCanSubtractFromCurrentStock, &owned_stock_amount, db, "SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
+    ExecuteQueryFDB(&GetOwnedStockAmount_CallBack, &owned_stock_amount, db, "SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
 
     if (owned_stock_amount >= amount_to_subtract) {
 
@@ -117,38 +102,6 @@ bool AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtrac
     sqlite3_close(db);
 
     return successful;
-
-}
-
-int FindOutIfYouCanSubtractFromCurrentStock(void *owned_stock_amount, int argc, char **argv, char **col_name)
-{
-
-    if (argc > 0)
-        *((int *)owned_stock_amount) = (int)atoi(argv[0]);
-    
-    return 0;
-}
-
-int SetCompanyId(void *company_id, int argc, char **argv, char **col_name) 
-{
-
-    if (argc == 0)
-        *((int *)company_id) = -1;
-    else
-        *((int *)company_id) = atoi(argv[0]);
-
-    return 0;
-
-}
-
-int GetCompanyId(char *company_name) 
-{
-
-    int company_id = -1;
-
-    ExecuteQueryF(&SetCompanyId, &company_id, "SELECT CompanyId FROM Company WHERE CompanyName='%s'", company_name);
-
-    return company_id;
 
 }
 
@@ -210,6 +163,23 @@ void SetDBMoneyToLocalMoney(int player_id)
 
 }
 
+TransactionType GetTransactionType(struct Transactions *transaction_temp)
+{
+
+    if(transaction_temp->transaction[transaction_temp->num_transactions] < 0)
+        return BUY;
+    else
+        return SELL;
+
+}
+
+float GetAmountPerShare(struct Transactions *transaction_temp)
+{
+
+    return fabs(transaction_temp->transaction[transaction_temp->num_transactions] / (float)transaction_temp->shares[transaction_temp->num_transactions]);
+
+}
+
 int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_name)
 {
     
@@ -238,23 +208,6 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
     transaction_temp->num_transactions++;
     
     return 0;
-}
-
-TransactionType GetTransactionType(struct Transactions *transaction_temp)
-{
-
-    if(transaction_temp->transaction[transaction_temp->num_transactions] < 0)
-        return BUY;
-    else
-        return SELL;
-
-}
-
-float GetAmountPerShare(struct Transactions *transaction_temp)
-{
-
-    return fabs(transaction_temp->transaction[transaction_temp->num_transactions] / (float)transaction_temp->shares[transaction_temp->num_transactions]);
-
 }
 
 struct Transactions *GetTransactions(char* company)
