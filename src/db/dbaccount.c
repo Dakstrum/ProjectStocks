@@ -5,7 +5,8 @@
 #include <sqlite3.h>
 
 #include "account.h"
-#include "dbaccess.h"
+#include "shared.h"
+#include "dbutils.h"
 #include "dbcompany.h"
 #include "dbaccount.h"
 #include "dbsave.h"

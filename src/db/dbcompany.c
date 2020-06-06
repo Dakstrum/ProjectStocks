@@ -1,7 +1,10 @@
 
+#include <stdlib.h>
+#include <assert.h>
 #include <string.h>
 
-#include "dbaccess.h"
+#include "shared.h"
+#include "dbutils.h"
 #include "dbcompany.h"
 
 static Vector *companies = NULL;

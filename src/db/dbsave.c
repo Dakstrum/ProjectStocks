@@ -6,7 +6,8 @@
 
 #include "log.h"
 #include "dbsave.h"
-#include "dbaccess.h"
+#include "shared.h"
+#include "dbutils.h"
 #include "account.h"
 
 int GetSaveIdCallback(void *save_id, int argc, char **argv, char **col_name) 

@@ -4,11 +4,8 @@
 #include <sqlite3.h>
 
 #include "log.h"
-#include "graph.h"
 #include "shared.h"
-#include "account.h"
-#include "stocksmenu.h"
-#include "sqlutils.h"
+#include "dbutils.h"
 #include "dbaccess.h"
 
 void SetupMainDB();
@@ -87,89 +84,6 @@ void CleanUpDatabases()
 
 }
 
-char *MemoryConnection() 
-{
-
-    return "file:simdb?mode=memory&cache=shared";
-
-}
-
-char *DefaultConnection() 
-{
-
-    return "blinky.db";
-
-}
-
-int OpenConnection(sqlite3 **db, char *connection_string) 
-{
-
-    if (sqlite3_open_v2(connection_string, db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE, NULL) != SQLITE_OK) {
-
-        LogF("Could not establish connection to %s", connection_string);
-        SetCleanUpToTrue();
-        return -1;
-
-    }
-    return 0;
-
-}
-
-int OpenConnectionCreate(sqlite3 **db, char *connection_string) 
-{
-
-    if  (sqlite3_open_v2(connection_string, db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, NULL) != SQLITE_OK) {
-
-        LogF("Could not establish connection to %s for creation or write/read access.", connection_string);
-        SetCleanUpToTrue();
-        return -1;
-
-    }
-    return 0;
-
-}
-
-void BeginInMemoryBackup(sqlite3 *persistent, sqlite3 *memory)
-{
-
-    sqlite3_backup *backup;
-    if ((backup = sqlite3_backup_init(memory, "main", persistent, "main")) != NULL) {
-
-        sqlite3_backup_step(backup, -1);
-        sqlite3_backup_finish(backup);
-
-    } else {
-
-        LogF("Backup error: %s", sqlite3_errmsg(memory));
-        SetCleanUpToTrue();
-
-    }
-
-}
-
-void CopyPersistentToMemory() 
-{
-
-    sqlite3 *persistent;
-    sqlite3 *memory;
-
-    if (OpenConnection(&persistent, DefaultConnection()) == -1)
-        return;
-
-    if (OpenConnection(&memory, MemoryConnection()) == -1) {
-
-        sqlite3_close(persistent);
-        return;
-
-    }
-
-    BeginInMemoryBackup(persistent, memory);
-
-    sqlite3_close(persistent);
-    sqlite3_close(memory);
-
-}
-
 void SetUpDB() 
 {
 
@@ -241,47 +155,5 @@ void SetupLogDB()
 
     }
     sqlite3_close(db);
-
-}
-
-void ExecuteQuery(char *query, int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db) 
-{
-
-    char *error = NULL;
-    sqlite3_exec(db, query, callback, callback_var, &error);
-
-    if (error != NULL)
-        LogF("SQL ERROR %s, query = %s", error, query);
-
-    free(query);
-
-}
-
-void ExecuteQueryF(int (*callback)(void *,int, char**, char **), void *callback_var, const char *query, ...)
-{
-
-    sqlite3 *db;
-    va_list args;
-    va_start(args, query);
-
-    if (OpenConnection(&db, DefaultConnection()) != 0) {
-
-        LogF("Could not open connection: %s", query);
-        return;
-
-    }
-
-    ExecuteQuery(GetFormattedPointerVaList(query, args), callback, callback_var, db);
-    sqlite3_close(db);
-
-}
-
-void ExecuteQueryFDB(int (*callback)(void *,int, char**, char **), void *callback_var, sqlite3 *db, const char *query, ...)
-{
-
-    va_list args;
-    va_start(args, query);
-
-    ExecuteQuery(GetFormattedPointerVaList(query, args), callback, callback_var, db);
 
 }

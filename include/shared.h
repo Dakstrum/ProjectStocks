@@ -2,6 +2,7 @@
 #define SHARED_H
 
 #include <time.h>
+#include <stdbool.h>
 #include <stdarg.h>
 
 typedef enum ScreenSetting {
