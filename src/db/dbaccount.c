@@ -168,6 +168,7 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
     if (transaction_temp->num_transactions == transaction_temp->size){
 
         transaction_temp->size        += 128;
+        transaction_temp->id          = realloc(transaction_temp->id,          sizeof(int)  * transaction_temp->size);
         transaction_temp->transaction = realloc(transaction_temp->transaction, sizeof(float)  * transaction_temp->size);
         transaction_temp->date        = realloc(transaction_temp->date,        sizeof(time_t)  * transaction_temp->size);
         transaction_temp->shares      = realloc(transaction_temp->shares,      sizeof(int) * transaction_temp->size);
@@ -176,6 +177,7 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
 
     }
 
+    transaction_temp->id[transaction_temp->num_transactions]          = (int)atof(argv[3]);
     transaction_temp->transaction[transaction_temp->num_transactions] = (float)atof(argv[4]);
     transaction_temp->shares[transaction_temp->num_transactions]      = (int)atof(argv[5]);
     transaction_temp->date[transaction_temp->num_transactions]        = (time_t)atof(argv[6]);
@@ -191,6 +193,7 @@ struct Transactions *GetTransactions(char* company)
 {
 
     struct Transactions *transaction      = malloc(sizeof(struct Transactions));
+    transaction->id                       = malloc(sizeof(int) * 128);
     transaction->transaction              = malloc(sizeof(float) * 128);
     transaction->shares                   = malloc(sizeof(int) * 128);
     transaction->pershare                 = malloc(sizeof(float) * 128);
@@ -201,6 +204,7 @@ struct Transactions *GetTransactions(char* company)
 
     for(int i = 0; i < 128; i++) {
 
+        transaction->id[i]          = 0;
         transaction->transaction[i] = 0;
         transaction->shares[i]      = 0;
         transaction->pershare[i]    = 0;
@@ -210,6 +214,35 @@ struct Transactions *GetTransactions(char* company)
     }
 
     ExecuteQueryF(&SetTransactionCallback, transaction, "SELECT * FROM Transactions WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d", GetCompanyId(company), GetSaveId(), GetCurrentPlayerId());
+    return transaction;
+
+}
+
+struct Transactions *GetAllTransactions()
+{
+
+    struct Transactions *transaction      = malloc(sizeof(struct Transactions));
+    transaction->id                       = malloc(sizeof(int) * 128);
+    transaction->transaction              = malloc(sizeof(float) * 128);
+    transaction->shares                   = malloc(sizeof(int) * 128);
+    transaction->pershare                 = malloc(sizeof(float) * 128);
+    transaction->type                     = malloc(sizeof(TransactionType) * 128);
+    transaction->date                     = malloc(sizeof(time_t) * 128);
+    transaction->num_transactions         = 0;
+    transaction->size                     = 128;
+
+    for(int i = 0; i < 128; i++) {
+
+        transaction->id[i]          = 0;
+        transaction->transaction[i] = 0;
+        transaction->shares[i]      = 0;
+        transaction->pershare[i]    = 0;
+        transaction->date[i]        = 0;
+        transaction->type[i]        = BUY;
+
+    }
+
+    ExecuteQueryF(&SetTransactionCallback, transaction, "SELECT * FROM Transactions WHERE SaveId=%d AND PlayerId=%d", GetSaveId(), GetCurrentPlayerId());
     return transaction;
 
 }

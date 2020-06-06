@@ -17,6 +17,7 @@ typedef enum TransactionType
 typedef struct Transactions
 {
 
+	int *id;
 	TransactionType *type;
     time_t *date;
     int *shares;
@@ -29,7 +30,6 @@ typedef struct Transactions
 } Transaction;
 
 
-
 void InsertStockPrice(int save_id, int company_id, float stock_price, char *timestamp, sqlite3 *db);
 StockPrices *GetStockPricesBetweenRange(char *company_name, char *start_time, char *end_time, TimeSpan timespan);
 
@@ -39,10 +39,14 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float p
 char *GetSaveNameFromSaveId(int save_id);
 int GetAmountOfSaves();
 
+char *GetCompanyNameFromCompanyId(int stock_id);
+int GetAmountOfCompanies();
+
 char *GetPlayerNameFromSaveName(char *save_name);
-int *GetSaveIdFromSaveName(char *save_name);
 
 struct Transactions *GetTransactions(char* company);
+struct Transactions *GetAllTransactions();
+
 int GetOwnedStockAmount(char *company_name);
 
 void SetDBMoneyToLocalMoney(int player_id);
