@@ -21,15 +21,15 @@ CREATE TABLE IF NOT EXISTS Players
 (
     PlayerId INTEGER PRIMARY KEY, 
     SaveId INT NOT NULL, 
-    PlayerName TEXT NOT NULL, 
+    PlayerName VARCHAR(20) NOT NULL, 
     Money DOUBLE NOT NULL, 
-    aveOwner INT NOT NULL DEFAULT(0)
+    SaveOwner INT NOT NULL DEFAULT(0)
 );
 
 CREATE TABLE IF NOT EXISTS Saves
 (
     SaveId INTEGER PRIMARY KEY, 
-    SaveName TEXT NOT NULL, 
+    SaveName VARCHAR(20) NOT NULL, 
     TimeSpentInGame UNSIGNED BIG INT DEFAULT(0), 
     RandomSeed UNSIGNED BIG INT
 );

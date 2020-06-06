@@ -9,6 +9,7 @@
 #include "log.h"
 #include "shared.h"
 #include "account.h"
+#include "dbcompany.h"
 #include "dbaccount.h"
 #include "dbsave.h"
 
@@ -102,7 +103,7 @@ float GetAccountMoney()
 char *GetCompanyNameViewing()
 {
 
-    return GetStockNameFromStockId(GetCompanyIdViewing());
+    return GetCompanyName(GetCompanyIdViewing());
 
 }
 

@@ -208,7 +208,7 @@ void PopulateStocksScrollBox(DrawObject *object)
 {
 
     for(int i = 0; i < GetNumCompanies(); i++)
-        object->scrollbox.text_content[i]  = GetStockNameFromStockId(i+1);
+        object->scrollbox.text_content[i]  = GetCompanyName(i+1);
 
 }
 

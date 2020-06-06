@@ -11,6 +11,7 @@
 #include "cache.h"
 #include "graph.h"
 #include "startup.h"
+#include "dbcompany.h"
 #include "dbaccount.h"
 #include "account.h"
 #include "simulation.h"
@@ -84,8 +85,8 @@ void InitializeCardsMenuText()
 void PopulateCardMenuCompanyScrollBox(DrawObject *object)
 {
 
-    for(int i = 0; i < GetAmountOfCompanies(); i++)
-        object->scrollbox.text_content[i]  = GetStockNameFromStockId(i+1);
+    for(int i = 0; i < GetNumCompanies(); i++)
+        object->scrollbox.text_content[i]  = GetCompanyName(i+1);
 
 }
 
@@ -108,9 +109,9 @@ void InitializeCardMenuCompanyScrollBox()
     object->height     = 200;
     object->asset_path = "assets/images/companyicons/StocksBox.png";
 
-    object->scrollbox.num_items    = GetAmountOfCompanies();
+    object->scrollbox.num_items    = GetNumCompanies();
     object->scrollbox.box_click    = &CardMenuCompanyScrollBoxClick;
-    object->scrollbox.text_content = malloc(sizeof(char *) * 2);
+    object->scrollbox.text_content = malloc(sizeof(char *) * GetNumCompanies());
 
     PopulateCardMenuCompanyScrollBox(object);
     AddObjectToDrawLayer(object);

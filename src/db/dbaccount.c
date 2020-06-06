@@ -250,35 +250,6 @@ int GetStockNameFromStockIdCallback(void *stock_name, int argc, char **argv, cha
     return 0;
 }
 
-char *GetStockNameFromStockId(int stock_id)
-{
-    char *stock_name = malloc(sizeof(char) * 128);
-
-    ExecuteQueryF(&GetStockNameFromStockIdCallback, &stock_name, "SELECT CompanyName FROM Company WHERE CompanyId = %d", stock_id);
-
-    return stock_name;
-}
-
-int GetAmountOfCompanysCallback(void *amount_of_saves, int argc, char **argv, char **col_name)
-{
-
-    if (argc > 0) 
-        *((int *)amount_of_saves) = atoi(argv[0]);
-
-    return 0;
-}
-
-int GetAmountOfCompanies()
-{
-
-    int amount_of_companies = 0;
-
-    ExecuteQueryF(&GetAmountOfCompanysCallback, &amount_of_companies, "SELECT * FROM Company");
-
-    return amount_of_companies;
-
-}
-
 int GetMoneyFromPlayersCallback(void *money, int argc, char **argv, char **col_name)
 {
 

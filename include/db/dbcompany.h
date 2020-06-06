@@ -13,6 +13,7 @@ typedef struct Company {
 } Company;
 
 Company *GetAllCompanies();
+char *GetCompanyName(unsigned int company_id);
 int GetNumCompanies();
 
 void InitializeCompanies();

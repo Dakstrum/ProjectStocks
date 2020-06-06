@@ -12,6 +12,19 @@ Company *GetAllCompanies()
 
 }
 
+char *GetCompanyName(unsigned int company_id)
+{
+
+    Company *temp = (Company *)companies->elements;
+    for (int i = 0; i < companies->num_elements;i++)
+        if (temp[i].company_id == company_id)
+            return strdup(temp[i].company_name);
+
+    return NULL;
+
+}
+
+
 int GetNumCompanies()
 {
 

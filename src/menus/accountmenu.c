@@ -8,6 +8,7 @@
 #include "jsonlayer.h"
 #include "drawlayers.h"
 #include "log.h"
+#include "dbcompany.h"
 #include "dbaccount.h"
 #include "text.h"
 #include "scrollbox.h"
@@ -173,8 +174,8 @@ void ClearAccountHistoryDisplay()
 void PopulateAccountMenuCompanyScrollBox(DrawObject *object)
 {
 
-    for(int i = 0; i < GetAmountOfCompanies(); i++)
-        object->scrollbox.text_content[i]  = GetStockNameFromStockId(i+1);
+    for(int i = 0; i < GetNumCompanies(); i++)
+        object->scrollbox.text_content[i]  = GetCompanyName(i+1);
 
 }
 
@@ -200,9 +201,9 @@ void InitalizeAccountMenuCompanyScrollbox()
     object->height     = 603;
     object->asset_path = "assets/images/companyicons/StocksBox.png";
 
-    object->scrollbox.num_items    = GetAmountOfCompanies();
+    object->scrollbox.num_items    = GetNumCompanies();
     object->scrollbox.box_click    = &AccountMenuCompanyScrollBoxClick;
-    object->scrollbox.text_content = malloc(sizeof(char *) * 2);
+    object->scrollbox.text_content = malloc(sizeof(char *) * GetNumCompanies());
 
     PopulateAccountMenuCompanyScrollBox(object);
     AddObjectToDrawLayer(object);
