@@ -45,6 +45,8 @@ void FreeVectorPtrElements(Vector *vector)
     for (int i = 0;i < vector->num_elements;i++)
         free(array[i]);
 
+    vector->num_elements = 0;
+
 }
 
 void DeleteVector(Vector *vector)
