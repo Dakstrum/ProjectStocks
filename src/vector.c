@@ -38,6 +38,22 @@ void PushBack(Vector *vector, void *element)
 
 }
 
+void PushBackPtr(Vector * vector, void *element)
+{
+
+    if (vector->num_elements == vector->mem_size) {
+
+        vector->mem_size += vector->initial_mem_size;
+        vector->elements  = realloc(vector->elements, vector->size_of_single_elem * vector->mem_size);
+
+    }
+
+    void **elements = vector->elements;
+    elements[vector->num_elements] = element;
+    vector->num_elements++;
+
+}
+
 void FreeVectorPtrElements(Vector *vector)
 {
     void **array = (void **)vector->elements;

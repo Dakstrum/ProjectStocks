@@ -12,7 +12,10 @@ typedef struct Vector {
 } Vector;
 
 Vector *CreateVector(int size_of_single_elem, int initial_mem_size);
-void PushBack(Vector * vector, void *element);
+// Pushes back stack allocated memory. Will copy entire value, byte by byte
+void PushBack(Vector *vector, void *element);
+// Pushes back pointer
+void PushBackPtr(Vector * vector, void *element);
 
 // Free's elements that are themselves point to allocated memory.
 void FreeVectorPtrElements(Vector *vector);
