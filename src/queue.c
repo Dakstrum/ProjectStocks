@@ -27,12 +27,11 @@ void Queue_Unlock(Queue *queue)
 
 }
 
-void Queue_Clear(Queue *queue)
+void Queue_Delete(Queue *queue)
 {
 
-    Queue_Lock(queue);
     FreeVectorPtrElements(queue->messages);
-    Queue_Unlock(queue);
+    free(queue);
 
 }
 
@@ -40,7 +39,7 @@ void Queue_PushMessage(Queue *queue, char *message)
 {
 
     Queue_Lock(queue);
-    PushBack(queue->messages, message);
+    PushBackPtr(queue->messages, message);
     Queue_Unlock(queue);
 
 }
