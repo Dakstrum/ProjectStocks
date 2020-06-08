@@ -232,6 +232,8 @@ void CreateNewSave(char *save_name, char *player_name)
     atomic_store(&game_time, ONE_HOUR);
     CreateNewSaveEntries(save_name, player_name);
 
+    InitializeAccountInformation();
+
 }
 
 void LoadSave(int load_save_id, int save_player_id)
@@ -249,6 +251,8 @@ void LoadSave(int load_save_id, int save_player_id)
     atomic_store(&game_time, save.time_spent_in_game);
 
     account_money = save.save_player_money;
+
+    InitializeAccountInformation();
 
 }
 

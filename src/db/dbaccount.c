@@ -23,33 +23,37 @@ static unsigned int num_companies = 0;
 static OwnedStocks owned_stocks   = {NULL, NULL};
 static Transactions *transactions = NULL;
 
-void AddOwnedStock(char *company_name, int amount_to_own) 
+int GetOwnedStockAmount(char *company_name) 
 {
 
-    ExecuteQueryF(NULL, NULL, "INSERT INTO OwnedStocks (SaveId, PlayerId, CompanyId, HowManyOwned) VALUES (%d, %d, %d, '%d');", GetSaveId(), GetCurrentPlayerId(),  GetCompanyId(company_name), amount_to_own);
+    unsigned int company_id = GetCompanyId(company_name);
 
-}
+    for (unsigned int i = 0; i < num_companies;i++) {
 
-int GetOwnedStockAmountCallback(void *owned_stock_amount, int argc, char **argv, char **col_name) 
-{
+        if (owned_stocks.company_id[i] == company_id)
+            return owned_stocks.owned_amount[i];
 
-    if (argc == 0)
-        *((int *)owned_stock_amount) = -1;
-    else
-        *((int *)owned_stock_amount) = atoi(argv[0]);
+    }
 
     return 0;
 
 }
 
-int GetOwnedStockAmount(char *company_name) 
+void ModifyOwnedStockAmount(char *company_name, int amount) 
 {
 
-    int owned_stock_amount = 0;
+    unsigned int company_id = GetCompanyId(company_name);
 
-    ExecuteQueryF(&GetOwnedStockAmountCallback, &owned_stock_amount, "SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId = %d AND SaveId=%d;", GetCompanyId(company_name), GetSaveId());
+    for (unsigned int i = 0; i < num_companies;i++) {
 
-    return owned_stock_amount;
+        if (owned_stocks.company_id[i] == company_id) {
+
+            owned_stocks.owned_amount[i] -= amount;
+            break;
+
+        }
+
+    }
 
 }
 
@@ -60,95 +64,24 @@ void InsertStockTransaction(char *company_name, float transaction_amount, int st
 
 }
 
-int GetOwnedStockAmount_CallBack(void *owned_stock_amount, int argc, char **argv, char **col_name)
-{
-
-    if (argc > 0) 
-        *((int *)owned_stock_amount) = (int)atoi(argv[0]);
-    
-    return 0;
-
-}
-
 
 void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float price_per_stock)
 {
 
-    sqlite3 *db            = NULL;
-    int owned_stock_amount = -1;
-
-     if (OpenConnection(&db, DefaultConnection()) != 0)
-        return;
-
-    ExecuteQueryFDB(&GetOwnedStockAmount_CallBack, &owned_stock_amount, db, "SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
-    if(owned_stock_amount <= -1) 
-        AddOwnedStock(company_name, amount_to_add);
-    else
-        ExecuteQueryFDB(NULL, NULL, db, "UPDATE OwnedStocks SET HowManyOwned = HowManyOwned + %d WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", amount_to_add, GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
-    
+    ModifyOwnedStockAmount(company_name, amount_to_add);
     InsertStockTransaction(company_name, -amount_to_add * price_per_stock, amount_to_add);
-
-    sqlite3_close(db);
 
 }
 
 bool AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtract, float price_per_stock)
 {
 
-    sqlite3 *db            = NULL;
-    int owned_stock_amount = 0;
-    bool successful        = false;
-    
-    if (OpenConnection(&db, DefaultConnection()) != 0)
+    if (GetOwnedStockAmount(company_name) < amount_to_subtract)
         return false;
 
-    ExecuteQueryFDB(&GetOwnedStockAmount_CallBack, &owned_stock_amount, db, "SELECT HowManyOwned FROM OwnedStocks WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
-
-    if (owned_stock_amount >= amount_to_subtract) {
-
-        ExecuteQueryFDB(NULL, NULL, db, "UPDATE OwnedStocks SET HowManyOwned = HowManyOwned - %d WHERE CompanyId=%d AND SaveId=%d AND PlayerId=%d;", amount_to_subtract, GetCompanyId(company_name), GetSaveId(), GetCurrentPlayerId());
-        InsertStockTransaction(company_name, amount_to_subtract * price_per_stock, -amount_to_subtract);
-        successful = true;
-
-    }
-
-    sqlite3_close(db);
-
-    return successful;
-
-}
-
-void InsertStockPrice(int save_id, int company_id, float stock_price, char *timestamp, sqlite3 *db) 
-{
-
-    ExecuteQueryFDB(NULL, NULL, db, "INSERT INTO StockPrices (SaveId, CompanyId, Price, Time) VALUES (%d, %d, %f, '%s')", save_id, company_id, stock_price, timestamp);
-
-}
-
-int GetAmountOfSaves_Callback(void *amount_of_saves, int argc, char **argv, char **col_name)
-{
-
-    if (argc > 0) 
-        *((int *)amount_of_saves) = atoi(argv[0]);
-
-    return 0;
-}
-
-int GetAmountOfSaves()
-{
-
-    int amount_of_saves = 0;
-
-    ExecuteQueryF(&GetAmountOfSaves_Callback, &amount_of_saves, "SELECT * FROM Saves");
-
-    return amount_of_saves;
-
-}
-
-void SetDBMoneyToLocalMoney(int player_id)
-{
-
-    ExecuteQueryF(NULL, NULL, "UPDATE Players SET Money = %.2f WHERE PlayerId = %d;", GetAccountMoney(), player_id);
+    ModifyOwnedStockAmount(company_name, amount_to_subtract);
+    InsertStockTransaction(company_name, amount_to_subtract * price_per_stock, -amount_to_subtract);
+    return true;
 
 }
 
@@ -310,7 +243,7 @@ void InitializeOwnedStocks()
     for (unsigned int i = 0; i< num_companies;i++)
         owned_stocks.owned_amount[i] = 0;
 
-    ExecuteQueryF(&GetOwnedStockAmount_CallBack, NULL, "SELECT HowManyOwned, CompanyId FROM OwnedStocks WHERE SaveId=%d AND PlayerId=%d;", GetSaveId(), GetCurrentPlayerId());
+    ExecuteQueryF(&GetOwnedStocks_CallBack, NULL, "SELECT SUM(StocksExchanged), CompanyId FROM Transactions WHERE SaveId=%d AND PlayerId=%d GROUP BY CompanyId", GetSaveId(), GetCurrentPlayerId());
 
 }
 
@@ -321,7 +254,7 @@ void InitializeTransactions()
 
 }
 
-void InitialAccountInformation()
+void InitializeAccountInformation()
 {
 
 

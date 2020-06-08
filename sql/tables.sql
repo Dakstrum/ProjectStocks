@@ -34,14 +34,6 @@ CREATE TABLE IF NOT EXISTS Saves
     RandomSeed UNSIGNED BIG INT
 );
 
-CREATE TABLE IF NOT EXISTS OwnedStocks
-(
-    OwnedStockId INTEGER PRIMARY KEY, 
-    SaveId INT NOT NULL, PlayerId INT NOT NULL, 
-    CompanyId INT NOT NULL, 
-    HowManyOwned UNSIGNED BIG INT NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS Transactions
 (
     TransactionId INTEGER PRIMARY KEY, 
