@@ -196,7 +196,7 @@ void PopulateAllStocksHistoryDisplay()
             time_t time_buf = transaction->date[i];
             strftime(transaction_time, 128, "%x", localtime(&time_buf));
 
-            SetTextContent(all_name_objects[i],         "%s", GetCompanyName(transaction->id[i]));
+            SetTextContent(all_name_objects[i],         "%s", GetCompanyName(transaction->company_id[i]));
             SetTextContent(all_action_objects[i],       "%s", GetTransactionAction(transaction->type[i]));
             SetTextContent(all_date_objects[i],         "%s", transaction_time);
             SetTextContent(all_share_amount_objects[i], "%d", transaction->shares[i]);

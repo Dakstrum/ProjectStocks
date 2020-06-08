@@ -28,7 +28,7 @@ typedef struct Transactions
     unsigned int num_transactions;
     unsigned int size;
 
-} Transaction;
+} Transactions;
 
 
 void InsertStockPrice(int save_id, int company_id, float stock_price, char *timestamp, sqlite3 *db);
@@ -40,9 +40,6 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float p
 char *GetSaveNameFromSaveId(int save_id);
 int GetAmountOfSaves();
 
-char *GetCompanyNameFromCompanyId(int stock_id);
-int GetAmountOfCompanies();
-
 char *GetPlayerNameFromSaveName(char *save_name);
 
 struct Transactions *GetTransactions(char* company);
@@ -51,5 +48,7 @@ struct Transactions *GetAllTransactions();
 int GetOwnedStockAmount(char *company_name);
 
 void SetDBMoneyToLocalMoney(int player_id);
+
+void InitialAccountInformation();
 
 #endif

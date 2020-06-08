@@ -19,8 +19,9 @@ typedef struct OwnedStocks
 
 } OwnedStocks;
 
-unsigned int num_companies = 0;
-OwnedStocks owned_stocks = {NULL, NULL};
+static unsigned int num_companies = 0;
+static OwnedStocks owned_stocks   = {NULL, NULL};
+static Transactions *transactions = NULL;
 
 void AddOwnedStock(char *company_name, int amount_to_own) 
 {
@@ -151,7 +152,7 @@ void SetDBMoneyToLocalMoney(int player_id)
 
 }
 
-TransactionType GetTransactionType(struct Transactions *transaction_temp)
+TransactionType GetTransactionType(Transactions *transaction_temp)
 {
 
     if(transaction_temp->transaction[transaction_temp->num_transactions] < 0)
@@ -161,41 +162,48 @@ TransactionType GetTransactionType(struct Transactions *transaction_temp)
 
 }
 
-float GetAmountPerShare(struct Transactions *transaction_temp)
+float GetAmountPerShare(Transactions *transaction_temp)
 {
 
     return fabs(transaction_temp->transaction[transaction_temp->num_transactions] / (float)transaction_temp->shares[transaction_temp->num_transactions]);
 
 }
 
+void IncreaseTransactionSizeIfNeeded(Transactions *transaction_temp)
+{
+
+    if (transaction_temp->num_transactions < transaction_temp->size)
+        return;
+
+    transaction_temp->size        += 128;
+    transaction_temp->id          = realloc(transaction_temp->id,          sizeof(int)  * transaction_temp->size);
+    transaction_temp->company_id  = realloc(transaction_temp->company_id,  sizeof(int)  * transaction_temp->size);
+    transaction_temp->transaction = realloc(transaction_temp->transaction, sizeof(float)  * transaction_temp->size);
+    transaction_temp->date        = realloc(transaction_temp->date,        sizeof(time_t)  * transaction_temp->size);
+    transaction_temp->shares      = realloc(transaction_temp->shares,      sizeof(int) * transaction_temp->size);
+    transaction_temp->pershare    = realloc(transaction_temp->pershare,    sizeof(float) * transaction_temp->size);
+    transaction_temp->type        = realloc(transaction_temp->type,        sizeof(TransactionType) * transaction_temp->size);
+
+
+}
+
 int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_name)
 {
-    
-    struct Transactions *transaction_temp = (struct Transactions *)transaction;
 
-    if (argc == 0 )
+    if (argc == 0)
         return 0;
 
-    if (transaction_temp->num_transactions == transaction_temp->size){
+    Transactions *transaction_temp  = (Transactions *)transaction;
+    const int temp_num_transactions = transaction_temp->num_transactions;
+    IncreaseTransactionSizeIfNeeded(transaction_temp);
 
-        transaction_temp->size        += 128;
-        transaction_temp->id          = realloc(transaction_temp->id,          sizeof(int)  * transaction_temp->size);
-        transaction_temp->company_id  = realloc(transaction_temp->company_id,  sizeof(int)  * transaction_temp->size);
-        transaction_temp->transaction = realloc(transaction_temp->transaction, sizeof(float)  * transaction_temp->size);
-        transaction_temp->date        = realloc(transaction_temp->date,        sizeof(time_t)  * transaction_temp->size);
-        transaction_temp->shares      = realloc(transaction_temp->shares,      sizeof(int) * transaction_temp->size);
-        transaction_temp->pershare    = realloc(transaction_temp->pershare,    sizeof(float) * transaction_temp->size);
-        transaction_temp->type        = realloc(transaction_temp->type,        sizeof(TransactionType) * transaction_temp->size);
-
-    }
-
-    transaction_temp->id[transaction_temp->num_transactions]          = (int)atof(argv[3]);
-    transaction_temp->transaction[transaction_temp->num_transactions] = (float)atof(argv[4]);
-    transaction_temp->shares[transaction_temp->num_transactions]      = (int)atof(argv[5]);
-    transaction_temp->date[transaction_temp->num_transactions]        = (time_t)atof(argv[6]);
-    transaction_temp->type[transaction_temp->num_transactions]        = GetTransactionType(transaction_temp);
-    transaction_temp->pershare[transaction_temp->num_transactions]    = GetAmountPerShare(transaction_temp);
-    
+    transaction_temp->id[temp_num_transactions]          = atoi(argv[0]);
+    transaction_temp->company_id[temp_num_transactions]  = atoi(argv[3]);
+    transaction_temp->transaction[temp_num_transactions] = (float)atof(argv[4]);
+    transaction_temp->shares[temp_num_transactions]      = atoi(argv[5]);
+    transaction_temp->date[temp_num_transactions]        = atoi(argv[6]);
+    transaction_temp->type[temp_num_transactions]        = GetTransactionType(transaction_temp);
+    transaction_temp->pershare[temp_num_transactions]    = GetAmountPerShare(transaction_temp);
     transaction_temp->num_transactions++;
     
     return 0;
@@ -204,19 +212,21 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
 struct Transactions *GetTransactions(char* company)
 {
 
-    struct Transactions *transaction      = malloc(sizeof(struct Transactions));
-    transaction->id                       = malloc(sizeof(int) * 128);
-    transaction->transaction              = malloc(sizeof(float) * 128);
-    transaction->shares                   = malloc(sizeof(int) * 128);
-    transaction->pershare                 = malloc(sizeof(float) * 128);
-    transaction->type                     = malloc(sizeof(TransactionType) * 128);
-    transaction->date                     = malloc(sizeof(time_t) * 128);
-    transaction->num_transactions         = 0;
-    transaction->size                     = 128;
+    Transactions *transaction      = malloc(sizeof(struct Transactions));
+    transaction->id                = malloc(sizeof(int) * 128);
+    transaction->company_id        = malloc(sizeof(int) * 128);
+    transaction->transaction       = malloc(sizeof(float) * 128);
+    transaction->shares            = malloc(sizeof(int) * 128);
+    transaction->pershare          = malloc(sizeof(float) * 128);
+    transaction->type              = malloc(sizeof(TransactionType) * 128);
+    transaction->date              = malloc(sizeof(time_t) * 128);
+    transaction->num_transactions  = 0;
+    transaction->size              = 128;
 
     for(int i = 0; i < 128; i++) {
 
         transaction->id[i]          = 0;
+        transaction->company_id[i]  = 0;
         transaction->transaction[i] = 0;
         transaction->shares[i]      = 0;
         transaction->pershare[i]    = 0;
@@ -233,16 +243,16 @@ struct Transactions *GetTransactions(char* company)
 struct Transactions *GetAllTransactions()
 {
 
-    struct Transactions *transaction      = malloc(sizeof(struct Transactions));
-    transaction->id                       = malloc(sizeof(int) * 128);
-    transaction->company_id               = malloc(sizeof(int) * 128);
-    transaction->transaction              = malloc(sizeof(float) * 128);
-    transaction->shares                   = malloc(sizeof(int) * 128);
-    transaction->pershare                 = malloc(sizeof(float) * 128);
-    transaction->type                     = malloc(sizeof(TransactionType) * 128);
-    transaction->date                     = malloc(sizeof(time_t) * 128);
-    transaction->num_transactions         = 0;
-    transaction->size                     = 128;
+    Transactions *transaction      = malloc(sizeof(struct Transactions));
+    transaction->id                = malloc(sizeof(int) * 128);
+    transaction->company_id        = malloc(sizeof(int) * 128);
+    transaction->transaction       = malloc(sizeof(float) * 128);
+    transaction->shares            = malloc(sizeof(int) * 128);
+    transaction->pershare          = malloc(sizeof(float) * 128);
+    transaction->type              = malloc(sizeof(TransactionType) * 128);
+    transaction->date              = malloc(sizeof(time_t) * 128);
+    transaction->num_transactions  = 0;
+    transaction->size              = 128;
 
     for(int i = 0; i < 128; i++) {
 
@@ -304,11 +314,19 @@ void InitializeOwnedStocks()
 
 }
 
-void InitialTransactions()
+void InitializeTransactions()
+{
+
+    transactions = GetAllTransactions();
+
+}
+
+void InitialAccountInformation()
 {
 
 
     InitializeOwnedStocks();
+    InitializeTransactions();
 
 
 }
