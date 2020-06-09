@@ -132,34 +132,27 @@ void InitializeSelectedStockHistoryDisplay()
 void PopulateSelectedStockHistoryDisplay(char* company)
 {
     
-    struct Transactions *transaction = GetTransactions(company);
+    struct Transactions *transactions = GetCompanyTransactions(company);
 
     char transaction_time[128];
 
     for (int i=0; i < DSP_NUM; i++) {
 
-        if(transaction->shares[history_display_number + i]) {
+        if(transactions->shares[history_display_number + i]) {
 
-            time_t time_buf = transaction->date[history_display_number + i];
+            time_t time_buf = transactions->date[history_display_number + i];
             strftime(transaction_time, 128, "%x", localtime(&time_buf));
 
-            SetTextContent(selected_action_objects[i],       "%s",   GetTransactionAction(transaction->type[history_display_number + i]));
+            SetTextContent(selected_action_objects[i],       "%s",   GetTransactionAction(transactions->type[history_display_number + i]));
             SetTextContent(selected_date_objects[i],         "%s",   transaction_time);
-            SetTextContent(selected_share_amount_objects[i], "%d",   transaction->shares[history_display_number + i]);
-            SetTextContent(selected_share_price_objects[i],  "%.2f", transaction->pershare[history_display_number + i]);
-            SetTextContent(selected_transaction_objects[i],  "%.2f", transaction->transaction[history_display_number + i]);
+            SetTextContent(selected_share_amount_objects[i], "%d",   transactions->shares[history_display_number + i]);
+            SetTextContent(selected_share_price_objects[i],  "%.2f", transactions->pershare[history_display_number + i]);
+            SetTextContent(selected_transaction_objects[i],  "%.2f", transactions->transaction[history_display_number + i]);
 
         }
         
     }
-
-    free(transaction->id);
-    free(transaction->pershare);
-    free(transaction->shares);
-    free(transaction->transaction);
-    free(transaction->date);
-    free(transaction->type);
-    free(transaction);
+    FreeTransactions(transactions);
     
 }
 
@@ -185,32 +178,26 @@ void InitializeAllStocksHistoryDisplay()
 void PopulateAllStocksHistoryDisplay()
 {
     
-    struct Transactions *transaction = GetAllTransactions();
+    struct Transactions *transactions = GetAllTransactions();
 
     char transaction_time[128];
 
     for (int i=0; i < DSP_NUM; i++) {
 
-        if(transaction->shares[i]) {
+        if(transactions->shares[i]) {
 
-            time_t time_buf = transaction->date[i];
+            time_t time_buf = transactions->date[i];
             strftime(transaction_time, 128, "%x", localtime(&time_buf));
 
-            SetTextContent(all_name_objects[i],         "%s", GetCompanyName(transaction->company_id[i]));
-            SetTextContent(all_action_objects[i],       "%s", GetTransactionAction(transaction->type[i]));
+            SetTextContent(all_name_objects[i],         "%s", GetCompanyName(transactions->company_id[i]));
+            SetTextContent(all_action_objects[i],       "%s", GetTransactionAction(transactions->type[i]));
             SetTextContent(all_date_objects[i],         "%s", transaction_time);
-            SetTextContent(all_share_amount_objects[i], "%d", transaction->shares[i]);
+            SetTextContent(all_share_amount_objects[i], "%d", transactions->shares[i]);
         }
         
     }
 
-    free(transaction->id);
-    free(transaction->pershare);
-    free(transaction->shares);
-    free(transaction->transaction);
-    free(transaction->date);
-    free(transaction->type);
-    free(transaction);
+    FreeTransactions(transactions);
     
 }
 

@@ -269,6 +269,7 @@ void StorePlayerData()
     save.save_player_money  = account_money;
 
     SavePlayerData(save);
+    SaveTransactions();
 
 }
 
