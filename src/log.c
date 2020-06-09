@@ -7,6 +7,7 @@
 #include <allegro5/allegro.h>
 
 #include "log.h"
+#include "dbutils.h"
 #include "vector.h"
 #include "queue.h"
 #include "shared.h"
@@ -27,35 +28,16 @@ void InitializeLogging()
 
 }
 
-void InsertMessage(sqlite3 *db, char *message) 
-{
-
-    char *error = NULL;
-    sqlite3_exec(db, message, NULL, NULL, &error);
-
-    if (error != NULL)
-        LogFNoQueue("SQL ERROR %s, query = %s", error, message);
-
-}
-
 void WriteQueue() 
 {
 
-    Vector *vector  = Queue_GetLockFreeVector(log_queue);
-    char **messages = vector->elements;
+    Vector *vector = Queue_GetLockFreeVector(log_queue);
 
     sqlite3 *db;
     if (sqlite3_open_v2("log.db", &db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE, NULL) != SQLITE_OK)
         return;
 
-    sqlite3_exec(db, "BEGIN TRANSACTION", NULL, 0, 0);
-
-    for (size_t i = 0; i < vector->num_elements; i++)
-        InsertMessage(db, messages[i]);
-
-    sqlite3_exec(db, "END TRANSACTION", NULL, 0, 0);
-    sqlite3_close(db);
-
+    ExecuteTransaction(db, vector);
     FreeVectorPtrElements(vector);
     DeleteVector(vector);
 

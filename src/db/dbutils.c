@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "log.h"
+#include "vector.h"
 #include "shared.h"
 #include "dbutils.h"
 
@@ -139,5 +140,30 @@ void ExecuteQueryFDB(int (*callback)(void *,int, char**, char **), void *callbac
     va_start(args, query);
 
     ExecuteQuery(GetFormattedPointerVaList(query, args), callback, callback_var, db);
+
+}
+
+void InsertMessage(sqlite3 *db, char *message) 
+{
+
+    char *error = NULL;
+    sqlite3_exec(db, message, NULL, NULL, &error);
+
+    if (error != NULL)
+        LogFNoQueue("SQL ERROR %s, query = %s", error, message);
+
+}
+
+void ExecuteTransaction(sqlite3 *db, Vector *vector)
+{
+
+    sqlite3_exec(db, "BEGIN TRANSACTION", NULL, 0, 0);
+
+    char **messages = vector->elements;
+    for (size_t i = 0; i < vector->num_elements; i++)
+        InsertMessage(db, messages[i]);
+
+    sqlite3_exec(db, "END TRANSACTION", NULL, 0, 0);
+    sqlite3_close(db);
 
 }
