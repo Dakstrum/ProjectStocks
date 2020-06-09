@@ -38,8 +38,7 @@ void WriteQueue()
         return;
 
     ExecuteTransaction(db, vector);
-    FreeVectorPtrElements(vector);
-    DeleteVector(vector);
+    Vector_DeletePtrs(vector);
 
 }
 

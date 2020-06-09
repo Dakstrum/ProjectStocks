@@ -167,14 +167,14 @@ int GetAllSaves_Callback(void *saves, int argc, char **argv, char **col_name)
     save.save_name[31]        = '\0';
     save.save_player_name[31] = '\0';
 
-    PushBack(temp_vec, &save);
+    Vector_PushBack(temp_vec, &save);
     return 0;
 
 }
 
 Vector *GetAllSaves() 
 {
-    Vector *saves = CreateVector(sizeof(PlayerSave), 16);
+    Vector *saves = Vector_Create(sizeof(PlayerSave), 16);
     char *query   = "SELECT S.SaveId, S.SaveName, S.TimeSpentInGame, S.RandomSeed, P.PlayerId, P.PlayerName, P.Money FROM Saves S "
                     "INNER JOIN Players P ON P.SaveId = S.SaveId "
                     "WHERE P.SaveOwner = 1";

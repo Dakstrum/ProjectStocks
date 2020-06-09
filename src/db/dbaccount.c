@@ -95,7 +95,7 @@ int GetOwnedStockAmount(char *company_name)
 
     const unsigned int company_id = GetCompanyId(company_name);
 
-    for (unsigned int i = 0; i < num_companies;i++)
+    for (size_t i = 0; i < num_companies;i++)
         if (owned_stocks.company_id[i] == company_id)
             return owned_stocks.owned_amount[i];
 
@@ -109,7 +109,7 @@ void ModifyOwnedStockAmount(char *company_name, int amount)
 
     const unsigned int company_id = GetCompanyId(company_name);
 
-    for (unsigned int i = 0; i < num_companies;i++) {
+    for (size_t i = 0; i < num_companies;i++) {
 
         if (owned_stocks.company_id[i] != company_id)
             continue;
@@ -208,7 +208,7 @@ Transactions *GetCompanyTransactions(char* company)
     Transactions *company_transactions = GetNewTransactions();
     const int company_id = GetCompanyId(company);
 
-    for (unsigned int i = 0; i < account_transactions->num_transactions;i++) {
+    for (size_t i = 0; i < account_transactions->num_transactions;i++) {
 
         if (account_transactions->company_id[i] != company_id)
             continue;
@@ -224,7 +224,7 @@ Transactions *GetAllTransactions()
 {
 
     Transactions *transactions = GetNewTransactions();
-    for (unsigned int i = 0; i < account_transactions->num_transactions;i++)
+    for (size_t i = 0; i < account_transactions->num_transactions;i++)
         CopyTransactionEntry(transactions, account_transactions, i);
 
     return transactions;
@@ -248,7 +248,7 @@ int GetOwnedStocks_CallBack(void *owned_amount, int argc, char **argv, char **co
         return 0;
 
     unsigned int company_id = (unsigned int)atoi(argv[1]);
-    for (unsigned int i = 0; i < num_companies;i++) {
+    for (size_t i = 0; i < num_companies;i++) {
 
         if (owned_stocks.company_id[i] != company_id)
             continue;
@@ -271,12 +271,12 @@ void InitializeOwnedStocks()
         owned_stocks.company_id   = malloc(sizeof(int) * num_companies);
         owned_stocks.owned_amount = malloc(sizeof(int) * num_companies);
 
-        for (unsigned int i = 0; i< num_companies;i++)
+        for (size_t i = 0; i< num_companies;i++)
             owned_stocks.company_id[i] = companies[i].company_id;
 
     }
 
-    for (unsigned int i = 0; i< num_companies;i++)
+    for (size_t i = 0; i< num_companies;i++)
         owned_stocks.owned_amount[i] = 0;
 
     ExecuteQueryF(&GetOwnedStocks_CallBack, NULL, "SELECT SUM(StocksExchanged), CompanyId FROM Transactions WHERE SaveId=%d AND PlayerId=%d GROUP BY CompanyId", GetSaveId(), GetCurrentPlayerId());
@@ -293,8 +293,7 @@ void SaveTransactions()
         return;
 
     ExecuteTransaction(db, vector);
-    FreeVectorPtrElements(vector);
-    DeleteVector(vector);
+    Vector_DeletePtrs(vector);
 
 }
 

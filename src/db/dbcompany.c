@@ -21,7 +21,7 @@ char *GetCompanyName(unsigned int company_id)
 {
 
     Company *temp = (Company *)companies->elements;
-    for (int i = 0; i < companies->num_elements;i++)
+    for (size_t i = 0; i < companies->num_elements;i++)
         if (temp[i].company_id == company_id)
             return strdup(temp[i].company_name);
 
@@ -33,7 +33,7 @@ unsigned int GetCompanyId(const char *company_name)
 {
 
     Company *temp = (Company *)companies->elements;
-    for (int i = 0; i < companies->num_elements;i++)
+    for (size_t i = 0; i < companies->num_elements;i++)
         if (strcmp(temp[i].company_name, company_name) == 0)
             return temp[i].company_id;
 
@@ -64,7 +64,7 @@ int Company_Callback(void *company, int argc, char **argv, char **col_name)
     temp.ipo = atof(argv[2]);
     strncpy(temp.category, argv[3], 32);
 
-    PushBack(companies, &temp);
+    Vector_PushBack(companies, &temp);
 
     return 0;
 
@@ -73,7 +73,7 @@ int Company_Callback(void *company, int argc, char **argv, char **col_name)
 void InitializeCompanies()
 {
 
-    companies = CreateVector(sizeof(Company), 4);
+    companies = Vector_Create(sizeof(Company), 4);
     ExecuteQueryF(&Company_Callback, NULL, "SELECT C.CompanyId, C.CompanyName, C.IPO, CA.CategoryName FROM Company C INNER JOIN Category CA ON CA.CategoryId = C.CategoryId");
 
 }

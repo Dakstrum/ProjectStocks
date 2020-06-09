@@ -51,7 +51,7 @@ void SetJsonObjectsFromFiles(const char *dirpath, Vector *files)
 
     char filepath[128];
     char **filenames = (char **)files->elements;
-    for (int i = 0; i < files->num_elements;i++) {
+    for (size_t i = 0; i < files->num_elements;i++) {
 
         memset(filepath, 0, 128);
         strcpy(filepath, dirpath);

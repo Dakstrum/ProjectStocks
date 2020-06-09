@@ -87,7 +87,7 @@ void SetSaveInfoText(char *save_name, char *player_name)
 void PopulateSaveScrollBox(DrawObject *object)
 {
     PlayerSave *temp = (PlayerSave *)saves->elements;
-    for(int i = 0; i < saves->num_elements; i++)
+    for(size_t i = 0; i < saves->num_elements; i++)
         object->scrollbox.text_content[i] = temp[i].save_name;
 
 }
@@ -181,7 +181,7 @@ void DeleteSave_BCB()
     RemoveDrawObject(saves_scrollbox);
 
     SetSaveInfoText("", "");
-    DeleteVector(saves);
+    Vector_Delete(saves);
 
     saves_scrollbox = NULL;
     InitalizeSaveScrollBox();
@@ -224,7 +224,7 @@ void CleanSaveMenu()
 {
 
     if (saves != NULL)
-        DeleteVector(saves);
+        Vector_Delete(saves);
 
     load_save_menu = NULL;
     new_save_menu  = NULL;

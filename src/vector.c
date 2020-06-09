@@ -2,7 +2,7 @@
 
 #include "vector.h"
 
-Vector *CreateVector(int size_of_single_elem, int initial_mem_size)
+Vector *Vector_Create(size_t size_of_single_elem, size_t initial_mem_size)
 {
 
     Vector *vector = malloc(sizeof(Vector));
@@ -18,7 +18,7 @@ Vector *CreateVector(int size_of_single_elem, int initial_mem_size)
 
 }
 
-void PushBack(Vector *vector, void *element)
+void Vector_PushBack(Vector *vector, void *element)
 {
 
     if (vector->num_elements == vector->mem_size) {
@@ -31,14 +31,14 @@ void PushBack(Vector *vector, void *element)
     unsigned char *temp        = (unsigned char *)vector->elements;
     unsigned char *new_element = (unsigned char *)element;
 
-    for (int i = 0; i < vector->size_of_single_elem;i++)
+    for (size_t i = 0; i < vector->size_of_single_elem;i++)
         *(temp + vector->num_elements * vector->size_of_single_elem + i) = *(new_element + i);
 
     vector->num_elements++;
 
 }
 
-void PushBackPtr(Vector * vector, void *element)
+void Vector_PushBackPtr(Vector *vector, void *element)
 {
 
     if (vector->num_elements == vector->mem_size) {
@@ -54,29 +54,22 @@ void PushBackPtr(Vector * vector, void *element)
 
 }
 
-void FreeVectorPtrElements(Vector *vector)
+void Vector_DeletePtrs(Vector *vector)
 {
     void **array = (void **)vector->elements;
 
-    for (int i = 0;i < vector->num_elements;i++)
+    for (size_t i = 0;i < vector->num_elements;i++)
         free(array[i]);
 
     vector->num_elements = 0;
-
-}
-
-void DeleteVector(Vector *vector)
-{
-
-    free(vector->elements);
     free(vector);
 
 }
 
-
-void DeleteJustVector(Vector *vector)
+void Vector_Delete(Vector *vector)
 {
 
+    free(vector->elements);
     free(vector);
 
 }

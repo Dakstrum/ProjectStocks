@@ -28,8 +28,8 @@ static Vector *font_vector   = NULL;
 void InitializeCache() 
 {
 
-    bitmap_vector = CreateVector(sizeof(BitmapCache), 128);
-    font_vector   = CreateVector(sizeof(FontCache), 128);
+    bitmap_vector = Vector_Create(sizeof(BitmapCache), 128);
+    font_vector   = Vector_Create(sizeof(FontCache), 128);
 
 }
 
@@ -37,7 +37,7 @@ ALLEGRO_BITMAP *GetNewlyAddedBitmapFromCache(char *asset_path)
 {
 
     BitmapCache cache = {asset_path, al_load_bitmap(asset_path)};
-    PushBack(bitmap_vector, &cache);
+    Vector_PushBack(bitmap_vector, &cache);
     return cache.bitmap;
     
 }
@@ -51,7 +51,7 @@ ALLEGRO_BITMAP *GetBitmapFromCache(char *asset_path)
 
     BitmapCache *cache = (BitmapCache *)bitmap_vector->elements;
 
-    for (unsigned short int i = 0; i < bitmap_vector->num_elements; i++)
+    for (size_t i = 0; i < bitmap_vector->num_elements; i++)
         if (strcmp(asset_path, cache[i].asset_path) == 0)
             return cache[i].bitmap;
 
@@ -63,7 +63,7 @@ ALLEGRO_FONT *GetNewlyAddedFontFromCache(char *asset_path, int font_size)
 {
 
     FontCache cache = {asset_path, al_load_ttf_font(asset_path, font_size, 0), font_size};
-    PushBack(font_vector, &cache);
+    Vector_PushBack(font_vector, &cache);
     return cache.font;
 
 }
@@ -76,7 +76,7 @@ ALLEGRO_FONT *GetFontFromCache(char *asset_path, int font_size)
 
     FontCache *cache = (FontCache *)font_vector->elements;
 
-    for (unsigned short int i = 0; i < font_vector->num_elements; i++)
+    for (size_t i = 0; i < font_vector->num_elements; i++)
         if (cache[i].font_size == font_size && strcmp(cache[i].asset_path, asset_path) == 0) 
             return cache[i].font;
 

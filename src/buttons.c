@@ -40,7 +40,7 @@ void *GetButtonCallback(char *button_name)
 
     ButtonCallbacks *callbacks = (ButtonCallbacks *)button_callbacks->elements;
 
-    for (int i = 0; i < button_callbacks->num_elements; i++) 
+    for (size_t i = 0; i < button_callbacks->num_elements; i++) 
         if (strcmp(button_name, callbacks[i].name) == 0) 
             return callbacks[i].Callback;
 
@@ -52,7 +52,7 @@ void AddButton(char *button_name, void (*Callback)())
 {
 
     ButtonCallbacks button_callback = {button_name, Callback};
-    PushBack(button_callbacks, &button_callback);
+    Vector_PushBack(button_callbacks, &button_callback);
 
 }
 
@@ -148,7 +148,7 @@ void InitializeCardsMenuButtons()
 void InitializeButtons() 
 {
 
-    button_callbacks = CreateVector(sizeof(ButtonCallbacks), 16);
+    button_callbacks = Vector_Create(sizeof(ButtonCallbacks), 16);
 
     AddButton("STUB", &StubCallBack);
 

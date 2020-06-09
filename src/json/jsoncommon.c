@@ -17,7 +17,7 @@ Vector *Unix_GetJsonFilesInDirectory(const char *path)
 
     const int FILENAME_BUFF_SIZE = 32;
 
-    Vector *files = CreateVector(sizeof(char *), 8);
+    Vector *files = Vector_Create(sizeof(char *), 8);
     DIR *dp;
     struct dirent *ep;
 
@@ -39,7 +39,7 @@ Vector *Unix_GetJsonFilesInDirectory(const char *path)
         filename = malloc(FILENAME_BUFF_SIZE);
         strncpy(filename, ep->d_name, FILENAME_BUFF_SIZE);
         filename[31] = '\0';
-        PushBack(files, &filename);
+        Vector_PushBack(files, &filename);
 
     }
     closedir(dp);
