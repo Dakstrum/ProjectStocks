@@ -6,6 +6,19 @@ CREATE TABLE IF NOT EXISTS Company
     CompanyName VARCHAR(50) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS Category
+(
+    CategoryId INTEGER PRIMARY KEY,
+    CategoryName VARCHAR(30)
+);
+
+CREATE TABLE IF NOT EXISTS CompanyProducts
+(
+    CompanyProductId INTEGER PRIMARY KEY,
+    CompanyId INT NOT NULL,
+    ProductName VARCHAR(40)
+);
+
 CREATE TABLE IF NOT EXISTS CompanyMetadata
 (
     CompanyMetaId INTEGER PRIMARY KEY, 
@@ -53,18 +66,12 @@ CREATE TABLE IF NOT EXISTS Settings
     WindowStyle UNSIGNED INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS CompanyProducts
-(
-    CompanyProductId INTEGER PRIMARY KEY,
-    CompanyId INT NOT NULL,
-    Name VARCHAR(40)
-);
-
 CREATE TABLE IF NOT EXISTS GlobalEvents
 (
     GlobalEventId INTEGER PRIMARY KEY,
     Event VARCHAR(128) NOT NULL,
-    PriceModifier DOUBLE NOT NULL
+    PriceModifier DOUBLE NOT NULL,
+    ModifierLength INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS CategoryEvents
@@ -72,13 +79,8 @@ CREATE TABLE IF NOT EXISTS CategoryEvents
     CategoryEventId INTEGER PRIMARY KEY,
     CategoryId INT NOT NULL,
     Event VARCHAR(128) NOT NULL,
-    PriceModifier DOUBLE NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS Category
-(
-    CategoryId INTEGER PRIMARY KEY,
-    CategoryName VARCHAR(30)
+    PriceModifier DOUBLE NOT NULL,
+    ModifierLength INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS CompanyEvents
@@ -86,7 +88,8 @@ CREATE TABLE IF NOT EXISTS CompanyEvents
     CompanyEventId INTEGER PRIMARY KEY,
     CompanyId INT NOT NULL,
     Event VARCHAR(128) NOT NULL,
-    PriceModifier DOUBLE NOT NULL
+    PriceModifier DOUBLE NOT NULL,
+    ModifierLength INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS DBEvents

@@ -16,7 +16,7 @@ VALUES
     (162.0, 'Interstellar Business Robots', 3);
 
 INSERT INTO
-	CompanyProducts (CompanyId, Name)
+	CompanyProducts (CompanyId, ProductName)
 VALUES
 	(1, 'Naon'),
 	(1, 'Backdoor Belief'),
