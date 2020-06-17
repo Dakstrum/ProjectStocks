@@ -30,7 +30,7 @@ void SetModifiedTextBoxWithFlicker(DrawObject *object)
     struct timespec current_time = GetCurrentTime();
     if (object->bit_flags & TEXTBOX_FLICKER_DRAWING) {
  
-        if (GetMillDiff(&object->textbox.flicker, &current_time) >= 500) {
+        if (GetAbsMilliDiff(&object->textbox.flicker, &current_time) >= 500) {
 
             object->bit_flags      ^= (object->bit_flags & TEXTBOX_FLICKER_DRAWING);
             object->textbox.flicker = GetCurrentTime();
@@ -43,7 +43,7 @@ void SetModifiedTextBoxWithFlicker(DrawObject *object)
 
     } else {
 
-        if (GetMillDiff(&object->textbox.flicker, &current_time) >= 250) {
+        if (GetAbsMilliDiff(&object->textbox.flicker, &current_time) >= 250) {
 
             object->bit_flags       |= TEXTBOX_FLICKER_DRAWING;
             object->textbox.flicker  = GetCurrentTime();

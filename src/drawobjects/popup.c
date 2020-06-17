@@ -97,7 +97,7 @@ void MovePopUp(DrawObject *object, void (*set_dx_dy)(void *, int, int), bool rev
 {
 
     struct timespec current_time = GetCurrentTime();
-    long dt_milli                = GetMillDiff(&current_time, &object->popup.last_animation_time);
+    long dt_milli                = GetAbsMilliDiff(&current_time, &object->popup.last_animation_time);
 
     if (dt_milli == 0)
         return;
@@ -127,7 +127,7 @@ void WaitPopUp(DrawObject *object)
 {
 
     struct timespec current_time = GetCurrentTime();
-    if (GetMillDiff(&current_time, &object->popup.last_stay_time) >= object->popup.diff_time_to_stay)
+    if (GetAbsMilliDiff(&current_time, &object->popup.last_stay_time) >= object->popup.diff_time_to_stay)
         object->bit_flags |= POPUP_DONE_STAYING;
 
 }

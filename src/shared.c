@@ -153,10 +153,17 @@ float MaxMinDiff(float *array, unsigned int size)
     
 }
 
-long GetMillDiff(struct timespec *t1, struct timespec *t2) 
+long GetMilliDiff(struct timespec *t1, struct timespec *t2)
 {
 
-    return labs( ((t1->tv_sec * 1e3) + (t1->tv_nsec / 1e6)) - ((t2->tv_sec * 1e3) + (t2->tv_nsec / 1e6)) );
+    return ((t1->tv_sec * 1e3) + (t1->tv_nsec / 1e6)) - ((t2->tv_sec * 1e3) + (t2->tv_nsec / 1e6));    
+
+}
+
+long GetAbsMilliDiff(struct timespec *t1, struct timespec *t2) 
+{
+
+    return labs(GetMilliDiff(t1, t2));
 
 }
 
@@ -166,6 +173,14 @@ struct timespec GetCurrentTime()
     struct timespec current_time;
     clock_gettime(CLOCK_MONOTONIC, &current_time);
     return current_time;
+
+}
+
+bool IsTimeSpecInPast(struct timespec *t)
+{
+
+    struct timespec temp = GetCurrentTime();
+    return GetMilliDiff(&temp, t) > 0;
 
 }
 

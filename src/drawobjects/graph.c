@@ -49,7 +49,7 @@ DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points)
     object->asset_path           = NULL;
     object->child_of             = NULL;
 
-    object->graph.next_refresh = time(NULL) + 1;
+    object->graph.next_refresh = GetOffsetTime(75);
     object->graph.num_points   = (unsigned int)num_points;
     object->graph.points       = malloc(sizeof(Point) * num_points);
 
@@ -108,12 +108,12 @@ DrawObject *GetGraphDrawObject(char *company_name, TimeSpan timespan, int width,
 DrawObject *PollForNewGraphObject(DrawObject *object) 
 {
 
-    if (object->graph.next_refresh <= time(NULL)) {
+    if (IsTimeSpecInPast(&object->graph.next_refresh)) {
 
         free(object->graph.points);
         DrawObject *graph_object   = GetGraphDrawObject(object->graph.company, object->graph.timespan, object->width, object->height);
         object->graph              = graph_object->graph;
-        object->graph.next_refresh = time(NULL) + 1;
+        object->graph.next_refresh = GetOffsetTime(75);
         free(graph_object);
 
     }

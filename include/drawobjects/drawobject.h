@@ -87,7 +87,7 @@ typedef struct Graph {
     unsigned char b;
     unsigned char a;
 
-    time_t next_refresh;
+    struct timespec next_refresh;
 
 } Graph;
 

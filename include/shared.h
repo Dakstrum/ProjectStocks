@@ -66,7 +66,9 @@ float MaxF(float *array, unsigned int size);
 float MinF(float *array, unsigned int size);
 float MaxMinDiff(float *array, unsigned int size);
 
-long GetMillDiff(struct timespec *t1, struct timespec *t2);
+bool IsTimeSpecInPast(struct timespec *t);
+long GetMilliDiff(struct timespec *t1, struct timespec *t2);
+long GetAbsMilliDiff(struct timespec *t1, struct timespec *t2);
 struct timespec GetCurrentTime();
 struct timespec GetOffsetTime(long offset_in_milli);
 

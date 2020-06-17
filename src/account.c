@@ -278,8 +278,8 @@ void SetGameSpeed(const int speed)
 
     switch (speed) {
 
-        case 2:  sleep_time = .75; break;
-        case 3:  sleep_time = .5; break;
+        case 2:  sleep_time = .5; break;
+        case 3:  sleep_time = .1; break;
         default: sleep_time = 1.5; break;
 
     }
