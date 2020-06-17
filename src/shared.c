@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdatomic.h>
 #include <stdbool.h>
 #include <stdarg.h>
@@ -14,6 +15,8 @@ static atomic_bool should_clean_up;
 static WindowSettings window_settings;
 static const float window_width  = 1.0/1920.0;
 static const float window_height = 1.0/1080.0;
+
+static const int BUFFER_SIZE = 8192;
 
 void InitializeShared() 
 {
@@ -78,14 +81,15 @@ char *GetFormattedPointer(const char *str, ...)
 {
 
     // NEEDS TO BE FREED, so be sure to free the return.
-    char *buffer = malloc(sizeof(char) * 2048);
+    char *buffer = malloc(sizeof(char) * BUFFER_SIZE);
+    memset(buffer, '\0', BUFFER_SIZE);
 
     va_list args;
     va_start(args, str);
     vsprintf(buffer, str, args);
     va_end(args);
     
-    buffer[2047] = '\0';
+    buffer[BUFFER_SIZE-1] = '\0';
 
     return buffer;
 
@@ -97,7 +101,7 @@ void SetFormattedPointerVaList(char *buffer, const char *str, va_list args)
     vsprintf(buffer, str, args);
     va_end(args);
     
-    buffer[511] = '\0';
+    buffer[BUFFER_SIZE-1] = '\0';
 
 }
 
@@ -105,7 +109,9 @@ char *GetFormattedPointerVaList(const char *str, va_list args)
 {
 
     // NEEDS TO BE FREED, so be sure to free the return.
-    char *buffer = malloc(sizeof(char) * 512);
+    char *buffer = malloc(sizeof(char) * BUFFER_SIZE);
+    memset(buffer, '\0', BUFFER_SIZE);
+
     SetFormattedPointerVaList(buffer, str, args);
     return buffer;
 
