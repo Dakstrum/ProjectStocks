@@ -1,6 +1,8 @@
 #ifndef DBEVENTS_H
 #define DBEVENTS_H
 
+#include "vector.h"
+
 typedef struct Event
 {
 
@@ -12,5 +14,8 @@ typedef struct Event
 
 
 void InitializeEvents();
+Event *GetRandomGlobalEvent();
+Event *GetRandomCategoryEvent(int category_id);
+Event *GetRandomCompanyEvent(int company_id);
 
 #endif

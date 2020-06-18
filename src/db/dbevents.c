@@ -4,6 +4,7 @@
 #include <assert.h>
 
 
+#include "log.h"
 #include "vector.h"
 #include "dbutils.h"
 #include "dbevents.h"
@@ -143,5 +144,40 @@ void InitializeEvents()
 	InitializeCompanyEvents();
 	InitializeCategoryEvents();
 	InitializeGlobalEvents();
+
+}
+
+Event *GetRandomGlobalEvent()
+{
+
+	assert(global_events != NULL && global_events->num_elements > 0);
+
+	Event *temp = (Event *)global_events->elements;
+	return &temp[rand() % global_events->num_elements];
+
+}
+
+Event *GetRandomEvent(Vector *events)
+{
+
+	Event *temp = (Event *)events->elements;
+	if (events->num_elements == 0)
+		return NULL;
+
+	return &temp[rand() % events->num_elements];
+
+}
+
+Event *GetRandomCategoryEvent(int category_id)
+{
+
+	return GetRandomEvent(company_events.events[category_id - 1]);
+
+}
+
+Event *GetRandomCompanyEvent(int company_id)
+{
+
+	return GetRandomEvent(company_events.events[company_id - 1]);
 
 }
