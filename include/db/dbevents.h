@@ -10,4 +10,7 @@ typedef struct Event
 
 } Event;
 
+
+void InitializeEvents();
+
 #endif
