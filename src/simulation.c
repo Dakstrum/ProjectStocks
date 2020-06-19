@@ -8,14 +8,17 @@
 
 
 #include "log.h"
+#include "vector.h"
 #include "shared.h"
 #include "account.h"
 #include "dbaccess.h"
+#include "dbevents.h"
 #include "dbcompany.h"
 
 #define STOCK_PRICE_SIZE 4096
 
-typedef struct Sim {
+typedef struct Sim 
+{
 
     Company *companies;
     StockPrices *prices;
@@ -24,6 +27,26 @@ typedef struct Sim {
     unsigned int num_companies;
 
 } Sim;
+
+typedef struct EventSim 
+{
+
+    Vector *event_times;
+    Vector *events;
+
+} EventSim;
+
+typedef struct EventSimId 
+{
+
+    Vector *ids;
+    Vector *event_sims;
+
+} EventSimId;
+
+static EventSim global_events;
+static EventSimId category_events;
+static EventSimId company_events; 
 
 
 static const float TRUNCATE_TO_AMOUNT = 500.0;
@@ -106,6 +129,83 @@ void SetCompanies()
 
 }
 
+void GenerateGlobalEvents()
+{
+
+    const int hours_in_year = 8760;
+    const int hours_in_half_year = hours_in_year / 2;
+    const int hours_in_two_years = hours_in_year * 2;
+    time_t current_time     = 0;
+    while (ShouldContinueSimulation(current_time)) {
+
+        int hours_passed = (hours_in_half_year + rand() % hours_in_two_years) * HOUR;
+        current_time    += hours_passed;
+        Vector_PushBack(global_events.event_times, &current_time);
+        Vector_PushBack(global_events.events, GetRandomGlobalEvent());
+
+    }
+
+
+}
+
+void InitializeCategoryEventGeneration()
+{
+
+    category_events.ids        = Vector_Create(sizeof(int), 16);
+    category_events.event_sims = Vector_Create(sizeof(EventSim), 16);
+
+    int num_categories = GetNumCompanyCategories();
+    int *category_ids  = GetCompanyCategoryIds();
+    for (int i = 0; i < num_categories;i++) {
+
+        Vector_PushBack(category_events.ids, &category_ids[i]);
+        EventSim temp;
+        temp.event_times = Vector_Create(sizeof(time_t), 16);
+        temp.events      = Vector_Create(sizeof(Event), 16);
+        Vector_PushBack(category_events.event_sims, &temp);
+
+    }
+
+}
+
+void InitializeCompanyEventGeneration()
+{
+
+    company_events.ids        = Vector_Create(sizeof(int), 16);
+    company_events.event_sims = Vector_Create(sizeof(EventSim), 16);
+
+    for (unsigned int i = 0; i < sim_data.num_companies;i++) {
+
+        Vector_PushBack(company_events.ids, &sim_data.companies[i].company_id);
+        EventSim temp;
+        temp.event_times = Vector_Create(sizeof(time_t), 16);
+        temp.events      = Vector_Create(sizeof(Event), 16);
+        Vector_PushBack(company_events.event_sims, &temp);
+
+    }
+
+}
+
+void InitializeEventGeneration()
+{
+
+    global_events.event_times  = Vector_Create(sizeof(time_t), 16);
+    global_events.events       = Vector_Create(sizeof(Event), 16);
+
+    InitializeCategoryEventGeneration();
+    InitializeCompanyEventGeneration();
+
+}
+
+void GenerateEvents()
+{
+
+    srand(seed);
+    InitializeEventGeneration();
+    GenerateGlobalEvents();
+
+}
+
 void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg) 
 {
 
@@ -113,6 +213,7 @@ void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg)
     save_id = GetSaveId();
     SetRandomSeed();
     SetCompanies();
+    GenerateEvents();
     GenerateDataForCompanies();
     atomic_store(&simulation_finished, true);
 
@@ -309,7 +410,6 @@ int GetNumToReducePricesBy(StockPrices *prices)
         reduce_by = reduce_by << 1;
 
     }
-    Log("Unable to reduce prices amount");
     return 4;
 
 }
@@ -318,7 +418,6 @@ void RemoveElements(StockPrices *prices)
 {
 
     int reduce_by = GetNumToReducePricesBy(prices);
-    LogF("Reduce by %d", reduce_by);
     int new_index = 1;
     for (size_t i = 1; i < prices->num_prices;i++) {
 

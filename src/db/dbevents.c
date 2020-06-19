@@ -23,6 +23,7 @@ static Vector *global_events = NULL;
 static Events category_events;
 static Events company_events;
 
+static int num_categories = 0;
 
 int Events_Callback(void *events, int argc, char **argv, char **col_name)
 {
@@ -111,7 +112,6 @@ void InitializeCompanyEvents()
 void InitializeCategoryEvents()
 {
 
-	int num_categories = 0;
 	ExecuteQueryF(&NumCategories_Callback, &num_categories, "SELECT COUNT(CategoryName) FROM Category");
 
 	category_events.num_elements = num_categories;
@@ -179,5 +179,19 @@ Event *GetRandomCompanyEvent(int company_id)
 {
 
 	return GetRandomEvent(company_events.events[company_id - 1]);
+
+}
+
+int GetNumCompanyCategories()
+{
+
+	return num_categories;
+
+}
+
+int *GetCompanyCategoryIds()
+{
+
+	return category_events.id;
 
 }

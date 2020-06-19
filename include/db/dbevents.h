@@ -18,4 +18,7 @@ Event *GetRandomGlobalEvent();
 Event *GetRandomCategoryEvent(int category_id);
 Event *GetRandomCompanyEvent(int company_id);
 
+int GetNumCompanyCategories();
+int *GetCompanyCategoryIds();
+
 #endif
