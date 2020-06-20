@@ -44,6 +44,19 @@ typedef struct EventSimId
 
 } EventSimId;
 
+typedef struct SimulationFrame
+{
+
+    float last_price;
+    float price;
+    time_t current_time;
+    Event *event;
+
+    time_t event_end_time;
+    float event_price_diff;
+
+} SimulationFrame;
+
 static EventSim global_events;
 static EventSimId category_events;
 static EventSimId company_events; 
@@ -297,23 +310,103 @@ float GenerateRandomPriceFluctuation(float last_price)
 
 }
 
+Event *GetGenericEventOnDay(EventSim *event_sim, time_t current_time)
+{
+
+    time_t *times = (time_t *)event_sim->event_times->elements;
+
+    for (size_t i = 0; i < event_sim->event_times->num_elements;i++)
+        if (times[i] == current_time)
+            return &((Event *)event_sim->events->elements)[i];
+
+    return NULL;
+
+}
+
+Event *GetEventOnDay(time_t current_time, unsigned int idx)
+{
+
+    Event *event = NULL;
+    event = GetGenericEventOnDay(&global_events, current_time);
+
+    if (event != NULL)
+        return event;
+
+    /*
+    unsigned int company_id  = sim_data.companies[idx].company_id;
+    EventSim *company_events = 
+    event = GetGenericEventOnDay();
+    */
+
+    return NULL;
+
+}
+
+void CheckForEvent(SimulationFrame *frame, unsigned int idx) 
+{
+
+    if (frame->event != NULL)
+        return;
+
+    frame->event = GetEventOnDay(frame->current_time, idx);
+    if (frame->event != NULL) {
+
+        frame->event_end_time   = frame->current_time + frame->event->modifier_length * HOUR  * 24;
+        frame->event_price_diff = (frame->last_price * frame->event->price_modifier) / (frame->event->modifier_length * 24);
+
+    }
+
+}
+
+void CheckToEndEvent(SimulationFrame *frame)
+{
+
+    if (frame->current_time < frame->event_end_time)
+        return;
+
+    frame->event            = NULL;
+    frame->event_end_time   = 0;
+    frame->event_price_diff = 0;
+
+}
+
+void SetNewPrice(SimulationFrame *frame, unsigned int idx)
+{
+
+        if (frame->event_price_diff > 0)
+            frame->price = frame->last_price + frame->event_price_diff;
+        else
+            frame->price = frame->last_price + GenerateRandomPriceFluctuation(frame->last_price) + GenerateRandomEvent(frame->last_price, idx);
+        
+        frame->last_price = frame->price; 
+
+}
+
 void SimulationLoop(unsigned int idx) 
 {
 
-    float last_price    = sim_data.companies[idx].ipo;
-    float price         = 0.0;
-    time_t current_time = 0;
+    SimulationFrame frame;
+
+    frame.last_price       = sim_data.companies[idx].ipo;
+    frame.price            = 0.0;
+    frame.current_time     = 0;
+    frame.event            = NULL;
+    frame.event_end_time   = 0;
+    frame.event_price_diff = 0;
 
     srand(sim_data.companies[idx].company_id + seed);
-    StoreStockPrice(&sim_data.prices[idx], last_price, current_time);
-    while (ShouldContinueSimulation(current_time)) {
+    StoreStockPrice(&sim_data.prices[idx], frame.last_price, frame.current_time);
 
-        current_time += HOUR;
-        price         = last_price + GenerateRandomPriceFluctuation(last_price) + GenerateRandomEvent(last_price, idx);
-        last_price    = price;
-        StoreStockPrice(&sim_data.prices[idx], price, current_time);
+    while (ShouldContinueSimulation(frame.current_time)) {
+
+        frame.current_time += HOUR;  
+        CheckForEvent(&frame, idx);
+        CheckToEndEvent(&frame);
+        SetNewPrice(&frame, idx);
+        StoreStockPrice(&sim_data.prices[idx], frame.price, frame.current_time);
 
     }
+
     ReclaimUnusedStockPriceMemory(&sim_data.prices[idx]);
 
 }
@@ -506,7 +599,6 @@ void CleanUpEvents(EventSimId *event, int num_elements)
 
 void CleanSimulation()
 {
-
 
     Vector_Delete(global_events.event_times);
     Vector_Delete(global_events.events);
