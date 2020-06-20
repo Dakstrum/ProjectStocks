@@ -75,8 +75,8 @@ void DynamicText()
 {
 
     // TEST CODE
-    verson_object = GetDrawObjectFromJsonLayer("MainMenuWebsiteText");
-    AddObjectToDrawLayer(verson_object);
+    //verson_object = GetDrawObjectFromJsonLayer("MainMenuWebsiteText");
+    //AddObjectToDrawLayer(verson_object);
 
 }
 

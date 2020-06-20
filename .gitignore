@@ -12,6 +12,7 @@ assets/
 server/
 build/
 *.config
+*.pyc
 .vs/
 *.rsuser
 *.suo

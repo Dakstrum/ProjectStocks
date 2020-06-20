@@ -59,7 +59,7 @@ void AddButton(char *button_name, void (*Callback)())
 void InitializeMainMenuButtons() 
 {
 
-    AddButton("StartButton", &Start_BCB);
+    AddButton("MainMenuStartButtonObject", &Start_BCB);
     AddButton("OptionsButton", &MainMenuOptions_BCB);
     AddButton("ExitButton", &MainMenuExit_BCB);
     AddButton("GitHubButton", &GitHub_BCB);
