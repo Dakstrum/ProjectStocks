@@ -489,15 +489,30 @@ void StartSimulation()
 
 }
 
+void CleanUpEvents(EventSimId *event, int num_elements)
+{
+
+    EventSim *temp = (EventSim *)event->event_sims->elements;
+    for (int i = 0; i < num_elements;i++) {
+
+        Vector_Delete(temp[i].event_times);
+        Vector_Delete(temp[i].events);
+
+    }
+    Vector_Delete(event->event_sims);
+    Vector_Delete(event->ids);
+
+}
+
 void CleanSimulation()
 {
 
-    for (size_t i = 0; i < sim_data.num_companies;i++) {
 
-        free(sim_data.prices[i].prices);
-        free(sim_data.prices[i].times);
+    Vector_Delete(global_events.event_times);
+    Vector_Delete(global_events.events);
 
-    }
+    CleanUpEvents(&category_events, GetNumCompanyCategories());
+    CleanUpEvents(&company_events, sim_data.num_companies);
 
     free(sim_data.prices);
     free(sim_data.random_event_chance);
