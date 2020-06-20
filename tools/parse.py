@@ -2,9 +2,12 @@ import time
 import xml.etree.ElementTree as ET
 import json
 
+class MenuObject:
+	def __init__(self, name):
+		self.name = name
+
 class TextObject:
-	def __init__(self, idn, name, x, y, content):
-		self.idn     = idn
+	def __init__(self, name, x, y, content):
 		self.name    = name
 		self.x       = x
 		self.y       = y
@@ -26,19 +29,29 @@ def main():
 	tree = ET.parse('mainmenu.xml')
 	root = tree.getroot()
 
+	CreateMenuObject(root)
 	CreateButtonObject(root)
 	CreateTextObject(root)	
 	print("suc")
 	time.sleep(500);
 
+def CreateMenuObject(root):
+	for properties_ns in root.findall('p_link:Properties', namespaces):
+		for property_ns in properties_ns.findall('p_link:Property', namespaces):
+			if(property_ns.get("name") == "name"):
+				print(property_ns.text)
+				MenuObject_1 = MenuObject(property_ns.text)
+				AddMenuObjectToJSON(MenuObject_1)
 
+def AddMenuObjectToJSON(MenuObject):
+	print("m")
+	with open('base.json') as f:
+		data = json.load(f)
 
+	data["Objects"].append({"Type": "Menu", "Path": "insert_path", "Name": MenuObject.name, "X": 0, "Y": 0, "Width": 1920, "Height": 1080, "Buttons": [], "Text": []})
 
-
-
-
-
-
+	with open('base.json', 'w') as f:
+		json.dump(data, f)
 
 def CreateTextObject(root):
 	for content_ns in root.findall('p_link:Content', namespaces):
@@ -49,7 +62,7 @@ def CreateTextObject(root):
 					for text_content_ns in text_ns.findall("text_link:tspan", namespaces):
 						matrix_str = g_ns.get("transform").replace("matrix(", "").replace(")", "").split(",")
 						name = "MainMenu" + text_content_ns.text + "TextObject"
-						TextObject_1 = TextObject(g_ns.get("id"), name, int(float(matrix_str[4])), int(float(matrix_str[5])), text_content_ns.text)
+						TextObject_1 = TextObject(name, int(float(matrix_str[4])), int(float(matrix_str[5])), text_content_ns.text)
 						AddTextObjectToJSON(TextObject_1)
 
 
@@ -62,15 +75,6 @@ def AddTextObjectToJSON(TextObject):
 
 	with open('base.json', 'w') as f:
 		json.dump(data, f)
-
-
-def IsText(g_def):
-	if(g_def == "Evolus.Common:PlainTextV2"):
-		return True
-	else:
-		return False
-
-
 
 def CreateButtonObject(root):
 	for content_ns in root.findall('p_link:Content', namespaces):
@@ -94,8 +98,15 @@ def AddButtonObjectToJSON(ButtonObject):
 	with open('base.json', 'w') as f:
 		json.dump(data, f)
 
+
 def IsButton(g_def):
 	if(g_def == "Evolus.Sketchy.GUI:button"):
+		return True
+	else:
+		return False
+
+def IsText(g_def):
+	if(g_def == "Evolus.Common:PlainTextV2"):
 		return True
 	else:
 		return False
