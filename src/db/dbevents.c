@@ -41,9 +41,9 @@ int Events_Callback(void *events, int argc, char **argv, char **col_name)
 			Event temp;
 			temp.event = malloc(128);
 
-			strncpy(temp.event, argv[0], 128);
-			temp.price_modifier  = atof(argv[1]);
-			temp.modifier_length = atoi(argv[2]);
+			strncpy(temp.event, argv[1], 128);
+			temp.price_modifier  = atof(argv[2]);
+			temp.modifier_length = atoi(argv[3]);
 			temp.event[127]      = '\0';
 
 			Vector_PushBack(events_temp->events[i], &temp);

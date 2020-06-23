@@ -61,6 +61,9 @@ static EventSim global_events;
 static EventSimId category_events;
 static EventSimId company_events; 
 
+static const int HOURS_IN_YEAR      = 8760;
+static const int HOURS_IN_HALF_YEAR = HOURS_IN_YEAR / 2;
+static const int HOURS_IN_TWO_YEARS = HOURS_IN_YEAR * 2;
 
 static const float TRUNCATE_TO_AMOUNT = 500.0;
 static const int HOUR = 3600;
@@ -119,7 +122,7 @@ void InitializeStockPrice(StockPrices *prices)
 void ReclaimUnusedStockPriceMemory(StockPrices *prices) 
 {
 
-    prices->size = prices->num_prices;
+    prices->size   = prices->num_prices;
     prices->prices = realloc(prices->prices, sizeof(float) * (prices->size + 1));
     prices->times  = realloc(prices->times, sizeof(time_t) * (prices->size + 1));
 
@@ -142,22 +145,34 @@ void SetCompanies()
 
 }
 
-void GenerateGlobalEvents()
+void GenerateGameEvents(EventSim *events, Event *(*GetRandomEvent)())
 {
 
-    const int hours_in_year = 8760;
-    const int hours_in_half_year = hours_in_year / 2;
-    const int hours_in_two_years = hours_in_year * 2;
-    time_t current_time     = 0;
+    time_t current_time = 0;
     while (ShouldContinueSimulation(current_time)) {
 
-        int hours_passed = (hours_in_half_year + rand() % hours_in_two_years) * HOUR;
+        int hours_passed = (HOURS_IN_HALF_YEAR + rand() % HOURS_IN_TWO_YEARS) * HOUR;
         current_time    += hours_passed;
-        Vector_PushBack(global_events.event_times, &current_time);
-        Vector_PushBack(global_events.events, GetRandomGlobalEvent());
+        Vector_PushBack(events->event_times, &current_time);
+        Vector_PushBack(events->events, GetRandomEvent());
 
     }
 
+}
+
+void GenerateGameEventsId(EventSim *events, int id, Event *(*GetRandomEvent)(int))
+{
+
+    time_t current_time = 0;
+    while (ShouldContinueSimulation(current_time)) {
+
+        int hours_passed = (HOURS_IN_HALF_YEAR + rand() % HOURS_IN_TWO_YEARS) * HOUR;
+        current_time    += hours_passed;
+        Vector_PushBack(events->event_times, &current_time);
+        Vector_PushBack(events->events, GetRandomEvent(id));
+        LogF("Current_time = %lu, id: %d", current_time, id);
+
+    }
 
 }
 
@@ -176,6 +191,7 @@ void InitializeCategoryEventGeneration()
         temp.event_times = Vector_Create(sizeof(time_t), 16);
         temp.events      = Vector_Create(sizeof(Event), 16);
         Vector_PushBack(category_events.event_sims, &temp);
+        GenerateGameEventsId(&temp, category_ids[i], &GetRandomCategoryEvent);
 
     }
 
@@ -194,6 +210,7 @@ void InitializeCompanyEventGeneration()
         temp.event_times = Vector_Create(sizeof(time_t), 16);
         temp.events      = Vector_Create(sizeof(Event), 16);
         Vector_PushBack(company_events.event_sims, &temp);
+        GenerateGameEventsId(&temp, sim_data.companies[i].company_id, &GetRandomCompanyEvent);
 
     }
 
@@ -205,6 +222,8 @@ void InitializeEventGeneration()
     global_events.event_times  = Vector_Create(sizeof(time_t), 16);
     global_events.events       = Vector_Create(sizeof(Event), 16);
 
+    GenerateGameEvents(&global_events, GetRandomGlobalEvent);
+
     InitializeCategoryEventGeneration();
     InitializeCompanyEventGeneration();
 
@@ -215,7 +234,7 @@ void GenerateEvents()
 
     srand(seed);
     InitializeEventGeneration();
-    GenerateGlobalEvents();
+
 
 }
 
@@ -323,6 +342,20 @@ Event *GetGenericEventOnDay(EventSim *event_sim, time_t current_time)
 
 }
 
+Event *GetGenericEventOnDayWithId(EventSimId *event_sim, time_t current_time, unsigned int id)
+{
+
+    unsigned int *ids    = event_sim->ids->elements;
+    EventSim *event_sims = event_sim->event_sims->elements;
+
+    for (unsigned int i = 0; i < event_sim->ids->num_elements;i++)
+        if (ids[i] == id)
+            return GetGenericEventOnDay(&event_sims[i], current_time);
+
+    return NULL;
+
+}
+
 Event *GetEventOnDay(time_t current_time, unsigned int idx)
 {
 
@@ -332,11 +365,11 @@ Event *GetEventOnDay(time_t current_time, unsigned int idx)
     if (event != NULL)
         return event;
 
-    /*
-    unsigned int company_id  = sim_data.companies[idx].company_id;
-    EventSim *company_events = 
-    event = GetGenericEventOnDay();
-    */
+    unsigned int company_id = sim_data.companies[idx].company_id;
+    event = GetGenericEventOnDayWithId(&company_events, current_time, company_id);
+
+    if (event != NULL)
+        return event;
 
     return NULL;
 
@@ -373,12 +406,12 @@ void CheckToEndEvent(SimulationFrame *frame)
 void SetNewPrice(SimulationFrame *frame, unsigned int idx)
 {
 
-        if (frame->event_price_diff > 0)
-            frame->price = frame->last_price + frame->event_price_diff;
-        else
-            frame->price = frame->last_price + GenerateRandomPriceFluctuation(frame->last_price) + GenerateRandomEvent(frame->last_price, idx);
-        
-        frame->last_price = frame->price; 
+    if (frame->event_price_diff > 0)
+        frame->price = frame->last_price + frame->event_price_diff;
+    else
+        frame->price = frame->last_price + GenerateRandomPriceFluctuation(frame->last_price) + GenerateRandomEvent(frame->last_price, idx);
+    
+    frame->last_price = frame->price; 
 
 }
 
