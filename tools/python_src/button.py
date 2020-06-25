@@ -3,12 +3,13 @@ import xml.etree.ElementTree as ET
 import json
 
 class ButtonObject:
-	def __init__(self, x, y, width, height, name):
+	def __init__(self, x, y, width, height, name, path):
 		self.x      = x
 		self.y      = y
 		self.width  = width
 		self.height = height
 		self.name   = name
+		self.path   = path
 
 namespaces = {'p_link': 'http://www.evolus.vn/Namespace/Pencil',
 			 'text_link': 'http://www.w3.org/2000/svg'}
@@ -17,10 +18,27 @@ def GetButtonObject(root):
 	for content_ns in root.findall('p_link:Content', namespaces):
 		for g_ns in content_ns.findall('text_link:g', namespaces):
 			def_object = g_ns.get("{http://www.evolus.vn/Namespace/Pencil}def")
-			if(IsButton(def_object)):
-				CreateButtonObject(g_ns)
+			if(IsDefaultButton(def_object)):
+				CreateDefaultButtonObject(g_ns)
 
-def CreateButtonObject(g_ns):
+			if(IsInvisButton(def_object)):
+				CreateInvisButtonObject(g_ns)
+
+def CreateInvisButtonObject(g_ns):
+	matrix_str = g_ns.get("transform").replace("matrix(", "").replace(")", "").split(",")
+
+	for text_ns in g_ns.findall("text_link:text", namespaces):
+		name = "MainMenu" + text_ns.text + "ButtonObject"
+
+	for rect_ns in g_ns.findall("text_link:rect", namespaces):
+		if(rect_ns.get("{http://www.evolus.vn/Namespace/Pencil}name") == "rect"):
+			width  = rect_ns.get("width")
+			height = rect_ns.get("height")
+
+	InvisObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(width)), int(float(height)), name, None)
+	AddButtonObjectToJSON(InvisObject_1)
+
+def CreateDefaultButtonObject(g_ns):
 	for sg_ns in g_ns.findall('text_link:g', namespaces):
 		for path_ns in sg_ns.findall("text_link:path", namespaces):
 			dimensions = path_ns.get("d")
@@ -29,22 +47,30 @@ def CreateButtonObject(g_ns):
 		for text_ns in g_ns.findall("text_link:text", namespaces):
 			matrix_str = g_ns.get("transform").replace("matrix(", "").replace(")", "").split(",")
 			name = "MainMenu" + text_ns.text + "ButtonObject"
-			ButtonObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name)
-
-		AddButtonObjectToJSON(ButtonObject_1)
+			
+		DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/mainmenu/assets/mainmenu-button.png")
+		AddButtonObjectToJSON(DefaultObject_1)
 
 def AddButtonObjectToJSON(ButtonObject):
 	print("b")
 	with open('base.json') as f:
 		data = json.load(f)
 
-	data["Objects"][0]["Buttons"].append({"RX": ButtonObject.x, "RY": ButtonObject.y, "Width": ButtonObject.width, "Height" : ButtonObject.height, "Path": "assets/images/mainmenu/assets/mainmenu-button.png", "Name" : ButtonObject.name})
+	if(ButtonObject.path == None):
+		data["Objects"][0]["Buttons"].append({"RX": ButtonObject.x, "RY": ButtonObject.y, "Width": ButtonObject.width, "Height" : ButtonObject.height, "Name" : ButtonObject.name})
+
+	else:
+		data["Objects"][0]["Buttons"].append({"RX": ButtonObject.x, "RY": ButtonObject.y, "Width": ButtonObject.width, "Height" : ButtonObject.height, "Path": ButtonObject.path, "Name" : ButtonObject.name})
+	
 
 	with open('base.json', 'w') as f:
 		json.dump(data, f)
 
-def IsButton(g_def):
-	if(g_def == "Evolus.Sketchy.GUI:button"):
-		return True
-	else:
-		return False
+
+
+def IsDefaultButton(g_def):
+	return g_def == "Evolus.Sketchy.GUI:button"
+
+def IsInvisButton(g_def):
+	return g_def == "Evolus.WindowsXP.Widgets:Button"
+	
