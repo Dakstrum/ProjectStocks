@@ -60,12 +60,12 @@ void InitializeMainMenuButtons()
 {
 
     AddButton("MainMenuStartButtonObject", &Start_BCB);
-    AddButton("OptionsButton", &MainMenuOptions_BCB);
-    AddButton("ExitButton", &MainMenuExit_BCB);
-    AddButton("GitHubButton", &GitHub_BCB);
-    AddButton("TwitterButton", &Twitter_BCB);
-    AddButton("YoutubeButton", &Youtube_BCB);
-    AddButton("WebsiteButton", &Website_BCB);
+    AddButton("MainMenuOptionsButtonObject", &MainMenuOptions_BCB);
+    AddButton("MainMenuExitButtonObject", &MainMenuExit_BCB);
+    AddButton("MainMenuGithubButtonObject", &GitHub_BCB);
+    AddButton("MainMenuTwitterButtonObject", &Twitter_BCB);
+    AddButton("MainMenuYoutubeButtonObject", &Youtube_BCB);
+    AddButton("MainMenuWebsiteButtonObject", &Website_BCB);
 
 }
 
