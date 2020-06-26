@@ -37,7 +37,7 @@ def CreateInvisButtonObject(g_ns):
 			width  = rect_ns.get("width")
 			height = rect_ns.get("height")
 
-	InvisObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5]) - 20), int(float(width)), int(float(height)), name, None)
+	InvisObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(width)), int(float(height)), name, None)
 	AddButtonObjectToJSON(InvisObject_1)
 
 def CreateDefaultButtonObject(g_ns):

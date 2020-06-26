@@ -32,7 +32,7 @@ def CreateTextObject(g_ns):
 			matrix_str = g_ns.get("transform").replace("matrix(", "").replace(")", "").split(",")
 			name = menu.menu_name + text_content_ns.text + "TextObject"
 			rgb = GetRGB(style)
-			TextObject_1 = TextObject(name, int(float(matrix_str[4])), int(float(matrix_str[5]) - 44), int(GetFontSize(style)), text_content_ns.text, GetRGB(style))
+			TextObject_1 = TextObject(name, int(float(matrix_str[4])), int(float(matrix_str[5]) - int(GetFontSize(style)) / 1.5), int(GetFontSize(style)), text_content_ns.text, GetRGB(style))
 			AddTextObjectToJSON(TextObject_1)
 
 def GetFontSize(style):
