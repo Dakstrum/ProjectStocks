@@ -62,13 +62,13 @@ void InitializeStocksMenu()
 
     stocks_menu = GetJSONMenuAndAddToDrawLayer("StocksMenu");
     
-    InitalizeStocksMenuText();
-    InitializeCompanyScrollBox();
+    //InitalizeStocksMenuText();
+    //InitializeCompanyScrollBox();
 
-    DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
-    PopulateStockStatsText(GetCompanyNameViewing());
+    //DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
+    //PopulateStockStatsText(GetCompanyNameViewing());
 
-    InitializeSpeedSelectObject();
+    //InitializeSpeedSelectObject();
 
 }
 

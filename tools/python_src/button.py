@@ -2,6 +2,8 @@ import time
 import xml.etree.ElementTree as ET
 import json
 
+from python_src import menu
+
 class ButtonObject:
 	def __init__(self, x, y, width, height, name, path):
 		self.x      = x
@@ -28,14 +30,14 @@ def CreateInvisButtonObject(g_ns):
 	matrix_str = g_ns.get("transform").replace("matrix(", "").replace(")", "").split(",")
 
 	for text_ns in g_ns.findall("text_link:text", namespaces):
-		name = "MainMenu" + text_ns.text + "ButtonObject"
+		name = menu.menu_name + text_ns.text + "ButtonObject"
 
 	for rect_ns in g_ns.findall("text_link:rect", namespaces):
 		if(rect_ns.get("{http://www.evolus.vn/Namespace/Pencil}name") == "rect"):
 			width  = rect_ns.get("width")
 			height = rect_ns.get("height")
 
-	InvisObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(width)), int(float(height)), name, None)
+	InvisObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5]) - 20), int(float(width)), int(float(height)), name, None)
 	AddButtonObjectToJSON(InvisObject_1)
 
 def CreateDefaultButtonObject(g_ns):
@@ -46,9 +48,14 @@ def CreateDefaultButtonObject(g_ns):
 
 		for text_ns in g_ns.findall("text_link:text", namespaces):
 			matrix_str = g_ns.get("transform").replace("matrix(", "").replace(")", "").split(",")
-			name = "MainMenu" + text_ns.text + "ButtonObject"
-			
-		DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/mainmenu/assets/mainmenu-button.png")
+			name = menu.menu_name + text_ns.text + "ButtonObject"
+		
+		if((int(float(dimensions[15]))) == 260 and (int(float(dimensions[16]))) == 75): #Button 1
+			DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/button1.png")
+
+		if((int(float(dimensions[15]))) == 92 and (int(float(dimensions[16]))) == 57): #Button 1
+			DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/button2.png")
+
 		AddButtonObjectToJSON(DefaultObject_1)
 
 def AddButtonObjectToJSON(ButtonObject):

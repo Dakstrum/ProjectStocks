@@ -14,7 +14,9 @@ def CreateMenuObject(root):
 	for properties_ns in root.findall('p_link:Properties', namespaces):
 		for property_ns in properties_ns.findall('p_link:Property', namespaces):
 			if(property_ns.get("name") == "name"):
-				print(property_ns.text)
+				global menu_name 
+				menu_name = property_ns.text
+
 				MenuObject_1 = MenuObject(property_ns.text)
 				AddMenuObjectToJSON(MenuObject_1)
 
