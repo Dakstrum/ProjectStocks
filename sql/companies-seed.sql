@@ -8,12 +8,12 @@ VALUES
     ('Computer Software');
 
 INSERT INTO 
-    Company (IPO, CompanyName, CategoryId) 
+    Company (IPO, CompanyName, CompanyAbbreviation, CategoryId) 
 VALUES
-    (25.0, 'WeBeHard', 1),
-    (35.0, 'Unimpressive Games', 1),
-    (20.0, 'WhySpace', 2),
-    (162.0, 'Interstellar Business Robots', 3);
+    (25.0, 'WeBeHard', 'WBH', 1),
+    (35.0, 'Unimpressive Games', 'UG', 1),
+    (20.0, 'WhySpace', 'YSP', 2),
+    (162.0, 'Interstellar Business Robots', 'IBR', 3);
 
 INSERT INTO
 	CompanyProducts (CompanyId, ProductName)

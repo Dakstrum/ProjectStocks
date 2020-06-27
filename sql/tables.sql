@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS Company
     CompanyId INTEGER PRIMARY KEY,
     CategoryId INTEGER NOT NULL, 
     Ipo DOUBLE NOT NULL, 
-    CompanyName VARCHAR(50) NOT NULL
+    CompanyName VARCHAR(50) NOT NULL,
+    CompanyAbbreviation VARCHAR(5) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Category

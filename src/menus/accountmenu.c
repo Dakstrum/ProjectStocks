@@ -231,18 +231,19 @@ void PopulateAccountMenuCompanyScrollBox(DrawObject *object)
 {
 
     for(int i = 0; i < GetNumCompanies(); i++)
-        object->scrollbox.text_content[i]  = GetCompanyName(i+1);
+        object->scrollbox.text_content[i]  = GetCompanyAbbreviation(i+1);
 
 }
 
 void AccountMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
 
-    SetCompanyIdViewing(GetCompanyId(scroll_box_content));
+    char *company_name = GetCompanyName(index+1);
+    SetCompanyIdViewing(GetCompanyId(company_name));
     ClearAccountHistoryDisplay();
-    PopulateSelectedStockHistoryDisplay(scroll_box_content);
+    PopulateSelectedStockHistoryDisplay(company_name);
 
-    SetTextContent(company_name_textobject, "%s", scroll_box_content);
+    SetTextContent(company_name_textobject, "%s", company_name);
 
 }
 

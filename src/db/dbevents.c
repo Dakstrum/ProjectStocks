@@ -171,7 +171,7 @@ Event *GetRandomEvent(Vector *events)
 Event *GetRandomCategoryEvent(int category_id)
 {
 
-	return GetRandomEvent(company_events.events[category_id - 1]);
+	return GetRandomEvent(category_events.events[category_id - 1]);
 
 }
 

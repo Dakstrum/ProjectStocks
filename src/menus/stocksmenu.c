@@ -176,11 +176,12 @@ char *GetCurrentCompanyFromGraph()
 void LoadCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
 
-    SetCompanyIdViewing(GetCompanyId(scroll_box_content));
+    char *company_name = GetCompanyName(index+1);
+    SetCompanyIdViewing(GetCompanyId(company_name));
 
     RemoveDrawObject(current_graph);
-    DisplayGraph(scroll_box_content, ONE_DAY);
-    PopulateStockStatsText(scroll_box_content);
+    DisplayGraph(company_name, ONE_DAY);
+    PopulateStockStatsText(company_name);
 
 }
 
@@ -208,7 +209,7 @@ void PopulateStocksScrollBox(DrawObject *object)
 {
 
     for(int i = 0; i < GetNumCompanies(); i++)
-        object->scrollbox.text_content[i]  = GetCompanyName(i+1);
+        object->scrollbox.text_content[i] = GetCompanyAbbreviation(i+1);
 
 }
 

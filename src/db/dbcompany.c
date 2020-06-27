@@ -29,8 +29,22 @@ char *GetCompanyName(unsigned int company_id)
 
 }
 
+char *GetCompanyAbbreviation(unsigned int company_id)
+{
+
+    Company *temp = (Company *)companies->elements;
+    for (size_t i = 0; i < companies->num_elements;i++)
+        if (temp[i].company_id == company_id)
+            return strdup(temp[i].company_abbreviation);
+
+    return NULL;
+
+}
+
 unsigned int GetCompanyId(const char *company_name)
 {
+
+    assert(company_name != NULL);
 
     Company *temp = (Company *)companies->elements;
     for (size_t i = 0; i < companies->num_elements;i++)
@@ -61,8 +75,9 @@ int Company_Callback(void *company, int argc, char **argv, char **col_name)
     temp.company_id = atoi(argv[0]);
     strncpy(temp.company_name, argv[1], 64);
 
-    temp.ipo = atof(argv[2]);
-    strncpy(temp.category, argv[3], 32);
+    strncpy(temp.company_abbreviation, argv[2], 6);
+    temp.ipo         = atof(argv[3]);
+    temp.category_id = atoi(argv[4]);
 
     Vector_PushBack(companies, &temp);
 
@@ -74,6 +89,6 @@ void InitializeCompanies()
 {
 
     companies = Vector_Create(sizeof(Company), 4);
-    ExecuteQueryF(&Company_Callback, NULL, "SELECT C.CompanyId, C.CompanyName, C.IPO, CA.CategoryName FROM Company C INNER JOIN Category CA ON CA.CategoryId = C.CategoryId");
+    ExecuteQueryF(&Company_Callback, NULL, "SELECT C.CompanyId, C.CompanyName, C.CompanyAbbreviation, C.IPO, C.CategoryId FROM Company C");
 
 }
