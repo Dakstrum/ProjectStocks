@@ -63,7 +63,11 @@ GetSharedLibs()
                    "libpng16-16.dll" "libwebp-7.dll" "libgcc_s_seh-1.dll" "libstdc++-6.dll" "libjpeg-8.dll" "libfreetype-6.dll" "libwinpthread-1.dll" "zlib1.dll" "libbz2-1.dll" "libharfbuzz-0.dll" \
                    "libgraphite2.dll" "libglib-2.0-0.dll" "libpcre-1.dll" "libintl-8.dll" "libiconv-2.dll"; do
 
-            cp "${msys_path}${dll}" $build_dir
+            if test -f "${msys_path}${dll}"; then
+                cp "${msys_path}${dll}" $build_dir
+            else
+                echo "Did not find ${msys_path}${dll}"
+            fi
 
         done
 
@@ -73,7 +77,9 @@ GetSharedLibs()
 
             #cp -L $(locate $lib | head -n 1) "lib/${lib}"
 
-            cp -L "/lib64/${lib}" "lib/${lib}"
+            if test -f "/lib64/${lib}"; then
+                cp -L "/lib64/${lib}" "lib/${lib}"
+            fi
 
         done
         rm lib/libc*
