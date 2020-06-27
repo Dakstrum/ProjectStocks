@@ -47,7 +47,7 @@ void DrawScrollBox(DrawObject *object)
 
         box_y = i * vertical_spacing + vertical_offset + object->y;
 
-        if (box_y < object->y || box_y > object->y + object->height)
+        if (box_y < object->y || box_y + (vertical_spacing/2) > object->y + object->height)
             continue;
 
         float box_with_vertical  = box_y + vertical_spacing;
