@@ -50,13 +50,21 @@ def CreateDefaultButtonObject(g_ns):
 			matrix_str = g_ns.get("transform").replace("matrix(", "").replace(")", "").split(",")
 			name = menu.menu_name + text_ns.text + "ButtonObject"
 		
-		if((int(float(dimensions[15]))) == 260 and (int(float(dimensions[16]))) == 75): #Button 1
-			DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/button1.png")
+			DetermineButtonPNG(dimensions, matrix_str, name)
 
-		if((int(float(dimensions[15]))) == 92 and (int(float(dimensions[16]))) == 57): #Button 1
-			DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/button2.png")
+		
 
-		AddButtonObjectToJSON(DefaultObject_1)
+def DetermineButtonPNG(dimensions, matrix_str, name):
+	if((int(float(dimensions[15]))) == 260 and (int(float(dimensions[16]))) == 75): #Button 1
+		DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/button1.png")
+
+	if((int(float(dimensions[15]))) == 92 and (int(float(dimensions[16]))) == 57): #Button 1
+		DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/button2.png")
+
+	if((int(float(dimensions[15]))) == 12 and (int(float(dimensions[16]))) == 12): #Arrow
+		DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/gamespeed/arrow.png")
+
+	AddButtonObjectToJSON(DefaultObject_1)
 
 def AddButtonObjectToJSON(ButtonObject):
 	print("b")

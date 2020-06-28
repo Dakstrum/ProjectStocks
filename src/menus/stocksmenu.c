@@ -62,13 +62,13 @@ void InitializeStocksMenu()
 
     stocks_menu = GetJSONMenuAndAddToDrawLayer("StocksMenu");
     
-    //InitalizeStocksMenuText();
-    //InitializeCompanyScrollBox();
+    InitalizeStocksMenuText();
+    InitializeCompanyScrollBox();
 
-    //DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
-    //PopulateStockStatsText(GetCompanyNameViewing());
+    DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
+    PopulateStockStatsText(GetCompanyNameViewing());
 
-    //InitializeSpeedSelectObject();
+    InitializeSpeedSelectObject();
 
 }
 
@@ -109,12 +109,12 @@ void StocksMenusRenderLogic()
 void InitalizeStocksMenuText()
 {
 
-    company_name_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuChangingCompanyNameText");
-    company_about_textobject = GetJSONObjectAndAddToDrawLayer("StocksMenuChangingAboutText");
-    player_money_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
-    player_date_textobject   = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
-    stock_price_textobject   = GetJSONObjectAndAddToDrawLayer("StocksMenuCurrentStockPriceText");
-    stock_change_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuStockChangeText");
+    company_name_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuCompanyNameTextObject");
+    company_about_textobject = GetJSONObjectAndAddToDrawLayer("StocksMenuAboutCompanyTextObject");
+    player_money_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyTextObject");
+    player_date_textobject   = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateTextObject");
+    stock_price_textobject   = GetJSONObjectAndAddToDrawLayer("StocksMenuStockPriceTextObject");
+    stock_change_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuPriceChangeTextObject");
 
     SetTextContent(stock_change_textobject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
     SetTextContent(player_money_textobject, "%.2f", GetAccountMoney());

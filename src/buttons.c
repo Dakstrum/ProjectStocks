@@ -72,15 +72,20 @@ void InitializeMainMenuButtons()
 void InitializeStocksMenuButtons()
 {
 
-    AddButton("ToggleTransactionSellButton", &SellMenu_BCB);
-    AddButton("ToggleTransactionBuyButton", &BuyMenu_BCB);
+    AddButton("StocksMenuBuyButtonObject", &SellMenu_BCB);
+    AddButton("StocksMenuBuyButtonObject", &BuyMenu_BCB);
     AddButton("MakeTransactionSellButton", &Sell_BCB);
-    AddButton("MakeTransactionBuyButton", &Buy_BCB);
-    AddButton("OneDButton", &OneD_BCB);
-    AddButton("OneWButton", &OneW_BCB);
-    AddButton("OneMButton", &OneM_BCB);
-    AddButton("OneYButton", &OneY_BCB);
-    AddButton("AllButton", &All_BCB);
+    AddButton("MakeTransactionBuyButton",  &Buy_BCB);
+    AddButton("StocksMenuDButtonObject",   &OneD_BCB);
+    AddButton("StocksMenuWButtonObject",   &OneW_BCB);
+    AddButton("StocksMenuMButtonObject",   &OneM_BCB);
+    AddButton("StocksMenuYButtonObject",   &OneY_BCB);
+    AddButton("StocksMenuAllButtonObject", &All_BCB);
+
+    AddButton("StocksMenuStocksTabButtonObject",  &Stocks_BCB);
+    AddButton("StocksMenuNewsTabButtonObject",    &News_BCB);
+    AddButton("StocksMenuAccountTabButtonObject", &Account_BCB);
+    AddButton("StocksMenuCardsTabButtonObject",   &Cards_BCB);
 
 }
 

@@ -7,13 +7,15 @@ from python_src import menu
 
 
 class TextObject:
-	def __init__(self, name, x, y, fontsize, content, color):
-		self.name     = name
-		self.x        = x
-		self.y        = y
-		self.fontsize = fontsize
-		self.content  = content
-		self.color    = color
+	def __init__(self, name, x, y, fontsize, content, color, fontstyle):
+		self.name      = name
+		self.x         = x
+		self.y         = y
+		self.fontsize  = fontsize
+		self.content   = content
+		self.color     = color
+
+		self.fontstyle = fontstyle
 
 namespaces = {'p_link': 'http://www.evolus.vn/Namespace/Pencil',
 			 'text_link': 'http://www.w3.org/2000/svg'}
@@ -32,12 +34,17 @@ def CreateTextObject(g_ns):
 			matrix_str = g_ns.get("transform").replace("matrix(", "").replace(")", "").split(",")
 			name = menu.menu_name + text_content_ns.text + "TextObject"
 			rgb = GetRGB(style)
-			TextObject_1 = TextObject(name, int(float(matrix_str[4])), int(float(matrix_str[5]) - int(GetFontSize(style)) / 1.5), int(GetFontSize(style)), text_content_ns.text, GetRGB(style))
+			TextObject_1 = TextObject(name, int(float(matrix_str[4])), int(float(matrix_str[5]) - int(GetFontSize(style)) / 1.5), int(GetFontSize(style)), text_content_ns.text, GetRGB(style), GetFontStyle(style))
+			
 			AddTextObjectToJSON(TextObject_1)
 
 def GetFontSize(style):
 	fontsize = re.search(r'font-size:\s*(\d+)', style)[1] 
 	return fontsize
+
+def GetFontStyle(style):
+	fontstyle = re.search(r'font-style: (.+); ', style)[1] 
+	return fontstyle
 
 def GetRGB(style):
 	rgb = style[style.find("(") + 1:style.find(")")].split(", ")
@@ -48,7 +55,11 @@ def AddTextObjectToJSON(TextObject):
 	with open('base.json') as f:
 		data = json.load(f)
 
-	data["Objects"][0]["Text"].append({"RX": TextObject.x, "RY": TextObject.y, "FontSize": TextObject.fontsize, "Name" : TextObject.name, "Path" : "assets/font/DanielLinssenM5/m5x7.ttf", "Content" : TextObject.content, "Color" : [int(TextObject.color[0]), int(TextObject.color[1]), int(TextObject.color[2]), 255]})
+	if(TextObject.fontstyle == "italic"):
+		data["Objects"][0]["Text"].append({"RX": TextObject.x, "RY": TextObject.y, "FontSize": TextObject.fontsize, "Name" : TextObject.name, "Path" : "assets/font/DanielLinssenM5/m5x7.ttf", "Content" : "", "Color" : [int(TextObject.color[0]), int(TextObject.color[1]), int(TextObject.color[2]), 255]})
+
+	else:
+		data["Objects"][0]["Text"].append({"RX": TextObject.x, "RY": TextObject.y, "FontSize": TextObject.fontsize, "Name" : TextObject.name, "Path" : "assets/font/DanielLinssenM5/m5x7.ttf", "Content" : TextObject.content, "Color" : [int(TextObject.color[0]), int(TextObject.color[1]), int(TextObject.color[2]), 255]})
 
 	with open('base.json', 'w') as f:
 		json.dump(data, f)
