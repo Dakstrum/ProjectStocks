@@ -125,6 +125,7 @@ void SeedDB()
 
     ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/companies-seed.sql"));
     ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/news-events-seed.sql"));
+    ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/ai.sql"));
     ExecuteQueryF(NULL, NULL, "INSERT INTO DBEvents (Event) VALUES ('Seeded')");
 
 }
