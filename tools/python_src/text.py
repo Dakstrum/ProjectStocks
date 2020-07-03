@@ -55,11 +55,22 @@ def AddTextObjectToJSON(TextObject):
 	with open('base.json') as f:
 		data = json.load(f)
 
-	if(TextObject.fontstyle == "italic"):
-		data["Objects"][0]["Text"].append({"RX": TextObject.x, "RY": TextObject.y, "FontSize": TextObject.fontsize, "Name" : TextObject.name, "Path" : "assets/font/DanielLinssenM5/m5x7.ttf", "Content" : "", "Color" : [int(TextObject.color[0]), int(TextObject.color[1]), int(TextObject.color[2]), 255]})
+	i = 0
 
-	else:
-		data["Objects"][0]["Text"].append({"RX": TextObject.x, "RY": TextObject.y, "FontSize": TextObject.fontsize, "Name" : TextObject.name, "Path" : "assets/font/DanielLinssenM5/m5x7.ttf", "Content" : TextObject.content, "Color" : [int(TextObject.color[0]), int(TextObject.color[1]), int(TextObject.color[2]), 255]})
+	for JsonObject in data["Objects"]:
+		if(JsonObject["Name"] == menu.menu_name):
+			if(TextObject.fontstyle == "italic"):
+				print("adding Text to" + menu.menu_name + "I: " + str(i))
+				data["Objects"][i]["Text"].append({"RX": TextObject.x, "RY": TextObject.y, "FontSize": TextObject.fontsize, "Name" : TextObject.name, "Path" : "assets/font/DanielLinssenM5/m5x7.ttf", "Content" : "", "Color" : [int(TextObject.color[0]), int(TextObject.color[1]), int(TextObject.color[2]), 255]})
+
+			else:
+				print("adding Text to" + menu.menu_name + "I: " + str(i))
+				data["Objects"][i]["Text"].append({"RX": TextObject.x, "RY": TextObject.y, "FontSize": TextObject.fontsize, "Name" : TextObject.name, "Path" : "assets/font/DanielLinssenM5/m5x7.ttf", "Content" : TextObject.content, "Color" : [int(TextObject.color[0]), int(TextObject.color[1]), int(TextObject.color[2]), 255]})
+
+		else:
+			i += 1
+			print("i = " + str(i))
+
 
 	with open('base.json', 'w') as f:
 		json.dump(data, f)
@@ -69,3 +80,4 @@ def IsText(g_def):
 		return True
 	else:
 		return False
+

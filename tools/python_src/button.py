@@ -52,8 +52,7 @@ def CreateDefaultButtonObject(g_ns):
 		
 			DetermineButtonPNG(dimensions, matrix_str, name)
 
-		
-
+	
 def DetermineButtonPNG(dimensions, matrix_str, name):
 	if((int(float(dimensions[15]))) == 260 and (int(float(dimensions[16]))) == 75): #Button 1
 		DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/button1.png")
@@ -71,16 +70,20 @@ def AddButtonObjectToJSON(ButtonObject):
 	with open('base.json') as f:
 		data = json.load(f)
 
-	if(ButtonObject.path == None):
-		data["Objects"][0]["Buttons"].append({"RX": ButtonObject.x, "RY": ButtonObject.y, "Width": ButtonObject.width, "Height" : ButtonObject.height, "Name" : ButtonObject.name})
+	i = 0
 
-	else:
-		data["Objects"][0]["Buttons"].append({"RX": ButtonObject.x, "RY": ButtonObject.y, "Width": ButtonObject.width, "Height" : ButtonObject.height, "Path": ButtonObject.path, "Name" : ButtonObject.name})
-	
+	for JsonObject in data["Objects"]:	
+		if(JsonObject["Name"] == menu.menu_name):
+			if(ButtonObject.path == None):
+				data["Objects"][i]["Buttons"].append({"RX": ButtonObject.x, "RY": ButtonObject.y, "Width": ButtonObject.width, "Height" : ButtonObject.height, "Name" : ButtonObject.name})
+
+			else:
+				data["Objects"][i]["Buttons"].append({"RX": ButtonObject.x, "RY": ButtonObject.y, "Width": ButtonObject.width, "Height" : ButtonObject.height, "Path": ButtonObject.path, "Name" : ButtonObject.name})
+		else:
+			i += 1
 
 	with open('base.json', 'w') as f:
 		json.dump(data, f)
-
 
 
 def IsDefaultButton(g_def):
