@@ -403,6 +403,56 @@ void CheckToEndEvent(SimulationFrame *frame)
 
 }
 
+char *AnyEventAtTime(time_t event_time, EventSim *sim)
+{
+
+    time_t *times    = (time_t *)sim->event_times->elements;
+    unsigned int num = sim->event_times->num_elements;
+
+    for (unsigned int i = 0; i < num;i++)
+        if (times[i] == event_time)
+            return ((Event *)sim->events->elements)[i].event;
+
+    return NULL;
+
+}
+
+char *AnyEventSimEventAtTime(time_t event_time, EventSimId *sim) 
+{
+
+    unsigned int num    = sim->event_sims->num_elements;
+    EventSim *event_sim = (EventSim *)sim->event_sims->elements;
+    char *event         = NULL;
+    for (unsigned int i = 0; i < num;i++) {
+
+        event = AnyEventAtTime(event_time, &event_sim[i]);
+        if (event != NULL)
+            return event;
+
+    }
+    return NULL;
+
+}
+
+char *GetAnyEventAtTime(time_t event_time) 
+{
+
+    char *event = AnyEventAtTime(event_time, &global_events);
+    if (event != NULL)
+        return event;
+
+    event = AnyEventSimEventAtTime(event_time, &category_events);
+    if (event != NULL)
+        return event;
+
+    event = AnyEventSimEventAtTime(event_time, &company_events);
+    if (event != NULL)
+        return event;
+
+    return NULL;
+
+}
+
 void SetNewPrice(SimulationFrame *frame, unsigned int idx)
 {
 

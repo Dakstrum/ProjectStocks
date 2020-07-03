@@ -72,6 +72,15 @@ typedef struct Point {
 
 } Point;
 
+typedef struct NewsList {
+
+    ALLEGRO_BITMAP *button_bitmap;
+    unsigned short num_elements;
+    char **elements;
+    
+} NewsList;
+
+
 typedef struct Graph {
 
     char *company;
