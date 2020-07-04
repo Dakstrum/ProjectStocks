@@ -78,7 +78,7 @@ void InitializeNewSaveMenu()
 
     new_save_menu = GetJSONMenuAndAddToDrawLayer("NewSaveMenu");
 
-    InitializeNewSaveTextBoxes();
+    
     
 }
 
@@ -120,6 +120,7 @@ void NewSaveMenu_BCB()
 
     }
     AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("NewSaveMenu"));
+    InitializeNewSaveTextBoxes();
 
 }
 
@@ -228,12 +229,18 @@ void InitalizeSaveScrollBox()
 }
 
 void InitializeNewSaveTextBoxes()
+{
 
     DrawObject *object_thing = CreateTextBoxObject("SaveNameTextBox", "", 10, TEXTBOX_ACCEPT_ALPHABET_CHARACTERS | TEXTBOX_ACCEPT_NUMBER_CHARACTERS);
     object_thing->x          = 28 + 515;
     object_thing->y          = 96 + 179;
     object_thing->width      = 145;
     object_thing->height     = 22;
+
+    AddObjectToDrawLayer(object_thing);
+
+}
+
 
 void CleanSaveMenu()
 {
