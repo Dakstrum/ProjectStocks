@@ -1,4 +1,5 @@
 
+#include <assert.h>
 #include <stdlib.h>
 
 #include <allegro5/allegro.h>
@@ -74,7 +75,54 @@ void DrawTextBox(DrawObject *object)
 
 }
 
+void SetTextStyle(TextStyle *style) 
+{
+
+    style->font_path = "assets/font/DanielLinssenM5/m5x7.ttf";
+    style->font_size = 30;
+
+    style->r = 38;
+    style->g = 50;
+    style->b = 56;
+    style->a = 255;
+
+}
+
+DrawObject *CreateTextBoxObject(char *name, char *placeholder_text, short int limit_characters_to, unsigned short int flags)
+{
+
+    assert(name != NULL);
+    assert(placeholder_text != NULL);
+    assert(limit_characters_to < 129);
+
+    DrawObject *object = CreateNewDrawObject();
+
+    object->type                        = TEXTBOX;
+    object->name                        = name;
+    object->x                           = 0;
+    object->y                           = 0;
+    object->width                       = 0;
+    object->height                      = 0;
+    object->textbox.limit_characters_to = limit_characters_to;
+    object->textbox.current_character   = -1;
+    object->textbox.placeholder_text    = placeholder_text;
+    object->textbox.text_style          = malloc(sizeof(TextStyle));
+    object->textbox.placeholder_style   = malloc(sizeof(TextStyle));
+    object->bit_flags                  |= flags;
+    memset(object->textbox.text, '\0', 128);
+
+    SetTextStyle(object->textbox.text_style);
+    SetTextStyle(object->textbox.placeholder_style);
+
+    return object;
+
+}
+
 void CleanUpTextBox(DrawObject *object)
 {
+
+    assert(object != NULL);
+    free(object->textbox.text_style);
+    free(object->textbox.placeholder_style);
 
 }

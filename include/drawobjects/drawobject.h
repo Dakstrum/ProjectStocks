@@ -72,6 +72,7 @@ typedef struct Point {
 
 } Point;
 
+
 typedef struct Graph {
 
     char *company;

@@ -10,6 +10,7 @@
 #include "drawlayers.h"
 #include "drawobject.h"
 #include "scrollbox.h"
+#include "textbox.h"
 
 #include "log.h"
 #include "shared.h"
