@@ -23,8 +23,8 @@
 #include "drawlayerutils.h"
 
 static MenuWithChilds *stocks_menu           = NULL;
-static MenuWithChilds *sell_transaction_menu = NULL;
-static MenuWithChilds *buy_transaction_menu  = NULL;
+static MenuWithChilds *sell_menu = NULL;
+static MenuWithChilds *buy_menu  = NULL;
 
 static char *selected_company_name          = NULL;
 static DrawObject *current_graph            = NULL;
@@ -87,19 +87,19 @@ void StocksMenusRenderLogic()
 
     }
 
-    if(buy_transaction_menu)
+    if(buy_menu)
     {
 
-        SetTextContent(transaction_menu_pershare_textobject,  "%.2f", CurrentStockPrice(selected_company_name));
-        SetTextContent(transaction_menu_projected_textobject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("BuyTextBox")));
+        //SetTextContent(transaction_menu_pershare_textobject,  "%.2f", CurrentStockPrice(selected_company_name));
+        //SetTextContent(transaction_menu_projected_textobject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("BuyTextBox")));
 
     }
 
-    if(sell_transaction_menu)
+    if(sell_menu)
     {
 
-        SetTextContent(transaction_menu_pershare_textobject,  "%.2f", CurrentStockPrice(selected_company_name));
-        SetTextContent(transaction_menu_projected_textobject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("SellTextBox")));
+        //SetTextContent(transaction_menu_pershare_textobject,  "%.2f", CurrentStockPrice(selected_company_name));
+        //SetTextContent(transaction_menu_projected_textobject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("SellTextBox")));
 
     }
 
@@ -125,11 +125,11 @@ void InitalizeStocksMenuText()
 void InitializeTransactionMenuText()
 {
 
-    transaction_menu_company_name_textobject = GetJSONObjectAndAddToDrawLayer("TransactionMenuCompanyNameText");
-    transaction_menu_pershare_textobject     = GetJSONObjectAndAddToDrawLayer("TransactionMenuPerShareText");
-    transaction_menu_projected_textobject    = GetJSONObjectAndAddToDrawLayer("TransactionMenuProjectedCostText");
+    //transaction_menu_company_name_textobject = GetJSONObjectAndAddToDrawLayer("TransactionMenuCompanyNameText");
+    //transaction_menu_pershare_textobject     = GetJSONObjectAndAddToDrawLayer("TransactionMenuPerShareText");
+    //transaction_menu_projected_textobject    = GetJSONObjectAndAddToDrawLayer("TransactionMenuProjectedCostText");
 
-    SetTextContent(transaction_menu_company_name_textobject, "%s", selected_company_name);
+    //SetTextContent(transaction_menu_company_name_textobject, "%s", selected_company_name);
 
 }
 
@@ -224,21 +224,21 @@ void ChangeGraphTimespan(TimeSpan time_span)
 
 void SellMenu_BCB()
 {
-
-    if (sell_transaction_menu == NULL) {
+    
+    if (sell_menu == NULL) {
 
         selected_company_name = GetCurrentCompanyFromGraph();
 
         CreateNewDrawLayer();
 
-        sell_transaction_menu = GetMenuWithChildsFromJsonLayer("SellTransactionMenu");
-        AddMenuWithChildsToDrawLayer(sell_transaction_menu);
+        sell_menu = GetMenuWithChildsFromJsonLayer("SellMenu");
+        AddMenuWithChildsToDrawLayer(sell_menu);
         InitializeTransactionMenuText();
 
     } else {
 
         ClearCurrentDrawLayer();
-        sell_transaction_menu = NULL;
+        sell_menu = NULL;
 
     }
 
@@ -247,20 +247,20 @@ void SellMenu_BCB()
 void BuyMenu_BCB()
 {
 
-    if (buy_transaction_menu == NULL) {
+    if (buy_menu == NULL) {
 
         selected_company_name = GetCurrentCompanyFromGraph();
 
         CreateNewDrawLayer();
 
-        buy_transaction_menu = GetMenuWithChildsFromJsonLayer("BuyTransactionMenu");
-        AddMenuWithChildsToDrawLayer(buy_transaction_menu);
+        buy_menu = GetMenuWithChildsFromJsonLayer("BuyMenu");
+        AddMenuWithChildsToDrawLayer(buy_menu);
         InitializeTransactionMenuText();
 
     } else {
 
         ClearCurrentDrawLayer();
-        buy_transaction_menu = NULL;
+        buy_menu = NULL;
 
     }
 
@@ -368,8 +368,8 @@ void CleanStocksMenu()
 {
 
     stocks_menu           = NULL;
-    sell_transaction_menu = NULL;
-    buy_transaction_menu  = NULL;
+    sell_menu = NULL;
+    buy_menu  = NULL;
 
     selected_company_name    = NULL;
     current_graph            = NULL;

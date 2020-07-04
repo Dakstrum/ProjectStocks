@@ -38,6 +38,7 @@ static int current_button_idx = -1;
 
 void InitalizeSaveScrollBox();
 void InitializeLoadSaveMenuText();
+void InitializeNewSaveTextBoxes();
 
 void InitializeLoadSaveMenu() 
 {
@@ -59,8 +60,8 @@ void InitializeLoadSaveMenu()
 void InitializeLoadSaveMenuText()
 {
 
-    save_name_textobject   = GetJSONObjectAndAddToDrawLayer("LoadSaveMenuSaveNameText");
-    player_name_textobject = GetJSONObjectAndAddToDrawLayer("LoadSaveMenuPlayerNameText");
+    save_name_textobject   = GetJSONObjectAndAddToDrawLayer("LoadSaveMenuSaveNameTextObject");
+    player_name_textobject = GetJSONObjectAndAddToDrawLayer("LoadSaveMenuPlayerNameTextObject");
 
 }
 
@@ -76,6 +77,8 @@ void InitializeNewSaveMenu()
     }
 
     new_save_menu = GetJSONMenuAndAddToDrawLayer("NewSaveMenu");
+
+    InitializeNewSaveTextBoxes();
     
 }
 
@@ -93,36 +96,7 @@ void PopulateSaveScrollBox(DrawObject *object)
 
 }
 
-void SelectSaveClick(char *save_name, unsigned short int index)
-{
 
-    current_button_idx = index;
-    PlayerSave *temp   = (PlayerSave *)saves->elements;
-    SetSaveInfoText(save_name, temp[index].save_player_name);
-
-}
-
-void InitalizeSaveScrollBox() 
-{
-
-    saves           = GetAllSaves();
-    saves_scrollbox = CreateScrollBoxObject();
-
-    saves_scrollbox->type       = SCROLLBOX;
-    saves_scrollbox->x          = 535;
-    saves_scrollbox->y          = 226;
-    saves_scrollbox->width      = 288;
-    saves_scrollbox->height     = 603;
-    saves_scrollbox->asset_path = "assets/images/companyicons/SaveBox.png";
-
-    saves_scrollbox->scrollbox.num_items    = saves->num_elements;
-    saves_scrollbox->scrollbox.box_click    = &SelectSaveClick;
-    saves_scrollbox->scrollbox.text_content = malloc(sizeof(char *) * saves->num_elements);
-
-    PopulateSaveScrollBox(saves_scrollbox);
-    AddObjectToDrawLayer(saves_scrollbox);
-
-}
 
 void StartGame()
 {
@@ -221,14 +195,54 @@ void NewSaveMenuBack_BCB()
     
 }
 
+
+void SelectSaveClick(char *save_name, unsigned short int index)
+{
+
+    current_button_idx = index;
+    PlayerSave *temp   = (PlayerSave *)saves->elements;
+    SetSaveInfoText(save_name, temp[index].save_player_name);
+
+}
+
+void InitalizeSaveScrollBox() 
+{
+
+    saves           = GetAllSaves();
+    saves_scrollbox = CreateScrollBoxObject();
+
+    saves_scrollbox->type       = SCROLLBOX;
+    saves_scrollbox->x          = 535;
+    saves_scrollbox->y          = 226;
+    saves_scrollbox->width      = 288;
+    saves_scrollbox->height     = 603;
+    saves_scrollbox->asset_path = "assets/images/companyicons/SaveBox.png";
+
+    saves_scrollbox->scrollbox.num_items    = saves->num_elements;
+    saves_scrollbox->scrollbox.box_click    = &SelectSaveClick;
+    saves_scrollbox->scrollbox.text_content = malloc(sizeof(char *) * saves->num_elements);
+
+    PopulateSaveScrollBox(saves_scrollbox);
+    AddObjectToDrawLayer(saves_scrollbox);
+
+}
+
+void InitializeNewSaveTextBoxes()
+
+    DrawObject *object_thing = CreateTextBoxObject("SaveNameTextBox", "", 10, TEXTBOX_ACCEPT_ALPHABET_CHARACTERS | TEXTBOX_ACCEPT_NUMBER_CHARACTERS);
+    object_thing->x          = 28 + 515;
+    object_thing->y          = 96 + 179;
+    object_thing->width      = 145;
+    object_thing->height     = 22;
+
 void CleanSaveMenu()
 {
 
     if (saves != NULL)
         Vector_Delete(saves);
 
-    load_save_menu = NULL;
-    new_save_menu  = NULL;
+    load_save_menu         = NULL;
+    new_save_menu          = NULL;
     save_name_textobject   = NULL;
     player_name_textobject = NULL;
     saves_scrollbox        = NULL;

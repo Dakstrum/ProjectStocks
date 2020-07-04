@@ -72,20 +72,37 @@ void InitializeMainMenuButtons()
 void InitializeStocksMenuButtons()
 {
 
-    AddButton("StocksMenuBuyButtonObject", &SellMenu_BCB);
-    AddButton("StocksMenuBuyButtonObject", &BuyMenu_BCB);
-    AddButton("MakeTransactionSellButton", &Sell_BCB);
-    AddButton("MakeTransactionBuyButton",  &Buy_BCB);
-    AddButton("StocksMenuDButtonObject",   &OneD_BCB);
-    AddButton("StocksMenuWButtonObject",   &OneW_BCB);
-    AddButton("StocksMenuMButtonObject",   &OneM_BCB);
-    AddButton("StocksMenuYButtonObject",   &OneY_BCB);
-    AddButton("StocksMenuAllButtonObject", &All_BCB);
+    AddButton("StocksMenuSellButtonObject",       &SellMenu_BCB);
+    AddButton("StocksMenuBuyButtonObject",        &BuyMenu_BCB);
+
+    AddButton("StocksMenuDButtonObject",          &OneD_BCB);
+    AddButton("StocksMenuWButtonObject",          &OneW_BCB);
+    AddButton("StocksMenuMButtonObject",          &OneM_BCB);
+    AddButton("StocksMenuYButtonObject",          &OneY_BCB);
+    AddButton("StocksMenuAllButtonObject",        &All_BCB);
 
     AddButton("StocksMenuStocksTabButtonObject",  &Stocks_BCB);
     AddButton("StocksMenuNewsTabButtonObject",    &News_BCB);
     AddButton("StocksMenuAccountTabButtonObject", &Account_BCB);
     AddButton("StocksMenuCardsTabButtonObject",   &Cards_BCB);
+
+    AddButton("BuyMenuXButtonObject",             &BuyMenu_BCB);
+
+    AddButton("SellMenuXButtonObject",            &SellMenu_BCB);
+
+    
+}
+
+void InitializeSaveMenuButtons()            
+{
+
+    AddButton("LoadSaveMenuNewButtonObject",        &NewSaveMenu_BCB);
+    AddButton("LoadSaveMenuLoadButtonObject",       &LoadSaveMenuLoad_BCB);
+    AddButton("LoadSaveMenuBackButtonObject",       &LoadSaveMenuBack_BCB);
+    AddButton("LoadSaveMenuDeleteSaveButtonObject", &DeleteSave_BCB);
+
+    AddButton("NewSaveMenuBackButtonObject",        &NewSaveMenuBack_BCB);
+    AddButton("NewSaveMenuCreateButtonObject",      &CreateSave_BCB);
 
 }
 
@@ -130,17 +147,7 @@ void InitializeOptionsButtons()
 
 }
 
-void InitializeSaveMenuButtons()
-{
 
-    AddButton("LoadSaveMenuNewSaveButton", &NewSaveMenu_BCB);
-    AddButton("NewSaveMenuBackButton", &NewSaveMenuBack_BCB);
-    AddButton("NewSaveMenuCreateButton", &CreateSave_BCB);
-    AddButton("LoadSaveMenuLoadButton", &LoadSaveMenuLoad_BCB);
-    AddButton("LoadSaveMenuBackButton", &LoadSaveMenuBack_BCB);
-    AddButton("LoadSaveMenuDeleteSaveButton", &DeleteSave_BCB);
-
-}
 
 void InitializeCardsMenuButtons()
 {
