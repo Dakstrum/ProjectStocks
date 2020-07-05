@@ -98,11 +98,11 @@ void AccountMenuRenderLogic()
 void InitalizeAccountMenuText()
 {
 
-    company_name_textobject       = GetJSONObjectAndAddToDrawLayer("AccountMenuChangingCompanyNameText");
-    player_money_textobject       = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
-    player_date_textobject        = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
-    stock_price_textobject        = GetJSONObjectAndAddToDrawLayer("AccountMenuCurrentStockPriceText");
-    owned_stock_amount_textobject = GetJSONObjectAndAddToDrawLayer("AccountMenuOwnedStockAmountText");
+    company_name_textobject       = GetJSONObjectAndAddToDrawLayer("AccountMenuCompanyNameTextObject");
+    player_money_textobject       = GetJSONObjectAndAddToDrawLayer("AccountMenuAccountMoneyTextObject");
+    player_date_textobject        = GetJSONObjectAndAddToDrawLayer("AccountMenuAccountDateTextObject");
+    stock_price_textobject        = GetJSONObjectAndAddToDrawLayer("AccountMenuStockPriceTextObject");
+    owned_stock_amount_textobject = GetJSONObjectAndAddToDrawLayer("AccountMenuAmountOwnedTextObject");
 
     SetTextContent(company_name_textobject, "%s", GetCompanyNameViewing());
 
@@ -111,11 +111,11 @@ void InitalizeAccountMenuText()
 void InitializeSelectedStockHistoryDisplay()
 {
 
-    static char *action_json_objects[DSP_NUM]       = {"AccountMenuActionTextOne", "AccountMenuActionTextTwo", "AccountMenuActionTextThree", "AccountMenuActionTextFour", "AccountMenuActionTextFive"};
-    static char *date_json_objects[DSP_NUM]         = {"AccountMenuDateTextOne", "AccountMenuDateTextTwo", "AccountMenuDateTextThree", "AccountMenuDateTextFour", "AccountMenuDateTextFive"};
-    static char *share_amount_json_objects[DSP_NUM] = {"AccountMenuSharesTextOne", "AccountMenuSharesTextTwo", "AccountMenuSharesTextThree", "AccountMenuSharesTextFour", "AccountMenuSharesTextFive"};
-    static char *share_price_json_objects[DSP_NUM]  = {"AccountMenuPerShareTextOne", "AccountMenuPerShareTextTwo", "AccountMenuPerShareTextThree", "AccountMenuPerShareTextFour", "AccountMenuPerShareTextFive"};
-    static char *transaction_json_objects[DSP_NUM]  = {"AccountMenuTransactionTextOne", "AccountMenuTransactionTextTwo", "AccountMenuTransactionTextThree", "AccountMenuTransactionTextFour", "AccountMenuTransactionTextFive"};
+    static char *action_json_objects[DSP_NUM]       = {"AccountMenuAction1TextObject",      "AccountMenuAction2TextObject",      "AccountMenuAction3TextObject",      "AccountMenuAction4TextObject",      "AccountMenuAction5TextObject"};
+    static char *date_json_objects[DSP_NUM]         = {"AccountMenuDate1TextObject",        "AccountMenuDate2TextObject",        "AccountMenuDate3TextObject",        "AccountMenuDate4TextObject",        "AccountMenuDate5TextObject"};
+    static char *share_amount_json_objects[DSP_NUM] = {"AccountMenuShares1TextObject",      "AccountMenuShares2TextObject",      "AccountMenuShares3TextObject",      "AccountMenuShares4TextObject",      "AccountMenuShares5TextObject"};
+    static char *share_price_json_objects[DSP_NUM]  = {"AccountMenuPerShare1TextObject",    "AccountMenuPerShare2TextObject",    "AccountMenuPerShare3TextObject",    "AccountMenuPerShare4TextObject",    "AccountMenuPerShare5TextObject"};
+    static char *transaction_json_objects[DSP_NUM]  = {"AccountMenuTransaction1TextObject", "AccountMenuTransaction2TextObject", "AccountMenuTransaction3TextObject", "AccountMenuTransaction4TextObject", "AccountMenuTransaction5TextObject"};
 
     for (int i=0; i < DSP_NUM; i++) {
 
@@ -159,10 +159,10 @@ void PopulateSelectedStockHistoryDisplay(char* company)
 void InitializeAllStocksHistoryDisplay()
 {
 
-    static char *name_json_objects[DSP_NUM]         = {"AccountMenuNameOne",   "AccountMenuNameTwo",   "AccountMenuNameThree",   "AccountMenuNameFour",   "AccountMenuNameFive"};
-    static char *action_json_objects[DSP_NUM]       = {"AccountMenuActionOne", "AccountMenuActionTwo", "AccountMenuActionThree", "AccountMenuActionFour", "AccountMenuActionFive"};
-    static char *date_json_objects[DSP_NUM]         = {"AccountMenuDateOne",   "AccountMenuDateTwo",   "AccountMenuDateThree",   "AccountMenuDateFour",   "AccountMenuDateFive"};
-    static char *share_amount_json_objects[DSP_NUM] = {"AccountMenuSharesOne", "AccountMenuSharesTwo", "AccountMenuSharesThree", "AccountMenuSharesFour", "AccountMenuSharesFive"};
+    static char *name_json_objects[DSP_NUM]         = {"AccountMenuName11TextObject",   "AccountMenuName22TextObject",   "AccountMenuName33TextObject",   "AccountMenuName44TextObject",   "AccountMenuName55TextObject"};
+    static char *action_json_objects[DSP_NUM]       = {"AccountMenuAction11TextObject", "AccountMenuAction22TextObject", "AccountMenuAction33TextObject", "AccountMenuAction44TextObject", "AccountMenuAction55TextObject"};
+    static char *date_json_objects[DSP_NUM]         = {"AccountMenuDate11TextObject",   "AccountMenuDate22TextObject",   "AccountMenuDate33TextObject",   "AccountMenuDate44TextObject",   "AccountMenuDate55TextObject"};
+    static char *share_amount_json_objects[DSP_NUM] = {"AccountMenuShares11TextObject", "AccountMenuShares22TextObject", "AccountMenuShares33TextObject", "AccountMenuShares44TextObject", "AccountMenuShares55TextObject"};
 
     for (int i=0; i < DSP_NUM; i++) {
 

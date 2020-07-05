@@ -75,10 +75,10 @@ void CardsMenuRenderLogic()
 void InitializeCardsMenuText()
 {
 
-    player_money_textobject = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
-    player_date_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
-    card_title_textobject   = GetJSONObjectAndAddToDrawLayer("CardTitleText");
-    card_desc_textobject    = GetJSONObjectAndAddToDrawLayer("CardDescText");
+    player_money_textobject = GetJSONObjectAndAddToDrawLayer("CardsMenuAccountMoneyTextObject");
+    player_date_textobject  = GetJSONObjectAndAddToDrawLayer("CardsMenuAccountDateTextObject");
+    card_title_textobject   = GetJSONObjectAndAddToDrawLayer("CardsMenuCardTitleTextObject");
+    card_desc_textobject    = GetJSONObjectAndAddToDrawLayer("CardsMenuCardDescriptionTextObject");
 
 }
 

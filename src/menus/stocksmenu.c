@@ -61,7 +61,6 @@ void InitializeStocksMenu()
     }
 
     stocks_menu = GetJSONMenuAndAddToDrawLayer("StocksMenu");
-    
     InitalizeStocksMenuText();
     InitializeCompanyScrollBox();
 
@@ -202,12 +201,13 @@ void InitializeCompanyScrollBox()
 
     PopulateStocksScrollBox(object);
     AddObjectToDrawLayer(object);
+    Log("GOT HERE");
 
 }
 
 void PopulateStocksScrollBox(DrawObject *object)
 {
-
+    LogF("%d", GetNumCompanies());
     for(int i = 0; i < GetNumCompanies(); i++)
         object->scrollbox.text_content[i] = GetCompanyAbbreviation(i+1);
 

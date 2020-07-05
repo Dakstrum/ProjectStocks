@@ -33,8 +33,8 @@ void InitializeNewsMenu()
     
     news_menu = GetJSONMenuAndAddToDrawLayer("NewsMenu");
 
-    //InitalizeNewsMenuText();
-    //InitializeSpeedSelectObject();
+    InitalizeNewsMenuText();
+    InitializeSpeedSelectObject();
 
     NewsMenuRenderLogic();
 }
@@ -42,8 +42,8 @@ void InitializeNewsMenu()
 void InitalizeNewsMenuText()
 {
 
-    player_money_textobject = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountMoneyText");
-    player_date_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuAccountDateText");
+    player_money_textobject = GetJSONObjectAndAddToDrawLayer("NewsMenuAccountMoneyTextObject");
+    player_date_textobject  = GetJSONObjectAndAddToDrawLayer("NewsMenuAccountDateTextObject");
 
 }
 

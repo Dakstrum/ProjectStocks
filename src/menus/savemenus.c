@@ -169,7 +169,6 @@ void DeleteSave_BCB()
 void CreateSave_BCB()
 {
 
-/*
     char *save_name_in_text_box = GetTextFromTextBox("SaveNameTextBox");
     
     if (strlen(save_name_in_text_box) == 0) {
@@ -185,9 +184,9 @@ void CreateSave_BCB()
         // TODO setup popups when textboxes have no value.
         return;
     }
-    //CreateNewSave(save_name_in_text_box, player_name_in_text_box);
+    CreateNewSave(save_name_in_text_box, player_name_in_text_box);
     StartGame();
-    */
+    
 
 }
 
@@ -233,13 +232,20 @@ void InitalizeSaveScrollBox()
 void InitializeNewSaveTextBoxes()
 {
 
-    DrawObject *object_thing = CreateTextBoxObject("SaveNameTextBox", "", 10, TEXTBOX_ACCEPT_ALPHABET_CHARACTERS | TEXTBOX_ACCEPT_NUMBER_CHARACTERS);
-    object_thing->x          = 28 + 515;
-    object_thing->y          = 96 + 179;
-    object_thing->width      = 145;
-    object_thing->height     = 22;
+    DrawObject *savename_tb = CreateTextBoxObject("SaveNameTextBox", "", 10, TEXTBOX_ACCEPT_ALPHABET_CHARACTERS | TEXTBOX_ACCEPT_NUMBER_CHARACTERS);
+    savename_tb->x          = 28 + 515;
+    savename_tb->y          = 96 + 179;
+    savename_tb->width      = 145;
+    savename_tb->height     = 22;
 
-    AddObjectToDrawLayer(object_thing);
+    DrawObject *playername_tb = CreateTextBoxObject("PlayerNameTextBox", "", 10, TEXTBOX_ACCEPT_ALPHABET_CHARACTERS | TEXTBOX_ACCEPT_NUMBER_CHARACTERS);
+    playername_tb->x          = 28 + 515;
+    playername_tb->y          = 198 + 179;
+    playername_tb->width      = 145;
+    playername_tb->height     = 22;
+
+    AddObjectToDrawLayer(savename_tb);
+    AddObjectToDrawLayer(playername_tb);
 
 }
 
