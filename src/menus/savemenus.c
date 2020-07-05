@@ -169,6 +169,7 @@ void DeleteSave_BCB()
 void CreateSave_BCB()
 {
 
+/*
     char *save_name_in_text_box = GetTextFromTextBox("SaveNameTextBox");
     
     if (strlen(save_name_in_text_box) == 0) {
@@ -184,8 +185,9 @@ void CreateSave_BCB()
         // TODO setup popups when textboxes have no value.
         return;
     }
-    CreateNewSave(save_name_in_text_box, player_name_in_text_box);
+    //CreateNewSave(save_name_in_text_box, player_name_in_text_box);
     StartGame();
+    */
 
 }
 

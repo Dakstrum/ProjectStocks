@@ -103,6 +103,7 @@ DrawObject *CreateTextBoxObject(char *name, char *placeholder_text, short int li
     object->y                           = 0;
     object->width                       = 0;
     object->height                      = 0;
+    object->textbox.bitmap              = NULL;
     object->textbox.limit_characters_to = limit_characters_to;
     object->textbox.current_character   = -1;
     object->textbox.placeholder_text    = placeholder_text;

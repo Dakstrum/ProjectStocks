@@ -52,6 +52,9 @@ void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width,
 void DrawBackBuffer(ALLEGRO_BITMAP *bitmap) 
 {
 
+    if (bitmap == NULL)
+        return;
+
     const float scale_width  = (float)al_get_bitmap_width(bitmap)  * scale.x_scale;
     const float scale_height = (float)al_get_bitmap_height(bitmap) * scale.y_scale;
     al_draw_scaled_bitmap(bitmap, 0, 0, 1920, 1080, 0, 0, scale_width, scale_height, 0);
