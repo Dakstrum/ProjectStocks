@@ -28,7 +28,6 @@ def CreateMenuObject(root):
 			if(property_ns.get("name") == "name"):
 				global menu_name 
 				menu_name = property_ns.text
-				print("BEFORE TEXTTTTTTTTT: " + property_ns.text)
 
 	re_path   = re.search(r'Path:\s*([^<]*)', note)[1]
 	re_x      = re.search(r'X:\s*([^<]*)', note)[1]
@@ -36,9 +35,7 @@ def CreateMenuObject(root):
 	re_width  = re.search(r'Width:\s*([^<]*)', note)[1]
 	re_height = re.search(r'Height:\s*([^<]*)', note)[1]
 	
-	print("AFTER TEXTTTTTTTTT: " + property_ns.text)
-
-	MenuObject_1 = MenuObject(remove(re_path), menu.menu_name, remove(re_x), remove(re_y), remove(re_width), remove(re_height))
+	MenuObject_1 = MenuObject(re_path, menu.menu_name, re_x, re_y, re_width, re_height)
 	AddMenuObjectToJSON(MenuObject_1)
 
 def AddMenuObjectToJSON(MenuObject):
@@ -46,11 +43,7 @@ def AddMenuObjectToJSON(MenuObject):
 	with open('base.json') as f:
 		data = json.load(f)
 
-	data["Objects"].append({"Type": "Menu", "Path": MenuObject.path, "Name": MenuObject.name, "X": MenuObject.x, "Y": MenuObject.y, "Width": MenuObject.width, "Height": MenuObject.height, "Buttons": [], "Text": []})
+	data["Objects"].append({"Type": "Menu", "Path": MenuObject.path, "Name": MenuObject.name, "X": int(MenuObject.x), "Y": int(MenuObject.y), "Width": int(MenuObject.width), "Height": int(MenuObject.height), "Buttons": [], "Text": []})
 
 	with open('base.json', 'w') as f:
 		json.dump(data, f)
-
-
-def remove(string): 
-    return string.replace(" ", "") 
