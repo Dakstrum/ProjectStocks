@@ -162,18 +162,18 @@ void InitializeCardsMenuButtons()
 void InitializePauseMenusButtons()
 {
 
-    AddButton("PauseMenuMainMenuButton", &PauseMenuMainMenu_BCB);
-    AddButton("PauseMenuOptionsButton", &PauseMenuOptions_BCB);
-    AddButton("PauseMenuSaveButton", &PauseMenuSave_BCB);
-    AddButton("PauseMenuExitButton", &PauseMenuExit_BCB);
+    AddButton("PauseMenuMainMenuButtonObject", &PauseMenuMainMenu_BCB);
+    AddButton("PauseMenuOptionsButtonObject",  &PauseMenuOptions_BCB);
+    AddButton("PauseMenuSaveButtonObject",     &PauseMenuSave_BCB);
+    AddButton("PauseMenuExitButtonObject",     &PauseMenuExit_BCB);
 
 }
 
 void InitializeOptionsButtons()
 {
 
-    AddButton("OptionsMenuExitButton", &OptionsMenuExit_BCB);
-    AddButton("OptionsMenuResolutionButton", &OptionsMenuResolution_BCB);  
+    AddButton("OptionsMenuXButtonObject",          &OptionsMenuExit_BCB);
+    AddButton("OptionsMenuResolutionButtonObject", &OptionsMenuResolution_BCB);  
 
 }
 

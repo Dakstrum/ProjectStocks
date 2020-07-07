@@ -17,7 +17,7 @@ void ToggleInGamePauseMenu()
     if (in_game_pause_menu == NULL) {
 
         CreateNewDrawLayer();
-        in_game_pause_menu = GetJSONMenuAndAddToDrawLayer("InGamePauseMenu");
+        in_game_pause_menu = GetJSONMenuAndAddToDrawLayer("PauseMenu");
         
     } else {
 
