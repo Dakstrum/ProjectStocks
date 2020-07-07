@@ -153,6 +153,30 @@ float MaxMinDiff(float *array, unsigned int size)
     
 }
 
+struct timespec GetTimespecDiff(struct timespec *t1, struct timespec *t2)
+{
+
+    struct timespec diff_time;
+    long sec_diff  = 0;
+    long diff_nsec = 0;
+    if (t1->tv_nsec > t2->tv_nsec) {
+
+        sec_diff  = -1;
+        diff_nsec = 999999999 - (t1->tv_nsec - t2->tv_nsec); 
+
+    } else {
+
+        diff_nsec = t2->tv_nsec - t1->tv_nsec;
+
+    }
+
+    diff_time.tv_sec  = t2->tv_sec - t1->tv_sec + sec_diff;
+    diff_time.tv_nsec = diff_nsec;
+
+    return diff_time;
+
+}
+
 long GetMilliDiff(struct timespec *t1, struct timespec *t2)
 {
 
@@ -197,5 +221,12 @@ struct timespec GetOffsetTime(long offset_in_milli)
     offset_time.tv_nsec += (milli * 1e6);
 
     return offset_time;
+
+}
+
+float GetSeconds(struct timespec *t) 
+{
+
+    return (float)(t->tv_sec + t->tv_nsec * 1e-9);
 
 }

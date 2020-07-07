@@ -71,6 +71,8 @@ long GetMilliDiff(struct timespec *t1, struct timespec *t2);
 long GetAbsMilliDiff(struct timespec *t1, struct timespec *t2);
 struct timespec GetCurrentTime();
 struct timespec GetOffsetTime(long offset_in_milli);
+struct timespec GetTimespecDiff(struct timespec *t1, struct timespec *t2);
+float GetSeconds(struct timespec *t);
 
 void SetWindowSettings(WindowSettings settings);
 WindowSettings GetWindowSettings();
