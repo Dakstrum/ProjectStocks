@@ -20,16 +20,34 @@ Company *GetAllCompanies()
 char *GetCompanyName(unsigned int company_id)
 {
 
+    char *company_name = GetCompanyNameRef(company_id);
+    assert(company_name != NULL);
+    return strdup(company_name);
+
+}
+
+char *GetCompanyNameRef(unsigned int company_id)
+{
+
     Company *temp = (Company *)companies->elements;
     for (size_t i = 0; i < companies->num_elements;i++)
         if (temp[i].company_id == company_id)
-            return strdup(temp[i].company_name);
+            return temp[i].company_name;
 
     return NULL;
 
 }
 
 char *GetCompanyAbbreviation(unsigned int company_id)
+{
+
+    char *company_abbr = GetCompanyAbbreviationRef(company_id);
+    assert(company_abbr != NULL);
+    return strdup(company_abbr);
+
+}
+
+char *GetCompanyAbbreviationRef(unsigned int company_id)
 {
 
     Company *temp = (Company *)companies->elements;

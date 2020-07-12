@@ -1,12 +1,14 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 
+#include <time.h>
+
 typedef struct Position {
 
     float x;
     float y;
 
-}
+} Position;
 
 typedef struct Velocity {
 
@@ -28,7 +30,7 @@ typedef struct Kinematic {
     Velocity velocity;
     Acceleration acceleration;
 
-} Kinematic
+} Kinematic;
 
 Position ElapsedTime_GetNewPosition(Kinematic *kinematic, time_t t);
 Position TimeDiff_GetDiffPosition(Kinematic *kinematic, time_t t, time_t dt);

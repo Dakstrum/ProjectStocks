@@ -37,8 +37,7 @@ void SetTextContent(DrawObject *object, const char *str, ...)
     if (object == NULL)
         return;
 
-    if (object->type != TEXT)
-        return;
+    assert(object->type == TEXT);
 
     va_list args;
     va_start(args, str);

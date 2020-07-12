@@ -79,10 +79,10 @@ void StocksMenusRenderLogic()
     if(stocks_menu)
     {
 
-        SetTextContent(stock_change_textobject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing())); //Mem leak
+        SetTextContent(stock_change_textobject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
         SetTextContent(player_money_textobject, "%.2f", GetAccountMoney());
         SetTextContent(player_date_textobject,  "%s",   GetDate());
-        SetTextContent(stock_price_textobject,  "%.2f", CurrentStockPrice(GetCompanyNameViewing())); //Mem leak
+        SetTextContent(stock_price_textobject,  "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
 
     }
 
@@ -135,7 +135,7 @@ void InitializeTransactionMenuText()
 void DisplayPopup(char str[50]) 
 {
     DrawObject *object = CreateNewPopup();
-    SetPopupText(object, str); //Mem leak
+    SetPopupText(object, str);
     AddObjectToDrawLayer(object);
 
 }
@@ -201,13 +201,11 @@ void InitializeCompanyScrollBox()
 
     PopulateStocksScrollBox(object);
     AddObjectToDrawLayer(object);
-    Log("GOT HERE");
 
 }
 
 void PopulateStocksScrollBox(DrawObject *object)
 {
-    LogF("%d", GetNumCompanies());
     for(int i = 0; i < GetNumCompanies(); i++)
         object->scrollbox.text_content[i] = GetCompanyAbbreviation(i+1);
 

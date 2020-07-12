@@ -103,7 +103,7 @@ float GetAccountMoney()
 char *GetCompanyNameViewing()
 {
 
-    return GetCompanyName(GetCompanyIdViewing());
+    return GetCompanyNameRef(GetCompanyIdViewing());
 
 }
 

@@ -87,11 +87,13 @@ void AccountMenuRenderLogic()
 
     if (player_money_textobject == NULL)
         return;
+
+    char *company_viewing = GetCompanyNameViewing();
     
     SetTextContent(player_money_textobject,       "%.2f", GetAccountMoney());
     SetTextContent(player_date_textobject,        "%s",   GetDate());
-    SetTextContent(stock_price_textobject,        "%.2f", CurrentStockPrice(GetCompanyNameViewing())); //Mem leak
-    SetTextContent(owned_stock_amount_textobject, "%d",   GetOwnedStockAmount(GetCompanyNameViewing()));
+    SetTextContent(stock_price_textobject,        "%.2f", CurrentStockPrice(company_viewing));
+    SetTextContent(owned_stock_amount_textobject, "%d",   GetOwnedStockAmount(company_viewing));
 
 }
 
