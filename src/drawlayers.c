@@ -40,20 +40,11 @@ typedef struct DrawLayer
 
 } DrawLayer;
 
-typedef struct ActiveTextBox
-{
-
-    DrawObject *object;
-
-} ActiveTextBox;
-
-static DrawLayer *draw_layers;
-static int current_draw_layer = -1;
-
-static ALLEGRO_DISPLAY *display = NULL;
-
-static ActiveTextBox current_active_textbox;
-static ALLEGRO_BITMAP *video_buffer;
+static int current_draw_layer             = -1;
+static DrawLayer *draw_layers             = NULL;
+static ALLEGRO_DISPLAY *display           = NULL;
+static DrawObject *current_active_textbox = NULL;
+static ALLEGRO_BITMAP *video_buffer       = NULL;
 
 void ResetDrawLayers();
 
@@ -93,7 +84,7 @@ int GetMaxObjectsPerDrawLayer()
 void ResetDrawLayers() 
 {
 
-    current_active_textbox.object = NULL;
+    current_active_textbox = NULL;
 
     for (int i = 0; i < MAX_DRAW_LAYERS;i++) {
 
@@ -134,12 +125,12 @@ void SetActiveTextBox(DrawObject *object)
     
     assert(object != NULL);
 
-    if (current_active_textbox.object != NULL)
-        current_active_textbox.object->bit_flags ^= (current_active_textbox.object->bit_flags & TEXTBOX_ACTIVE);
+    if (current_active_textbox != NULL)
+        current_active_textbox->bit_flags ^= (current_active_textbox->bit_flags & TEXTBOX_ACTIVE);
 
-    current_active_textbox.object  = object;
-    object->bit_flags             |= TEXTBOX_ACTIVE | TEXTBOX_FLICKER_DRAWING;
-    object->textbox.flicker        = GetCurrentTime();
+    current_active_textbox  = object;
+    object->bit_flags      |= TEXTBOX_ACTIVE | TEXTBOX_FLICKER_DRAWING;
+    object->textbox.flicker = GetCurrentTime();
 
 }
 
@@ -156,7 +147,7 @@ DrawObject** GetAllDrawObjectsInCurrentLayer()
 DrawObject *GetActiveTextBox()
 {
 
-    return current_active_textbox.object;
+    return current_active_textbox;
 
 }
 
@@ -243,7 +234,7 @@ void ClearUpDrawLayer(int layer)
 
     ClearUpDrawObjects(layer);
     ClearUpMenuWithChilds(layer);
-    current_active_textbox.object = NULL;
+    current_active_textbox = NULL;
 
 }
 
