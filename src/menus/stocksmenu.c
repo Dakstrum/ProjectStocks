@@ -21,6 +21,7 @@
 #include "account.h"
 #include "generalpurposemenus.h"
 #include "drawlayerutils.h"
+#include "textbox.h"
 
 static MenuWithChilds *stocks_menu           = NULL;
 static MenuWithChilds *sell_menu = NULL;
@@ -40,6 +41,7 @@ static DrawObject *stock_change_textobject  = NULL;
 static DrawObject *transaction_menu_company_name_textobject = NULL;
 static DrawObject *transaction_menu_pershare_textobject     = NULL;
 static DrawObject *transaction_menu_projected_textobject    = NULL;
+static DrawObject *transaction_menu_amountowned_textobject  = NULL;
 
 void DisplayGraph(char *company_name, TimeSpan time_span);
 void InitializeCompanyScrollBox();
@@ -48,7 +50,9 @@ char *GetCurrentCompanyFromGraph();
 void StocksMenusRenderLogic();
 void PopulateStockStatsText(char *company_name);
 void InitalizeStocksMenuText();
-void InitializeTransactionMenuText();
+void InitializeTransactionMenuTextBoxes();
+void InitializeBuyMenuText();
+void InitializeSellMenuText();
 
 void InitializeStocksMenu() 
 { 
@@ -67,7 +71,7 @@ void InitializeStocksMenu()
     DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
     PopulateStockStatsText(GetCompanyNameViewing());
 
-    InitializeSpeedSelectObject();
+    InitializeSpeedSelectObject("StocksMenu");
 
 }
 
@@ -89,16 +93,16 @@ void StocksMenusRenderLogic()
     if(buy_menu)
     {
 
-        //SetTextContent(transaction_menu_pershare_textobject,  "%.2f", CurrentStockPrice(selected_company_name));
-        //SetTextContent(transaction_menu_projected_textobject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("BuyTextBox")));
+        SetTextContent(transaction_menu_pershare_textobject,  "%.2f", CurrentStockPrice(selected_company_name));
+        SetTextContent(transaction_menu_projected_textobject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("BuyTextBox")));
 
     }
 
     if(sell_menu)
     {
 
-        //SetTextContent(transaction_menu_pershare_textobject,  "%.2f", CurrentStockPrice(selected_company_name));
-        //SetTextContent(transaction_menu_projected_textobject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("SellTextBox")));
+        SetTextContent(transaction_menu_pershare_textobject,  "%.2f", CurrentStockPrice(selected_company_name));
+        SetTextContent(transaction_menu_projected_textobject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("SellTextBox")));
 
     }
 
@@ -121,16 +125,33 @@ void InitalizeStocksMenuText()
 
 }
 
-void InitializeTransactionMenuText()
+void InitializeBuyMenuText()
 {
+    InitializeTransactionMenuTextBoxes();
 
-    //transaction_menu_company_name_textobject = GetJSONObjectAndAddToDrawLayer("TransactionMenuCompanyNameText");
-    //transaction_menu_pershare_textobject     = GetJSONObjectAndAddToDrawLayer("TransactionMenuPerShareText");
-    //transaction_menu_projected_textobject    = GetJSONObjectAndAddToDrawLayer("TransactionMenuProjectedCostText");
+    transaction_menu_company_name_textobject = GetJSONObjectAndAddToDrawLayer("BuyMenuCompanyNameTextObject");
+    transaction_menu_pershare_textobject     = GetJSONObjectAndAddToDrawLayer("BuyMenuPricePerTextObject");
+    transaction_menu_projected_textobject    = GetJSONObjectAndAddToDrawLayer("BuyMenuPriceAllTextObject");
 
-    //SetTextContent(transaction_menu_company_name_textobject, "%s", selected_company_name);
+    SetTextContent(transaction_menu_company_name_textobject, "%s", GetCompanyAbbreviation(GetCompanyId(selected_company_name)));
 
 }
+
+void InitializeSellMenuText()
+{
+    InitializeTransactionMenuTextBoxes();
+
+    transaction_menu_company_name_textobject = GetJSONObjectAndAddToDrawLayer("SellMenuCompanyNameTextObject");
+    transaction_menu_pershare_textobject     = GetJSONObjectAndAddToDrawLayer("SellMenuPricePerTextObject");
+    transaction_menu_projected_textobject    = GetJSONObjectAndAddToDrawLayer("SellMenuPriceAllTextObject");
+    transaction_menu_amountowned_textobject  = GetJSONObjectAndAddToDrawLayer("SellMenuAmountOwnedTextObject");
+
+    SetTextContent(transaction_menu_company_name_textobject, "%s", GetCompanyAbbreviation(GetCompanyId(selected_company_name)));
+    SetTextContent(transaction_menu_amountowned_textobject, "%d", GetOwnedStockAmount(selected_company_name));
+
+}
+
+
 
 void DisplayPopup(char str[50]) 
 {
@@ -220,6 +241,37 @@ void ChangeGraphTimespan(TimeSpan time_span)
 
 }
 
+
+void InitializeTransactionMenuTextBoxes()
+{
+    if(buy_menu)
+    {
+
+        DrawObject *buy_tb = CreateTextBoxObject("BuyTextBox", "", 10, TEXTBOX_ACCEPT_ALPHABET_CHARACTERS | TEXTBOX_ACCEPT_NUMBER_CHARACTERS);
+        buy_tb->x          = 955;
+        buy_tb->y          = 395;
+        buy_tb->width      = 145;
+        buy_tb->height     = 22;
+
+        AddObjectToDrawLayer(buy_tb);
+
+    }
+
+    if(sell_menu)
+    {
+
+        DrawObject *sell_tb = CreateTextBoxObject("SellTextBox", "", 10, TEXTBOX_ACCEPT_ALPHABET_CHARACTERS | TEXTBOX_ACCEPT_NUMBER_CHARACTERS);
+        sell_tb->x          = 955;
+        sell_tb->y          = 395;
+        sell_tb->width      = 145;
+        sell_tb->height     = 22;
+
+        AddObjectToDrawLayer(sell_tb);
+    }
+
+}
+
+
 void SellMenu_BCB()
 {
     
@@ -231,7 +283,7 @@ void SellMenu_BCB()
 
         sell_menu = GetMenuWithChildsFromJsonLayer("SellMenu");
         AddMenuWithChildsToDrawLayer(sell_menu);
-        InitializeTransactionMenuText();
+        InitializeSellMenuText();
 
     } else {
 
@@ -253,7 +305,7 @@ void BuyMenu_BCB()
 
         buy_menu = GetMenuWithChildsFromJsonLayer("BuyMenu");
         AddMenuWithChildsToDrawLayer(buy_menu);
-        InitializeTransactionMenuText();
+        InitializeBuyMenuText();
 
     } else {
 
@@ -315,8 +367,6 @@ void Buy_BCB()
         DisplayPopup(str);
 
     }
-
-
 
 }
 
@@ -383,5 +433,6 @@ void CleanStocksMenu()
     transaction_menu_company_name_textobject = NULL;
     transaction_menu_pershare_textobject     = NULL;
     transaction_menu_projected_textobject    = NULL;
+    transaction_menu_amountowned_textobject  = NULL;
 
 }

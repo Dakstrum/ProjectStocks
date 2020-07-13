@@ -34,7 +34,7 @@ void InitializeNewsMenu()
     news_menu = GetJSONMenuAndAddToDrawLayer("NewsMenu");
 
     InitalizeNewsMenuText();
-    InitializeSpeedSelectObject();
+    InitializeSpeedSelectObject("NewsMenu");
 
     NewsMenuRenderLogic();
 }

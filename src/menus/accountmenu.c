@@ -69,7 +69,7 @@ void InitializeAccountMenu()
 
     InitalizeAccountMenuCompanyScrollbox();
     InitalizeAccountMenuText();
-    InitializeSpeedSelectObject();
+    InitializeSpeedSelectObject("AccountMenu");
 
     InitializeSelectedStockHistoryDisplay();
     PopulateSelectedStockHistoryDisplay(GetCompanyNameViewing());
