@@ -17,6 +17,9 @@ void Vector_PushBack(Vector *vector, void *element);
 // Pushes back pointer
 void Vector_PushBackPtr(Vector * vector, void *element);
 
+void Vector_Remove(Vector *vector, unsigned int element_idx);
+void Vector_RemovePrt(Vector *vector, unsigned int element_idx);
+
 void Vector_Delete(Vector *vector);
 void Vector_DeletePtrs(Vector *vector);
 
