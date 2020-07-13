@@ -60,8 +60,6 @@ void InitializeSpeedSelectObject(char* menu_name)
     if (pause_button == NULL)
         return;
 
-
-    
 }
 
 void CleanAll() 

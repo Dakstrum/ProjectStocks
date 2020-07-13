@@ -86,9 +86,11 @@ void InitializeStocksMenuButtons()
     AddButton("StocksMenuYButtonObject",          &OneY_BCB);
     AddButton("StocksMenuAllButtonObject",        &All_BCB);
 
-    AddButton("BuyMenuXButtonObject",             &BuyMenu_BCB);
+    AddButton("BuyMenuExitButtonObject",          &BuyMenu_BCB);
+    AddButton("BuyMenuBuyButtonObject",           &Buy_BCB);
 
-    AddButton("SellMenuXButtonObject",            &SellMenu_BCB);
+    AddButton("SellMenuExitButtonObject",         &SellMenu_BCB);
+    AddButton("SellMenuSellButtonObject",         &Sell_BCB);
 
     AddButton("StocksMenuSpeed1ButtonObject",   &SpeedOne_BCB);
     AddButton("StocksMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
