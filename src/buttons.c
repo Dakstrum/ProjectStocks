@@ -89,6 +89,10 @@ void InitializeStocksMenuButtons()
     AddButton("BuyMenuXButtonObject",             &BuyMenu_BCB);
 
     AddButton("SellMenuXButtonObject",            &SellMenu_BCB);
+
+    AddButton("StocksMenuSpeed1ButtonObject",   &SpeedOne_BCB);
+    AddButton("StocksMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
+    AddButton("StocksMenuSpeed3ButtonObject",   &SpeedThree_BCB);
     
 }
 
@@ -116,6 +120,10 @@ void InitializeAccountButtons()
     AddButton("AccountMenuDownButtonObject", &AccountDown_BCB);
     AddButton("AccountMenuUpButtonObject",   &AccountUp_BCB);
 
+    AddButton("AccountMenuSpeed1ButtonObject",   &SpeedOne_BCB);
+    AddButton("AccountMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
+    AddButton("AccountMenuSpeed3ButtonObject",   &SpeedThree_BCB);
+
 }
 
 void InitializeNewsButtons()
@@ -125,6 +133,10 @@ void InitializeNewsButtons()
     AddButton("NewsMenuNewsTabButtonObject",    &News_BCB);
     AddButton("NewsMenuAccountTabButtonObject", &Account_BCB);
     AddButton("NewsMenuCardsTabButtonObject",   &Cards_BCB);
+
+    AddButton("NewsMenuSpeed1ButtonObject",   &SpeedOne_BCB);
+    AddButton("NewsMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
+    AddButton("NewsMenuSpeed3ButtonObject",   &SpeedThree_BCB);
 
 }
 
@@ -155,6 +167,10 @@ void InitializeCardsMenuButtons()
 
 
     AddButton("ApplyCardMenuExitButtonObject", &ApplyMenu_BCB);
+
+    AddButton("CardsMenuSpeed1ButtonObject",   &SpeedOne_BCB);
+    AddButton("CardsMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
+    AddButton("CardsMenuSpeed3ButtonObject",   &SpeedThree_BCB);
 
 }
 

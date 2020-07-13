@@ -55,7 +55,7 @@ void InitializeCardsMenu()
 
     InitializeCardsMenuText(); 
 
-    InitializeSpeedSelectObject();
+    InitializeSpeedSelectObject("CardsMenu");
 
     CardsMenuRenderLogic();
 

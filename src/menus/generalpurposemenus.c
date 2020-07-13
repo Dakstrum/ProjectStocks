@@ -32,20 +32,35 @@ static DrawObject *speed_three_button = NULL;
 
 static int account_timespeed          = 1;
 
-void InitializeSpeedSelectObject()
+void InitializeSpeedSelectObject(char* menu_name)
 {
 
-    pause_button       = GetDrawObjectByName("PauseSpeedButton");
-    speed_one_button   = GetDrawObjectByName("SpeedOneButton");
-    speed_two_button   = GetDrawObjectByName("SpeedTwoButton");
-    speed_three_button = GetDrawObjectByName("SpeedThreeButton");
+    char speed_one_drawobject[128] = {'\0'};
+    strcpy(speed_one_drawobject, menu_name);
+    strcat(speed_one_drawobject, "Speed1ButtonObject");
+    speed_one_drawobject[127] = '\0';
+    speed_one_button   = GetDrawObjectByName(speed_one_drawobject);
 
-    if (pause_button == NULL)
-        return;
+    char speed_two_drawobject[128] = {'\0'};
+    strcpy(speed_two_drawobject, menu_name);
+    strcat(speed_two_drawobject, "Speed2ButtonObject");
+    speed_two_drawobject[127] = '\0';
+    speed_two_button   = GetDrawObjectByName(speed_two_drawobject);
+
+    char speed_three_drawobject[128] = {'\0'};
+    strcpy(speed_three_drawobject, menu_name);
+    strcat(speed_three_drawobject, "Speed3ButtonObject");
+    speed_three_drawobject[127] = '\0';
+    speed_three_button   = GetDrawObjectByName(speed_three_drawobject);
 
     if(account_timespeed == 1) SpeedOne_BCB();
     if(account_timespeed == 2) SpeedTwo_BCB();
     if(account_timespeed == 3) SpeedThree_BCB();
+
+    if (pause_button == NULL)
+        return;
+
+
     
 }
 

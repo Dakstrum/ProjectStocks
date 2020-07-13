@@ -67,7 +67,7 @@ void InitializeStocksMenu()
     DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
     PopulateStockStatsText(GetCompanyNameViewing());
 
-    InitializeSpeedSelectObject();
+    InitializeSpeedSelectObject("StocksMenu");
 
 }
 
@@ -201,7 +201,6 @@ void InitializeCompanyScrollBox()
 
     PopulateStocksScrollBox(object);
     AddObjectToDrawLayer(object);
-    Log("GOT HERE");
 
 }
 
