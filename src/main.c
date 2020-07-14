@@ -22,6 +22,7 @@
 #include "buttons.h"
 #include "vector.h"
 #include "animations.h"
+#include "drawobject.h"
 
 enum InitializeSuccess 
 {
@@ -109,9 +110,8 @@ enum InitializeSuccess Initialize()
 
     }
 
-    Animate_Initialize();
-    InitializeButtons();
     InitializeLogging();
+    InitializeButtons();
     InitializeCache();
     InitializeShared();
     InitializeDatabases();
@@ -124,6 +124,9 @@ enum InitializeSuccess Initialize()
     InitializeAudio();
     InitAccount();
     InitializeSimulation();
+
+    DrawObjects_Initialize();
+    Animate_Initialize();
 
     return SUCCESS;
 

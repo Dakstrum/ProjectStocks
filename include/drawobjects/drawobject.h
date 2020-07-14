@@ -261,6 +261,7 @@ typedef struct DrawObjectTypeCollection {
 
 } DrawObjectTypeCollection;
 
+void DrawObjects_Initialize();
 DrawObject *CreateNewDrawObject();
 
 #endif
