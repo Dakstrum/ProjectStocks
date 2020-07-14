@@ -11,13 +11,14 @@ MemPool *MemPool_Create(size_t size_of_single_elem, size_t initial_mem_size)
 
 	MemPool *mem = malloc(sizeof(MemPool));
 	mem->in_use  = Vector_Create(sizeof(bool), initial_mem_size);
-	mem->pool    = Vector_Create(sizeof(void *), initial_mem_size);
+	mem->pool    = Vector_Create(size_of_single_elem, initial_mem_size);
 
 	for (size_t i = 0; i < initial_mem_size;i++) {
 
 		bool temp = false;
+		char buffer[size_of_single_elem];
 		Vector_PushBack(mem->in_use, &temp);
-		Vector_PushBackPtr(mem->pool, malloc(size_of_single_elem));
+		Vector_PushBack(mem->pool, buffer);
 
 	}
 
@@ -34,8 +35,8 @@ void *MemPool_Get(MemPool *mem)
 		if (in_use[i] == false) {
 
 			in_use[i] = true;
-			void **elements = mem->pool->elements;
-			return elements[i];
+			char *elements = mem->pool->elements;
+			return &elements[i*mem->pool->size_of_single_elem];
 
 		}
 
