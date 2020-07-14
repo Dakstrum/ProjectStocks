@@ -70,6 +70,7 @@ void Loop()
 
     } else {
 
+        Animate_Update();
         HandleMouseLocation();
         HandleRendering();
 

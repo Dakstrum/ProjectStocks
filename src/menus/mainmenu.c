@@ -32,12 +32,29 @@
 #include "account.h"
 #include "drawlayerutils.h"
 
-static MenuWithChilds *main_menu = NULL;
-static DrawObject *verson_object = NULL;
+#include "animations.h"
 
-void DynamicText();
-void MainMenuRenderLogic();
+static MenuWithChilds *main_menu = NULL;
+
 void CleanMenus();
+
+void Test_Animations() 
+{
+
+    DrawObject *object = CreateNewDrawObject();
+    object->type       = MENU;
+    object->asset_path = "assets/images/all_buttons/button2.png";
+    object->x = 100;
+    object->y = 100;
+    AddObjectToDrawLayer(object);
+    Animate_MoveDrawObject(object, 0, 0, 1000);
+
+}
+
+void MainMenuRenderLogic()
+{
+
+}
 
 void InitializeMainMenu() 
 {
@@ -53,30 +70,10 @@ void InitializeMainMenu()
     
     main_menu = GetJSONMenuAndAddToDrawLayer("MainMenu");
     
-    DynamicText();
+    Test_Animations();
     MainMenuRenderLogic();
     StopSimulation();
     CleanMenus();
-
-}
-
-void MainMenuRenderLogic()
-{
-
-    // TEST CODE
-    if (verson_object == NULL)
-        return;
-
-    //SetTextContent(verson_object, "Version is %d", 0);
-
-}
-
-void DynamicText() 
-{
-
-    // TEST CODE
-    //verson_object = GetDrawObjectFromJsonLayer("MainMenuWebsiteText");
-    //AddObjectToDrawLayer(verson_object);
 
 }
 

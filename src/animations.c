@@ -2,6 +2,7 @@
 #include "drawobject.h"
 #include "vector.h"
 #include "shared.h"
+#include "log.h"
 
 #include <time.h>
 
@@ -32,6 +33,8 @@ void Animate_Initialize()
 {
 
     move_objects = Vector_Create(sizeof(MoveAnimation), 8);
+    last_animation_update.tv_sec  = 0;
+    last_animation_update.tv_nsec = 0;
 
 }
 
@@ -86,13 +89,12 @@ void Animate_Update()
 {
 
     struct timespec current_time = GetCurrentTime();
-    long milli_diff              = GetMilliDiff(&last_animation_update, &current_time);
+    long milli_diff = GetMilliDiff(&current_time, &last_animation_update);
 
     if (milli_diff == 0)
         return;
 
-    last_animation_update        = current_time;
-
+    last_animation_update = current_time;
     Animate_MoveDrawObjects(milli_diff);
     Animate_DisableMoveDrawObjects();
 
