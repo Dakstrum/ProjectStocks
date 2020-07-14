@@ -170,7 +170,6 @@ void GenerateGameEventsId(EventSim *events, int id, Event *(*GetRandomEvent)(int
         current_time    += hours_passed;
         Vector_PushBack(events->event_times, &current_time);
         Vector_PushBack(events->events, GetRandomEvent(id));
-        LogF("Current_time = %lu, id: %d", current_time, id);
 
     }
 
