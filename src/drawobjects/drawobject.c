@@ -10,7 +10,8 @@ void DrawObjects_Initialize()
 
 	mem = MemPool_Create(sizeof(DrawObject), 4);
 
-	DrawObject *object = MemPool_Get(mem);
+	DrawObject *object  = MemPool_Get(mem);
+    DrawObject *object2 = MemPool_Get(mem);
 
 	assert(object != NULL);
 
@@ -22,6 +23,7 @@ void DrawObjects_Initialize()
     object->layer_index  = 0;
     object->object_index = 0;
 
+    MemPool_Free(mem, object2);
     MemPool_Free(mem, object);
 
 }

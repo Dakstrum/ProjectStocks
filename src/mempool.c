@@ -49,12 +49,12 @@ void *MemPool_Get(MemPool *mem)
 void MemPool_Free(MemPool *mem, void *element)
 {
 
-	void **elements = mem->pool->elements;
+	char *elements = mem->pool->elements;
 	bool *in_use   = mem->in_use->elements;
 	for (size_t i = 0; i < mem->pool->num_elements;i++) {
 
-		if (element == elements[i]) {
-
+		if (element == &elements[i*mem->pool->size_of_single_elem]) {
+			
 			in_use[i] = false;
 			break;
 
