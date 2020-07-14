@@ -21,6 +21,7 @@
 #include "account.h"
 #include "buttons.h"
 #include "vector.h"
+#include "animations.h"
 
 enum InitializeSuccess 
 {
@@ -108,6 +109,7 @@ enum InitializeSuccess Initialize()
 
     }
 
+    Animate_Initialize();
     InitializeButtons();
     InitializeLogging();
     InitializeCache();

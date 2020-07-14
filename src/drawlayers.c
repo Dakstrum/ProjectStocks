@@ -15,6 +15,7 @@
 #include "audio.h"
 #include "cache.h"
 #include "drawlayers.h"
+#include "animations.h"
 
 #include "draw.h"
 #include "text.h"
@@ -167,6 +168,7 @@ int CreateNewDrawLayer()
 void ClearCurrentDrawLayer() 
 {
 
+    Animate_DisableByLayer(current_draw_layer);
     ClearUpDrawLayer(current_draw_layer);
     current_draw_layer--;
 
@@ -176,8 +178,12 @@ void ClearCurrentDrawLayer()
 void ClearDrawLayers() 
 {
 
-    for (int i = 0; i < current_draw_layer; i++)
+    for (int i = 0; i < current_draw_layer; i++) {
+
+        Animate_DisableByLayer(current_draw_layer);
         ClearUpDrawLayer(i);
+
+    }
 
     free(draw_layers);
     InitializeDrawLayers(display);
