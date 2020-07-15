@@ -20,6 +20,7 @@
 #include "accountmenu.h"
 #include "cardsmenu.h"
 #include "window.h"
+#include "draw.h"
 
 void InitializeAddons();
 
@@ -64,6 +65,7 @@ void HandleRendering()
         RenderLogic();
 
     DrawLayers();
+    DrawFrameTiming();
     al_flip_display();
 
 }
