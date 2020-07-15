@@ -60,3 +60,10 @@ void DrawBackBuffer(ALLEGRO_BITMAP *bitmap)
     al_draw_scaled_bitmap(bitmap, 0, 0, 1920, 1080, 0, 0, scale_width, scale_height, 0);
 
 }
+
+void DrawFrameTime()
+{
+
+    
+    
+}
