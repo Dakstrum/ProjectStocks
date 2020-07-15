@@ -44,10 +44,10 @@ void Test_Animations()
     DrawObject *object = CreateNewDrawObject();
     object->type       = MENU;
     object->asset_path = "assets/images/all_buttons/button2.png";
-    object->x = 100;
-    object->y = 100;
+    object->x          = 100;
+    object->y          = 0;
     AddObjectToDrawLayer(object);
-    Animate_MoveDrawObject(object, 0, 0, 1000);
+    Animate_MoveDrawObject(object, 0, 0, 100);
 
 }
 

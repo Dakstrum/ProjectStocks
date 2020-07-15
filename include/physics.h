@@ -35,4 +35,6 @@ typedef struct Kinematic {
 Position ElapsedTime_GetNewPosition(Kinematic *kinematic, time_t t);
 Position TimeDiff_GetDiffPosition(Kinematic *kinematic, time_t t, time_t dt);
 
+float GetSpeed(float x, float n_x, long t);
+
 #endif

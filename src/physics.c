@@ -15,3 +15,8 @@ void SetNewKinematicPosition(Kinematic *kinematic, time_t time_elapsed)
     kinematic->position.y = GetNewPosition(kinematic->position.y, kinematic->velocity.v_y, kinematic->acceleration.a_y, time_elapsed);
 
 }
+
+inline float GetSpeed(float x, float n_x, long t)
+{
+    return (n_x - x)/t;
+}

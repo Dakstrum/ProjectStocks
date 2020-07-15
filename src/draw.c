@@ -71,6 +71,12 @@ void DrawBackBuffer(ALLEGRO_BITMAP *bitmap)
 
 }
 
+void DrawFrameTime()
+{
+
+    
+    
+}
 void DrawFrameTiming()
 {
     static char FPS_string[255];

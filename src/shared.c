@@ -184,6 +184,13 @@ long GetMilliDiff(struct timespec *t1, struct timespec *t2)
 
 }
 
+double GetDoubleMilliDiff(struct timespec *t1, struct timespec *t2)
+{
+
+    return (double)((t1->tv_sec * 1e3) + (t1->tv_nsec / 1e6)) - ((t2->tv_sec * 1e3) + (t2->tv_nsec / 1e6));    
+
+}
+
 long GetAbsMilliDiff(struct timespec *t1, struct timespec *t2) 
 {
 
