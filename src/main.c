@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 
 #ifdef __linux__
     #include <signal.h>
@@ -35,6 +36,8 @@ enum InitializeSuccess
 static ALLEGRO_EVENT_QUEUE *event_queue;
 static ALLEGRO_TIMER *timer;
 
+static struct timespec last_render_update;
+
 enum InitializeSuccess Initialize();
 void GameLoop();
 void InitializeGameThreads();
@@ -63,16 +66,32 @@ void Loop()
 {
 
     ALLEGRO_EVENT event = WaitForEvent();
-    if (event.type != ALLEGRO_EVENT_TIMER) {
 
-        HandleInput(event);
-        HandleWindowEvents(event);
+    static ALLEGRO_EVENT input_event;
+    static bool had_input = false;
+
+    if (event.type == ALLEGRO_EVENT_TIMER) {
+
+        struct timespec current_time = GetCurrentTime();
+
+        Animate_Update(last_render_update, current_time);
+        HandleMouseLocation();
+        HandleRendering();
+
+        if (had_input) {
+
+            HandleInput(input_event);
+            HandleWindowEvents(input_event); 
+            
+        }
+
+        had_input          = false;
+        last_render_update = current_time;
 
     } else {
 
-        Animate_Update();
-        HandleMouseLocation();
-        HandleRendering();
+        input_event = event;
+        had_input   = true;
 
     }
 
@@ -81,6 +100,7 @@ void Loop()
 void GameLoop() 
 {
 
+    last_render_update = GetCurrentTime();
     while (!ShouldICleanUp())
         Loop();
 
@@ -136,7 +156,6 @@ enum InitializeSuccess Initialize()
 void InitializeEventQueue() 
 {
 
-    LogF("Display modes found = %d", al_get_num_display_modes());
     timer = al_create_timer(1.0/60.0);
     
     event_queue = al_create_event_queue();

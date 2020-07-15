@@ -30,15 +30,11 @@ typedef struct MoveAnimation
 } MoveAnimation;
 
 Vector *move_objects = NULL;
-struct timespec last_animation_update;
-double old_time;
 
 void Animate_Initialize()
 {
 
-    move_objects          = Vector_Create(sizeof(MoveAnimation), 8);
-    last_animation_update = GetCurrentTime();
-    old_time = al_get_time();
+    move_objects  = Vector_Create(sizeof(MoveAnimation), 8);
 
 }
 
@@ -90,13 +86,12 @@ void Animate_DisableMoveDrawObjects()
 }
 
 
-void Animate_Update()
+void Animate_Update(struct timespec last_update_time, struct timespec new_update_time)
 {
 
-    struct timespec current_time = GetCurrentTime();
-    double milli_diff            = GetDoubleMilliDiff(&current_time, &last_animation_update);
+    double milli_diff = GetDoubleMilliDiff(&new_update_time, &last_update_time);
 
-    last_animation_update = current_time;
+    LogF("milli_diff = %f", milli_diff);
     Animate_MoveDrawObjects(milli_diff);
     Animate_DisableMoveDrawObjects();
 
