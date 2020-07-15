@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     CleanUp();
 
 #ifdef __linux__
-    raise(SIGTSTP);
+    raise(SIGTERM);
 #endif
     return 0;
 
