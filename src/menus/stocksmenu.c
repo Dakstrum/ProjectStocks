@@ -415,9 +415,9 @@ void CleanUpStocksMenu()
 void CleanStocksMenu()
 {
 
-    stocks_menu           = NULL;
-    sell_menu = NULL;
-    buy_menu  = NULL;
+    stocks_menu = NULL;
+    sell_menu   = NULL;
+    buy_menu    = NULL;
 
     selected_company_name    = NULL;
     current_graph            = NULL;
