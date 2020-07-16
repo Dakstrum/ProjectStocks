@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <assert.h>
 
 #include <allegro5/allegro.h>
 
@@ -47,7 +48,8 @@ void Test_Animations()
     object->x          = 100;
     object->y          = 0;
     AddObjectToDrawLayer(object);
-    Animate_MoveDrawObject(object, 0, 0, 100);
+    unsigned int id = Animate_MoveDrawObject(object, 0, 0, 100);
+    assert(Animate_FinishedMoveAnimation(id) == false);
 
 }
 
@@ -93,27 +95,6 @@ void ScrollBoxClick(char *scroll_box_content, unsigned short int index)
 
     LogF("Got click %s", scroll_box_content);
     
-}
-
-void DisplayTempScrollBox() 
-{
-
-    // TEST CODE
-    DrawObject *object = CreateScrollBoxObject();
-    object->x          = 100;
-    object->y          = 100;
-    object->width      = 300;
-    object->height     = 500;
-    object->asset_path = "assets/images/companyicons/StocksBox.png";
-
-    object->scrollbox.num_items        = 2;
-    object->scrollbox.box_click        = &ScrollBoxClick;
-    object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
-    object->scrollbox.text_content[0]  = GetFormattedPointer("WeBeHard");
-    object->scrollbox.text_content[1]  = GetFormattedPointer("Unimpressive Games");
-
-    AddObjectToDrawLayer(object);
-
 }
 
 void Start_BCB()
