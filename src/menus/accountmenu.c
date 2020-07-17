@@ -249,6 +249,7 @@ void AccountMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short i
     PopulateSelectedStockHistoryDisplay(company_name);
 
     SetTextContent(company_name_textobject, "%s", company_name);
+    SetTextContent(company_about_textobject, "%s", GetCompanyDescriptionRef(GetCompanyId(GetCompanyNameViewing())));
 
 }
 

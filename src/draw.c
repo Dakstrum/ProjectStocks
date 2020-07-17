@@ -77,9 +77,9 @@ void DrawFrameTiming()
     if(font == NULL)
         font = al_load_ttf_font("assets/font/DanielLinssenM5/m5x7.ttf", 50, 0);
 
-    int frame_time = ??
+    //int frame_time = ??
 
-    sprintf(display_string, "%d", frame_time); 
+    //sprintf(display_string, "%d", frame_time); 
     al_draw_text(font , al_map_rgb(0, 0, 0), 0, 0, 0, display_string);
 
 }
