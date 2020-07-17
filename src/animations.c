@@ -102,12 +102,10 @@ void Animate_DisableMoveDrawObjects()
 }
 
 
-void Animate_Update(struct timespec last_update_time, struct timespec new_update_time)
+void Animate_Update(double dt)
 {
 
-    double milli_diff = GetDoubleMilliDiff(&new_update_time, &last_update_time);
-
-    Animate_MoveDrawObjects(milli_diff);
+    Animate_MoveDrawObjects(dt);
     Animate_DisableMoveDrawObjects();
 
 }

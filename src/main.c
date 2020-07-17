@@ -73,8 +73,9 @@ void Loop()
     if (event.type == ALLEGRO_EVENT_TIMER) {
 
         struct timespec current_time = GetCurrentTime();
+        double dt = GetDoubleMilliDiff(&current_time, &last_render_update);
 
-        Animate_Update(last_render_update, current_time);
+        Animate_Update(dt);
         HandleMouseLocation();
         HandleRendering();
 
