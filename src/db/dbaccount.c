@@ -114,7 +114,7 @@ void ModifyOwnedStockAmount(char *company_name, int amount)
         if (owned_stocks.company_id[i] != company_id)
             continue;
 
-        owned_stocks.owned_amount[i] -= amount;
+        owned_stocks.owned_amount[i] += amount;
         break;
 
     }
@@ -158,7 +158,7 @@ bool AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtrac
     if (GetOwnedStockAmount(company_name) < amount_to_subtract)
         return false;
 
-    ModifyOwnedStockAmount(company_name, amount_to_subtract);
+    ModifyOwnedStockAmount(company_name, -amount_to_subtract);
     InsertStockTransaction(company_name, amount_to_subtract * price_per_stock, -amount_to_subtract);
     return true;
 

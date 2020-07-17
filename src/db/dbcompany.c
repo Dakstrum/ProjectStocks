@@ -53,7 +53,19 @@ char *GetCompanyAbbreviationRef(unsigned int company_id)
     Company *temp = (Company *)companies->elements;
     for (size_t i = 0; i < companies->num_elements;i++)
         if (temp[i].company_id == company_id)
-            return strdup(temp[i].company_abbreviation);
+            return temp[i].company_abbreviation;
+
+    return NULL;
+
+}
+
+char *GetCompanyDescriptionRef(unsigned int company_id)
+{
+
+    Company *temp = (Company *)companies->elements;
+    for (size_t i = 0; i < companies->num_elements;i++)
+        if (temp[i].company_id == company_id)
+            return temp[i].company_abbreviation;
 
     return NULL;
 
@@ -92,10 +104,10 @@ int Company_Callback(void *company, int argc, char **argv, char **col_name)
 
     temp.company_id = atoi(argv[0]);
     strncpy(temp.company_name, argv[1], 64);
-
-    strncpy(temp.company_abbreviation, argv[2], 6);
-    temp.ipo         = atof(argv[3]);
-    temp.category_id = atoi(argv[4]);
+    strncpy(temp.company_description, argv[2], 128);
+    strncpy(temp.company_abbreviation, argv[3], 6);
+    temp.ipo         = atof(argv[4]);
+    temp.category_id = atoi(argv[5]);
 
     Vector_PushBack(companies, &temp);
 
@@ -107,6 +119,6 @@ void InitializeCompanies()
 {
 
     companies = Vector_Create(sizeof(Company), 4);
-    ExecuteQueryF(&Company_Callback, NULL, "SELECT C.CompanyId, C.CompanyName, C.CompanyAbbreviation, C.IPO, C.CategoryId FROM Company C");
+    ExecuteQueryF(&Company_Callback, NULL, "SELECT C.CompanyId, C.CompanyName, C.CompanyDescription, C.CompanyAbbreviation, C.IPO, C.CategoryId FROM Company C");
 
 }

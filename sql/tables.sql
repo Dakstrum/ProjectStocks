@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS Company
     CategoryId INTEGER NOT NULL, 
     Ipo DOUBLE NOT NULL, 
     CompanyName VARCHAR(50) NOT NULL,
+    CompanyDescription VARCHAR(128) NOT NULL,
     CompanyAbbreviation VARCHAR(5) NOT NULL
 );
 
