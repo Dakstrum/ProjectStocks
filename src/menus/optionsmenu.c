@@ -8,12 +8,9 @@
 #include "jsonlayer.h"
 #include "drawlayers.h"
 #include "log.h"
-#include "cache.h"
-#include "graph.h"
 #include "startup.h"
 #include "dbaccount.h"
 #include "account.h"
-#include "simulation.h"
 #include "scrollbox.h"
 #include "text.h"
 #include "generalpurposemenus.h"
@@ -102,12 +99,12 @@ void PopulateOptionsScrollBox(DrawObject *object)
 void ChangeResolutionOptionClick(char *scroll_box_content, unsigned short int index)
 {
 
-    if(strcmp(scroll_box_content, "1920x1080") == 0) SetWindowResolutionSettings(1920, 1080);
-    if(strcmp(scroll_box_content, "1366x768")  == 0) SetWindowResolutionSettings(1366, 768);
-    if(strcmp(scroll_box_content, "1440x900")  == 0) SetWindowResolutionSettings(1440, 900);
-    if(strcmp(scroll_box_content, "1536x864")  == 0) SetWindowResolutionSettings(1536, 864);
-    if(strcmp(scroll_box_content, "1024x768")  == 0) SetWindowResolutionSettings(1024, 768);
-    if(strcmp(scroll_box_content, "1280x720")  == 0) SetWindowResolutionSettings(1280, 720);
+    if(strcmp(scroll_box_content, "1920x1080") == 0) Window_Resize(1920, 1080);
+    if(strcmp(scroll_box_content, "1366x768")  == 0) Window_Resize(1366, 768);
+    if(strcmp(scroll_box_content, "1440x900")  == 0) Window_Resize(1440, 900);
+    if(strcmp(scroll_box_content, "1536x864")  == 0) Window_Resize(1536, 864);
+    if(strcmp(scroll_box_content, "1024x768")  == 0) Window_Resize(1024, 768);
+    if(strcmp(scroll_box_content, "1280x720")  == 0) Window_Resize(1280, 720);
 
 }
 

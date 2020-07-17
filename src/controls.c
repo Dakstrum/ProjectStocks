@@ -8,6 +8,7 @@
 #include "log.h"
 #include "audio.h"
 #include "shared.h"
+#include "window.h"
 #include "mainmenu.h"
 #include "drawlayers.h"
 #include "generalpurposemenus.h"

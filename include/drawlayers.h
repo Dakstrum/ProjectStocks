@@ -5,7 +5,7 @@
 #include "shared.h"
 
 
-void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display);
+void DrawLayer_Initialize();
 int GetMaxObjectsPerDrawLayer();
 int CreateNewDrawLayer();
 int GetCurrentDrawLayer();

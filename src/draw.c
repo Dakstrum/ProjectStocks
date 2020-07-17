@@ -2,7 +2,7 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
 
-#include "shared.h"
+#include "window.h"
 
 static WindowScale scale;
 

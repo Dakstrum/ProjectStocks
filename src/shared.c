@@ -12,41 +12,12 @@
 #include "shared.h"
 
 static atomic_bool should_clean_up;
-static WindowSettings window_settings;
-static const float window_width  = 1.0/1920.0;
-static const float window_height = 1.0/1080.0;
-
 static const int BUFFER_SIZE = 8192;
 
 void InitializeShared() 
 {
 
     atomic_store(&should_clean_up, false);
-
-}
-
-void SetWindowSettings(WindowSettings settings) 
-{
-
-    window_settings = settings;
-
-}
-
-WindowSettings GetWindowSettings() 
-{
-
-    return window_settings;    
-
-}
-
-WindowScale GetWindowScale() 
-{
-
-    WindowScale scale;
-    scale.x_scale = (float)window_settings.width * window_width;
-    scale.y_scale = (float)window_settings.height * window_height;
-
-    return scale;
 
 }
 

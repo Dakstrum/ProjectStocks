@@ -5,14 +5,6 @@
 #include <stdbool.h>
 #include <stdarg.h>
 
-typedef enum ScreenSetting {
-
-    FULLSCREEN,
-    WINDOWED,
-    BORDERLESS
-
-} ScreenSetting;
-
 typedef enum TimeSpan {
 
     ONE_DAY = 0,
@@ -38,22 +30,6 @@ typedef struct StockPrices {
 
 } StockPrices;
 
-typedef struct WindowSettings {
-
-    int width;
-    int height;
-    float fps;
-    ScreenSetting screen_flag;
-    
-} WindowSettings;
-
-typedef struct WindowScale {
-
-    float x_scale;
-    float y_scale;
-
-} WindowScale;
-
 void InitializeShared();
 bool ShouldICleanUp();
 void SetCleanUpToTrue();
@@ -75,9 +51,5 @@ struct timespec GetCurrentTime();
 struct timespec GetOffsetTime(long offset_in_milli);
 struct timespec GetTimespecDiff(struct timespec *t1, struct timespec *t2);
 float GetSeconds(struct timespec *t);
-
-void SetWindowSettings(WindowSettings settings);
-WindowSettings GetWindowSettings();
-WindowScale GetWindowScale();
 
 #endif

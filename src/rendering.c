@@ -27,18 +27,12 @@ void CleanUpRendering();
 void CleanUpDisplay();
 void CleanUpAddons();
 
-void SetDisplayIcon();
-
 static void (*RenderLogic)() = &StartUpSequence;
 
 void InitializeRendering() 
 {
 
-    SetWindowSettings(GetWindowSettingsFromDB());
-
-    InitializeDisplay();
     InitializeAddons();
-    SetDisplayIcon();
 
 }
 

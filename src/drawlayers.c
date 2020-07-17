@@ -28,6 +28,8 @@
 #include "scrollbox.h"
 #include "jsonlayer.h"
 
+#include "window.h"
+
 #define MAX_DRAW_LAYERS 10
 #define MAX_OBJECTS_PER_LAYER 256
 #define MAX_MENU_WITH_CHILDS_PER_LAYER 64
@@ -43,9 +45,7 @@ typedef struct DrawLayer
 
 static int current_draw_layer             = -1;
 static DrawLayer *draw_layers             = NULL;
-static ALLEGRO_DISPLAY *display           = NULL;
 static DrawObject *current_active_textbox = NULL;
-static ALLEGRO_BITMAP *video_buffer       = NULL;
 
 void ResetDrawLayers();
 
@@ -61,15 +61,11 @@ void DrawSingleLayer(DrawLayer *layer);
 void DrawObjectOfTypeGen(DrawObject *object);
 void DrawMenu(DrawObject *object);
 
-void InitializeDrawLayers(ALLEGRO_DISPLAY *active_display) 
+void DrawLayer_Initialize() 
 {
 
-    al_destroy_bitmap(video_buffer);
-    video_buffer = al_create_bitmap(1920, 1080);
-    al_set_new_bitmap_flags(ALLEGRO_NO_PRESERVE_TEXTURE);
-
-    display            = active_display;
-    draw_layers        = malloc(sizeof(DrawLayer) * MAX_DRAW_LAYERS);
+    Window_InitVideoBuffer();
+    draw_layers = malloc(sizeof(DrawLayer) * MAX_DRAW_LAYERS);
     current_draw_layer = -1;
     ResetDrawLayers();
 
@@ -186,7 +182,7 @@ void ClearDrawLayers()
     }
 
     free(draw_layers);
-    InitializeDrawLayers(display);
+    DrawLayer_Initialize();
 
 }
 
@@ -286,7 +282,7 @@ int AddTextBoxToDrawLayers(DrawObject *object)
 int AddPopUpToDrawLayer(DrawObject *object)
 {
 
-    InitPopup(object, al_get_display_width(display), al_get_display_height(display));
+    InitPopup(object, Window_Width(), Window_Height());
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -432,13 +428,13 @@ void DrawLayers()
 {
 
     RefreshDrawScale();
-    al_set_target_bitmap(video_buffer);
+    Window_SetVideoBufferAsTarget();
 
     for (int i = 0; i < current_draw_layer+1; i++)
         DrawSingleLayer(&draw_layers[i]);
 
-    al_set_target_backbuffer(display);
-    DrawBackBuffer(video_buffer);
+    Window_SetVideoBackBuffer();
+    Window_DrawBackBuffer();
 
 }
 

@@ -22,7 +22,9 @@
 #include "account.h"
 #include "buttons.h"
 #include "vector.h"
+#include "window.h"
 #include "animations.h"
+#include "drawlayers.h"
 #include "drawobject.h"
 
 enum InitializeSuccess 
@@ -140,7 +142,11 @@ enum InitializeSuccess Initialize()
     InitializeCompanies();
     InitializeEvents();
     InitializeControls();
+
     InitializeRendering();
+    Window_Initialize();
+    DrawLayer_Initialize();
+
     InitializeEventQueue();
     InitializeJson();
     InitializeAudio();

@@ -3,15 +3,13 @@
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
-#include <allegro5/allegro_video.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
-#include <allegro5/allegro_primitives.h>
 
 #include "log.h"
-#include "drawlayers.h"
+#include "shared.h"
 #include "rendering.h"
-#include "dbaccess.h"
+#include "window.h"
+#include "draw.h"
+#include "dbsettings.h"
 
 typedef struct DisplayFlagMap {
 
@@ -20,7 +18,8 @@ typedef struct DisplayFlagMap {
 
 } DisplayFlagMap;
 
-static ALLEGRO_DISPLAY *display = NULL;
+static ALLEGRO_DISPLAY *display     = NULL;
+static ALLEGRO_BITMAP *video_buffer = NULL;
 static WindowSettings window_settings;
 
 static DisplayFlagMap flag_maps[3] = 
@@ -32,15 +31,41 @@ static DisplayFlagMap flag_maps[3] =
 
 };
 
-void InitializeDisplay() 
+static WindowSettings window_settings;
+static const float window_width  = 1.0/1920.0;
+static const float window_height = 1.0/1080.0;
+
+void Window_SetDisplayIcon()
+{
+
+    al_set_display_icon(display, al_load_bitmap("assets/icon.tga"));
+
+}
+
+void Window_Initialize() 
 {
     
-    window_settings = GetWindowSettings();
-
+    window_settings = GetWindowSettingsFromDB();
     al_set_new_display_flags(flag_maps[window_settings.screen_flag].allegro_flag);
-    
     display = al_create_display(window_settings.width, window_settings.height);
-    InitializeDrawLayers(display);
+    Window_SetDisplayIcon();
+}
+
+WindowSettings GetWindowSettings() 
+{
+
+    return window_settings;    
+
+}
+
+WindowScale GetWindowScale() 
+{
+
+    WindowScale scale;
+    scale.x_scale = (float)window_settings.width * window_width;
+    scale.y_scale = (float)window_settings.height * window_height;
+
+    return scale;
 
 }
 
@@ -59,23 +84,64 @@ void CleanUpDisplay()
 
 }
 
-void ChangeDisplay(int width, int height) 
+void Window_Resize(int width, int height) 
 {
 
     al_resize_display(display, width, height);
+    SetWindowResolutionSettings(width, height);
 
 }
+
 
 ALLEGRO_DISPLAY *GetDisplay() 
 {
 
+    assert(display != NULL);
     return display;
 
 }
 
-void SetDisplayIcon()
+int Window_Width()
 {
 
-    al_set_display_icon(display, al_load_bitmap("assets/icon.tga"));
+    return window_settings.width;
+
+}
+
+int Window_Height() 
+{
+
+    return window_settings.height;
+
+}
+
+void Window_InitVideoBuffer()
+{
+
+    al_destroy_bitmap(video_buffer);
+    video_buffer = al_create_bitmap(1920, 1080);
+    al_set_new_bitmap_flags(ALLEGRO_NO_PRESERVE_TEXTURE);
+
+}
+
+void Window_SetVideoBufferAsTarget()
+{
+
+    assert(video_buffer != NULL);
+    al_set_target_bitmap(video_buffer);
+
+}
+
+void Window_SetVideoBackBuffer()
+{
+
+    al_set_target_backbuffer(display);
+
+}
+
+void Window_DrawBackBuffer()
+{
+
+    DrawBackBuffer(video_buffer);
 
 }

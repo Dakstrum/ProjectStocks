@@ -4,59 +4,11 @@
 #include <sqlite3.h>
 
 #include "log.h"
-#include "shared.h"
 #include "dbutils.h"
 #include "dbaccess.h"
 
 void SetupMainDB();
 void SetupLogDB();
-
-int SetWindowSettingsIfExists(void *settings, int argc, char **argv, char **col_name) 
-{
-
-    WindowSettings *temp_settings = (WindowSettings *)settings;
-    if (argc == 0)
-        return 0;
-
-    temp_settings->width          = atoi(argv[0]);
-    temp_settings->height         = atoi(argv[1]);
-    temp_settings->screen_flag    = atoi(argv[2]);
-
-    return 0;
-
-}
-
-WindowSettings GetSettingsFromDB(sqlite3 *db) 
-{
-
-    WindowSettings settings = {0, 0, WINDOWED};
-    ExecuteQuery(GetFormattedPointer("SELECT WindowWidth, WindowHeight, WindowStyle FROM Settings"), &SetWindowSettingsIfExists, &settings, db);
-    return settings;
-
-}
-
-WindowSettings GetWindowSettingsFromDB() 
-{
-
-    WindowSettings settings = {1920, 1080, WINDOWED};
-    sqlite3 *db = NULL;
-    if (OpenConnection(&db, DefaultConnection()))
-        return settings;
-
-    return GetSettingsFromDB(db);
-
-}
-
-void SetWindowResolutionSettings(int width, int height)
-{
-
-    sqlite3 *db; 
-    if (OpenConnection(&db, DefaultConnection()) == 0) 
-        ExecuteQuery(GetFormattedPointer("UPDATE Settings SET WindowWidth = %d, WindowHeight = %d WHERE SettingsId = 1;", width, height ), NULL, NULL, db);
-
-    sqlite3_close(db);
-
-}
 
 void InitializeDatabases() 
 {
