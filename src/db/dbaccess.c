@@ -31,15 +31,6 @@ WindowSettings GetSettingsFromDB(sqlite3 *db)
 
     WindowSettings settings = {0, 0, WINDOWED};
     ExecuteQuery(GetFormattedPointer("SELECT WindowWidth, WindowHeight, WindowStyle FROM Settings"), &SetWindowSettingsIfExists, &settings, db);
-
-    if (settings.width == 0) {
-
-        settings.width  = 1920;
-        settings.height = 1080;
-        settings.screen_flag = WINDOWED;
-        ExecuteQuery(GetFormattedPointer("INSERT INTO Settings (WindowWidth, WindowHeight, WindowStyle) VALUES (1920, 1080, 1);"), NULL, NULL, db);
-
-    }
     return settings;
 
 }
@@ -127,6 +118,7 @@ void SeedDB()
     ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/companies-seed.sql"));
     ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/news-events-seed.sql"));
     ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/ai.sql"));
+    ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/settings-seed.sql"));
     ExecuteQueryF(NULL, NULL, "INSERT INTO DBEvents (Event) VALUES ('Seeded')");
 
 }

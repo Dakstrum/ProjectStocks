@@ -42,6 +42,7 @@ typedef struct WindowSettings {
 
     int width;
     int height;
+    float fps;
     ScreenSetting screen_flag;
     
 } WindowSettings;
