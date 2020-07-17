@@ -73,8 +73,9 @@ void Loop()
     if (event.type == ALLEGRO_EVENT_TIMER) {
 
         struct timespec current_time = GetCurrentTime();
+        double dt = GetDoubleMilliDiff(&current_time, &last_render_update);
 
-        Animate_Update(last_render_update, current_time);
+        Animate_Update(dt);
         HandleMouseLocation();
         HandleRendering();
 
@@ -91,7 +92,6 @@ void Loop()
     } else {
 
         input_event = event;
-        LogF("event_type = %d, %d, %d", input_event.type, ALLEGRO_EVENT_KEY_DOWN, ALLEGRO_EVENT_KEY_UP);
         had_input   = true;
 
     }
