@@ -46,9 +46,10 @@ void Window_Initialize()
 {
     
     window_settings = GetWindowSettingsFromDB();
-    al_set_new_display_flags(flag_maps[window_settings.screen_flag].allegro_flag);
+    al_set_new_display_flags(flag_maps[window_settings.screen_flag].allegro_flag | ALLEGRO_OPENGL);
     display = al_create_display(window_settings.width, window_settings.height);
     Window_SetDisplayIcon();
+
 }
 
 WindowSettings GetWindowSettings() 
@@ -87,7 +88,13 @@ void CleanUpDisplay()
 void Window_Resize(int width, int height) 
 {
 
-    al_resize_display(display, width, height);
+    if (!al_resize_display(display, width, height)) {
+
+        Log("Could not resize display");
+        return;
+
+    }
+    al_acknowledge_resize(display);
     SetWindowResolutionSettings(width, height);
     window_settings.width  = width;
     window_settings.height = height;
