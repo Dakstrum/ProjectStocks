@@ -73,13 +73,13 @@ void DrawBackBuffer(ALLEGRO_BITMAP *bitmap)
 
 void DrawFrameTiming()
 {
-    static char FPS_string[255];
+    static char display_string[255];
     if(font == NULL)
         font = al_load_ttf_font("assets/font/DanielLinssenM5/m5x7.ttf", 50, 0);
 
+    int frame_time = ??
 
-
-    sprintf(FPS_string, "%d", 60); 
-    al_draw_text(font , al_map_rgb(0, 0, 0), 0, 0, 0, FPS_string);
+    sprintf(display_string, "%d", frame_time); 
+    al_draw_text(font , al_map_rgb(0, 0, 0), 0, 0, 0, display_string);
 
 }
