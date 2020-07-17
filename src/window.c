@@ -94,7 +94,6 @@ void Window_Resize(int width, int height)
         return;
 
     }
-    al_acknowledge_resize(display);
     SetWindowResolutionSettings(width, height);
     window_settings.width  = width;
     window_settings.height = height;
