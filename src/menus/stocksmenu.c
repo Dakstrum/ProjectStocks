@@ -119,9 +119,9 @@ void InitalizeStocksMenuText()
     stock_price_textobject   = GetJSONObjectAndAddToDrawLayer("StocksMenuStockPriceTextObject");
     stock_change_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuPriceChangeTextObject");
 
-    SetTextContent(stock_change_textobject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
-    SetTextContent(player_money_textobject, "%.2f", GetAccountMoney());
-    SetTextContent(stock_price_textobject,  "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
+    SetTextContent(stock_change_textobject,  "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
+    SetTextContent(player_money_textobject,  "%.2f", GetAccountMoney());
+    SetTextContent(stock_price_textobject,   "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
 
 }
 
@@ -165,7 +165,7 @@ void PopulateStockStatsText(char *company_name)
 {
 
     SetTextContent(company_name_textobject, "%s", company_name);
-    SetTextContent(company_about_textobject, "Dynamic Description of a company");
+    SetTextContent(company_about_textobject, "%s", GetCompanyDescriptionRef(GetCompanyId(GetCompanyNameViewing())));
     StocksMenusRenderLogic();
 
 }

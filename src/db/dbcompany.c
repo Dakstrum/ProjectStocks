@@ -65,7 +65,7 @@ char *GetCompanyDescriptionRef(unsigned int company_id)
     Company *temp = (Company *)companies->elements;
     for (size_t i = 0; i < companies->num_elements;i++)
         if (temp[i].company_id == company_id)
-            return temp[i].company_abbreviation;
+            return temp[i].company_description;
 
     return NULL;
 

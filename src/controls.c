@@ -235,13 +235,14 @@ void HandleMouseInput(ALLEGRO_EVENT event)
 void HandlePauseMenu(ALLEGRO_EVENT event)
 {
 
-    if(event.type == ALLEGRO_EVENT_KEY_DOWN && event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
-
+    if(event.type == ALLEGRO_EVENT_KEY_DOWN) {
+        LogF("%s", event.type);
         if(DoesObjectExistInCurrentDrawLayer("LoadingVideo") || DoesObjectExistInCurrentDrawLayer("StartUpVideo"))
             return;
 
         if(GetInGameStatus() == 1)
         {
+
             if(!DoesObjectExistInCurrentDrawLayer("OptionsMenu"))
                 ToggleInGamePauseMenu();
         }
