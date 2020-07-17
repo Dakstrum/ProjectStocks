@@ -92,7 +92,6 @@ void Loop()
     } else {
 
         input_event = event;
-        LogF("event_type = %d, %d, %d", input_event.type, ALLEGRO_EVENT_KEY_DOWN, ALLEGRO_EVENT_KEY_UP);
         had_input   = true;
 
     }
