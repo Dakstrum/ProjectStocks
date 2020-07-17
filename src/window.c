@@ -6,19 +6,12 @@
 #include <allegro5/allegro_video.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
-#include<allegro5/allegro_primitives.h>
+#include <allegro5/allegro_primitives.h>
 
 #include "log.h"
-#include "shared.h"
-#include "mainmenu.h"
 #include "drawlayers.h"
 #include "rendering.h"
-#include "startup.h"
 #include "dbaccess.h"
-#include "stocksmenu.h"
-#include "newsmenu.h"
-#include "accountmenu.h"
-#include "cardsmenu.h"
 
 typedef struct DisplayFlagMap {
 
@@ -48,7 +41,6 @@ void InitializeDisplay()
     
     display = al_create_display(window_settings.width, window_settings.height);
     InitializeDrawLayers(display);
-    //al_add_new_bitmap_flag(ALLEGRO_NO_PRESERVE_TEXTURE);
 
 }
 
@@ -69,11 +61,9 @@ void CleanUpDisplay()
 
 void ChangeDisplay(int width, int height) 
 {
-   //figureout how to change res
-   al_resize_display(display, width, height);
-   // al_acknowledge_resize(display);
-   // al_flip_display();
-   // InitializeMainMenu();
+
+    al_resize_display(display, width, height);
+
 }
 
 ALLEGRO_DISPLAY *GetDisplay() 

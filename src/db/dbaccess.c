@@ -11,17 +11,18 @@
 void SetupMainDB();
 void SetupLogDB();
 
-void SetWindowSettingsIfExists(void *settings, int argc, char **argv, char **col_name) 
+int SetWindowSettingsIfExists(void *settings, int argc, char **argv, char **col_name) 
 {
 
     WindowSettings *temp_settings = (WindowSettings *)settings;
     if (argc == 0)
-        return;
+        return 0;
 
     temp_settings->width          = atoi(argv[0]);
     temp_settings->height         = atoi(argv[1]);
     temp_settings->screen_flag    = atoi(argv[2]);
 
+    return 0;
 
 }
 
@@ -29,7 +30,7 @@ WindowSettings GetSettingsFromDB(sqlite3 *db)
 {
 
     WindowSettings settings = {0, 0, WINDOWED};
-    ExecuteQuery(GetFormattedPointer("SELECT WindowWidth, WindowHeight, WindowStyle FROM Settings"), (void *)(&SetWindowSettingsIfExists), &settings, db);
+    ExecuteQuery(GetFormattedPointer("SELECT WindowWidth, WindowHeight, WindowStyle FROM Settings"), &SetWindowSettingsIfExists, &settings, db);
 
     if (settings.width == 0) {
 
