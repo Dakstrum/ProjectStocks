@@ -38,6 +38,7 @@ static const float window_height = 1.0/1080.0;
 void Window_SetDisplayIcon()
 {
 
+    assert(al_is_image_addon_initialized());
     al_set_display_icon(display, al_load_bitmap("assets/icon.tga"));
 
 }
