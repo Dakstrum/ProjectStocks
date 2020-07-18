@@ -30,7 +30,7 @@ char *ReadSqlFile(const char *file)
     }
 
     int i = 0;
-    char c;
+    int c;
     char *buffer = malloc(8192);
     memset(buffer, '\0', 8192);
 
