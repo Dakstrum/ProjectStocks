@@ -58,14 +58,14 @@ void InitializeAddons()
         Log("Unable to init primitives addon");
 }
 
-void HandleRendering() 
+void HandleRendering(double dt) 
 {
 
     if (RenderLogic != NULL)
         RenderLogic();
 
     DrawLayers();
-    DrawFrameTiming();
+    DrawFrameTiming(dt);
     al_flip_display();
 
 }
