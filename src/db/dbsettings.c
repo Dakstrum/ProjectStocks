@@ -11,9 +11,10 @@ int SetWindowSettingsIfExists(void *settings, int argc, char **argv, char **col_
     if (argc == 0)
         return 0;
 
-    temp_settings->width          = atoi(argv[0]);
-    temp_settings->height         = atoi(argv[1]);
-    temp_settings->screen_flag    = atoi(argv[2]);
+    temp_settings->width       = atoi(argv[0]);
+    temp_settings->height      = atoi(argv[1]);
+    temp_settings->screen_flag = atoi(argv[2]);
+    temp_settings->fps         = atof(argv[3]);
 
     return 0;
 
@@ -23,7 +24,7 @@ WindowSettings GetWindowSettingsFromDB()
 {
 
     WindowSettings settings = {1920, 1080, WINDOWED};
-    ExecuteQueryF(&SetWindowSettingsIfExists, &settings, "SELECT WindowWidth, WindowHeight, WindowStyle FROM Settings");
+    ExecuteQueryF(&SetWindowSettingsIfExists, &settings, "SELECT WindowWidth, WindowHeight, WindowStyle, FPS FROM Settings");
     return settings;
 
 }

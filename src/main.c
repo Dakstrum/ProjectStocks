@@ -163,7 +163,7 @@ enum InitializeSuccess Initialize()
 void InitializeEventQueue() 
 {
 
-    timer = al_create_timer(1.0/60.0);
+    timer = al_create_timer(1.0/Window_FPS());
     
     event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_mouse_event_source());

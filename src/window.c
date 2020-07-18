@@ -153,3 +153,10 @@ void Window_DrawBackBuffer()
     DrawBackBuffer(video_buffer);
 
 }
+
+float Window_FPS()
+{
+
+    return window_settings.fps;
+
+}
