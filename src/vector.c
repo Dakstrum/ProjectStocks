@@ -55,6 +55,13 @@ void Vector_PushBackPtr(Vector *vector, void *element)
 
 }
 
+void Vector_Reset(Vector *vector)
+{
+
+    vector->num_elements = 0;
+
+}
+
 void Vector_DeletePtrs(Vector *vector)
 {
     void **array = (void **)vector->elements;

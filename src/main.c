@@ -39,8 +39,9 @@ enum InitializeSuccess
 /* Test code */
 static ALLEGRO_EVENT_QUEUE *event_queue;
 static ALLEGRO_TIMER *timer;
-
 static struct timespec last_render_update;
+
+static Vector *input_events = NULL;
 
 enum InitializeSuccess Initialize();
 void GameLoop();
@@ -66,18 +67,29 @@ int main(int argc, char **argv)
 
 }
 
+
+void ApplyInputs()
+{
+
+    ALLEGRO_EVENT *events = input_events->elements;
+    for (size_t i = 0; i < input_events->num_elements;i++) {
+
+        HandleInput(events[i]);
+        HandleWindowEvents(events[i]); 
+
+    }
+    Vector_Reset(input_events); 
+
+}
+
 void Loop() 
 {
 
     ALLEGRO_EVENT event = WaitForEvent();
 
-    static ALLEGRO_EVENT input_event;
-    static bool had_input = false;
-
-    
-
     if (event.type == ALLEGRO_EVENT_TIMER) {
 
+        ApplyInputs();
         struct timespec current_time = GetCurrentTime();
         double dt = GetDoubleMilliDiff(&current_time, &last_render_update);
 
@@ -85,20 +97,11 @@ void Loop()
         HandleMouseLocation();
         HandleRendering(dt);
 
-        if (had_input) {
-
-            HandleInput(input_event);
-            HandleWindowEvents(input_event); 
-            
-        }
-
-        had_input          = false;
         last_render_update = current_time;
 
     } else {
 
-        input_event = event;
-        had_input   = true;
+        Vector_PushBack(input_events, &event);
 
     }
 
@@ -107,6 +110,7 @@ void Loop()
 void GameLoop() 
 {
 
+    input_events       = Vector_Create(sizeof(ALLEGRO_EVENT), 32);
     last_render_update = GetCurrentTime();
     while (!ShouldICleanUp())
         Loop();
