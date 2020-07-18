@@ -126,9 +126,6 @@ bool MouseInScrollBoxArea(DrawObject *object, const int x, const int y, const in
 bool CheckForScrollboxClick(DrawObject *object, const int x, const int y) 
 {
 
-    if (!IsMouseCursorInAreaOfObject(object, x, y))
-        return false;
-
     for (int i = 0; i < object->scrollbox.num_items; i++) {
 
         if (MouseInScrollBoxArea(object, x, y, i)) {
