@@ -27,6 +27,7 @@
 #include "drawlayers.h"
 #include "drawobject.h"
 #include "rendering.h"
+#include "draw.h"
 
 enum InitializeSuccess 
 {
@@ -72,6 +73,8 @@ void Loop()
 
     static ALLEGRO_EVENT input_event;
     static bool had_input = false;
+
+    
 
     if (event.type == ALLEGRO_EVENT_TIMER) {
 
@@ -156,6 +159,8 @@ enum InitializeSuccess Initialize()
 
     DrawObjects_Initialize();
     Animate_Initialize();
+
+    Draw_Initialize();
 
     return SUCCESS;
 

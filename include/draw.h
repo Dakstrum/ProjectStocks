@@ -10,5 +10,6 @@ void DrawGenericTinted(ALLEGRO_BITMAP *bitmap, float x, float y, ALLEGRO_COLOR t
 void DrawGenericWithWidth(ALLEGRO_BITMAP *bitmap, float x, float y, float width, float height);
 void DrawBackBuffer(ALLEGRO_BITMAP *bitmap);
 void DrawFrameTiming(double dt);
+void Draw_Initialize();
 
 #endif
