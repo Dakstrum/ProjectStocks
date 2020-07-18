@@ -135,7 +135,7 @@ void InitializeBuyMenuText()
     transaction_menu_pershare_textobject     = GetJSONObjectAndAddToDrawLayer("BuyMenuPricePerTextObject");
     transaction_menu_projected_textobject    = GetJSONObjectAndAddToDrawLayer("BuyMenuPriceAllTextObject");
 
-    SetTextContent(transaction_menu_company_name_textobject, "%s", GetCompanyAbbreviation(GetCompanyId(selected_company_name)));
+    SetTextContent(transaction_menu_company_name_textobject, "%s", GetCompanyAbbreviationRef(GetCompanyId(selected_company_name)));
 
 }
 
@@ -148,7 +148,7 @@ void InitializeSellMenuText()
     transaction_menu_projected_textobject    = GetJSONObjectAndAddToDrawLayer("SellMenuPriceAllTextObject");
     transaction_menu_amountowned_textobject  = GetJSONObjectAndAddToDrawLayer("SellMenuAmountOwnedTextObject");
 
-    SetTextContent(transaction_menu_company_name_textobject, "%s", GetCompanyAbbreviation(GetCompanyId(selected_company_name)));
+    SetTextContent(transaction_menu_company_name_textobject, "%s", GetCompanyAbbreviationRef(GetCompanyId(selected_company_name)));
     SetTextContent(transaction_menu_amountowned_textobject, "%d", GetOwnedStockAmount(selected_company_name));
 
 }
