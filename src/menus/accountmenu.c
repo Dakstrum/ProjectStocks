@@ -27,6 +27,7 @@ static DrawObject *player_money_textobject       = NULL;
 static DrawObject *player_date_textobject        = NULL; 
 
 static DrawObject *company_name_textobject       = NULL;
+static DrawObject *company_about_textobject      = NULL;
 static DrawObject *stock_price_textobject        = NULL;
 static DrawObject *owned_stock_amount_textobject = NULL;
 
@@ -101,12 +102,14 @@ void InitalizeAccountMenuText()
 {
 
     company_name_textobject       = GetJSONObjectAndAddToDrawLayer("AccountMenuCompanyNameTextObject");
+    company_about_textobject      = GetJSONObjectAndAddToDrawLayer("AccountMenuAboutCompanyTextObject");
     player_money_textobject       = GetJSONObjectAndAddToDrawLayer("AccountMenuAccountMoneyTextObject");
     player_date_textobject        = GetJSONObjectAndAddToDrawLayer("AccountMenuAccountDateTextObject");
     stock_price_textobject        = GetJSONObjectAndAddToDrawLayer("AccountMenuStockPriceTextObject");
     owned_stock_amount_textobject = GetJSONObjectAndAddToDrawLayer("AccountMenuAmountOwnedTextObject");
 
     SetTextContent(company_name_textobject, "%s", GetCompanyNameViewing());
+    SetTextContent(company_about_textobject, "%s", GetCompanyDescriptionRef(GetCompanyId(GetCompanyNameViewing())));
 
 }
 
@@ -246,6 +249,7 @@ void AccountMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short i
     PopulateSelectedStockHistoryDisplay(company_name);
 
     SetTextContent(company_name_textobject, "%s", company_name);
+    SetTextContent(company_about_textobject, "%s", GetCompanyDescriptionRef(GetCompanyId(GetCompanyNameViewing())));
 
 }
 

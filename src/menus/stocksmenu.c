@@ -23,9 +23,9 @@
 #include "drawlayerutils.h"
 #include "textbox.h"
 
-static MenuWithChilds *stocks_menu           = NULL;
-static MenuWithChilds *sell_menu = NULL;
-static MenuWithChilds *buy_menu  = NULL;
+static MenuWithChilds *stocks_menu = NULL;
+static MenuWithChilds *sell_menu   = NULL;
+static MenuWithChilds *buy_menu    = NULL;
 
 static char *selected_company_name          = NULL;
 static DrawObject *current_graph            = NULL;
@@ -83,6 +83,8 @@ void StocksMenusRenderLogic()
     if(stocks_menu)
     {
 
+        //SetTextContent(stock_change_textobject,  "%s", "");
+
         SetTextContent(stock_change_textobject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
         SetTextContent(player_money_textobject, "%.2f", GetAccountMoney());
         SetTextContent(player_date_textobject,  "%s",   GetDate());
@@ -119,9 +121,9 @@ void InitalizeStocksMenuText()
     stock_price_textobject   = GetJSONObjectAndAddToDrawLayer("StocksMenuStockPriceTextObject");
     stock_change_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuPriceChangeTextObject");
 
-    SetTextContent(stock_change_textobject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
-    SetTextContent(player_money_textobject, "%.2f", GetAccountMoney());
-    SetTextContent(stock_price_textobject,  "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
+    SetTextContent(stock_change_textobject,  "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
+    SetTextContent(player_money_textobject,  "%.2f", GetAccountMoney());
+    SetTextContent(stock_price_textobject,   "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
 
 }
 
@@ -165,8 +167,7 @@ void PopulateStockStatsText(char *company_name)
 {
 
     SetTextContent(company_name_textobject, "%s", company_name);
-    SetTextContent(company_about_textobject, "Dynamic Description of a company");
-    StocksMenusRenderLogic();
+    SetTextContent(company_about_textobject, "%s", GetCompanyDescriptionRef(GetCompanyId(GetCompanyNameViewing())));
 
 }
 

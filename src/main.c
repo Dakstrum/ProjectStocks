@@ -26,6 +26,7 @@
 #include "animations.h"
 #include "drawlayers.h"
 #include "drawobject.h"
+#include "rendering.h"
 
 enum InitializeSuccess 
 {
@@ -79,7 +80,7 @@ void Loop()
 
         Animate_Update(dt);
         HandleMouseLocation();
-        HandleRendering();
+        HandleRendering(dt);
 
         if (had_input) {
 

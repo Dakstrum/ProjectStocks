@@ -20,6 +20,7 @@
 #include "accountmenu.h"
 #include "cardsmenu.h"
 #include "window.h"
+#include "draw.h"
 
 void InitializeAddons();
 
@@ -51,13 +52,14 @@ void InitializeAddons()
         Log("Unable to init primitives addon");
 }
 
-void HandleRendering() 
+void HandleRendering(double dt) 
 {
 
     if (RenderLogic != NULL)
         RenderLogic();
 
     DrawLayers();
+    DrawFrameTiming(dt);
     al_flip_display();
 
 }

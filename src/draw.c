@@ -4,7 +4,17 @@
 
 #include "window.h"
 
+#include "log.h"
+#include <allegro5/allegro.h>                                       
+#include <allegro5/allegro5.h>
+#include <allegro5/allegro_image.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
+#include<stdio.h> 
+
 static WindowScale scale;
+
+ALLEGRO_FONT *font = NULL;
 
 void RefreshDrawScale()
 {
@@ -61,9 +71,16 @@ void DrawBackBuffer(ALLEGRO_BITMAP *bitmap)
 
 }
 
-void DrawFrameTime()
+void DrawFrameTiming(double dt)
 {
+    static char FPS_string[255];
+    if(font == NULL)
+        font = al_load_ttf_font("assets/font/DanielLinssenM5/m5x7.ttf", 50, 0);
 
     
-    
+
+
+    sprintf(FPS_string, "%f", dt); 
+    al_draw_text(font , al_map_rgb(0, 0, 0), 0, 0, 0, FPS_string);
+
 }

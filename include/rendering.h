@@ -18,7 +18,7 @@ void SwitchToRenderingNewsMenu();
 void SwitchToRenderingAccountMenu();
 void SwitchToRenderingCardsMenu();
 
-void HandleRendering();
+void HandleRendering(double dt);
 void HandleWindowEvents(ALLEGRO_EVENT event);
 void CleanUpRendering();
 ALLEGRO_DISPLAY *GetDisplay();
