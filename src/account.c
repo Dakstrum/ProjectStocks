@@ -24,7 +24,7 @@ static atomic_int  player_id;
 static ALLEGRO_THREAD *account_thread = NULL;
 
 static float account_money   = 0;
-static int companyid_viewing = 1;
+
 static int in_game           = 0;
 
 static char *current_time_buf = NULL;
@@ -48,20 +48,6 @@ int GetInGameStatus()
 {
 
     return in_game;
-
-}
-
-void SetCompanyIdViewing(int id)
-{
-
-    companyid_viewing = id;
-
-}
-
-int GetCompanyIdViewing()
-{
-
-    return companyid_viewing;
 
 }
 
@@ -97,13 +83,6 @@ float GetAccountMoney()
 {
 
     return account_money;
-
-}
-
-char *GetCompanyNameViewing()
-{
-
-    return GetCompanyNameRef(GetCompanyIdViewing());
 
 }
 

@@ -16,10 +16,11 @@
 #include "simulation.h"
 #include "generalpurposemenus.h"
 #include "drawlayerutils.h"
+#include "menupersistence.h"
 
 #define DSP_NUM 5
 
-int history_display_number = 0;
+
 
 static MenuWithChilds *account_menu = NULL;
 
@@ -143,16 +144,16 @@ void PopulateSelectedStockHistoryDisplay(char* company)
 
     for (int i=0; i < DSP_NUM; i++) {
 
-        if(transactions->shares[history_display_number + i]) {
+        if(transactions->shares[GetAccountHistoryDisplayNum() + i]) {
 
-            time_t time_buf = transactions->date[history_display_number + i];
+            time_t time_buf = transactions->date[GetAccountHistoryDisplayNum() + i];
             strftime(transaction_time, 128, "%x", localtime(&time_buf));
 
-            SetTextContent(selected_action_objects[i],       "%s",   GetTransactionAction(transactions->type[history_display_number + i]));
+            SetTextContent(selected_action_objects[i],       "%s",   GetTransactionAction(transactions->type[GetAccountHistoryDisplayNum() + i]));
             SetTextContent(selected_date_objects[i],         "%s",   transaction_time);
-            SetTextContent(selected_share_amount_objects[i], "%d",   transactions->shares[history_display_number + i]);
-            SetTextContent(selected_share_price_objects[i],  "%.2f", transactions->pershare[history_display_number + i]);
-            SetTextContent(selected_transaction_objects[i],  "%.2f", transactions->transaction[history_display_number + i]);
+            SetTextContent(selected_share_amount_objects[i], "%d",   transactions->shares[GetAccountHistoryDisplayNum() + i]);
+            SetTextContent(selected_share_price_objects[i],  "%.2f", transactions->pershare[GetAccountHistoryDisplayNum() + i]);
+            SetTextContent(selected_transaction_objects[i],  "%.2f", transactions->transaction[GetAccountHistoryDisplayNum() + i]);
 
         }
         
@@ -277,7 +278,7 @@ void InitalizeAccountMenuCompanyScrollbox()
 void AccountDown_BCB()
 {
 
-    history_display_number += DSP_NUM;
+    SetAccountHistoryDisplayNum(GetAccountHistoryDisplayNum() + DSP_NUM);
     ClearAccountHistoryDisplay();
     PopulateSelectedStockHistoryDisplay(GetCompanyNameViewing());
 
@@ -285,9 +286,9 @@ void AccountDown_BCB()
 
 void AccountUp_BCB()
 {
-    if(history_display_number >= DSP_NUM) {
+    if(GetAccountHistoryDisplayNum() >= DSP_NUM) {
 
-        history_display_number -= DSP_NUM;
+        SetAccountHistoryDisplayNum(GetAccountHistoryDisplayNum() - DSP_NUM);
         ClearAccountHistoryDisplay();
         PopulateSelectedStockHistoryDisplay(GetCompanyNameViewing());
 
@@ -297,7 +298,7 @@ void AccountUp_BCB()
 void CleanAccountMenu()
 {
 
-    history_display_number = 0;
+    SetAccountHistoryDisplayNum(0);
 
     account_menu                  = NULL;
     company_name_textobject       = NULL;

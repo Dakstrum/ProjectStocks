@@ -22,6 +22,7 @@
 #include "generalpurposemenus.h"
 #include "drawlayerutils.h"
 #include "textbox.h"
+#include "menupersistence.h"
 
 static MenuWithChilds *stocks_menu = NULL;
 static MenuWithChilds *sell_menu   = NULL;
