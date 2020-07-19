@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "dbcompany.h"
+#include "shared.h"
 
 static int companyid_viewing      = 1;
 static int account_history_display_number = 0;
+static TimeSpan stock_timespan_number = ONE_DAY;
 
 //AllMenus
 
@@ -28,7 +30,6 @@ char *GetCompanyNameViewing()
 
 }
 
-
 //AccountMenu
 
 void SetAccountHistoryDisplayNum(int num)
@@ -46,3 +47,17 @@ int GetAccountHistoryDisplayNum()
 }
 
 //StocksMenu
+
+void SetStockMenuTimeSpanNum(TimeSpan time_span)
+{
+
+	stock_timespan_number = time_span;
+
+}
+
+TimeSpan GetStockMenuTimeSpanNum()
+{
+
+	return stock_timespan_number;
+
+}

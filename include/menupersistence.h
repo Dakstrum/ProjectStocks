@@ -8,4 +8,7 @@ char *GetCompanyNameViewing();
 void SetAccountHistoryDisplayNum(int num);
 int GetAccountHistoryDisplayNum();
 
+void SetStockMenuTimeSpanNum(TimeSpan time_span);
+TimeSpan GetStockMenuTimeSpanNum();
+
 #endif

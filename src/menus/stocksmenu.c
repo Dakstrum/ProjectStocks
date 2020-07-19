@@ -202,7 +202,7 @@ void LoadCompanyScrollBoxClick(char *scroll_box_content, unsigned short int inde
     SetCompanyIdViewing(GetCompanyId(company_name));
 
     RemoveDrawObject(current_graph);
-    DisplayGraph(company_name, ONE_DAY);
+    DisplayGraph(company_name, GetStockMenuTimeSpanNum());
     PopulateStockStatsText(company_name);
 
 }
@@ -236,7 +236,7 @@ void PopulateStocksScrollBox(DrawObject *object)
 
 void ChangeGraphTimespan(TimeSpan time_span)
 {
-
+    SetStockMenuTimeSpanNum(time_span);
     RemoveDrawObject(current_graph);
     DisplayGraph(GetCompanyNameViewing(), time_span);
     PopulateStockStatsText(GetCompanyNameViewing());
