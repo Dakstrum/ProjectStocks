@@ -19,19 +19,10 @@
 #include "window.h"
 #include "drawlayerutils.h"
 
-enum ObjectId {
-
-    RESOLUTION = 1
-    
-};
-
 static MenuWithChilds *options_menu = NULL;
-static int option_id = 0;
 
-void InitalizeOptionsScrollBox();
-void PopulateOptionsScrollBox(DrawObject *object);
-void ChangeResolutionOptionClick(char *scroll_box_content, unsigned short int index);
-void InitalizeResolutionOptionOnScrollbox(DrawObject *object);
+void ChangeResolutionClick(char *scroll_box_content, unsigned short int index);
+void InitalizeResolutionScrollbox();
 
 void InitializeOptionsMenu() 
 {
@@ -69,34 +60,7 @@ void ToggleOptionsMenu()
 
 }
 
-void InitalizeOptionsScrollBox() 
-{
-
-    DrawObject *object = CreateScrollBoxObject();
-
-    object->x      = 1000;
-    object->y      = 380;
-    object->width  = 288;
-    object->height = 310;
-
-    PopulateOptionsScrollBox(object);
-    AddObjectToDrawLayer(object);
-
-}
-
-void PopulateOptionsScrollBox(DrawObject *object)
-{
-
-    switch(option_id)
-    {
-
-        case 1:
-            InitalizeResolutionOptionOnScrollbox(object);
-    }
-        
-}
-
-void ChangeResolutionOptionClick(char *scroll_box_content, unsigned short int index)
+void ChangeResolutionClick(char *scroll_box_content, unsigned short int index)
 {
 
     if(strcmp(scroll_box_content, "1920x1080") == 0) Window_Resize(1920, 1080);
@@ -108,13 +72,22 @@ void ChangeResolutionOptionClick(char *scroll_box_content, unsigned short int in
 
 }
 
-void InitalizeResolutionOptionOnScrollbox(DrawObject *object)
+void InitalizeResolutionScrollbox()
 {
+
+    DrawObject *object = CreateScrollBoxObject();
+
+    object->x      = 1000;
+    object->y      = 380;
+    object->width  = 288;
+    object->height = 310;
+
+    AddObjectToDrawLayer(object);
 
     object->asset_path = "assets/images/companyicons/optionbox.png";
 
     object->scrollbox.num_items        = 6;
-    object->scrollbox.box_click        = &ChangeResolutionOptionClick;
+    object->scrollbox.box_click        = &ChangeResolutionClick;
     object->scrollbox.text_content     = malloc(sizeof(char *) * object->scrollbox.num_items);
 
     object->scrollbox.text_content[0]  = GetFormattedPointer("1920x1080");
@@ -136,15 +109,13 @@ void OptionsMenuExit_BCB()
 void OptionsMenuResolution_BCB()
 {
 
-    option_id = RESOLUTION;
-    InitalizeOptionsScrollBox();
+    Log("RESOLUTIONS");
 
 }
 
 void CleanOptionsMenu()
 {
 
-    option_id    = 0;
     options_menu = NULL;
 
 }
