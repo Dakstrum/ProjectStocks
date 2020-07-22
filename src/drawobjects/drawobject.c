@@ -46,6 +46,10 @@ DrawObject *CreateNewDrawObject()
     object->bit_flags    = SHOULD_BE_DRAWN;
     object->layer_index  = 0;
     object->object_index = 0;
+    object->x            = 0;
+    object->y            = 0;
+    object->width        = 0;
+    object->height       = 0;
 
     return object;
 
