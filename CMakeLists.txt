@@ -40,12 +40,13 @@ endif()
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
     string(APPEND CMAKE_C_FLAGS_DEBUG " -Og -g -Wall -Wtype-limits -Wsign-compare -Wuninitialized -fno-omit-frame-pointer -fsanitize=address")
     string(APPEND CMAKE_C_FLAGS_RELEASE " -O2")
+elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    string(APPEND CMAKE_C_FLAGS_DEBUG " -g -Og -Wall -Wtype-limits -Wsign-compare -Wuninitialized")
+    string(APPEND CMAKE_C_FLAGS_RELEASE " -O2")
 else()
     string(APPEND CMAKE_C_FLAGS_DEBUG " -lm -g -Og -Wall -Wtype-limits -Wsign-compare -Wuninitialized")
     string(APPEND CMAKE_C_FLAGS_RELEASE " -lm -O2")
 endif()
-
-
 
 add_executable(projectstocks ${sources} ${headers})
 
