@@ -5,6 +5,8 @@ void InitializeOptionsMenu();
 void ToggleOptionsMenu();
 void OptionsMenuExit_BCB();
 void OptionsMenuResolution_BCB();
+void DisplayMenuExit_BCB();
+void DisplayMenuFullScreen_BCB();
 
 void CleanOptionsMenu();
 

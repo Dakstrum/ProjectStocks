@@ -193,6 +193,9 @@ void InitializeOptionsButtons()
     AddButton("OptionsMenuXButtonObject",          &OptionsMenuExit_BCB);
     AddButton("OptionsMenuResolutionButtonObject", &OptionsMenuResolution_BCB);  
 
+    AddButton("DisplayMenuXButtonObject", &DisplayMenuExit_BCB);
+    AddButton("DisplayMenuFullScreenButtonObject", &DisplayMenuFullScreen_BCB);  
+
 }
 
 

@@ -20,6 +20,7 @@
 #include "drawlayerutils.h"
 
 static MenuWithChilds *options_menu = NULL;
+static MenuWithChilds *display_menu = NULL;
 
 void ChangeResolutionClick(char *scroll_box_content, unsigned short int index);
 void InitalizeResolutionScrollbox();
@@ -34,6 +35,19 @@ void InitializeOptionsMenu()
     }
 
     options_menu = GetJSONMenuAndAddToDrawLayer("OptionsMenu");
+    
+}
+
+void InitializeDisplayMenu() 
+{
+
+    if (CreateNewDrawLayer() == -1) {
+
+        Log("STUB: display Menu could not create new draw layer");
+        return;
+    }
+
+    display_menu = GetJSONMenuAndAddToDrawLayer("DisplayMenu");
     
 }
 
@@ -60,6 +74,25 @@ void ToggleOptionsMenu()
 
 }
 
+void ToggleDisplayMenu()
+{
+
+    if (display_menu == NULL) {
+
+        CreateNewDrawLayer();
+        display_menu = GetJSONMenuAndAddToDrawLayer("DisplayMenu");
+        InitalizeResolutionScrollbox();
+        
+    } else {
+
+        ClearCurrentDrawLayer();
+        display_menu = NULL;
+    }
+
+}
+
+
+
 void ChangeResolutionClick(char *scroll_box_content, unsigned short int index)
 {
 
@@ -77,18 +110,17 @@ void InitalizeResolutionScrollbox()
 
     DrawObject *object = CreateScrollBoxObject();
 
-    object->x      = 1000;
-    object->y      = 380;
+    object->x      = 1060;
+    object->y      = 410;
     object->width  = 288;
     object->height = 310;
-
-    AddObjectToDrawLayer(object);
-
     object->asset_path = "assets/images/companyicons/optionbox.png";
 
     object->scrollbox.num_items        = 6;
     object->scrollbox.box_click        = &ChangeResolutionClick;
     object->scrollbox.text_content     = malloc(sizeof(char *) * object->scrollbox.num_items);
+
+    AddObjectToDrawLayer(object);
 
     object->scrollbox.text_content[0]  = GetFormattedPointer("1920x1080");
     object->scrollbox.text_content[1]  = GetFormattedPointer("1366x768");
@@ -106,10 +138,24 @@ void OptionsMenuExit_BCB()
 
 }
 
+void DisplayMenuExit_BCB()
+{
+
+    ToggleDisplayMenu();
+
+}
+
+void DisplayMenuFullScreen_BCB()
+{
+
+    Window_FullScreen();
+
+}
+
 void OptionsMenuResolution_BCB()
 {
 
-    Log("RESOLUTIONS");
+    ToggleDisplayMenu();
 
 }
 
@@ -117,5 +163,6 @@ void CleanOptionsMenu()
 {
 
     options_menu = NULL;
+    display_menu = NULL;
 
 }

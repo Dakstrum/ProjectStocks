@@ -25,13 +25,12 @@ static WindowSettings window_settings;
 static DisplayFlagMap flag_maps[3] = 
 {
 
-    {FULLSCREEN, ALLEGRO_FULLSCREEN},
+    {FULLSCREEN, ALLEGRO_FULLSCREEN_WINDOW},
     {WINDOWED, ALLEGRO_WINDOWED},
     {BORDERLESS, ALLEGRO_FRAMELESS}
 
 };
 
-static WindowSettings window_settings;
 static const float window_width  = 1.0/1920.0;
 static const float window_height = 1.0/1080.0;
 
@@ -47,7 +46,7 @@ void Window_Initialize()
 {
     
     window_settings = GetWindowSettingsFromDB();
-    al_set_new_display_flags(flag_maps[window_settings.screen_flag].allegro_flag | ALLEGRO_OPENGL);
+    al_set_new_display_flags(flag_maps[WINDOWED].allegro_flag | ALLEGRO_OPENGL);
     display = al_create_display(window_settings.width, window_settings.height);
     Window_SetDisplayIcon();
 
@@ -88,7 +87,7 @@ void CleanUpDisplay()
 
 void Window_Resize(int width, int height) 
 {
-
+    al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, false);
     if (!al_resize_display(display, width, height)) {
 
         Log("Could not resize display");
@@ -159,5 +158,14 @@ float Window_FPS()
 {
 
     return window_settings.fps;
+
+}
+
+void Window_FullScreen()  //This is baked for a 1920 x 1080 monitor. Not sure how this can be changed 
+{
+    if(!(window_settings.width == 1920) && !(window_settings.height == 1080))
+        Window_Resize(1920, 1080);
+
+    al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, !(al_get_display_flags(display) & ALLEGRO_FULLSCREEN_WINDOW));
 
 }
