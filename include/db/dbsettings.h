@@ -15,12 +15,13 @@ typedef struct WindowSettings {
     int height;
     float fps;
     ScreenSetting screen_flag;
-    //int fullscreen;
+    int fullscreen;
     
 } WindowSettings;
 
 WindowSettings GetWindowSettingsFromDB();
 void SetWindowResolutionSettings(int width, int height);
 void SetFullScreenSettings(int arg);
+int GetFullScreenSettings();
 
 #endif

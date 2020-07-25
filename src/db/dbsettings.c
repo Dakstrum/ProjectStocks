@@ -24,7 +24,7 @@ int SetWindowSettingsIfExists(void *settings, int argc, char **argv, char **col_
 WindowSettings GetWindowSettingsFromDB() 
 {
 
-    WindowSettings settings = {1920, 1080, WINDOWED};
+    WindowSettings settings = {1920, 1080, WINDOWED, 0};
     ExecuteQueryF(&SetWindowSettingsIfExists, &settings, "SELECT WindowWidth, WindowHeight, WindowStyle, FPS, FullScreen FROM Settings");
     return settings;
 
@@ -41,5 +41,25 @@ void SetFullScreenSettings(int arg)
 {
 
     ExecuteQueryF(NULL, NULL,"UPDATE Settings SET FullScreen = %d WHERE SettingsId = 1;", arg );
+
+}
+
+int GetFullScreenSettingsCallBack(void *option, int argc, char **argv, char **col_name)
+{
+
+    if (argc > 0)
+        *((int *)option) = atoi(argv[0]);
+
+    return 0;
+
+}
+
+int GetFullScreenSettings()
+{
+
+    int option = 0;
+    ExecuteQueryF(&GetFullScreenSettingsCallBack, &option,"SELECT FullScreen FROM Settings");
+
+    return option;
 
 }
