@@ -73,10 +73,11 @@ unsigned int Animate_MoveDrawObject(DrawObject *object, float n_x, float n_y, lo
 void Animate_MoveDrawObjects(double milli_diff)
 {
 
-    double dt = milli_diff;
+    double dt;
     MoveAnimation *anims = move_objects->elements;
     for (size_t i = 0; i < move_objects->num_elements; i++) {
 
+        dt = milli_diff;
         if (anims[i].animation_length < milli_diff)
             dt = anims[i].animation_length;
 
