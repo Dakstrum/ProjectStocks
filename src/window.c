@@ -22,18 +22,21 @@ static ALLEGRO_DISPLAY *display     = NULL;
 static ALLEGRO_BITMAP *video_buffer = NULL;
 static WindowSettings window_settings;
 
-static DisplayFlagMap flag_maps[3] = 
-{
-
-    {FULLSCREEN, ALLEGRO_FULLSCREEN},
-    {WINDOWED, ALLEGRO_WINDOWED},
-    {BORDERLESS, ALLEGRO_FRAMELESS}
-
-};
-
-static WindowSettings window_settings;
 static const float window_width  = 1.0/1920.0;
 static const float window_height = 1.0/1080.0;
+
+static int monitor_adapter = 0;
+static int monitor_width   = 0;
+static int monitor_height  = 0;
+
+void GetMonitorResolution(int adapter)
+{
+    ALLEGRO_MONITOR_INFO info;
+    al_get_monitor_info(adapter, &info);
+
+    monitor_width  = info.x2 - info.x1;
+    monitor_height = info.y2 - info.y1;
+}
 
 void Window_SetDisplayIcon()
 {
@@ -47,9 +50,18 @@ void Window_Initialize()
 {
     
     window_settings = GetWindowSettingsFromDB();
-    al_set_new_display_flags(flag_maps[window_settings.screen_flag].allegro_flag | ALLEGRO_OPENGL);
+
+    if(window_settings.fullscreen)
+        al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW | ALLEGRO_OPENGL);
+
+    else
+        al_set_new_display_flags(ALLEGRO_WINDOWED | ALLEGRO_OPENGL);
+
+    
     display = al_create_display(window_settings.width, window_settings.height);
     Window_SetDisplayIcon();
+    
+    GetMonitorResolution(monitor_adapter);
 
 }
 
@@ -88,7 +100,7 @@ void CleanUpDisplay()
 
 void Window_Resize(int width, int height) 
 {
-
+    al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, false);
     if (!al_resize_display(display, width, height)) {
 
         Log("Could not resize display");
@@ -159,5 +171,20 @@ float Window_FPS()
 {
 
     return window_settings.fps;
+
+}
+
+void Window_FullScreen()
+{
+    
+    if(!(window_settings.width == monitor_width) && !(window_settings.height == monitor_height))
+        Window_Resize(monitor_width, monitor_height);
+
+    if(!(al_get_display_flags(display) & ALLEGRO_FULLSCREEN_WINDOW))
+        SetFullScreenSettings(1);
+    else
+        SetFullScreenSettings(0);
+
+    al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, !(al_get_display_flags(display) & ALLEGRO_FULLSCREEN_WINDOW));
 
 }

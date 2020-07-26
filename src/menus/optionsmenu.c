@@ -19,19 +19,11 @@
 #include "window.h"
 #include "drawlayerutils.h"
 
-enum ObjectId {
-
-    RESOLUTION = 1
-    
-};
-
 static MenuWithChilds *options_menu = NULL;
-static int option_id = 0;
+static MenuWithChilds *display_menu = NULL;
 
-void InitalizeOptionsScrollBox();
-void PopulateOptionsScrollBox(DrawObject *object);
-void ChangeResolutionOptionClick(char *scroll_box_content, unsigned short int index);
-void InitalizeResolutionOptionOnScrollbox(DrawObject *object);
+void ChangeResolutionClick(char *scroll_box_content, unsigned short int index);
+void InitalizeResolutionScrollbox();
 
 void InitializeOptionsMenu() 
 {
@@ -43,6 +35,19 @@ void InitializeOptionsMenu()
     }
 
     options_menu = GetJSONMenuAndAddToDrawLayer("OptionsMenu");
+    
+}
+
+void InitializeDisplayMenu() 
+{
+
+    if (CreateNewDrawLayer() == -1) {
+
+        Log("STUB: display Menu could not create new draw layer");
+        return;
+    }
+
+    display_menu = GetJSONMenuAndAddToDrawLayer("DisplayMenu");
     
 }
 
@@ -69,34 +74,26 @@ void ToggleOptionsMenu()
 
 }
 
-void InitalizeOptionsScrollBox() 
+void ToggleDisplayMenu()
 {
 
-    DrawObject *object = CreateScrollBoxObject();
+    if (display_menu == NULL) {
 
-    object->x      = 1000;
-    object->y      = 380;
-    object->width  = 288;
-    object->height = 310;
-
-    PopulateOptionsScrollBox(object);
-    AddObjectToDrawLayer(object);
-
-}
-
-void PopulateOptionsScrollBox(DrawObject *object)
-{
-
-    switch(option_id)
-    {
-
-        case 1:
-            InitalizeResolutionOptionOnScrollbox(object);
-    }
+        CreateNewDrawLayer();
+        display_menu = GetJSONMenuAndAddToDrawLayer("DisplayMenu");
+        InitalizeResolutionScrollbox();
         
+    } else {
+
+        ClearCurrentDrawLayer();
+        display_menu = NULL;
+    }
+
 }
 
-void ChangeResolutionOptionClick(char *scroll_box_content, unsigned short int index)
+
+
+void ChangeResolutionClick(char *scroll_box_content, unsigned short int index)
 {
 
     if(strcmp(scroll_box_content, "1920x1080") == 0) Window_Resize(1920, 1080);
@@ -108,14 +105,22 @@ void ChangeResolutionOptionClick(char *scroll_box_content, unsigned short int in
 
 }
 
-void InitalizeResolutionOptionOnScrollbox(DrawObject *object)
+void InitalizeResolutionScrollbox()
 {
 
+    DrawObject *object = CreateScrollBoxObject();
+
+    object->x      = 1060;
+    object->y      = 410;
+    object->width  = 288;
+    object->height = 310;
     object->asset_path = "assets/images/companyicons/optionbox.png";
 
     object->scrollbox.num_items        = 6;
-    object->scrollbox.box_click        = &ChangeResolutionOptionClick;
+    object->scrollbox.box_click        = &ChangeResolutionClick;
     object->scrollbox.text_content     = malloc(sizeof(char *) * object->scrollbox.num_items);
+
+    AddObjectToDrawLayer(object);
 
     object->scrollbox.text_content[0]  = GetFormattedPointer("1920x1080");
     object->scrollbox.text_content[1]  = GetFormattedPointer("1366x768");
@@ -133,18 +138,31 @@ void OptionsMenuExit_BCB()
 
 }
 
+void DisplayMenuExit_BCB()
+{
+
+    ToggleDisplayMenu();
+
+}
+
+void DisplayMenuFullScreen_BCB()
+{
+
+    Window_FullScreen();
+
+}
+
 void OptionsMenuResolution_BCB()
 {
 
-    option_id = RESOLUTION;
-    InitalizeOptionsScrollBox();
+    ToggleDisplayMenu();
 
 }
 
 void CleanOptionsMenu()
 {
 
-    option_id    = 0;
     options_menu = NULL;
+    display_menu = NULL;
 
 }

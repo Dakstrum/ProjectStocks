@@ -26,5 +26,6 @@ void Window_SetVideoBufferAsTarget();
 void Window_SetVideoBackBuffer();
 void Window_DrawBackBuffer();
 float Window_FPS();
+void Window_FullScreen();
 
 #endif

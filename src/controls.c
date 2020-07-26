@@ -236,7 +236,7 @@ void HandlePauseMenu(ALLEGRO_EVENT event)
     if (event.type != ALLEGRO_EVENT_KEY_CHAR || event.keyboard.keycode != ALLEGRO_KEY_ESCAPE)
         return;
 
-    if(DoesObjectExistInCurrentDrawLayer("LoadingVideo") || DoesObjectExistInCurrentDrawLayer("StartUpVideo"))
+    if(DoesObjectExistInCurrentDrawLayer("LoadingVideo") || DoesObjectExistInCurrentDrawLayer("StartUpVideo") || DoesObjectExistInCurrentDrawLayer("DisplayMenu"))
         return;
 
     if(GetInGameStatus() == 1)
