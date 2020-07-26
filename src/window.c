@@ -22,15 +22,6 @@ static ALLEGRO_DISPLAY *display     = NULL;
 static ALLEGRO_BITMAP *video_buffer = NULL;
 static WindowSettings window_settings;
 
-static DisplayFlagMap flag_maps[3] = 
-{
-
-    {FULLSCREEN, ALLEGRO_FULLSCREEN_WINDOW},
-    {WINDOWED, ALLEGRO_WINDOWED},
-    {BORDERLESS, ALLEGRO_FRAMELESS}
-
-};
-
 static const float window_width  = 1.0/1920.0;
 static const float window_height = 1.0/1080.0;
 
@@ -60,7 +51,7 @@ void Window_Initialize()
     
     window_settings = GetWindowSettingsFromDB();
 
-    if(GetFullScreenSettings())
+    if(window_settings.fullscreen)
         al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW | ALLEGRO_OPENGL);
 
     else

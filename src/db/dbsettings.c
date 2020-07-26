@@ -53,13 +53,3 @@ int GetFullScreenSettingsCallBack(void *option, int argc, char **argv, char **co
     return 0;
 
 }
-
-int GetFullScreenSettings()
-{
-
-    int option = 0;
-    ExecuteQueryF(&GetFullScreenSettingsCallBack, &option,"SELECT FullScreen FROM Settings");
-
-    return option;
-
-}

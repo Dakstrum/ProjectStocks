@@ -22,6 +22,5 @@ typedef struct WindowSettings {
 WindowSettings GetWindowSettingsFromDB();
 void SetWindowResolutionSettings(int width, int height);
 void SetFullScreenSettings(int arg);
-int GetFullScreenSettings();
 
 #endif
