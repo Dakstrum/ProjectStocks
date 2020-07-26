@@ -63,6 +63,8 @@ void Window_Initialize()
     
     GetMonitorResolution(monitor_adapter);
 
+    Window_Resize(monitor_width, monitor_height);
+
 }
 
 WindowSettings GetWindowSettings() 
