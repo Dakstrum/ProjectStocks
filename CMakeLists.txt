@@ -28,6 +28,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include/menus)
 include_directories(${PROJECT_SOURCE_DIR}/include/json)
 include_directories(${PROJECT_SOURCE_DIR}/include/db)
 include_directories(${PROJECT_SOURCE_DIR}/include/drawobjects)
+include_directories(${PROJECT_SOURCE_DIR}/include/managers)
 
 
 file(GLOB_RECURSE sources ${PROJECT_SOURCE_DIR}/src/*.c)
