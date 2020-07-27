@@ -8,6 +8,9 @@
 void InitText(DrawObject *object)
 {
 
+    if (object->text.bitmap_path != NULL)
+        object->text.bitmap = GetBitmapFromCache(object->text.bitmap_path);
+
     object->text.font  = GetFontFromCache(object->asset_path, object->text.font_size);
     object->text.color = al_map_rgba(object->text.r, object->text.g, object->text.b, object->text.a);
 
@@ -52,5 +55,17 @@ void SetTextContent(DrawObject *object, const char *str, ...)
         object->text.content = GetFormattedPointerVaList(str, args);
 
     }
+
+}
+
+DrawObject *Text_Create()
+{
+
+    DrawObject *object       = CreateNewDrawObject();
+    object->type             = TEXT;
+    object->text.bitmap_path = NULL;
+    object->text.bitmap      = NULL;
+
+    return object;
 
 }

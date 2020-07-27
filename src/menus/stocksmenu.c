@@ -240,7 +240,6 @@ void ChangeGraphTimespan(TimeSpan time_span)
     RemoveDrawObject(current_graph);
     DisplayGraph(GetCompanyNameViewing(), time_span);
     PopulateStockStatsText(GetCompanyNameViewing());
-
 }
 
 

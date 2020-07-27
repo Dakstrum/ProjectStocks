@@ -209,15 +209,17 @@ void SetTextObject(int idx)
 void SetMenuTextObject(int idx, int text_idx, char *child_of) 
 {
 
-    parsed_objects[num_objects].type                  = TEXT;
-    parsed_objects[num_objects].asset_path            = JsonObjectGetString(draw_objects, "/Objects/%d/Text/%d/Path", idx, text_idx);
-    parsed_objects[num_objects].name                  = JsonObjectGetString(draw_objects, "/Objects/%d/Text/%d/Name", idx, text_idx);
-    parsed_objects[num_objects].x                     = JsonObjectGetFloat(draw_objects, "/Objects/%d/Text/%d/RX", idx, text_idx)  + JsonObjectGetFloat(draw_objects, "/Objects/%d/X", idx);
-    parsed_objects[num_objects].y                     = JsonObjectGetFloat(draw_objects,  "/Objects/%d/Text/%d/RY", idx, text_idx) + JsonObjectGetFloat(draw_objects, "/Objects/%d/Y", idx);
-    parsed_objects[num_objects].text.font_size        = JsonObjectGetInt(draw_objects, "/Objects/%d/Text/%d/FontSize", idx, text_idx);
-    parsed_objects[num_objects].text.content          = JsonObjectGetString(draw_objects,"/Objects/%d/Text/%d/Content", idx, text_idx);
-    parsed_objects[num_objects].child_of              = child_of;
-    parsed_objects[num_objects].bit_flags             = SHOULD_BE_DRAWN;
+    parsed_objects[num_objects].type             = TEXT;
+    parsed_objects[num_objects].asset_path       = JsonObjectGetString(draw_objects, "/Objects/%d/Text/%d/Path", idx, text_idx);
+    parsed_objects[num_objects].name             = JsonObjectGetString(draw_objects, "/Objects/%d/Text/%d/Name", idx, text_idx);
+    parsed_objects[num_objects].x                = JsonObjectGetFloat(draw_objects, "/Objects/%d/Text/%d/RX", idx, text_idx)  + JsonObjectGetFloat(draw_objects, "/Objects/%d/X", idx);
+    parsed_objects[num_objects].y                = JsonObjectGetFloat(draw_objects,  "/Objects/%d/Text/%d/RY", idx, text_idx) + JsonObjectGetFloat(draw_objects, "/Objects/%d/Y", idx);
+    parsed_objects[num_objects].text.font_size   = JsonObjectGetInt(draw_objects, "/Objects/%d/Text/%d/FontSize", idx, text_idx);
+    parsed_objects[num_objects].text.content     = JsonObjectGetString(draw_objects,"/Objects/%d/Text/%d/Content", idx, text_idx);
+    parsed_objects[num_objects].child_of         = child_of;
+    parsed_objects[num_objects].bit_flags        = SHOULD_BE_DRAWN;
+    parsed_objects[num_objects].text.bitmap_path = NULL;
+    parsed_objects[num_objects].text.bitmap      = NULL;
 
     array_list *colors = JsonObjectGetArrayList(draw_objects, "/Objects/%d/Text/%d/Color", idx, text_idx);
     if (colors->length == 4) {
@@ -364,13 +366,15 @@ void SetMenuDrawObjectFromJson(DrawObject *draw_object, int object_idx)
 void SetTextDrawObjectFromJson(DrawObject *draw_object, int object_idx) 
 {
 
-    draw_object->type           = TEXT;
-    draw_object->text.font_size = parsed_objects[object_idx].text.font_size;
-    draw_object->text.content   = parsed_objects[object_idx].text.content;
-    draw_object->text.r         = parsed_objects[object_idx].text.r;
-    draw_object->text.g         = parsed_objects[object_idx].text.g;
-    draw_object->text.b         = parsed_objects[object_idx].text.b;
-    draw_object->text.a         = parsed_objects[object_idx].text.a;
+    draw_object->type             = TEXT;
+    draw_object->text.font_size   = parsed_objects[object_idx].text.font_size;
+    draw_object->text.content     = parsed_objects[object_idx].text.content;
+    draw_object->text.r           = parsed_objects[object_idx].text.r;
+    draw_object->text.g           = parsed_objects[object_idx].text.g;
+    draw_object->text.b           = parsed_objects[object_idx].text.b;
+    draw_object->text.a           = parsed_objects[object_idx].text.a;
+    draw_object->text.bitmap_path = NULL;
+    draw_object->text.bitmap      = NULL;
 
 }
 

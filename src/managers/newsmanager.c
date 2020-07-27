@@ -1,5 +1,6 @@
 #include "newsmanager.h"
 #include "animations.h"
+#include "text.h"
 #include "drawobject.h"
 
 typedef enum NewsManagerStates {
@@ -133,7 +134,7 @@ void NewsManager_Delete(void *state)
 
 }
 
-Manager *NewsManager_Create()
+Manager *NewsManager_Create(float x, float y)
 {
 
 	Manager *manager = Manager_Create();
@@ -145,10 +146,24 @@ Manager *NewsManager_Create()
 	state->animation_id = 0;
 	state->objects      = malloc(sizeof(DrawObject *) * 3);
 
-	for (size_t i = 0; i < 3; i++)
-		state->objects[i] = CreateNewDrawObject();
+	for (size_t i = 0; i < 3; i++) {
+
+		state->objects[i] = Text_Create();
+		state->objects[i]->x = x;
+		state->objects[i]->y = y + 60*i;
+		state->objects[i]->text.bitmap_path = "";
+
+	}
 
 	manager->state = state;
+	return manager;
+
+}
+
+Manager *NewsManager_Test() 
+{
+
+	Manager *manager = NewsManager_Create(1000, 540);
 	return manager;
 
 }
