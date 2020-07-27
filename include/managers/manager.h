@@ -5,8 +5,9 @@
 
 typedef struct Manager {
 
-	DrawObject **objects;
-	void (*update)(struct Manager *manager);
+	void *state;
+	void (*Update)(void *state);
+	void (*Delete)(void *state);
 
 } Manager;
 

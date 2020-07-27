@@ -7,8 +7,9 @@ Manager *Manager_Create()
 {
 
 	Manager *manager = malloc(sizeof(Manager));
-	manager->update  = NULL;
-	manager->objects = NULL;
+	manager->Update  = NULL;
+	manager->Delete  = NULL;
+	manager->state   = NULL;
 
 	return manager;
 
