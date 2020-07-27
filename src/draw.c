@@ -73,10 +73,10 @@ void DrawBackBuffer(ALLEGRO_BITMAP *bitmap)
 
 void DrawFrameTiming(double dt)
 {
-    static char FPS_string[255];
-    
-    sprintf(FPS_string, "%f", dt); 
-    al_draw_text(font , al_map_rgb(0, 0, 0), 0, 0, 0, FPS_string);
+
+    static char FPS_string[32];
+    sprintf(FPS_string, "%d", (int)(1000/dt)); 
+    al_draw_text(font , al_map_rgb(255, 255, 255), 0, Window_Height() - 60, 0, FPS_string);
 
 }
 
