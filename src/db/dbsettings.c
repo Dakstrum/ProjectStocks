@@ -43,13 +43,3 @@ void SetFullScreenSettings(int arg)
     ExecuteQueryF(NULL, NULL,"UPDATE Settings SET FullScreen = %d WHERE SettingsId = 1;", arg );
 
 }
-
-int GetFullScreenSettingsCallBack(void *option, int argc, char **argv, char **col_name)
-{
-
-    if (argc > 0)
-        *((int *)option) = atoi(argv[0]);
-
-    return 0;
-
-}

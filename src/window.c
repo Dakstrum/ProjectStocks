@@ -25,17 +25,29 @@ static WindowSettings window_settings;
 static const float window_width  = 1.0/1920.0;
 static const float window_height = 1.0/1080.0;
 
-static int monitor_adapter = 0;
-static int monitor_width   = 0;
-static int monitor_height  = 0;
+static const int MONITOR_ADAPTER = 0;
+static int monitor_width         = 0;
+static int monitor_height        = 0;
 
-void GetMonitorResolution(int adapter)
+
+void Window_SaveResize(int width, int height)
 {
-    ALLEGRO_MONITOR_INFO info;
-    al_get_monitor_info(adapter, &info);
 
-    monitor_width  = info.x2 - info.x1;
-    monitor_height = info.y2 - info.y1;
+    SetWindowResolutionSettings(width, height);
+    window_settings.width  = width;
+    window_settings.height = height;
+
+}
+
+void Window_Resize(int width, int height) 
+{
+    if (!al_resize_display(display, width, height)) {
+
+        Log("Could not resize display");
+        return;
+
+    }
+    Window_SaveResize(width, height);
 }
 
 void Window_SetDisplayIcon()
@@ -46,24 +58,35 @@ void Window_SetDisplayIcon()
 
 }
 
+void Window_SetMonitoryResolution(int adapter)
+{
+    ALLEGRO_MONITOR_INFO info;
+    al_get_monitor_info(adapter, &info);
+
+    monitor_width  = info.x2 - info.x1;
+    monitor_height = info.y2 - info.y1;
+}
+
+
 void Window_Initialize() 
 {
     
     window_settings = GetWindowSettingsFromDB();
+    Window_SetMonitoryResolution(MONITOR_ADAPTER);
 
-    if(window_settings.fullscreen)
+    if(window_settings.fullscreen) {
+
+        Window_SaveResize(monitor_width, monitor_height);
         al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW | ALLEGRO_OPENGL);
 
-    else
+    } else {
+
         al_set_new_display_flags(ALLEGRO_WINDOWED | ALLEGRO_OPENGL);
 
+    }
     
     display = al_create_display(window_settings.width, window_settings.height);
     Window_SetDisplayIcon();
-    
-    GetMonitorResolution(monitor_adapter);
-
-    Window_Resize(monitor_width, monitor_height);
 
 }
 
@@ -97,21 +120,6 @@ void CleanUpDisplay()
 {
 
     al_destroy_display(display);
-
-}
-
-void Window_Resize(int width, int height) 
-{
-    al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, false);
-    if (!al_resize_display(display, width, height)) {
-
-        Log("Could not resize display");
-        return;
-
-    }
-    SetWindowResolutionSettings(width, height);
-    window_settings.width  = width;
-    window_settings.height = height;
 
 }
 
@@ -179,14 +187,17 @@ float Window_FPS()
 void Window_FullScreen()
 {
     
-    if(!(window_settings.width == monitor_width) && !(window_settings.height == monitor_height))
-        Window_Resize(monitor_width, monitor_height);
+    if (!window_settings.fullscreen) {
 
-    if(!(al_get_display_flags(display) & ALLEGRO_FULLSCREEN_WINDOW))
+        al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, true);
+        Window_SaveResize(monitor_width, monitor_height);
         SetFullScreenSettings(1);
-    else
+
+    } else {
+
+        al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, false);
         SetFullScreenSettings(0);
 
-    al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, !(al_get_display_flags(display) & ALLEGRO_FULLSCREEN_WINDOW));
+    }
 
 }
