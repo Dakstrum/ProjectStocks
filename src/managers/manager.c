@@ -9,6 +9,7 @@ Manager *Manager_Create()
 	Manager *manager = malloc(sizeof(Manager));
 	manager->Update  = NULL;
 	manager->Delete  = NULL;
+    manager->Add     = NULL;
 	manager->state   = NULL;
 
 	return manager;

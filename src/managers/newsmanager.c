@@ -1,7 +1,10 @@
 #include "newsmanager.h"
 #include "animations.h"
 #include "text.h"
+#include "log.h"
+
 #include "drawobject.h"
+#include "drawlayers.h"
 
 typedef enum NewsManagerStates {
 
@@ -17,6 +20,8 @@ typedef struct NewsManager {
 	DrawObject **objects;
 	unsigned char news_state;
 	unsigned int animation_id;
+	float x_i;
+	float y_i;
 
 } NewsManager;
 
@@ -77,18 +82,18 @@ void NewsManager_PushDown(NewsManager *manager)
 	objects[1]->x = objects[0]->x;
 	objects[1]->y = objects[0]->y; 
 
-	objects[0]->x = 2000;
-	objects[0]->y = 540;
+	objects[0]->x = manager->x_i+400;
+	objects[0]->y = manager->y_i;
 
-	Animate_MoveDrawObject(manager->objects[1], manager->objects[1]->x, manager->objects[1]->y+80, 500);
-	manager->animation_id = Animate_MoveDrawObject(manager->objects[2], manager->objects[2]->x, manager->objects[2]->y+80, 500);
+	//Animate_MoveDrawObject(manager->objects[1], manager->objects[1]->x, manager->objects[1]->y+100, 500);
+	manager->animation_id = Animate_MoveDrawObject(manager->objects[2], manager->objects[2]->x, manager->objects[2]->y+100, 500);
 
 }
 
 void NewsManager_PushLeft(NewsManager *manager)
 {
 
-	manager->animation_id = Animate_MoveDrawObject(manager->objects[0], manager->objects[0]->x-100, manager->objects[2]->y, 250);
+	manager->animation_id = Animate_MoveDrawObject(manager->objects[0], manager->objects[0]->x-400, manager->objects[0]->y, 250);
 
 }
 
@@ -116,14 +121,23 @@ void NewsManager_Update(void *state)
 	NewsManager *manager = state;
 	NewsManager_CheckForNews();
 
-	if (manager->news_state == NOT_ANIMATING)
-		return;
+	//if (manager->news_state == NOT_ANIMATING)
+	//	return;
 
 	if (!Animate_FinishedMoveAnimation(manager->animation_id))
 		return;
 
 	NewsManager_Transition(manager);
 	NewsManager_Animate(manager);
+
+}
+
+void NewsManager_Add(void *state)
+{
+
+	NewsManager *manager = state;
+	for (size_t i = 0; i < 3;i++)
+		AddObjectToDrawLayer(manager->objects[i]);
 
 }
 
@@ -138,6 +152,7 @@ Manager *NewsManager_Create(float x, float y)
 {
 
 	Manager *manager = Manager_Create();
+	manager->Add     = NewsManager_Add;
 	manager->Update  = NewsManager_Update;
 	manager->Delete  = NewsManager_Delete;
 
@@ -145,13 +160,15 @@ Manager *NewsManager_Create(float x, float y)
 	state->news_state   = NOT_ANIMATING;
 	state->animation_id = 0;
 	state->objects      = malloc(sizeof(DrawObject *) * 3);
+	state->x_i          = x;
+	state->y_i          = y;
 
 	for (size_t i = 0; i < 3; i++) {
 
-		state->objects[i] = Text_Create();
-		state->objects[i]->x = x;
-		state->objects[i]->y = y + 60*i;
-		state->objects[i]->text.bitmap_path = "";
+		state->objects[i]                   = Text_Create();
+		state->objects[i]->x                = x;
+		state->objects[i]->y                = y + 100*i;
+		state->objects[i]->text.bitmap_path = "assets/images/all_buttons/button1.png";
 
 	}
 
@@ -163,7 +180,7 @@ Manager *NewsManager_Create(float x, float y)
 Manager *NewsManager_Test() 
 {
 
-	Manager *manager = NewsManager_Create(1000, 540);
+	Manager *manager = NewsManager_Create(900, 540);
 	return manager;
 
 }

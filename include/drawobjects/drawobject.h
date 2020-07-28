@@ -161,8 +161,10 @@ typedef struct Text
 {
 
     char *content;
+    char *bitmap_path;
     ALLEGRO_COLOR color;
     ALLEGRO_FONT *font;
+    ALLEGRO_BITMAP *bitmap;
 
     unsigned char font_size;
     unsigned char r;

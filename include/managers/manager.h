@@ -8,6 +8,7 @@ typedef struct Manager {
 	void *state;
 	void (*Update)(void *state);
 	void (*Delete)(void *state);
+    void (*Add)(void *state);
 
 } Manager;
 
