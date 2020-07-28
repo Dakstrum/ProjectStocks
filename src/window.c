@@ -41,6 +41,16 @@ void Window_SaveResize(int width, int height)
 
 void Window_Resize(int width, int height) 
 {
+
+    window_settings = GetWindowSettingsFromDB();
+
+    if(window_settings.fullscreen == 1)
+    {
+        al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, false);
+        SetFullScreenSettings(0);
+    }
+
+
     if (!al_resize_display(display, width, height)) {
 
         Log("Could not resize display");
@@ -186,7 +196,7 @@ float Window_FPS()
 
 void Window_FullScreen()
 {
-    
+    LogF("%d", window_settings.width);
     window_settings = GetWindowSettingsFromDB();
 
     if (!window_settings.fullscreen) {
@@ -198,6 +208,7 @@ void Window_FullScreen()
     } else {
 
         al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, false);
+        Window_Resize(monitor_width, monitor_height);
         SetFullScreenSettings(0);
 
     }
