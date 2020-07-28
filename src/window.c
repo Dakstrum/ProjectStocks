@@ -187,6 +187,8 @@ float Window_FPS()
 void Window_FullScreen()
 {
     
+    window_settings = GetWindowSettingsFromDB();
+
     if (!window_settings.fullscreen) {
 
         al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, true);
