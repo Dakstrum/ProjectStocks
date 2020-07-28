@@ -5,6 +5,7 @@
 
 #include "drawobject.h"
 #include "drawlayers.h"
+#include "window.h"
 
 typedef enum NewsManagerStates {
 
@@ -67,7 +68,7 @@ void NewsManager_Transition(NewsManager *manager)
 void NewsManager_PullRight(NewsManager *manager)
 {
 
-	manager->animation_id = Animate_MoveDrawObject(manager->objects[2], manager->objects[2]->x+300, manager->objects[2]->y, 500);
+	manager->animation_id = Animate_MoveDrawObject(manager->objects[2], manager->objects[2]->x+1000, manager->objects[2]->y, 500);
 
 }
 
@@ -82,18 +83,18 @@ void NewsManager_PushDown(NewsManager *manager)
 	objects[1]->x = objects[0]->x;
 	objects[1]->y = objects[0]->y; 
 
-	objects[0]->x = manager->x_i+400;
+	objects[0]->x = manager->x_i+1000;
 	objects[0]->y = manager->y_i;
 
-	//Animate_MoveDrawObject(manager->objects[1], manager->objects[1]->x, manager->objects[1]->y+100, 500);
-	manager->animation_id = Animate_MoveDrawObject(manager->objects[2], manager->objects[2]->x, manager->objects[2]->y+100, 500);
+	manager->animation_id = Animate_MoveDrawObject(manager->objects[1], manager->objects[1]->x, manager->objects[1]->y+100, 300);
+	Animate_MoveDrawObject(manager->objects[2], manager->objects[2]->x, manager->objects[2]->y+100, 300);
 
 }
 
 void NewsManager_PushLeft(NewsManager *manager)
 {
 
-	manager->animation_id = Animate_MoveDrawObject(manager->objects[0], manager->objects[0]->x-400, manager->objects[0]->y, 250);
+	manager->animation_id = Animate_MoveDrawObject(manager->objects[0], manager->objects[0]->x-1000, manager->objects[0]->y, 250);
 
 }
 

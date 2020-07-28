@@ -64,7 +64,7 @@ static Manager *news_manager = NULL;
 void StartNewsManager()
 {
 
-    news_manager = NewsManager_Create(1600, 440);
+    news_manager = NewsManager_Create(1400, 300);
     news_manager->Add(news_manager->state);
 
 }
@@ -100,8 +100,6 @@ void StocksMenusRenderLogic()
 
     if(stocks_menu)
     {
-
-        //SetTextContent(stock_change_textobject,  "%s", "");
 
         SetTextContent(stock_change_textobject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
         SetTextContent(player_money_textobject, "%.2f", GetAccountMoney());
