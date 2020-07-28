@@ -44,7 +44,7 @@ void Window_Resize(int width, int height)
 
     window_settings = GetWindowSettingsFromDB();
 
-    if(window_settings.fullscreen == 1)
+    if(window_settings.fullscreen)
     {
         al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, false);
         SetFullScreenSettings(0);
@@ -196,7 +196,7 @@ float Window_FPS()
 
 void Window_FullScreen()
 {
-    LogF("%d", window_settings.width);
+
     window_settings = GetWindowSettingsFromDB();
 
     if (!window_settings.fullscreen) {
