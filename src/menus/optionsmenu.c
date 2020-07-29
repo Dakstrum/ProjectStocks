@@ -18,12 +18,17 @@
 #include "rendering.h"
 #include "window.h"
 #include "drawlayerutils.h"
+#include "dbsettings.h"
+#include "button.h"
 
 static MenuWithChilds *options_menu = NULL;
 static MenuWithChilds *display_menu = NULL;
 
+static DrawObject *fullscreen_button = NULL;
+
 void ChangeResolutionClick(char *scroll_box_content, unsigned short int index);
 void InitalizeResolutionScrollbox();
+void UpdateFullScreenButton();
 
 void InitializeOptionsMenu() 
 {
@@ -89,12 +94,16 @@ void ToggleDisplayMenu()
         display_menu = NULL;
     }
 
+    fullscreen_button = GetDrawObjectByName("DisplayMenuFullScreenButtonObject");
+
+    UpdateFullScreenButton();
+
 }
-
-
 
 void ChangeResolutionClick(char *scroll_box_content, unsigned short int index)
 {
+
+
 
     if(strcmp(scroll_box_content, "1920x1080") == 0) Window_Resize(1920, 1080);
     if(strcmp(scroll_box_content, "1366x768")  == 0) Window_Resize(1366, 768);
@@ -102,6 +111,8 @@ void ChangeResolutionClick(char *scroll_box_content, unsigned short int index)
     if(strcmp(scroll_box_content, "1536x864")  == 0) Window_Resize(1536, 864);
     if(strcmp(scroll_box_content, "1024x768")  == 0) Window_Resize(1024, 768);
     if(strcmp(scroll_box_content, "1280x720")  == 0) Window_Resize(1280, 720);
+
+    UpdateFullScreenButton();
 
 }
 
@@ -131,6 +142,21 @@ void InitalizeResolutionScrollbox()
 
 }
 
+void UpdateFullScreenButton()
+{
+
+    static WindowSettings window_settings;
+
+    window_settings = GetWindowSettingsFromDB();
+
+    if(window_settings.fullscreen)
+        SetButtonTint(fullscreen_button, GetRGBA(0, 255, 0, 255));
+        
+    else
+        SetButtonTint(fullscreen_button, GetRGBA(255, 0, 0, 255));
+
+}
+
 void OptionsMenuExit_BCB()
 {
 
@@ -149,6 +175,8 @@ void DisplayMenuFullScreen_BCB()
 {
 
     Window_FullScreen();
+
+    UpdateFullScreenButton();
 
 }
 
