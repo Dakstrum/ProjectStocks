@@ -48,6 +48,7 @@ void Window_Resize(int width, int height)
     {
         al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, false);
         SetFullScreenSettings(0);
+        window_settings.fullscreen = 0;
     }
 
 
@@ -204,12 +205,14 @@ void Window_FullScreen()
         al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, true);
         Window_SaveResize(monitor_width, monitor_height);
         SetFullScreenSettings(1);
+        window_settings.fullscreen = 1;
 
     } else {
 
         al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, false);
         Window_Resize(monitor_width, monitor_height);
         SetFullScreenSettings(0);
+        window_settings.fullscreen = 0;
 
     }
 
