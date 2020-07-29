@@ -143,10 +143,8 @@ void InitalizeResolutionScrollbox()
 void UpdateFullScreenButton()
 {
 
-    WindowSettings window_settings;
-
-    window_settings = GetWindowSettings();
-
+    WindowSettings window_settings = GetWindowSettings();
+    
     if(window_settings.fullscreen)
         SetButtonTint(fullscreen_button, GetRGBA(0, 255, 0, 255));
         
