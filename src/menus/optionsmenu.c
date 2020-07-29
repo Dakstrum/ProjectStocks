@@ -103,8 +103,6 @@ void ToggleDisplayMenu()
 void ChangeResolutionClick(char *scroll_box_content, unsigned short int index)
 {
 
-
-
     if(strcmp(scroll_box_content, "1920x1080") == 0) Window_Resize(1920, 1080);
     if(strcmp(scroll_box_content, "1366x768")  == 0) Window_Resize(1366, 768);
     if(strcmp(scroll_box_content, "1440x900")  == 0) Window_Resize(1440, 900);
@@ -175,7 +173,6 @@ void DisplayMenuFullScreen_BCB()
 {
 
     Window_FullScreen();
-
     UpdateFullScreenButton();
 
 }
@@ -192,5 +189,6 @@ void CleanOptionsMenu()
 
     options_menu = NULL;
     display_menu = NULL;
+    fullscreen_button = NULL;
 
 }
