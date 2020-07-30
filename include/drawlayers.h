@@ -1,6 +1,7 @@
 #ifndef DRAWLAYERS_H
 #define DRAWLAYERS_H
 
+#include "manager.h"
 #include "drawobject.h"
 #include "shared.h"
 
@@ -19,6 +20,8 @@ int AddMenuToDrawLayer(DrawObject *object);
 int AddMenuWithChildsToDrawLayer(MenuWithChilds *menu_with_childs);
 int AddVideoToDrawLayer(DrawObject *object);
 int AddTextToDrawLayer(DrawObject *object);
+
+int DrawLayer_AddManager(Manager *manager);
 
 void DrawLayers();
 

@@ -27,6 +27,7 @@
 #include "textbox.h"
 #include "scrollbox.h"
 #include "jsonlayer.h"
+#include "vector.h"
 
 #include "window.h"
 
@@ -39,6 +40,7 @@ typedef struct DrawLayer
 
     unsigned char num_objects;
     DrawObject *objects[MAX_OBJECTS_PER_LAYER];
+    Vector *managers;
     MenuWithChilds *menu_with_childs[MAX_MENU_WITH_CHILDS_PER_LAYER];
 
 } DrawLayer;
@@ -92,6 +94,8 @@ void ResetDrawLayers()
 
         for (int j = 0;j < MAX_MENU_WITH_CHILDS_PER_LAYER; j++)
             draw_layers[i].menu_with_childs[j] = NULL;
+
+        draw_layers[i].managers = NULL;
 
     }
 
@@ -161,10 +165,26 @@ int CreateNewDrawLayer()
 
 }
 
+void ClearManagers(int layer)
+{
+
+    if (draw_layers[layer].managers == NULL)
+        return;
+
+    Manager **managers = draw_layers[layer].managers->elements;
+    for (size_t i = 0; i < draw_layers[layer].managers->num_elements;i++)
+        managers[i]->Delete(managers[i]->state);
+
+    Vector_DeletePtrs(draw_layers[layer].managers);
+    draw_layers[layer].managers = NULL;
+
+}
+
 void ClearCurrentDrawLayer() 
 {
 
     Animate_DisableByLayer(current_draw_layer);
+    ClearManagers(current_draw_layer);
     ClearUpDrawLayer(current_draw_layer);
     current_draw_layer--;
 
@@ -176,7 +196,8 @@ void ClearDrawLayers()
 
     for (int i = 0; i < current_draw_layer; i++) {
 
-        Animate_DisableByLayer(current_draw_layer);
+        Animate_DisableByLayer(i);
+        ClearManagers(i);
         ClearUpDrawLayer(i);
 
     }
@@ -423,6 +444,31 @@ int AddTextToDrawLayer(DrawObject *object)
 }
 
 
+int DrawLayer_AddManager(Manager *manager)
+{
+
+    if (draw_layers[current_draw_layer].managers == NULL)
+        draw_layers[current_draw_layer].managers = Vector_Create(sizeof(Manager *), 1);
+
+    manager->Add(manager->state);
+    Vector_PushBackPtr(draw_layers[current_draw_layer].managers, manager);
+
+    return 1;
+
+}
+
+void HandleManagers(int layer)
+{
+
+    if (draw_layers[layer].managers == NULL)
+        return;
+
+    Manager **managers = draw_layers[layer].managers->elements;
+    for (size_t i = 0; i < draw_layers[layer].managers->num_elements;i++)
+        managers[i]->Update(managers[i]->state);
+
+}
+
 /* SECTION: Drawing functions */
 void DrawLayers() 
 {
@@ -435,6 +481,9 @@ void DrawLayers()
 
     Window_SetVideoBackBuffer();
     Window_DrawBackBuffer();
+
+    for (int i = 0; i < current_draw_layer+1; i++)
+        HandleManagers(i);
 
 }
 

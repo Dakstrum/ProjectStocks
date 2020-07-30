@@ -58,17 +58,6 @@ void InitializeTransactionMenuTextBoxes();
 void InitializeBuyMenuText();
 void InitializeSellMenuText();
 
-
-static Manager *news_manager = NULL;
-
-void StartNewsManager()
-{
-
-    news_manager = NewsManager_Create(1400, 300);
-    news_manager->Add(news_manager->state);
-
-}
-
 void InitializeStocksMenu() 
 { 
 
@@ -87,7 +76,7 @@ void InitializeStocksMenu()
     PopulateStockStatsText(GetCompanyNameViewing());
 
     InitializeSpeedSelectObject("StocksMenu");
-    //StartNewsManager();
+    DrawLayer_AddManager(NewsManager_Create(1400, 300));
 
 }
 
@@ -95,8 +84,6 @@ void StocksMenusRenderLogic()
 {
     if (player_money_textobject == NULL)
         return;
-
-    //news_manager->Update(news_manager->state);
 
     if(stocks_menu)
     {
