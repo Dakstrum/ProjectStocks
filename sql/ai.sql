@@ -6,7 +6,8 @@ VALUES
     ('Kyle'),
     ('Lea'),
     ('John'),
-    ('Charlie');
+    ('Charlie'),
+    ('Amelia');
 
 INSERT INTO 
     AILastNames (LastName)
@@ -14,4 +15,5 @@ VALUES
     ('Muffin'),
     ('Kip'),
     ('Smith'),
-    ('John');
+    ('John'),
+    ('Knightly');

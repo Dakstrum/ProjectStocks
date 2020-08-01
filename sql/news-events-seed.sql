@@ -12,7 +12,8 @@ VALUES
 	(1, 'Due to the recent pandemic, video game sales have surged!', .15, 10),
 	(2, 'Rocket fuel has skyrocketed in prices, literally!', -.15, 10),
 	(3, 'Broken software sales have spiked! Buy your buggy computer crap today!', .05, 5),
-	(4, 'Who can afford insurance anymore?', 0.10, 5);
+	(4, 'Who can afford insurance anymore?', 0.10, 5),
+	(5, 'News companys at war? All news companys are hard at work reporting on each other!', 0.10, 5);
 
 INSERT INTO
 	CompanyEvents (CompanyId, Event, PriceModifier, ModifierLength)
@@ -22,4 +23,5 @@ VALUES
 	(3, 'WhySpace: Has affirmed that we need not good to space and that Earth has all the pollution we need!', .05, 5),
 	(4, 'Interstellar Business Robots: Wait, we still exist?', -.10, 5),
 	(5, 'A recent study finds back right tires often hit nails', -.20, 5),
-	(6, 'There has been a recent surge in sword related violence', .15, 15);
+	(6, 'There has been a recent surge in sword related violence', .15, 15),
+	(7, 'K3 News Event', .15, 15);
