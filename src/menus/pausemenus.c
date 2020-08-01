@@ -14,7 +14,6 @@ static MenuWithChilds *in_game_pause_menu = NULL;
 void ToggleInGamePauseMenu()
 {
 
-    Log("asdasdasdasdasdasdasdasdasd");
     if (in_game_pause_menu == NULL) {
 
         CreateNewDrawLayer();
