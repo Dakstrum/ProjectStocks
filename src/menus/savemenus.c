@@ -25,6 +25,7 @@
 #include "dbsave.h"
 #include "vector.h"
 #include "drawlayerutils.h"
+#include "popup.h"
 
 static MenuWithChilds *load_save_menu = NULL;
 static MenuWithChilds *new_save_menu  = NULL;
@@ -39,6 +40,7 @@ static int current_button_idx = -1;
 void InitalizeSaveScrollBox();
 void InitializeLoadSaveMenuText();
 void InitializeNewSaveTextBoxes();
+void DisplaySavePopup(char str[50], char *path);
 
 void InitializeLoadSaveMenu() 
 {
@@ -63,23 +65,6 @@ void InitializeLoadSaveMenuText()
     save_name_textobject   = GetJSONObjectAndAddToDrawLayer("LoadSaveMenuSaveNameTextObject");
     player_name_textobject = GetJSONObjectAndAddToDrawLayer("LoadSaveMenuPlayerNameTextObject");
 
-}
-
-void InitializeNewSaveMenu() 
-{
-
-    
-    if (CreateNewDrawLayer() == -1) {
-
-        Log("ERROR: NewMenu could not create new draw layer");
-        return;
-
-    }
-
-    new_save_menu = GetJSONMenuAndAddToDrawLayer("NewSaveMenu");
-
-    
-    
 }
 
 void SetSaveInfoText(char *save_name, char *player_name) 
@@ -121,6 +106,7 @@ void NewSaveMenu_BCB()
     }
     AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("NewSaveMenu"));
     InitializeNewSaveTextBoxes();
+    DisplaySavePopup("Test", "assets/images/generalpurposemenus/popups/redpopup.png");
 
 }
 
@@ -249,6 +235,15 @@ void InitializeNewSaveTextBoxes()
 
 }
 
+
+void DisplaySavePopup(char str[50], char *path) 
+{
+    DrawObject *object = CreateNewPopup();
+    object->asset_path = path;
+    SetPopupText(object, str);
+    AddObjectToDrawLayer(object);
+
+}
 
 void CleanSaveMenu()
 {

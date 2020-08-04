@@ -158,7 +158,7 @@ void InitializeSellMenuText()
 
 
 
-void DisplayPopup(char str[50]) 
+void DisplayStockPopup(char str[50]) 
 {
     DrawObject *object = CreateNewPopup();
     SetPopupText(object, str);
@@ -334,13 +334,13 @@ void Sell_BCB()
 
         SellMenu_BCB();
         sprintf(str, "Sold %d of %s", amount_in_text_box, GetCompanyNameViewing());
-        DisplayPopup(str);
+        DisplayStockPopup(str);
         AddMoney(amount_in_text_box * current_stock_price);
 
     } else {
 
         sprintf(str, "Unable to sell stocks");
-        DisplayPopup(str);
+        DisplayStockPopup(str);
 
     }
 
@@ -360,14 +360,14 @@ void Buy_BCB()
         BuyMenu_BCB();
 
         sprintf(str, "Bought %d of %s", amount_in_text_box, GetCompanyNameViewing());
-        DisplayPopup(str);
+        DisplayStockPopup(str);
 
         SubtractMoney(amount_in_text_box * current_stock_price);
 
     } else {
 
         sprintf(str, "Unable to purchase stock");
-        DisplayPopup(str);
+        DisplayStockPopup(str);
 
     }
 
