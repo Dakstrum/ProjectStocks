@@ -240,7 +240,7 @@ void InitializeTransactionMenuTextBoxes()
     if(buy_menu)
     {
 
-        DrawObject *buy_tb = CreateTextBoxObject("BuyTextBox", "", 10, TEXTBOX_ACCEPT_ALPHABET_CHARACTERS | TEXTBOX_ACCEPT_NUMBER_CHARACTERS);
+        DrawObject *buy_tb = CreateTextBoxObject("BuyTextBox", "", 10, TEXTBOX_ACCEPT_NUMBER_CHARACTERS);
         buy_tb->x          = 955;
         buy_tb->y          = 395;
         buy_tb->width      = 145;
@@ -253,7 +253,7 @@ void InitializeTransactionMenuTextBoxes()
     if(sell_menu)
     {
 
-        DrawObject *sell_tb = CreateTextBoxObject("SellTextBox", "", 10, TEXTBOX_ACCEPT_ALPHABET_CHARACTERS | TEXTBOX_ACCEPT_NUMBER_CHARACTERS);
+        DrawObject *sell_tb = CreateTextBoxObject("SellTextBox", "", 10, TEXTBOX_ACCEPT_NUMBER_CHARACTERS);
         sell_tb->x          = 955;
         sell_tb->y          = 395;
         sell_tb->width      = 145;
@@ -313,7 +313,7 @@ void Sell_BCB()
 {
 
     int amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));
-    if (amount_in_text_box < 0)
+    if (amount_in_text_box <= 0)
         return;
 
     char str[50];
@@ -341,6 +341,9 @@ void Buy_BCB()
 {
     
     int amount_in_text_box    = atoi(GetTextFromTextBox("BuyTextBox"));
+    if (amount_in_text_box <= 0)
+        return;
+
     float current_stock_price = CurrentStockPrice(selected_company_name);
 
     char str[50];
