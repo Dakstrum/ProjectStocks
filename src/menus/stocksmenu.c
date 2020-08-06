@@ -327,13 +327,9 @@ void Sell_BCB()
         DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
         AddMoney(amount_in_text_box * current_stock_price);
 
-    } else {
-
-        sprintf(str, "Unable to sell stocks");
+    } 
+    else 
         DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/redpopup.png");
-
-    }
-
 
 }
 
@@ -357,12 +353,9 @@ void Buy_BCB()
 
         SubtractMoney(amount_in_text_box * current_stock_price);
 
-    } else {
-
-        sprintf(str, "Unable to purchase stock");
-        DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/redpopup.png");
-
-    }
+    } 
+    else
+        DisplayPopupOnDrawLayer("Unable to purchase stock", "assets/images/generalpurposemenus/popups/redpopup.png");
 
 }
 
