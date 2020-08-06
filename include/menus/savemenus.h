@@ -2,7 +2,6 @@
 #define SAVEMENUS_H
 
 void InitializeLoadSaveMenu();
-void InitializeNewSaveMenu();
 
 void NewSaveMenu_BCB();
 

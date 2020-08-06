@@ -25,6 +25,7 @@
 #include "dbsave.h"
 #include "vector.h"
 #include "drawlayerutils.h"
+#include "popup.h"
 
 static MenuWithChilds *load_save_menu = NULL;
 static MenuWithChilds *new_save_menu  = NULL;
@@ -39,6 +40,7 @@ static int current_button_idx = -1;
 void InitalizeSaveScrollBox();
 void InitializeLoadSaveMenuText();
 void InitializeNewSaveTextBoxes();
+void DisplaySavePopup(char str[50], char *path);
 
 void InitializeLoadSaveMenu() 
 {
@@ -63,23 +65,6 @@ void InitializeLoadSaveMenuText()
     save_name_textobject   = GetJSONObjectAndAddToDrawLayer("LoadSaveMenuSaveNameTextObject");
     player_name_textobject = GetJSONObjectAndAddToDrawLayer("LoadSaveMenuPlayerNameTextObject");
 
-}
-
-void InitializeNewSaveMenu() 
-{
-
-    
-    if (CreateNewDrawLayer() == -1) {
-
-        Log("ERROR: NewMenu could not create new draw layer");
-        return;
-
-    }
-
-    new_save_menu = GetJSONMenuAndAddToDrawLayer("NewSaveMenu");
-
-    
-    
 }
 
 void SetSaveInfoText(char *save_name, char *player_name) 
@@ -173,15 +158,14 @@ void CreateSave_BCB()
     
     if (strlen(save_name_in_text_box) == 0) {
 
-        Log("save_name_in_text_box has length of 0");
+        DisplayPopupOnDrawLayer("Save Name is Necessary", "assets/images/generalpurposemenus/popups/yellowpopup.png");
         return;
     }
 
     char *player_name_in_text_box = GetTextFromTextBox("PlayerNameTextBox");
     if (strlen(player_name_in_text_box) == 0) {
 
-        Log("player_name_in_text_box has length of 0");
-        // TODO setup popups when textboxes have no value.
+        DisplayPopupOnDrawLayer("Plyaer Name is Necessary", "assets/images/generalpurposemenus/popups/yellowpopup.png");
         return;
     }
     CreateNewSave(save_name_in_text_box, player_name_in_text_box);
@@ -248,7 +232,6 @@ void InitializeNewSaveTextBoxes()
     AddObjectToDrawLayer(playername_tb);
 
 }
-
 
 void CleanSaveMenu()
 {
