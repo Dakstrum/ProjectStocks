@@ -156,16 +156,6 @@ void InitializeSellMenuText()
 
 }
 
-
-
-void DisplayStockPopup(char str[50]) 
-{
-    DrawObject *object = CreateNewPopup();
-    SetPopupText(object, str);
-    AddObjectToDrawLayer(object);
-
-}
-
 void PopulateStockStatsText(char *company_name)
 {
 
@@ -334,13 +324,13 @@ void Sell_BCB()
 
         SellMenu_BCB();
         sprintf(str, "Sold %d of %s", amount_in_text_box, GetCompanyNameViewing());
-        DisplayStockPopup(str);
+        DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
         AddMoney(amount_in_text_box * current_stock_price);
 
     } else {
 
         sprintf(str, "Unable to sell stocks");
-        DisplayStockPopup(str);
+        DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/redpopup.png");
 
     }
 
@@ -360,14 +350,14 @@ void Buy_BCB()
         BuyMenu_BCB();
 
         sprintf(str, "Bought %d of %s", amount_in_text_box, GetCompanyNameViewing());
-        DisplayStockPopup(str);
+        DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
 
         SubtractMoney(amount_in_text_box * current_stock_price);
 
     } else {
 
         sprintf(str, "Unable to purchase stock");
-        DisplayStockPopup(str);
+        DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/redpopup.png");
 
     }
 

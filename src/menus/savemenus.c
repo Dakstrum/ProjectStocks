@@ -106,7 +106,6 @@ void NewSaveMenu_BCB()
     }
     AddMenuWithChildsToDrawLayer(GetMenuWithChildsFromJsonLayer("NewSaveMenu"));
     InitializeNewSaveTextBoxes();
-    DisplaySavePopup("Test", "assets/images/generalpurposemenus/popups/redpopup.png");
 
 }
 
@@ -159,15 +158,14 @@ void CreateSave_BCB()
     
     if (strlen(save_name_in_text_box) == 0) {
 
-        Log("save_name_in_text_box has length of 0");
+        DisplayPopupOnDrawLayer("Save Name is Necessary", "assets/images/generalpurposemenus/popups/yellowpopup.png");
         return;
     }
 
     char *player_name_in_text_box = GetTextFromTextBox("PlayerNameTextBox");
     if (strlen(player_name_in_text_box) == 0) {
 
-        Log("player_name_in_text_box has length of 0");
-        // TODO setup popups when textboxes have no value.
+        DisplayPopupOnDrawLayer("Plyaer Name is Necessary", "assets/images/generalpurposemenus/popups/yellowpopup.png");
         return;
     }
     CreateNewSave(save_name_in_text_box, player_name_in_text_box);
@@ -232,16 +230,6 @@ void InitializeNewSaveTextBoxes()
 
     AddObjectToDrawLayer(savename_tb);
     AddObjectToDrawLayer(playername_tb);
-
-}
-
-
-void DisplaySavePopup(char str[50], char *path) 
-{
-    DrawObject *object = CreateNewPopup();
-    object->asset_path = path;
-    SetPopupText(object, str);
-    AddObjectToDrawLayer(object);
 
 }
 

@@ -9,5 +9,6 @@ void InitPopup(DrawObject *object, const int display_width, const int display_he
 void DrawPopUp(DrawObject *object);
 void CleanUpPopUp(DrawObject *object);
 void SetPopupText(DrawObject *object, const char *text);
+void DisplayPopupOnDrawLayer(char str[50], char *path);
 
 #endif
