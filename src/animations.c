@@ -58,14 +58,14 @@ unsigned int Animate_MoveDrawObject(DrawObject *object, float n_x, float n_y, lo
     anim.layer_index = object->layer_index;
     anim.x           = &object->x;
     anim.y           = &object->y;
-    anim.id          = id_counter;
+    anim.id          = GetId();
     anim.n_x         = n_x;
     anim.n_y         = n_y;
     anim.animation_length = (float)animation_length;
 
     Vector_PushBack(move_objects, &anim);
 
-    return GetId();
+    return anim.id;
 
 }
 
@@ -73,7 +73,7 @@ unsigned int Animate_MoveDrawObject(DrawObject *object, float n_x, float n_y, lo
 void Animate_MoveDrawObjects(double milli_diff)
 {
 
-    double dt;
+    double dt = 0;
     MoveAnimation *anims = move_objects->elements;
     for (size_t i = 0; i < move_objects->num_elements; i++) {
 
@@ -110,9 +110,9 @@ void Animate_DisableMoveDrawObjects()
 void Animate_Update(double dt)
 {
 
-    Animate_MoveDrawObjects(dt);
     Animate_DisableMoveDrawObjects();
-
+    Animate_MoveDrawObjects(dt);
+    
 }
 
 void Animate_DisableGenByLayer(unsigned char layer_index, Vector *vec)

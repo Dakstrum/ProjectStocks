@@ -23,14 +23,25 @@ typedef struct NewsManager {
 	unsigned int animation_id;
 	float x_i;
 	float y_i;
+	unsigned char active_boxes;
+	unsigned char num_boxes;
 
 } NewsManager;
 
-
-void NewsManager_CheckForNews()
+void NewsManager_PushNews(NewsManager *manager, char *content)
 {
 
+}
 
+void NewsManager_CheckForNews(NewsManager *manager)
+{
+
+	static bool pushed_news = false;
+	if (pushed_news)
+		return;
+
+	pushed_news = true;
+	NewsManager_PushNews(manager, "Some news article");
 
 }
 
@@ -40,8 +51,6 @@ void NewsManager_Insert()
 
 
 }
-
-//unsigned int Animate_MoveDrawObject(DrawObject *object, float n_x, float n_y, long animation_length);
 
 void NewsManager_Transition(NewsManager *manager)
 {
@@ -68,7 +77,8 @@ void NewsManager_Transition(NewsManager *manager)
 void NewsManager_PullRight(NewsManager *manager)
 {
 
-	manager->animation_id = Animate_MoveDrawObject(manager->objects[2], manager->objects[2]->x+1000, manager->objects[2]->y, 500);
+	unsigned char last_box = manager->num_boxes - 1;
+	manager->animation_id = Animate_MoveDrawObject(manager->objects[last_box], manager->objects[last_box]->x+1000, manager->objects[last_box]->y, 500);
 
 }
 
@@ -77,17 +87,22 @@ void NewsManager_PushDown(NewsManager *manager)
 
 	DrawObject **objects = manager->objects;
 
-	objects[2]->x = objects[1]->x;
-	objects[2]->y = objects[1]->y; 
+	for (size_t i = manager->num_boxes-1; i > 0;i--) {
 
-	objects[1]->x = objects[0]->x;
-	objects[1]->y = objects[0]->y; 
+		objects[i]->x = objects[i-1]->x;
+		objects[i]->y = objects[i-1]->y; 
+
+	}
 
 	objects[0]->x = manager->x_i+1000;
 	objects[0]->y = manager->y_i;
 
-	manager->animation_id = Animate_MoveDrawObject(manager->objects[1], manager->objects[1]->x, manager->objects[1]->y+100, 300);
-	Animate_MoveDrawObject(manager->objects[2], manager->objects[2]->x, manager->objects[2]->y+100, 300);
+	//manager->animation_id = Animate_MoveDrawObject(manager->objects[1], manager->objects[1]->x, manager->objects[1]->y+100, 300);
+	for (size_t i = 1; i < manager->num_boxes;i++) {
+
+		manager->animation_id = Animate_MoveDrawObject(manager->objects[i], manager->objects[i]->x, manager->objects[i]->y+100, 300);
+
+	}
 
 }
 
@@ -120,7 +135,7 @@ void NewsManager_Update(void *state)
 {
 
 	NewsManager *manager = state;
-	NewsManager_CheckForNews();
+	//NewsManager_CheckForNews(manager);
 
 	//if (manager->news_state == NOT_ANIMATING)
 	//	return;
@@ -137,7 +152,7 @@ void NewsManager_Add(void *state)
 {
 
 	NewsManager *manager = state;
-	for (size_t i = 0; i < 3;i++)
+	for (size_t i = 0; i < manager->num_boxes;i++)
 		AddObjectToDrawLayer(manager->objects[i]);
 
 }
@@ -145,7 +160,9 @@ void NewsManager_Add(void *state)
 void NewsManager_Delete(void *state)
 {
 
-
+	NewsManager *manager = state;
+	free(manager->objects);
+	free(state);
 
 }
 
@@ -160,28 +177,23 @@ Manager *NewsManager_Create(float x, float y)
 	NewsManager *state  = malloc(sizeof(NewsManager));
 	state->news_state   = NOT_ANIMATING;
 	state->animation_id = 0;
-	state->objects      = malloc(sizeof(DrawObject *) * 3);
+	state->num_boxes    = 3;
+	state->objects      = malloc(sizeof(DrawObject *) * state->num_boxes);
 	state->x_i          = x;
 	state->y_i          = y;
+	state->active_boxes = 0;
 
-	for (size_t i = 0; i < 3; i++) {
+	for (size_t i = 0; i < state->num_boxes; i++) {
 
 		state->objects[i]                   = Text_Create();
 		state->objects[i]->x                = x;
-		state->objects[i]->y                = y + 100*i;
+		state->objects[i]->y                = y + 100 * i;
 		state->objects[i]->text.bitmap_path = "assets/images/all_buttons/button1.png";
+		//state->objects[i]->bit_flags       ^= SHOULD_BE_DRAWN;
 
 	}
 
 	manager->state = state;
-	return manager;
-
-}
-
-Manager *NewsManager_Test() 
-{
-
-	Manager *manager = NewsManager_Create(900, 540);
 	return manager;
 
 }

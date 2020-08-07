@@ -4,6 +4,5 @@
 #include "manager.h"
 
 Manager *NewsManager_Create(float x, float y);
-Manager *NewsManager_Test();
 
 #endif
