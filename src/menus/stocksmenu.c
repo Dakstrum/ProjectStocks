@@ -348,7 +348,7 @@ void Buy_BCB()
         AttemptToAddFromCurrentStock(GetCompanyNameViewing(), amount_in_text_box, current_stock_price);
         BuyMenu_BCB();
 
-        sprintf(str, "Bought %d of %s", amount_in_text_box, GetCompanyNameViewing());
+        sprintf(str, "Bought %d shares of %s", amount_in_text_box, GetCompanyNameViewing());
         DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
 
         SubtractMoney(amount_in_text_box * current_stock_price);
