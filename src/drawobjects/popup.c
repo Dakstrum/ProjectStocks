@@ -7,6 +7,7 @@
 #include "cache.h"
 #include "shared.h"
 #include "drawobject.h"
+#include "drawlayers.h"
 
 void PopupSetUpDy(void *gen_object, int x, int y)
 {

@@ -329,7 +329,7 @@ void Sell_BCB()
 
     } 
     else 
-        DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/redpopup.png");
+        DisplayPopupOnDrawLayer("Unable to sell stock", "assets/images/generalpurposemenus/popups/redpopup.png");
 
 }
 
