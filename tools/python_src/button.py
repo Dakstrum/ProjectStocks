@@ -66,6 +66,12 @@ def DetermineButtonPNG(dimensions, matrix_str, name):
 	if((int(float(dimensions[15]))) == 12 and (int(float(dimensions[16]))) == 12): #Arrow
 		DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/gamespeed/arrow.png")
 
+	if((int(float(dimensions[15]))) == 23 and (int(float(dimensions[16]))) == 23): #Exit
+		DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/exit.png")
+
+	if((int(float(dimensions[15]))) == 18 and (int(float(dimensions[16]))) == 20): #Checkbox
+		DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/checkbox.png")
+
 	AddButtonObjectToJSON(DefaultObject_1)
 
 def AddButtonObjectToJSON(ButtonObject):
