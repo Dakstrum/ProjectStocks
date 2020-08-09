@@ -1,3 +1,6 @@
+
+#include <assert.h>
+
 #include "newsmanager.h"
 #include "animations.h"
 #include "text.h"
@@ -20,7 +23,7 @@ typedef struct NewsManager {
 
 	DrawObject **objects;
 	unsigned char news_state;
-	unsigned int animation_id;
+	unsigned int group_id;
 	float x_i;
 	float y_i;
 	unsigned char active_boxes;
@@ -77,9 +80,12 @@ void NewsManager_Transition(NewsManager *manager)
 void NewsManager_PullRight(NewsManager *manager)
 {
 
-	unsigned char last_box = manager->num_boxes - 1;
-	manager->animation_id = Animate_MoveDrawObject(manager->objects[last_box], manager->objects[last_box]->x+1000, manager->objects[last_box]->y, 500);
+	manager->group_id = Animation_StartGroup();
 
+	unsigned char last_box = manager->num_boxes - 1;
+	Animate_MoveDrawObject(manager->objects[last_box], manager->objects[last_box]->x+1000, manager->objects[last_box]->y, 500);
+
+	Animation_EndGroup();
 }
 
 void NewsManager_PushDown(NewsManager *manager)
@@ -97,19 +103,22 @@ void NewsManager_PushDown(NewsManager *manager)
 	objects[0]->x = manager->x_i+1000;
 	objects[0]->y = manager->y_i;
 
-	//manager->animation_id = Animate_MoveDrawObject(manager->objects[1], manager->objects[1]->x, manager->objects[1]->y+100, 300);
+	manager->group_id = Animation_StartGroup();
 	for (size_t i = 1; i < manager->num_boxes;i++) {
 
-		manager->animation_id = Animate_MoveDrawObject(manager->objects[i], manager->objects[i]->x, manager->objects[i]->y+100, 300);
+		Animate_MoveDrawObject(manager->objects[i], manager->objects[i]->x, manager->objects[i]->y+100, 300);
 
 	}
+	Animation_EndGroup();
 
 }
 
 void NewsManager_PushLeft(NewsManager *manager)
 {
 
-	manager->animation_id = Animate_MoveDrawObject(manager->objects[0], manager->objects[0]->x-1000, manager->objects[0]->y, 250);
+	manager->group_id = Animation_StartGroup();
+	Animate_MoveDrawObject(manager->objects[0], manager->objects[0]->x-1000, manager->objects[0]->y, 250);
+	Animation_EndGroup();
 
 }
 
@@ -140,7 +149,7 @@ void NewsManager_Update(void *state)
 	//if (manager->news_state == NOT_ANIMATING)
 	//	return;
 
-	if (!Animate_FinishedMoveAnimation(manager->animation_id))
+	if (!Animate_FinishedMoveGroupAnimation(manager->group_id))
 		return;
 
 	NewsManager_Transition(manager);
@@ -176,8 +185,8 @@ Manager *NewsManager_Create(float x, float y)
 
 	NewsManager *state  = malloc(sizeof(NewsManager));
 	state->news_state   = NOT_ANIMATING;
-	state->animation_id = 0;
-	state->num_boxes    = 3;
+	state->group_id     = 0;
+	state->num_boxes    = 4;
 	state->objects      = malloc(sizeof(DrawObject *) * state->num_boxes);
 	state->x_i          = x;
 	state->y_i          = y;

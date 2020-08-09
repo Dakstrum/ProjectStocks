@@ -1,5 +1,6 @@
 
 #include <time.h>
+#include <assert.h>
 
 #include <allegro5/allegro.h>
 
@@ -13,6 +14,7 @@ typedef struct Animation {
 
     unsigned char layer_index;
     unsigned int id;
+    unsigned int group_id;
 
 } Animation;
 
@@ -21,6 +23,7 @@ typedef struct MoveAnimation
 
     unsigned char layer_index;
     unsigned int id;
+    unsigned int group_id;
     float animation_length;
 
     float *x;
@@ -31,8 +34,10 @@ typedef struct MoveAnimation
 
 } MoveAnimation;
 
-Vector *move_objects = NULL;
-static unsigned int id_counter = 0;
+Vector *move_objects                 = NULL;
+static unsigned int id_counter       = 1;
+static unsigned int group_id_counter = 1;
+static bool group_id_active          = false;
 
 void Animate_Initialize()
 {
@@ -41,13 +46,40 @@ void Animate_Initialize()
 
 }
 
-unsigned int GetId() 
+unsigned int Animation_GetId() 
 {
 
     unsigned int temp = id_counter;
     id_counter++;
 
     return temp;
+
+}
+
+unsigned int Animation_GetGroupId()
+{
+
+    if (!group_id_active)
+        return 0;
+
+    return group_id_counter;
+
+
+}
+
+unsigned int Animation_StartGroup() 
+{
+
+    group_id_active = true;
+    return group_id_counter;
+
+}
+
+void Animation_EndGroup()
+{
+
+    group_id_counter++;
+    group_id_active = false;
 
 }
 
@@ -58,12 +90,14 @@ unsigned int Animate_MoveDrawObject(DrawObject *object, float n_x, float n_y, lo
     anim.layer_index = object->layer_index;
     anim.x           = &object->x;
     anim.y           = &object->y;
-    anim.id          = GetId();
+    anim.id          = Animation_GetId();
+    anim.group_id    = Animation_GetGroupId();
     anim.n_x         = n_x;
     anim.n_y         = n_y;
     anim.animation_length = (float)animation_length;
 
     Vector_PushBack(move_objects, &anim);
+    //assert(move_objects->num_elements < 4);
 
     return anim.id;
 
@@ -133,6 +167,21 @@ void Animate_DisableGenByLayer(unsigned char layer_index, Vector *vec)
 
 }
 
+bool Animate_FinishedGenGroupAnimation(unsigned int group_id, Vector *vec)
+{
+
+    Animation *anims = vec->elements;
+    for (size_t i = 0; i < vec->num_elements;i++) {
+
+        if (anims[i].group_id == group_id)
+            return false;
+
+    }
+
+    return true;
+
+}
+
 bool Animate_FinishedGenAnimation(unsigned int id, Vector *vec)
 {
 
@@ -153,6 +202,12 @@ bool Animate_FinishedMoveAnimation(unsigned int id)
 
     return Animate_FinishedGenAnimation(id, move_objects);
 
+}
+
+bool Animate_FinishedMoveGroupAnimation(unsigned int group_id)
+{
+
+    return Animate_FinishedGenGroupAnimation(group_id, move_objects);
 }
 
 void Animate_DisableByLayer(unsigned char layer_index)

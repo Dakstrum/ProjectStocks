@@ -13,4 +13,9 @@ void Animate_Update(double dt);
 bool Animate_FinishedMoveAnimation(unsigned int id);
 void Animate_DisableByLayer(unsigned char layer_index);
 
+unsigned int Animation_StartGroup();
+void Animation_EndGroup();
+
+bool Animate_FinishedMoveGroupAnimation(unsigned int group_id);
+
 #endif
