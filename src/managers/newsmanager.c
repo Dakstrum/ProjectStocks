@@ -75,7 +75,7 @@ void NewsManager_PushDown(NewsManager *manager)
 	manager->group_id = Animation_StartGroup();
 	for (size_t i = 1; i < manager->active_boxes;i++) {
 
-		Animate_MoveDrawObject(manager->objects[i], manager->objects[i]->x, manager->objects[i]->y+100, 300);
+		Animate_MoveDrawObject(manager->objects[i], manager->objects[i]->x, manager->objects[i]->y+140, 300);
 
 	}
 	Animation_EndGroup();
@@ -235,8 +235,8 @@ Manager *NewsManager_Create(float x, float y)
 
 		state->objects[i]                   = Text_Create();
 		state->objects[i]->x                = x;
-		state->objects[i]->y                = y + 100 * i;
-		state->objects[i]->text.bitmap_path = "assets/images/all_buttons/button1.png";
+		state->objects[i]->y                = y + 140 * i;
+		state->objects[i]->text.bitmap_path = "assets/images/newsmenu/newsmenuassets/newsbox.png";
 		state->objects[i]->bit_flags       ^= SHOULD_BE_DRAWN;
 
 	}
