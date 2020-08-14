@@ -5,6 +5,8 @@
 #include "animations.h"
 #include "text.h"
 #include "log.h"
+#include "simulation.h"
+#include "account.h"
 
 #include "drawobject.h"
 #include "drawlayers.h"
@@ -127,14 +129,11 @@ void NewsManager_PushNews(NewsManager *manager, char *content)
 void NewsManager_CheckForNews(NewsManager *manager)
 {
 
-	NewsManager_PushNews(manager, "Some news article");
+	char *event = GetAnyEventAtTime(GetGameTime());
+	if (event == NULL)
+		return;
 
-}
-
-void NewsManager_Insert()
-{
-
-
+	NewsManager_PushNews(manager, event);
 
 }
 

@@ -151,7 +151,7 @@ void GenerateGameEvents(EventSim *events, Event *(*GetRandomEvent)())
     time_t current_time = 0;
     while (ShouldContinueSimulation(current_time)) {
 
-        int hours_passed = (HOURS_IN_HALF_YEAR + rand() % HOURS_IN_TWO_YEARS) * HOUR;
+        int hours_passed = (HOURS_IN_HALF_YEAR + rand() % HOURS_IN_YEAR) * HOUR;
         current_time    += hours_passed;
         Vector_PushBack(events->event_times, &current_time);
         Vector_PushBack(events->events, GetRandomEvent());
@@ -166,7 +166,7 @@ void GenerateGameEventsId(EventSim *events, int id, Event *(*GetRandomEvent)(int
     time_t current_time = 0;
     while (ShouldContinueSimulation(current_time)) {
 
-        int hours_passed = (HOURS_IN_HALF_YEAR + rand() % HOURS_IN_TWO_YEARS) * HOUR;
+        int hours_passed = (HOURS_IN_HALF_YEAR + rand() % HOURS_IN_YEAR) * HOUR;
         current_time    += hours_passed;
         Vector_PushBack(events->event_times, &current_time);
         Vector_PushBack(events->events, GetRandomEvent(id));

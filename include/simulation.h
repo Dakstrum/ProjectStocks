@@ -15,6 +15,8 @@ void ReduceStockPriceAmount(StockPrices *prices);
 float CurrentStockPrice(char *company_name);
 float GetCurrentStockChange(char *company_name);
 
+char *GetAnyEventAtTime(time_t event_time);
+
 void StartSimulation();
 void StopSimulation();
 #endif
