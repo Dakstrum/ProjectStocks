@@ -31,12 +31,16 @@ typedef struct NewsManager {
 
 } NewsManager;
 
+static char *news_to_push = NULL;
+
 void NewsManager_SetupPushLeft(NewsManager *manager)
 {
 
+	assert(news_to_push != NULL);
 	DrawObject **objects = manager->objects;
 	objects[0]->x = manager->x_i+1000;
 	objects[0]->y = manager->y_i;
+	SetTextContent(objects[0], news_to_push);
 
 }
 
@@ -59,7 +63,8 @@ void NewsManager_PushDown(NewsManager *manager)
 	for (size_t i = manager->active_boxes-1; i > 0;i--) {
 
 		objects[i]->x = objects[i-1]->x;
-		objects[i]->y = objects[i-1]->y; 
+		objects[i]->y = objects[i-1]->y;
+		SetTextContent(objects[i], objects[i-1]->text.content);
 
 	}
 
@@ -87,12 +92,15 @@ void NewsManager_PushLeft(NewsManager *manager)
 void NewsManager_PushNews(NewsManager *manager, char *content)
 {
 
+	news_to_push = content;
 	if (manager->active_boxes == 0) {
 
 		DrawObject **objects  = manager->objects;
 		objects[0]->bit_flags |= SHOULD_BE_DRAWN;
 		manager->news_state = PUSH_LEFT;
 		manager->active_boxes++;
+
+		SetTextContent(objects[0], content);
 
 		NewsManager_SetupPushLeft(manager);
 		NewsManager_PushLeft(manager);
