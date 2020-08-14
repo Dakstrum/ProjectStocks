@@ -31,19 +31,94 @@ typedef struct NewsManager {
 
 } NewsManager;
 
+void NewsManager_SetupPushLeft(NewsManager *manager)
+{
+
+	DrawObject **objects = manager->objects;
+	objects[0]->x = manager->x_i+1000;
+	objects[0]->y = manager->y_i;
+
+}
+
+void NewsManager_PullRight(NewsManager *manager)
+{
+
+	manager->group_id = Animation_StartGroup();
+
+	unsigned char last_box = manager->num_boxes - 1;
+	Animate_MoveDrawObject(manager->objects[last_box], manager->objects[last_box]->x+1000, manager->objects[last_box]->y, 500);
+
+	Animation_EndGroup();
+}
+
+void NewsManager_PushDown(NewsManager *manager)
+{
+
+	DrawObject **objects = manager->objects;
+
+	for (size_t i = manager->active_boxes-1; i > 0;i--) {
+
+		objects[i]->x = objects[i-1]->x;
+		objects[i]->y = objects[i-1]->y; 
+
+	}
+
+	NewsManager_SetupPushLeft(manager);
+
+	manager->group_id = Animation_StartGroup();
+	for (size_t i = 1; i < manager->active_boxes;i++) {
+
+		Animate_MoveDrawObject(manager->objects[i], manager->objects[i]->x, manager->objects[i]->y+100, 300);
+
+	}
+	Animation_EndGroup();
+
+}
+
+void NewsManager_PushLeft(NewsManager *manager)
+{
+
+	manager->group_id = Animation_StartGroup();
+	Animate_MoveDrawObject(manager->objects[0], manager->objects[0]->x-1000, manager->objects[0]->y, 250);
+	Animation_EndGroup();
+
+}
+
 void NewsManager_PushNews(NewsManager *manager, char *content)
 {
+
+	if (manager->active_boxes == 0) {
+
+		DrawObject **objects  = manager->objects;
+		objects[0]->bit_flags |= SHOULD_BE_DRAWN;
+		manager->news_state = PUSH_LEFT;
+		manager->active_boxes++;
+
+		NewsManager_SetupPushLeft(manager);
+		NewsManager_PushLeft(manager);
+
+	} else if (manager->active_boxes < manager->num_boxes) {
+
+		DrawObject **objects = manager->objects;
+		objects[manager->active_boxes]->bit_flags |= SHOULD_BE_DRAWN;
+
+		manager->news_state = PUSH_DOWN;
+		manager->active_boxes++;
+
+		NewsManager_PushDown(manager);
+
+	} else {
+
+		manager->news_state = PULL_RIGHT;
+		NewsManager_PullRight(manager);
+
+	}
 
 }
 
 void NewsManager_CheckForNews(NewsManager *manager)
 {
 
-	static bool pushed_news = false;
-	if (pushed_news)
-		return;
-
-	pushed_news = true;
 	NewsManager_PushNews(manager, "Some news article");
 
 }
@@ -68,57 +143,10 @@ void NewsManager_Transition(NewsManager *manager)
 			break;
 		case PUSH_LEFT:
 			manager->news_state = NOT_ANIMATING;
-			break;
-		case NOT_ANIMATING:
-			manager->news_state = PULL_RIGHT;
+			manager->group_id   = 0;
 			break;
 
 	}
-
-}
-
-void NewsManager_PullRight(NewsManager *manager)
-{
-
-	manager->group_id = Animation_StartGroup();
-
-	unsigned char last_box = manager->num_boxes - 1;
-	Animate_MoveDrawObject(manager->objects[last_box], manager->objects[last_box]->x+1000, manager->objects[last_box]->y, 500);
-
-	Animation_EndGroup();
-}
-
-void NewsManager_PushDown(NewsManager *manager)
-{
-
-	DrawObject **objects = manager->objects;
-
-	for (size_t i = manager->num_boxes-1; i > 0;i--) {
-
-		objects[i]->x = objects[i-1]->x;
-		objects[i]->y = objects[i-1]->y; 
-
-	}
-
-	objects[0]->x = manager->x_i+1000;
-	objects[0]->y = manager->y_i;
-
-	manager->group_id = Animation_StartGroup();
-	for (size_t i = 1; i < manager->num_boxes;i++) {
-
-		Animate_MoveDrawObject(manager->objects[i], manager->objects[i]->x, manager->objects[i]->y+100, 300);
-
-	}
-	Animation_EndGroup();
-
-}
-
-void NewsManager_PushLeft(NewsManager *manager)
-{
-
-	manager->group_id = Animation_StartGroup();
-	Animate_MoveDrawObject(manager->objects[0], manager->objects[0]->x-1000, manager->objects[0]->y, 250);
-	Animation_EndGroup();
 
 }
 
@@ -144,16 +172,20 @@ void NewsManager_Update(void *state)
 {
 
 	NewsManager *manager = state;
-	//NewsManager_CheckForNews(manager);
+	if (manager->group_id == 0) {
 
-	//if (manager->news_state == NOT_ANIMATING)
-	//	return;
+		NewsManager_CheckForNews(manager);
 
-	if (!Animate_FinishedMoveGroupAnimation(manager->group_id))
-		return;
+	} else {
 
-	NewsManager_Transition(manager);
-	NewsManager_Animate(manager);
+		if (!Animate_FinishedMoveGroupAnimation(manager->group_id))
+			return;
+
+		NewsManager_Transition(manager);
+		NewsManager_Animate(manager);
+
+	}
+
 
 }
 
@@ -198,7 +230,7 @@ Manager *NewsManager_Create(float x, float y)
 		state->objects[i]->x                = x;
 		state->objects[i]->y                = y + 100 * i;
 		state->objects[i]->text.bitmap_path = "assets/images/all_buttons/button1.png";
-		//state->objects[i]->bit_flags       ^= SHOULD_BE_DRAWN;
+		state->objects[i]->bit_flags       ^= SHOULD_BE_DRAWN;
 
 	}
 
