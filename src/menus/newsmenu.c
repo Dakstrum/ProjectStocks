@@ -167,22 +167,22 @@ void TempCreateWeatherBitMaps() //This function is nasty. Will change when I can
         if(weather_num == 0)
         {
             all_weather_bitmaps[i]->asset_path = "assets/images/newsmenu/newsmenuassets/sunny.png";
-            SetTextContent(all_weather_temps_textobjects[i], "%s", "90°");
+            SetTextContent(all_weather_temps_textobjects[i], "%d", rand() % (99 + 1 - 75) + 75);
         }
 
-
+        
         if(weather_num == 1)
         {
             all_weather_bitmaps[i]->asset_path = "assets/images/newsmenu/newsmenuassets/cloudy.png";
-            SetTextContent(all_weather_temps_textobjects[i], "%s", "70°");
+            SetTextContent(all_weather_temps_textobjects[i], "%d", rand() % (75 + 1 - 70) + 70);
         }
 
         if(weather_num == 2)
         {
             all_weather_bitmaps[i]->asset_path = "assets/images/newsmenu/newsmenuassets/rain.png";
-            SetTextContent(all_weather_temps_textobjects[i], "%s", "60°");
+            SetTextContent(all_weather_temps_textobjects[i], "%d", rand() % (70 + 1 - 60) + 60);
         }
-
+        
         AddObjectToDrawLayer(all_weather_bitmaps[i]);
     }
 
@@ -191,7 +191,24 @@ void TempCreateWeatherBitMaps() //This function is nasty. Will change when I can
 void CleanNewsMenu()
 {
 
+
     player_money_textobject = NULL;
     player_date_textobject  = NULL;
+
+    sun_temp_textobject    = NULL;
+    mon_temp_textobject    = NULL;
+    tues_temp_textobject   = NULL;
+    wed_temp_textobject    = NULL;
+    thurs_temp_textobject  = NULL;
+    fri_temp_textobject    = NULL;
+    sat_temp_textobject    = NULL;
+
+    sun_bitmap    = NULL;
+    mon_bitmap    = NULL;
+    tues_bitmap   = NULL;
+    wed_bitmap    = NULL;
+    thurs_bitmap  = NULL;
+    fri_bitmap    = NULL;
+    sat_bitmap    = NULL;
 
 }
