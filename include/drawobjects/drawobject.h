@@ -172,6 +172,9 @@ typedef struct Text
     unsigned char b;
     unsigned char a;
 
+    float x_offset;
+    float y_offset;
+
 } Text;
 
 typedef struct TextBox {

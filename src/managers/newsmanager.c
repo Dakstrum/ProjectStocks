@@ -129,11 +129,11 @@ void NewsManager_PushNews(NewsManager *manager, char *content)
 void NewsManager_CheckForNews(NewsManager *manager)
 {
 
-	char *event = GetAnyEventAtTime(GetGameTime());
+	/*char *event = GetAnyEventAtTime(GetGameTime());
 	if (event == NULL)
 		return;
-
-	NewsManager_PushNews(manager, event);
+ 	*/
+	NewsManager_PushNews(manager, "This is content that will hopefully wrap around. Has it wrapped around yet? Only time will tell.");
 
 }
 

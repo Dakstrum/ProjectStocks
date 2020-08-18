@@ -61,9 +61,10 @@ static EventSim global_events;
 static EventSimId category_events;
 static EventSimId company_events; 
 
-static const int HOURS_IN_YEAR      = 8760;
-static const int HOURS_IN_HALF_YEAR = HOURS_IN_YEAR / 2;
-static const int HOURS_IN_TWO_YEARS = HOURS_IN_YEAR * 2;
+static const int HOURS_IN_YEAR         = 8760;
+static const int HOURS_IN_QUARTER_YEAR = HOURS_IN_YEAR / 4;
+static const int HOURS_IN_HALF_YEAR    = HOURS_IN_YEAR / 2;
+static const int HOURS_IN_TWO_YEARS    = HOURS_IN_YEAR * 2;
 
 static const float TRUNCATE_TO_AMOUNT = 500.0;
 static const int HOUR = 3600;
@@ -151,7 +152,7 @@ void GenerateGameEvents(EventSim *events, Event *(*GetRandomEvent)())
     time_t current_time = 0;
     while (ShouldContinueSimulation(current_time)) {
 
-        int hours_passed = (HOURS_IN_HALF_YEAR + rand() % HOURS_IN_YEAR) * HOUR;
+        int hours_passed = (HOURS_IN_QUARTER_YEAR + rand() % HOURS_IN_YEAR) * HOUR;
         current_time    += hours_passed;
         Vector_PushBack(events->event_times, &current_time);
         Vector_PushBack(events->events, GetRandomEvent());
@@ -166,7 +167,7 @@ void GenerateGameEventsId(EventSim *events, int id, Event *(*GetRandomEvent)(int
     time_t current_time = 0;
     while (ShouldContinueSimulation(current_time)) {
 
-        int hours_passed = (HOURS_IN_HALF_YEAR + rand() % HOURS_IN_YEAR) * HOUR;
+        int hours_passed = (HOURS_IN_QUARTER_YEAR + rand() % HOURS_IN_YEAR) * HOUR;
         current_time    += hours_passed;
         Vector_PushBack(events->event_times, &current_time);
         Vector_PushBack(events->events, GetRandomEvent(id));
