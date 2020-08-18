@@ -68,21 +68,22 @@ void InitializeStocksMenu()
 
     }
 
-    stocks_menu = GetJSONMenuAndAddToDrawLayer("StocksMenu");
-    InitalizeStocksMenuText();
-    InitializeCompanyScrollBox();
+    stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
+    AddMenuWithChildsToDrawLayer(stocks_menu);
+    //InitalizeStocksMenuText();
+    //InitializeCompanyScrollBox();
 
-    DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
-    PopulateStockStatsText(GetCompanyNameViewing());
+   // DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
+   // PopulateStockStatsText(GetCompanyNameViewing());
 
-    InitializeSpeedSelectObject("StocksMenu");
-    DrawLayer_AddManager(NewsManager_Create(1400, 300));
+    //InitializeSpeedSelectObject("StocksMenu");
+    //DrawLayer_AddManager(NewsManager_Create(1400, 300));
 
 }
 
 void StocksMenusRenderLogic()
 {
-    
+    /*
     if (player_money_textobject == NULL)
         return;
 
@@ -111,7 +112,7 @@ void StocksMenusRenderLogic()
         SetTextContent(transaction_menu_projected_textobject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("SellTextBox")));
 
     }
-    
+    */
 }
 
 
