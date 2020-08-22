@@ -68,15 +68,17 @@ void InitializeStocksMenu()
 
     }
 
-    stocks_menu = GetJSONMenuAndAddToDrawLayer("StocksMenu");
-    InitalizeStocksMenuText();
-    InitializeCompanyScrollBox();
+    MenuWithChilds *stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
+    AddMenuWithChildsToDrawLayer(stocks_menu);
 
-    DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
-    PopulateStockStatsText(GetCompanyNameViewing());
+    //InitalizeStocksMenuText();
+    //InitializeCompanyScrollBox();
 
-    InitializeSpeedSelectObject("StocksMenu");
-    DrawLayer_AddManager(NewsManager_Create(1400, 300));
+    //DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
+    //PopulateStockStatsText(GetCompanyNameViewing());
+
+    //InitializeSpeedSelectObject("StocksMenu");
+    //DrawLayer_AddManager(NewsManager_Create(1400, 300));
 
 }
 
@@ -404,10 +406,6 @@ void CleanUpStocksMenu()
 void CleanStocksMenu()
 {
 
-    stocks_menu = NULL;
-    sell_menu   = NULL;
-    buy_menu    = NULL;
-
     selected_company_name    = NULL;
     current_graph            = NULL;
 
@@ -423,5 +421,9 @@ void CleanStocksMenu()
     transaction_menu_pershare_textobject     = NULL;
     transaction_menu_projected_textobject    = NULL;
     transaction_menu_amountowned_textobject  = NULL;
+
+    stocks_menu = NULL;
+    sell_menu   = NULL;
+    buy_menu    = NULL;
 
 }
