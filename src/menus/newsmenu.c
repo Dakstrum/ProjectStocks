@@ -63,7 +63,6 @@ void InitializeNewsMenu()
 void InitalizeNewsMenuText()
 {
 
-
     player_money_textobject = GetJSONObjectAndAddToDrawLayer("NewsMenuAccountMoneyTextObject");
     player_date_textobject  = GetJSONObjectAndAddToDrawLayer("NewsMenuAccountDateTextObject");
 
