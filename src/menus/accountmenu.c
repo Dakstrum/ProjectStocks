@@ -73,18 +73,15 @@ void InitializeAccountMenu()
 
     account_menu = GetJSONMenuAndAddToDrawLayer("AccountMenu");
 
-    //InitalizeAccountMenuCompanyScrollbox();
-    //InitalizeAccountMenuText();
-    //InitializeSpeedSelectObject("AccountMenu");
+    InitalizeAccountMenuCompanyScrollbox();
+    InitalizeAccountMenuText();
+    InitializeSpeedSelectObject("AccountMenu");
 
-    //InitializeSelectedStockHistoryDisplay();
-    //PopulateSelectedStockHistoryDisplay(GetCompanyNameViewing());
+    InitializeSelectedStockHistoryDisplay();
+    PopulateSelectedStockHistoryDisplay(GetCompanyNameViewing());
 
-    //InitializeAllStocksHistoryDisplay();
-    //PopulateAllStocksHistoryDisplay();
-
-
-    //AccountMenuRenderLogic(); 
+    InitializeAllStocksHistoryDisplay();
+    PopulateAllStocksHistoryDisplay();
 
 }
 
