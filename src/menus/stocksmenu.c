@@ -63,14 +63,12 @@ void InitializeStocksMenu()
 
     if (CreateNewDrawLayer() == -1) {
 
-        Log("STUB: StocksMenu could not create new draw layer");
+        Log("STUB: StocksMenu could not create new draw layer"); 
         return;
 
     }
 
-    MenuWithChilds *stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
-    AddMenuWithChildsToDrawLayer(stocks_menu);
-
+    stocks_menu = GetJSONMenuAndAddToDrawLayer("StocksMenu");
     //InitalizeStocksMenuText();
     //InitializeCompanyScrollBox();
 

@@ -50,14 +50,14 @@ void InitializeCardsMenu()
 
     cards_menu = GetJSONMenuAndAddToDrawLayer("CardsMenu");
 
-    InitalizePositiveCardsScrollBox();
-    InitalizeNegativeCardsScrollBox();
+    //InitalizePositiveCardsScrollBox();
+    //InitalizeNegativeCardsScrollBox();
 
-    InitializeCardsMenuText(); 
+    //InitializeCardsMenuText(); 
 
-    InitializeSpeedSelectObject("CardsMenu");
+    //InitializeSpeedSelectObject("CardsMenu");
 
-    CardsMenuRenderLogic();
+    //CardsMenuRenderLogic();
 
 }
 

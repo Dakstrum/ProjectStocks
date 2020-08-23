@@ -78,7 +78,7 @@ void CleanAll()
 void Stocks_BCB()
 {
 
-    CleanAll();
+    ClearCurrentDrawLayer();
     SwitchToRenderingStocksMenu();
 
 }
@@ -86,7 +86,7 @@ void Stocks_BCB()
 void News_BCB()
 {
 
-    CleanAll();
+    ClearCurrentDrawLayer();
     SwitchToRenderingNewsMenu();
     
 }
@@ -94,7 +94,7 @@ void News_BCB()
 void Account_BCB()
 {
     
-    CleanAll();
+    ClearCurrentDrawLayer();
     SwitchToRenderingAccountMenu();
     
 }
@@ -102,7 +102,7 @@ void Account_BCB()
 void Cards_BCB()
 {
     
-    CleanAll();
+    ClearCurrentDrawLayer();
     SwitchToRenderingCardsMenu();
     
 }
