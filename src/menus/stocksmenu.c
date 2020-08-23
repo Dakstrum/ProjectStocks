@@ -63,20 +63,20 @@ void InitializeStocksMenu()
 
     if (CreateNewDrawLayer() == -1) {
 
-        Log("STUB: StocksMenu could not create new draw layer");
+        Log("STUB: StocksMenu could not create new draw layer"); 
         return;
 
     }
 
     stocks_menu = GetJSONMenuAndAddToDrawLayer("StocksMenu");
-    InitalizeStocksMenuText();
-    InitializeCompanyScrollBox();
+    //InitalizeStocksMenuText();
+    //InitializeCompanyScrollBox();
 
-    DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
-    PopulateStockStatsText(GetCompanyNameViewing());
+    //DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
+    //PopulateStockStatsText(GetCompanyNameViewing());
 
-    InitializeSpeedSelectObject("StocksMenu");
-    DrawLayer_AddManager(NewsManager_Create(1400, 300));
+    //InitializeSpeedSelectObject("StocksMenu");
+    //DrawLayer_AddManager(NewsManager_Create(1400, 300));
 
 }
 
