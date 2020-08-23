@@ -125,7 +125,6 @@ void SpeedOne_BCB()
     SetGameSpeed(1);
     account_timespeed = 1;
     
-
 }
 void SpeedTwo_BCB()
 {
