@@ -64,7 +64,6 @@ void InitalizeNewsMenuText()
 {
 
 
-
     player_money_textobject = GetJSONObjectAndAddToDrawLayer("NewsMenuAccountMoneyTextObject");
     player_date_textobject  = GetJSONObjectAndAddToDrawLayer("NewsMenuAccountDateTextObject");
 
@@ -77,12 +76,6 @@ void InitalizeNewsMenuText()
     sat_temp_textobject     = GetJSONObjectAndAddToDrawLayer("NewsMenusattTextObject");
 
     TempCreateWeatherBitMaps();
-
-   
-    
-
-
-
 
 }
 
@@ -191,7 +184,6 @@ void TempCreateWeatherBitMaps() //This function is nasty. Will change when I can
 void CleanNewsMenu()
 {
 
-
     player_money_textobject = NULL;
     player_date_textobject  = NULL;
 
@@ -210,5 +202,7 @@ void CleanNewsMenu()
     thurs_bitmap  = NULL;
     fri_bitmap    = NULL;
     sat_bitmap    = NULL;
+
+    news_menu = NULL;
 
 }
