@@ -28,6 +28,7 @@
 #include "drawobject.h"
 #include "rendering.h"
 #include "draw.h"
+#include "timer.h"
 
 enum InitializeSuccess 
 {
@@ -39,8 +40,6 @@ enum InitializeSuccess
 /* Test code */
 static ALLEGRO_EVENT_QUEUE *event_queue;
 static ALLEGRO_TIMER *timer;
-static struct timespec last_render_update;
-
 static Vector *input_events = NULL;
 
 enum InitializeSuccess Initialize();
@@ -89,15 +88,12 @@ void Loop()
 
     if (event.type == ALLEGRO_EVENT_TIMER) {
 
+        double dt = Timer_GetDiff();
         ApplyInputs();
-        struct timespec current_time = GetCurrentTime();
-        double dt = GetDoubleMilliDiff(&current_time, &last_render_update);
-
         Animate_Update(dt);
         HandleMouseLocation();
         HandleRendering(dt);
 
-        last_render_update = current_time;
 
     } else {
 
@@ -110,8 +106,9 @@ void Loop()
 void GameLoop() 
 {
 
-    input_events       = Vector_Create(sizeof(ALLEGRO_EVENT), 32);
-    last_render_update = GetCurrentTime();
+    input_events = Vector_Create(sizeof(ALLEGRO_EVENT), 32);
+    Timer_Init();
+
     while (!ShouldICleanUp())
         Loop();
 
