@@ -29,6 +29,8 @@ static DrawObject *player_date_textobject  = NULL;
 static DrawObject *card_title_textobject   = NULL;
 static DrawObject *card_desc_textobject    = NULL;
 
+static DrawObject *card_bitmap    = NULL;
+
 
 void CardsMenuRenderLogic();
 
@@ -38,6 +40,7 @@ void InitalizeNegativeCardsScrollBox();
 void InitializeCardMenuCompanyScrollBox();
 
 void InitializeCardsMenuText();
+void InitializeCardBitmap();
 
 void InitializeCardsMenu() 
 {
@@ -56,6 +59,9 @@ void InitializeCardsMenu()
     InitializeCardsMenuText(); 
 
     InitializeSpeedSelectObject("CardsMenu");
+
+
+    InitializeCardBitmap();
 
 }
 
@@ -135,15 +141,19 @@ void InitalizePositiveCardsScrollBox()
     object->x          = 50;
     object->y          = 233;
     object->width      = 288;
-    object->height     = 200;
-    object->asset_path = "assets/images/companyicons/StocksBox.png";
+    object->height     = 809;
+    object->asset_path = "assets/images/scrollbox/card_scrollbox.png";
 
-    object->scrollbox.num_items        = 2;
+    object->scrollbox.num_items        = 4;
     object->scrollbox.box_click        = &LoadCardClick;
-    object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
+    object->scrollbox.text_content     = malloc(sizeof(char *) * 4);
+
+    object->scrollbox.vertical_spacing      = 70;
 
     object->scrollbox.text_content[0]  = GetFormattedPointer("Fake Quarter Earnings");
     object->scrollbox.text_content[1]  = GetFormattedPointer("Level 1 Advertising");
+    object->scrollbox.text_content[2]  = GetFormattedPointer("Damaging Product");
+    object->scrollbox.text_content[3]  = GetFormattedPointer("Level 1 Defamation");
 
     AddObjectToDrawLayer(object);
 
@@ -157,7 +167,7 @@ void InitalizeNegativeCardsScrollBox()
     object->x          = 480;
     object->y          = 233;
     object->width      = 288;
-    object->height     = 200;
+    object->height     = 809;
     object->asset_path = "assets/images/companyicons/StocksBox.png";
 
     object->scrollbox.num_items        = 2;
@@ -190,6 +200,21 @@ void ApplyMenu_BCB()
 
 }
 
+void InitializeCardBitmap()
+{
+
+    card_bitmap = CreateNewDrawObject();
+    card_bitmap->type                            = MENU;
+    card_bitmap->x                               = 1458;
+    card_bitmap->y                               = 218;
+    card_bitmap->width                           = 352;
+    card_bitmap->height                          = 496;
+    card_bitmap->asset_path = "assets/images/cards/Temp.png";
+
+    AddObjectToDrawLayer(card_bitmap);
+
+}
+
 void CleanCardsMenu()
 {
 
@@ -200,5 +225,7 @@ void CleanCardsMenu()
     player_date_textobject   = NULL; 
     card_title_textobject    = NULL;
     card_desc_textobject     = NULL;
+
+    card_bitmap    = NULL;
 
 }
