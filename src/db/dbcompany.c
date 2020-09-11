@@ -6,6 +6,7 @@
 #include "shared.h"
 #include "dbutils.h"
 #include "dbcompany.h"
+#include "log.h"
 
 static Vector *companies = NULL;
 

@@ -29,7 +29,7 @@
 #include "rendering.h"
 #include "draw.h"
 #include "timer.h"
-
+#include "dbcard.h"
 enum InitializeSuccess 
 {
 
@@ -145,6 +145,7 @@ enum InitializeSuccess Initialize()
     InitializeShared();
     InitializeDatabases();
     InitializeCompanies();
+    InitializeCards();
     InitializeEvents();
     InitializeControls();
 

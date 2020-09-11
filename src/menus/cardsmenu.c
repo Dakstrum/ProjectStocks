@@ -19,6 +19,7 @@
 #include "text.h"
 #include "generalpurposemenus.h"
 #include "drawlayerutils.h"
+#include "dbcard.h"
 
 static MenuWithChilds *cards_menu      = NULL;
 static MenuWithChilds *apply_card_menu = NULL;
@@ -174,7 +175,7 @@ void InitalizeNegativeCardsScrollBox()
     object->scrollbox.box_click        = &LoadCardClick;
     object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
 
-    object->scrollbox.text_content[0]  = GetFormattedPointer("Damaging Product");
+    object->scrollbox.text_content[0]  = GetFormattedPointer("Deadly Product");
     object->scrollbox.text_content[1]  = GetFormattedPointer("Level 1 Defamation");
 
     AddObjectToDrawLayer(object);
@@ -215,6 +216,7 @@ void InitializeCardBitmap(char* card_title)
     card_bitmap->asset_path = "assets/images/cards/Temp.png";
 
     AddObjectToDrawLayer(card_bitmap);
+    LogF("%d", GetCardId(card_title));
 
 
 }
