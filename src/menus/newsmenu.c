@@ -64,4 +64,5 @@ void CleanNewsMenu()
     player_money_textobject = NULL;
     player_date_textobject  = NULL;
 
+    news_menu = NULL;
 }

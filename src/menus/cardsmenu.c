@@ -40,7 +40,7 @@ void InitalizeNegativeCardsScrollBox();
 void InitializeCardMenuCompanyScrollBox();
 
 void InitializeCardsMenuText();
-void InitializeCardBitmap();
+void InitializeCardBitmap(char* card_title);
 
 void InitializeCardsMenu() 
 {
@@ -60,8 +60,6 @@ void InitializeCardsMenu()
 
     InitializeSpeedSelectObject("CardsMenu");
 
-
-    InitializeCardBitmap();
 
 }
 
@@ -130,6 +128,8 @@ void LoadCardClick(char *scroll_box_content, unsigned short int index)
 
     SetTextContent(card_title_textobject, "%s", scroll_box_content);
     SetTextContent(card_desc_textobject,  "%s", scroll_box_content);
+
+    InitializeCardBitmap(scroll_box_content);
 
 }
 
@@ -200,9 +200,12 @@ void ApplyMenu_BCB()
 
 }
 
-void InitializeCardBitmap()
+void InitializeCardBitmap(char* card_title)
 {
-
+    //Get Card Asset Path and Description from scrollbox_content(OR Card Title)
+    if(card_bitmap)
+        RemoveDrawObject(card_bitmap);
+    
     card_bitmap = CreateNewDrawObject();
     card_bitmap->type                            = MENU;
     card_bitmap->x                               = 1458;
@@ -213,13 +216,11 @@ void InitializeCardBitmap()
 
     AddObjectToDrawLayer(card_bitmap);
 
+
 }
 
 void CleanCardsMenu()
 {
-
-    cards_menu      = NULL;
-    apply_card_menu = NULL;
 
     player_money_textobject  = NULL;
     player_date_textobject   = NULL; 
@@ -227,5 +228,9 @@ void CleanCardsMenu()
     card_desc_textobject     = NULL;
 
     card_bitmap    = NULL;
+
+    cards_menu      = NULL;
+    apply_card_menu = NULL;
+
 
 }
