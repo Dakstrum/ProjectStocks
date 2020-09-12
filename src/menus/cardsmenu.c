@@ -218,6 +218,8 @@ void InitializeCardBitmap(char* card_title)
     AddObjectToDrawLayer(card_bitmap);
     LogF("%d", GetCardId(card_title));
     LogF("%s", GetCardPath(card_title));
+    LogF("%d", GetCardPriceModifier(card_title));
+    LogF("%f", GetCardModifierLength(card_title));
 
 
 }

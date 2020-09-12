@@ -13,7 +13,7 @@ unsigned int GetCardId(char* card_title)
 {
 
 	assert(card_title != NULL);
-    
+
     LogF("%s", card_title);
     Card *temp = (Card *)cards->elements;
     for (size_t i = 0; i < cards->num_elements; i++)
@@ -27,8 +27,7 @@ unsigned int GetCardId(char* card_title)
 char* GetCardDescription(char* card_title)
 {
 
-
-	return;
+	return "Add to DB";
 
 }
 
@@ -49,15 +48,31 @@ char* GetCardPath(char* card_title)
 int GetCardPriceModifier(char* card_title)
 {
 
+    assert(card_title != NULL);
 
-	return;
+    LogF("%s", card_title);
+    Card *temp = (Card *)cards->elements;
+    for (size_t i = 0; i < cards->num_elements; i++)
+        if (strcmp(temp[i].card_name, card_title) == 0)
+            return temp[i].price_modifier;
+
+    return 0;
+
 }
 
-int GetCardModifierLength(char* card_title)
+float GetCardModifierLength(char* card_title)
 {
 
+    assert(card_title != NULL);
 
-	return;
+    LogF("%s", card_title);
+    Card *temp = (Card *)cards->elements;
+    for (size_t i = 0; i < cards->num_elements; i++)
+        if (strcmp(temp[i].card_name, card_title) == 0)
+            return temp[i].modifier_length;
+
+    return 0;
+
 }
 
 int Card_Callback(void *card, int argc, char **argv, char **col_name) 
