@@ -13,7 +13,7 @@ unsigned int GetCardId(char* card_title)
 {
 
 	assert(card_title != NULL);
-
+    LogF("%s", card_title);
     Card *temp = (Card *)cards->elements;
     for (size_t i = 0; i < cards->num_elements; i++)
     	if (strcmp(temp[i].card_name, card_title) == 0)
@@ -78,6 +78,6 @@ void InitializeCards()
 {
 
     cards = Vector_Create(sizeof(Card), 4);
-    ExecuteQueryF(&Card_Callback, NULL, "SELECT C.CardId, C.CardName, C.CardPath, C.PriceModifier, C.ModifierLength");
+    ExecuteQueryF(&Card_Callback, NULL, "SELECT C.CardId, C.CardName, C.CardPath, C.PriceModifier, C.ModifierLength FROM Cards C");
 
 }

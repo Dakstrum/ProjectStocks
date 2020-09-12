@@ -1,6 +1,8 @@
 #ifndef DBCARDS_H
 #define DBCARDS_H
 
+#include "vector.h"
+
 typedef struct Card {
 
     unsigned int card_id;
