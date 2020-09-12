@@ -16,5 +16,6 @@ typedef struct Card {
 
 void InitializeCards();
 unsigned int GetCardId(char* card_title);
+char* GetCardPath(char* card_title);
 
 #endif

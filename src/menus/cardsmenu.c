@@ -217,6 +217,7 @@ void InitializeCardBitmap(char* card_title)
 
     AddObjectToDrawLayer(card_bitmap);
     LogF("%d", GetCardId(card_title));
+    LogF("%s", GetCardPath(card_title));
 
 
 }

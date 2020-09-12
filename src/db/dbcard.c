@@ -13,6 +13,7 @@ unsigned int GetCardId(char* card_title)
 {
 
 	assert(card_title != NULL);
+    
     LogF("%s", card_title);
     Card *temp = (Card *)cards->elements;
     for (size_t i = 0; i < cards->num_elements; i++)
@@ -34,8 +35,14 @@ char* GetCardDescription(char* card_title)
 char* GetCardPath(char* card_title)
 {
 
+    assert(card_title != NULL);
 
-	return;
+    Card *temp = (Card *)cards->elements;
+    for (size_t i = 0; i < cards->num_elements;i++)
+        if (strcmp(temp[i].card_name, card_title) == 0)
+            return temp[i].card_path;
+
+    return 0;
 
 }
 
