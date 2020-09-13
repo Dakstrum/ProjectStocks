@@ -118,6 +118,7 @@ CREATE TABLE IF NOT EXISTS Cards
 (
     CardId INTEGER PRIMARY KEY,
     CardName VARCHAR(128) NOT NULL,
+    CardDesc VARCHAR(256) NOT NULL,
     CardPath VARCHAR(256) NOT NULL,
     PriceModifier DOUBLE NOT NULL,
     ModifierLength INT NOT NULL

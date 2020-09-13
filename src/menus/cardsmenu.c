@@ -41,7 +41,7 @@ void InitalizeNegativeCardsScrollBox();
 void InitializeCardMenuCompanyScrollBox();
 
 void InitializeCardsMenuText();
-void InitializeCardBitmap(char* card_title);
+void InitializeCardBitmapAndText(char* card_title);
 
 void InitializeCardsMenu() 
 {
@@ -81,7 +81,11 @@ void InitializeCardsMenuText()
     player_money_textobject = GetJSONObjectAndAddToDrawLayer("CardsMenuAccountMoneyTextObject");
     player_date_textobject  = GetJSONObjectAndAddToDrawLayer("CardsMenuAccountDateTextObject");
     card_title_textobject   = GetJSONObjectAndAddToDrawLayer("CardsMenuCardTitleTextObject");
-    card_desc_textobject    = GetJSONObjectAndAddToDrawLayer("CardsMenuCardDescriptionTextObject");
+
+    card_desc_textobject    = GetDrawObjectFromJsonLayer("CardsMenuCardDescriptionTextObject");
+
+    card_desc_textobject->width = 400;
+    AddObjectToDrawLayer(card_desc_textobject);
 
 }
 
@@ -127,10 +131,7 @@ void LoadCardClick(char *scroll_box_content, unsigned short int index)
     if (card_title_textobject == NULL || card_desc_textobject == NULL)
         return;
 
-    SetTextContent(card_title_textobject, "%s", scroll_box_content);
-    SetTextContent(card_desc_textobject,  "%s", scroll_box_content);
-
-    InitializeCardBitmap(scroll_box_content);
+    InitializeCardBitmapAndText(scroll_box_content);
 
 }
 
@@ -201,9 +202,9 @@ void ApplyMenu_BCB()
 
 }
 
-void InitializeCardBitmap(char* card_title)
+void InitializeCardBitmapAndText(char* card_title)
 {
-    //Get Card Asset Path and Description from scrollbox_content(OR Card Title)
+
     if(card_bitmap)
         RemoveDrawObject(card_bitmap);
     
@@ -213,14 +214,17 @@ void InitializeCardBitmap(char* card_title)
     card_bitmap->y                               = 218;
     card_bitmap->width                           = 352;
     card_bitmap->height                          = 496;
-    card_bitmap->asset_path = "assets/images/cards/Temp.png";
+    card_bitmap->asset_path = GetCardPath(card_title);
 
     AddObjectToDrawLayer(card_bitmap);
     LogF("%d", GetCardId(card_title));
     LogF("%s", GetCardPath(card_title));
     LogF("%d", GetCardPriceModifier(card_title));
     LogF("%f", GetCardModifierLength(card_title));
+    LogF("%s", GetCardDescription(card_title));
 
+    SetTextContent(card_title_textobject, "%s", card_title);
+    SetTextContent(card_desc_textobject,  "%s", GetCardDescription(card_title));
 
 }
 

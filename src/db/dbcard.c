@@ -27,7 +27,14 @@ unsigned int GetCardId(char* card_title)
 char* GetCardDescription(char* card_title)
 {
 
-	return "Add to DB";
+	assert(card_title != NULL);
+
+    Card *temp = (Card *)cards->elements;
+    for (size_t i = 0; i < cards->num_elements;i++)
+        if (strcmp(temp[i].card_name, card_title) == 0)
+            return temp[i].card_desc;
+
+    return 0;
 
 }
 
@@ -85,10 +92,11 @@ int Card_Callback(void *card, int argc, char **argv, char **col_name)
 
     temp.card_id = atoi(argv[0]);
     strncpy(temp.card_name, argv[1], 32);
-    strncpy(temp.card_path, argv[2], 255);
-    temp.price_modifier = atof(argv[3]);
+    strncpy(temp.card_desc, argv[2], 255);
+    strncpy(temp.card_path, argv[3], 255);
+    temp.price_modifier = atof(argv[4]);
 
-    temp.modifier_length = atoi(argv[4]);
+    temp.modifier_length = atoi(argv[5]);
 
     Vector_PushBack(cards, &temp);
 
@@ -100,6 +108,6 @@ void InitializeCards()
 {
 
     cards = Vector_Create(sizeof(Card), 4);
-    ExecuteQueryF(&Card_Callback, NULL, "SELECT C.CardId, C.CardName, C.CardPath, C.PriceModifier, C.ModifierLength FROM Cards C");
+    ExecuteQueryF(&Card_Callback, NULL, "SELECT C.CardId, C.CardName, C.CardDesc, C.CardPath, C.PriceModifier, C.ModifierLength FROM Cards C");
 
 }

@@ -104,8 +104,8 @@ int Company_Callback(void *company, int argc, char **argv, char **col_name)
     Company temp;
 
     temp.company_id = atoi(argv[0]);
-    strncpy(temp.company_name, argv[1], 64);
-    strncpy(temp.company_description, argv[2], 128);
+    strncpy(temp.company_name,         argv[1], 64);
+    strncpy(temp.company_description,  argv[2], 128);
     strncpy(temp.company_abbreviation, argv[3], 6);
     temp.ipo         = atof(argv[4]);
     temp.category_id = atoi(argv[5]);
