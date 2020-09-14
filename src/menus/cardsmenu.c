@@ -60,6 +60,8 @@ void InitializeCardsMenu()
     InitializeCardsMenuText(); 
 
     InitializeSpeedSelectObject("CardsMenu");
+    AddCardToPlayer(1);
+    InitializePlayerCards();
 
 
 }
@@ -144,13 +146,11 @@ void InitalizePositiveCardsScrollBox()
     object->y          = 233;
     object->width      = 288;
     object->height     = 809;
-    object->asset_path = "assets/images/scrollbox/card_scrollbox.png";
+    object->asset_path = "assets/images/companyicons/StocksBox.png";
 
-    object->scrollbox.num_items        = 4;
+    object->scrollbox.num_items        = 4; //GetNumOfPlayerPositiveCards()
     object->scrollbox.box_click        = &LoadCardClick;
     object->scrollbox.text_content     = malloc(sizeof(char *) * 4);
-
-    object->scrollbox.vertical_spacing      = 70;
 
     object->scrollbox.text_content[0]  = GetFormattedPointer("Fake Quarter Earnings");
     object->scrollbox.text_content[1]  = GetFormattedPointer("Level 1 Advertising");
@@ -160,6 +160,7 @@ void InitalizePositiveCardsScrollBox()
     AddObjectToDrawLayer(object);
 
 }
+
 
 void InitalizeNegativeCardsScrollBox() 
 {
@@ -172,7 +173,7 @@ void InitalizeNegativeCardsScrollBox()
     object->height     = 809;
     object->asset_path = "assets/images/companyicons/StocksBox.png";
 
-    object->scrollbox.num_items        = 2;
+    object->scrollbox.num_items        = 2; // GetNumOfPlayerNegativeCards()
     object->scrollbox.box_click        = &LoadCardClick;
     object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
 
@@ -217,11 +218,6 @@ void InitializeCardBitmapAndText(char* card_title)
     card_bitmap->asset_path = GetCardPath(card_title);
 
     AddObjectToDrawLayer(card_bitmap);
-    LogF("%d", GetCardId(card_title));
-    LogF("%s", GetCardPath(card_title));
-    LogF("%d", GetCardPriceModifier(card_title));
-    LogF("%f", GetCardModifierLength(card_title));
-    LogF("%s", GetCardDescription(card_title));
 
     SetTextContent(card_title_textobject, "%s", card_title);
     SetTextContent(card_desc_textobject,  "%s", GetCardDescription(card_title));
