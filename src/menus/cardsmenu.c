@@ -33,6 +33,7 @@ static DrawObject *card_desc_textobject    = NULL;
 static DrawObject *card_bitmap    = NULL;
 
 
+
 void CardsMenuRenderLogic();
 
 void InitalizePositiveCardsScrollBox();
@@ -52,16 +53,28 @@ void InitializeCardsMenu()
         return;
     }
 
+   AddCardToPlayer(1);
+   AddCardToPlayer(2);
+   AddCardToPlayer(2);
+   AddCardToPlayer(3);
+   AddCardToPlayer(1);
+   AddCardToPlayer(1);
+    
+
     cards_menu = GetJSONMenuAndAddToDrawLayer("CardsMenu");
 
+    InitializePlayerCards();
+
+    LogF("POS: %d", GetNumOfPlayerPositiveCards());
+    LogF("Neg: %d", GetNumOfPlayerNegativeCards());
+
     InitalizePositiveCardsScrollBox();
-    InitalizeNegativeCardsScrollBox();
+    //InitalizeNegativeCardsScrollBox();
 
     InitializeCardsMenuText(); 
 
     InitializeSpeedSelectObject("CardsMenu");
-    AddCardToPlayer(1);
-    InitializePlayerCards();
+
 
 
 }
@@ -140,6 +153,8 @@ void LoadCardClick(char *scroll_box_content, unsigned short int index)
 void InitalizePositiveCardsScrollBox() 
 {
 
+    PlayerCard *temp = GetAllPlayerCards();
+
     DrawObject *object = CreateScrollBoxObject();
 
     object->x          = 50;
@@ -148,22 +163,35 @@ void InitalizePositiveCardsScrollBox()
     object->height     = 809;
     object->asset_path = "assets/images/companyicons/StocksBox.png";
 
-    object->scrollbox.num_items        = 4; //GetNumOfPlayerPositiveCards()
+    object->scrollbox.num_items        = GetNumOfPlayerPositiveCards();
     object->scrollbox.box_click        = &LoadCardClick;
-    object->scrollbox.text_content     = malloc(sizeof(char *) * 4);
+    object->scrollbox.text_content     = malloc(sizeof(char *) * GetNumOfPlayerPositiveCards());
 
-    object->scrollbox.text_content[0]  = GetFormattedPointer("Fake Quarter Earnings");
-    object->scrollbox.text_content[1]  = GetFormattedPointer("Level 1 Advertising");
-    object->scrollbox.text_content[2]  = GetFormattedPointer("Damaging Product");
-    object->scrollbox.text_content[3]  = GetFormattedPointer("Level 1 Defamation");
+    for(int i = 0; i < GetNumOfPlayerCards(); i++)
+    {
+
+        if(GetCardType(GetCardTitle(temp[i].card_id)) == 1)
+        {
+            LogF("i = %d", i - 1);
+            LogF("player_card_id =%d", temp[i].player_card_id);
+
+            object->scrollbox.text_content[i - 1] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
+
+        }
+
+    }
 
     AddObjectToDrawLayer(object);
 
 }
 
 
+
+
 void InitalizeNegativeCardsScrollBox() 
 {
+
+    PlayerCard *temp = GetAllPlayerCards();
 
     DrawObject *object = CreateScrollBoxObject();
 
@@ -173,12 +201,13 @@ void InitalizeNegativeCardsScrollBox()
     object->height     = 809;
     object->asset_path = "assets/images/companyicons/StocksBox.png";
 
-    object->scrollbox.num_items        = 2; // GetNumOfPlayerNegativeCards()
+    object->scrollbox.num_items        = GetNumOfPlayerNegativeCards();
     object->scrollbox.box_click        = &LoadCardClick;
-    object->scrollbox.text_content     = malloc(sizeof(char *) * 2);
+    object->scrollbox.text_content     = malloc(sizeof(char *) * GetNumOfPlayerNegativeCards());
 
-    object->scrollbox.text_content[0]  = GetFormattedPointer("Deadly Product");
-    object->scrollbox.text_content[1]  = GetFormattedPointer("Level 1 Defamation");
+    for(int i = 0; i < GetNumOfPlayerCards(); i++)
+        if(GetCardType(GetCardTitle(temp[i].card_id)) == 0)
+            object->scrollbox.text_content[i] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
 
     AddObjectToDrawLayer(object);
 

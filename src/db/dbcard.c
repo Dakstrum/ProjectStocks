@@ -183,23 +183,21 @@ void RemoveCardToPlayer()
 
 }
 
-
-
 int GetNumOfPlayerCards()
 {
 
-    assert(cards != NULL);
+    assert(player_cards != NULL);
     return player_cards->num_elements;
 
 }
 
 
 
-Card *GetAllPlayerCards()
+PlayerCard *GetAllPlayerCards()
 {
 
-    assert(cards != NULL);
-    return (Card *)player_cards->elements;
+    assert(player_cards != NULL);
+    return (PlayerCard *)player_cards->elements;
 
 }
 
@@ -225,8 +223,8 @@ int GetNumOfPlayerNegativeCards()
 
     PlayerCard *temp = (PlayerCard *)player_cards->elements;
     
-    for(size_t i = 0; i > player_cards->num_elements; i++)  
-        if(!GetCardType(GetCardTitle(temp[i].card_id)))
+    for(size_t i = 0; i < player_cards->num_elements; i++)  
+        if(GetCardType(GetCardTitle(temp[i].card_id)) == 0)
             amount++;
 
     return amount;

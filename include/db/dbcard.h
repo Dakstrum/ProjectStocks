@@ -33,6 +33,10 @@ void AddCardToPlayer(int card_id);
 int GetNumOfPlayerPositiveCards();
 int GetNumOfPlayerNegativeCards();
 void InitializePlayerCards();
+PlayerCard *GetAllPlayerCards();
+char* GetCardTitle(int card_id);
+int GetCardType(char* card_title);
+int GetNumOfPlayerCards();
 
 
 #endif
