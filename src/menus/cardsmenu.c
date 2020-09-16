@@ -32,7 +32,7 @@ static DrawObject *card_desc_textobject    = NULL;
 
 static DrawObject *card_bitmap    = NULL;
 
-
+int scrollbox_num = 0; //MOVE THIS NOW JACK
 
 void CardsMenuRenderLogic();
 
@@ -52,13 +52,14 @@ void InitializeCardsMenu()
         Log("STUB: cards Menu could not create new draw layer");
         return;
     }
+    scrollbox_num = 0; //MOVE THIS NOW JACK
 
-   AddCardToPlayer(1);
-   AddCardToPlayer(2);
-   AddCardToPlayer(2);
-   AddCardToPlayer(3);
-   AddCardToPlayer(1);
-   AddCardToPlayer(1);
+   //AddCardToPlayer(1);
+   //AddCardToPlayer(2);
+   //AddCardToPlayer(2);
+   //AddCardToPlayer(3);
+   //AddCardToPlayer(1);
+   //AddCardToPlayer(1);
     
 
     cards_menu = GetJSONMenuAndAddToDrawLayer("CardsMenu");
@@ -150,6 +151,19 @@ void LoadCardClick(char *scroll_box_content, unsigned short int index)
 
 }
 
+
+
+void AddToPositiveScrollBox(DrawObject * object, char* content)
+{
+
+
+    object->scrollbox.text_content[scrollbox_num] = content;
+
+    LogF("scrollbox_num = %d", scrollbox_num);
+    scrollbox_num++;
+
+}
+
 void InitalizePositiveCardsScrollBox() 
 {
 
@@ -168,18 +182,9 @@ void InitalizePositiveCardsScrollBox()
     object->scrollbox.text_content     = malloc(sizeof(char *) * GetNumOfPlayerPositiveCards());
 
     for(int i = 0; i < GetNumOfPlayerCards(); i++)
-    {
-
         if(GetCardType(GetCardTitle(temp[i].card_id)) == 1)
-        {
-            LogF("i = %d", i - 1);
-            LogF("player_card_id =%d", temp[i].player_card_id);
+            AddToPositiveScrollBox(object, GetFormattedPointer(GetCardTitle(temp[i].card_id)));
 
-            object->scrollbox.text_content[i - 1] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
-
-        }
-
-    }
 
     AddObjectToDrawLayer(object);
 
