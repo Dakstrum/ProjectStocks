@@ -32,8 +32,6 @@ static DrawObject *card_desc_textobject    = NULL;
 
 static DrawObject *card_bitmap    = NULL;
 
-int scrollbox_num = 0; //MOVE THIS NOW JACK
-
 void CardsMenuRenderLogic();
 
 void InitalizePositiveCardsScrollBox();
@@ -52,7 +50,6 @@ void InitializeCardsMenu()
         Log("STUB: cards Menu could not create new draw layer");
         return;
     }
-    scrollbox_num = 0; //MOVE THIS NOW JACK
 
    //AddCardToPlayer(1);
    //AddCardToPlayer(2);
@@ -70,7 +67,7 @@ void InitializeCardsMenu()
     LogF("Neg: %d", GetNumOfPlayerNegativeCards());
 
     InitalizePositiveCardsScrollBox();
-    //InitalizeNegativeCardsScrollBox();
+    InitalizeNegativeCardsScrollBox();
 
     InitializeCardsMenuText(); 
 
@@ -151,23 +148,22 @@ void LoadCardClick(char *scroll_box_content, unsigned short int index)
 
 }
 
-
-
-void AddToPositiveScrollBox(DrawObject * object, char* content)
+void PopulatePositiveCardsScollBox(DrawObject *object)
 {
+    PlayerCard *temp  = GetAllPlayerCards();
+    int scrollbox_num = 0;
 
-
-    object->scrollbox.text_content[scrollbox_num] = content;
-
-    LogF("scrollbox_num = %d", scrollbox_num);
-    scrollbox_num++;
+    for(int i = 0; i < GetNumOfPlayerCards(); i++)
+        if(GetCardType(GetCardTitle(temp[i].card_id)) == 1)
+        {
+            object->scrollbox.text_content[scrollbox_num] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
+            scrollbox_num++;
+        }
 
 }
 
 void InitalizePositiveCardsScrollBox() 
 {
-
-    PlayerCard *temp = GetAllPlayerCards();
 
     DrawObject *object = CreateScrollBoxObject();
 
@@ -180,23 +176,30 @@ void InitalizePositiveCardsScrollBox()
     object->scrollbox.num_items        = GetNumOfPlayerPositiveCards();
     object->scrollbox.box_click        = &LoadCardClick;
     object->scrollbox.text_content     = malloc(sizeof(char *) * GetNumOfPlayerPositiveCards());
-
-    for(int i = 0; i < GetNumOfPlayerCards(); i++)
-        if(GetCardType(GetCardTitle(temp[i].card_id)) == 1)
-            AddToPositiveScrollBox(object, GetFormattedPointer(GetCardTitle(temp[i].card_id)));
-
-
+    
+    PopulatePositiveCardsScollBox(object);
+    
     AddObjectToDrawLayer(object);
 
 }
 
 
+void PopulateNegativeCardsScollBox(DrawObject *object)
+{
+    PlayerCard *temp  = GetAllPlayerCards();
+    int scrollbox_num = 0;
 
+    for(int i = 0; i < GetNumOfPlayerCards(); i++)
+        if(GetCardType(GetCardTitle(temp[i].card_id)) == 0)
+        {
+            object->scrollbox.text_content[scrollbox_num] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
+            scrollbox_num++;
+        }
+
+}
 
 void InitalizeNegativeCardsScrollBox() 
 {
-
-    PlayerCard *temp = GetAllPlayerCards();
 
     DrawObject *object = CreateScrollBoxObject();
 
@@ -210,9 +213,11 @@ void InitalizeNegativeCardsScrollBox()
     object->scrollbox.box_click        = &LoadCardClick;
     object->scrollbox.text_content     = malloc(sizeof(char *) * GetNumOfPlayerNegativeCards());
 
-    for(int i = 0; i < GetNumOfPlayerCards(); i++)
-        if(GetCardType(GetCardTitle(temp[i].card_id)) == 0)
-            object->scrollbox.text_content[i] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
+    PopulateNegativeCardsScollBox(object);
+
+    //for(int i = 0; i < GetNumOfPlayerCards(); i++)
+    //    if(GetCardType(GetCardTitle(temp[i].card_id)) == 0)
+    //        object->scrollbox.text_content[i] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
 
     AddObjectToDrawLayer(object);
 
