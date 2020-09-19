@@ -20,6 +20,8 @@
 #include "generalpurposemenus.h"
 #include "drawlayerutils.h"
 #include "dbcard.h"
+#include "popup.h"
+#include "button.h"
 
 static MenuWithChilds *cards_menu      = NULL;
 static MenuWithChilds *apply_card_menu = NULL;
@@ -30,7 +32,10 @@ static DrawObject *player_date_textobject  = NULL;
 static DrawObject *card_title_textobject   = NULL;
 static DrawObject *card_desc_textobject    = NULL;
 
+static DrawObject *apply_button = NULL;
+
 static DrawObject *card_bitmap    = NULL;
+
 
 void CardsMenuRenderLogic();
 
@@ -39,8 +44,9 @@ void InitalizeNegativeCardsScrollBox();
 
 void InitializeCardMenuCompanyScrollBox();
 
-void InitializeCardsMenuText();
+void InitializeCardsMenuTextAndButtons();
 void InitializeCardBitmapAndText(char* card_title);
+void ApplyMenu_BCB();
 
 void InitializeCardsMenu() 
 {
@@ -51,9 +57,6 @@ void InitializeCardsMenu()
         return;
     }
 
-    //AddCardToPlayer(1);
-    //AddCardToPlayer(2);
-
     cards_menu = GetJSONMenuAndAddToDrawLayer("CardsMenu");
 
     InitializePlayerCards();
@@ -61,7 +64,7 @@ void InitializeCardsMenu()
     InitalizePositiveCardsScrollBox();
     InitalizeNegativeCardsScrollBox();
 
-    InitializeCardsMenuText(); 
+    InitializeCardsMenuTextAndButtons(); 
 
     InitializeSpeedSelectObject("CardsMenu");
 
@@ -78,7 +81,7 @@ void CardsMenuRenderLogic()
 
 }
 
-void InitializeCardsMenuText()
+void InitializeCardsMenuTextAndButtons()
 {
 
     player_money_textobject = GetJSONObjectAndAddToDrawLayer("CardsMenuAccountMoneyTextObject");
@@ -86,9 +89,12 @@ void InitializeCardsMenuText()
     card_title_textobject   = GetJSONObjectAndAddToDrawLayer("CardsMenuCardTitleTextObject");
 
     card_desc_textobject    = GetDrawObjectFromJsonLayer("CardsMenuCardDescriptionTextObject");
-
     card_desc_textobject->width = 400;
     AddObjectToDrawLayer(card_desc_textobject);
+
+    apply_button = GetDrawObjectFromJsonLayer("CardsMenuApplyButtonObject");
+    RemoveDrawObject(apply_button);
+
 
 }
 
@@ -103,11 +109,10 @@ void PopulateCardMenuCompanyScrollBox(DrawObject *object)
 
 void CardMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
-    LogF("CardBeingPlayed: %s", card_title_textobject->text.content);
-    LogF("CardplayedId: %d", GetCardId(card_title_textobject->text.content));
-    LogF("CompanyToBeApliedTo: %s", scroll_box_content);
-    LogF("PlayerCardIDFUNCT: %d", GetPlayerCardId(GetCardId(card_title_textobject->text.content)));
+
     RemoveCardFromPlayer(GetPlayerCardId(GetCardId(card_title_textobject->text.content)));
+    ApplyMenu_BCB();
+    DisplayPopupOnDrawLayer("Added Card to Company", "assets/images/generalpurposemenus/popups/greenpopup.png");
 
 }
 
@@ -119,7 +124,7 @@ void InitializeCardMenuCompanyScrollBox()
     object->x          = 757;
     object->y          = 363;
     object->width      = 288;
-    object->height     = 200;
+    object->height     = 350;
     object->asset_path = "assets/images/companyicons/StocksBox.png";
 
     object->scrollbox.num_items    = GetNumCompanies();
@@ -148,16 +153,12 @@ void PopulatePositiveCardsScollBox(DrawObject *object)
     int scrollbox_num = 0;
 
     for(int i = 0; i < GetNumOfPlayerCards(); i++)
-    {
-        LogF("PlayerCardId: %d", temp[i].player_card_id);
         if(GetCardType(GetCardTitle(temp[i].card_id)) == 1)
         {
             object->scrollbox.text_content[scrollbox_num] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
             scrollbox_num++;
         }
-    }
         
-
 }
 
 void InitalizePositiveCardsScrollBox() 
@@ -232,7 +233,10 @@ void ApplyMenu_BCB()
 
         ClearCurrentDrawLayer();
         apply_card_menu = NULL;
-
+        ClearCurrentDrawLayer();
+        cards_menu      = NULL;
+        InitializeCardsMenu();
+        
     }
 
 }

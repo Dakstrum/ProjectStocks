@@ -40,7 +40,6 @@ static int current_button_idx = -1;
 void InitalizeSaveScrollBox();
 void InitializeLoadSaveMenuText();
 void InitializeNewSaveTextBoxes();
-void DisplaySavePopup(char str[50], char *path);
 
 void InitializeLoadSaveMenu() 
 {
