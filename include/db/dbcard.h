@@ -24,7 +24,7 @@ typedef struct PlayerCard {
 
 
 void InitializeCards();
-unsigned int GetCardId(char* card_title);
+int GetCardId(char* card_title);
 char* GetCardPath(char* card_title);
 int GetCardPriceModifier(char* card_title);
 float GetCardModifierLength(char* card_title);
@@ -37,6 +37,8 @@ PlayerCard *GetAllPlayerCards();
 char* GetCardTitle(int card_id);
 int GetCardType(char* card_title);
 int GetNumOfPlayerCards();
+void RemoveCardFromPlayer(int player_card_id);
+int GetPlayerCardId(int temp_card_id);
 
 
 #endif

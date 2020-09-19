@@ -13,12 +13,11 @@ static Vector *player_cards = NULL;
 
 
 //Cards
-unsigned int GetCardId(char* card_title)
+int GetCardId(char* card_title)
 {
 
 	assert(card_title != NULL);
 
-    LogF("%s", card_title);
     Card *temp = (Card *)cards->elements;
     for (size_t i = 0; i < cards->num_elements; i++)
     	if (strcmp(temp[i].card_name, card_title) == 0)
@@ -97,6 +96,18 @@ float GetCardModifierLength(char* card_title)
 
 }
 
+
+int GetCardType(char* card_title)
+{
+
+    if(GetCardPriceModifier(card_title) > 0)
+        return 1;
+    else
+        return 0;
+
+
+}
+
 int Card_Callback(void *card, int argc, char **argv, char **col_name) 
 {
 
@@ -116,17 +127,6 @@ int Card_Callback(void *card, int argc, char **argv, char **col_name)
     Vector_PushBack(cards, &temp);
 
     return 0;
-
-}
-
-int GetCardType(char* card_title)
-{
-
-    if(GetCardPriceModifier(card_title) > 0)
-        return 1;
-    else
-        return 0;
-
 
 }
 
@@ -165,23 +165,32 @@ void InitializePlayerCards()
 
 }
 
+int GetPlayerCardId(int temp_card_id)
+{
+
+    PlayerCard *temp = (PlayerCard *)player_cards->elements;
+    for (size_t i = 0; i < player_cards->num_elements; i++)
+        if (temp[i].card_id == temp_card_id)
+            return temp[i].player_card_id;
+
+    return 0;
+
+}
+
 void AddCardToPlayer(int card_id)
 {
 
-    sqlite3 *db;
-    if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("INSERT INTO PlayerCards (PlayerId, CardId) VALUES (%d, %d)", GetCurrentPlayerId(), card_id), NULL, NULL, db);
-
-    sqlite3_close(db);
+    ExecuteQueryF(NULL, NULL, "INSERT INTO PlayerCards (PlayerId, CardId) VALUES (%d, %d)", GetCurrentPlayerId(), card_id);
 
 }
 
-void RemoveCardToPlayer()
+void RemoveCardFromPlayer(int player_card_id)
 {
 
-
-
+    ExecuteQueryF(NULL, NULL, "DELETE FROM PlayerCards WHERE PlayerCardId = %d", player_card_id);
+    
 }
+
 
 int GetNumOfPlayerCards()
 {
