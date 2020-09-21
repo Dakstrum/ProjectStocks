@@ -13,11 +13,12 @@
 #include "dbaccount.h"
 #include "dbsave.h"
 
+#include "timer.h"
+
 static atomic_long game_time;
 static atomic_long game_time_real_dt;
 static atomic_long game_time_game_dt;
 static atomic_uint game_seed;
-static atomic_bool pause_game_time;
 static atomic_int  save_id;
 static atomic_int  player_id;
 
@@ -113,7 +114,6 @@ void InitAccount()
     atomic_store(&save_id, -1);
     atomic_store(&game_time, ONE_HOUR);
     atomic_store(&game_time_real_dt, 2);
-    atomic_store(&pause_game_time, false);
     atomic_store(&game_seed, 0);
     atomic_store(&game_time_game_dt, ONE_HOUR);
 
@@ -123,13 +123,6 @@ void InitAccount()
     current_time_buf    = malloc(128);
     current_save_name   = malloc(64);
     current_player_name = malloc(64);
-
-}
-
-void TogglePauseGameTime() 
-{
-
-    atomic_store(&pause_game_time, !atomic_load(&pause_game_time));
 
 }
 
@@ -167,7 +160,7 @@ void *AccountEntry(ALLEGRO_THREAD *thread, void *arg)
     while (!ShouldICleanUp()) {
 
         al_rest(sleep_time);
-        if (atomic_load(&pause_game_time))
+        if (Timer_IsPaused())
             continue;
 
         dt += 1;
@@ -256,6 +249,7 @@ void SetGameSpeed(const int speed)
 {
 
     switch (speed) {
+
 
         case 2:  sleep_time = .5; break;
         case 3:  sleep_time = .1; break;

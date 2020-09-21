@@ -10,7 +10,6 @@ void LoadSave(int load_save_id, int save_player_id);
 void StorePlayerData();
 int GetCurrentPlayerId();
 
-void TogglePauseGameTime();
 void SetGameTime(time_t time_to_set);
 
 time_t GetGameTime();

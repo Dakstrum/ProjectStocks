@@ -75,6 +75,7 @@ void ToggleOptionsMenu()
 
         ClearCurrentDrawLayer();
         options_menu = NULL;
+        
     }
 
 }

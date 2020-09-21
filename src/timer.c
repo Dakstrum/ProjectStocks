@@ -1,6 +1,7 @@
 
 #include <assert.h>
 #include <time.h>
+#include <stdatomic.h>
 
 #include "timer.h"
 #include "shared.h"
@@ -8,7 +9,7 @@
 static struct timespec last_render_update;
 static double previous_time = 0.0;
 
-static bool paused = false;
+static atomic_bool paused = false;
 
 void Timer_Init() 
 {
@@ -33,19 +34,26 @@ double Timer_GetDiff()
 
 void Timer_Pause()
 {
-	assert(!paused);
+	assert(!atomic_load(&paused));
 
 	previous_time = Timer_GetDiff();
-	paused = true;
+	atomic_store(&paused, true);
 
 }
 
 void Timer_Unpause()
 {
-	assert(paused);
+	assert(atomic_load(&paused));
 
-	paused = false;
+	atomic_store(&paused, false);
 	last_render_update = GetOffsetTime(-previous_time);
 	previous_time = 0.0;
+
+}
+
+bool Timer_IsPaused()
+{
+
+	return atomic_load(&paused);
 
 }
