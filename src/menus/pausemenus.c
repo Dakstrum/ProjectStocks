@@ -35,6 +35,7 @@ void ToggleInGamePauseMenu()
 void PauseMenuMainMenu_BCB()
 {
 
+    Timer_Unpause();
     ClearDrawLayers();
     SwitchToRenderingMainMenu();
 
