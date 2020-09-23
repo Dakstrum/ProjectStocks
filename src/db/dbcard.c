@@ -27,7 +27,7 @@ int GetCardId(char* card_title)
 
 }
 
-char* GetCardTitle(int card_id)
+char* GetCardTitle(unsigned int card_id)
 {
 
 
@@ -40,56 +40,48 @@ char* GetCardTitle(int card_id)
 
 }
 
-char* GetCardDescription(char* card_title)
+char* GetCardDescription(unsigned int card_id)
 {
-
-	assert(card_title != NULL);
 
     Card *temp = (Card *)cards->elements;
     for (size_t i = 0; i < cards->num_elements;i++)
-        if (strcmp(temp[i].card_name, card_title) == 0)
+        if (temp[i].card_id == (unsigned int)card_id)
             return temp[i].card_desc;
 
     return 0;
 
 }
 
-char* GetCardPath(char* card_title)
+char* GetCardPath(unsigned int card_id)
 {
-
-    assert(card_title != NULL);
 
     Card *temp = (Card *)cards->elements;
     for (size_t i = 0; i < cards->num_elements;i++)
-        if (strcmp(temp[i].card_name, card_title) == 0)
+        if (temp[i].card_id == (unsigned int)card_id)
             return temp[i].card_path;
 
     return 0;
 
 }
 
-int GetCardPriceModifier(char* card_title)
+int GetCardPriceModifier(unsigned int card_id)
 {
-
-    assert(card_title != NULL);
 
     Card *temp = (Card *)cards->elements;
     for (size_t i = 0; i < cards->num_elements; i++)
-        if (strcmp(temp[i].card_name, card_title) == 0)
+        if (temp[i].card_id == (unsigned int)card_id)
             return temp[i].price_modifier;
 
     return 0;
 
 }
 
-float GetCardModifierLength(char* card_title)
+float GetCardModifierLength(unsigned int card_id)
 {
-
-    assert(card_title != NULL);
 
     Card *temp = (Card *)cards->elements;
     for (size_t i = 0; i < cards->num_elements; i++)
-        if (strcmp(temp[i].card_name, card_title) == 0)
+        if (temp[i].card_id == (unsigned int)card_id)
             return temp[i].modifier_length;
 
     return 0;
@@ -97,10 +89,10 @@ float GetCardModifierLength(char* card_title)
 }
 
 
-int GetCardType(char* card_title)
+int GetCardType(unsigned int card_id)
 {
 
-    if(GetCardPriceModifier(card_title) > 0)
+    if(GetCardPriceModifier(card_id) > 0)
         return 1;
     else
         return 0;
@@ -170,7 +162,7 @@ int GetPlayerCardId(int temp_card_id)
 
     PlayerCard *temp = (PlayerCard *)player_cards->elements;
     for (size_t i = 0; i < player_cards->num_elements; i++)
-        if (temp[i].card_id == temp_card_id)
+        if (temp[i].card_id == (unsigned int)temp_card_id)
             return temp[i].player_card_id;
 
     return 0;
@@ -217,7 +209,7 @@ int GetNumOfPlayerPositiveCards()
     PlayerCard *temp = (PlayerCard *)player_cards->elements;
 
     for(size_t i = 0; i < player_cards->num_elements; i++)  
-        if(GetCardType(GetCardTitle(temp[i].card_id)))
+        if(GetCardType(temp[i].card_id))
             amount++;
 
     return amount;
@@ -233,7 +225,7 @@ int GetNumOfPlayerNegativeCards()
     PlayerCard *temp = (PlayerCard *)player_cards->elements;
     
     for(size_t i = 0; i < player_cards->num_elements; i++)  
-        if(GetCardType(GetCardTitle(temp[i].card_id)) == 0)
+        if(GetCardType(temp[i].card_id) == 0)
             amount++;
 
     return amount;

@@ -153,7 +153,7 @@ void PopulatePositiveCardsScollBox(DrawObject *object)
     int scrollbox_num = 0;
 
     for(int i = 0; i < GetNumOfPlayerCards(); i++)
-        if(GetCardType(GetCardTitle(temp[i].card_id)) == 1)
+        if(GetCardType(temp[i].card_id) == 1)
         {
             object->scrollbox.text_content[scrollbox_num] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
             scrollbox_num++;
@@ -190,7 +190,7 @@ void PopulateNegativeCardsScollBox(DrawObject *object)
     int scrollbox_num = 0;
 
     for(int i = 0; i < GetNumOfPlayerCards(); i++)
-        if(GetCardType(GetCardTitle(temp[i].card_id)) == 0)
+        if(GetCardType(temp[i].card_id) == 0)
         {
             object->scrollbox.text_content[scrollbox_num] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
             scrollbox_num++;
@@ -253,12 +253,12 @@ void InitializeCardBitmapAndText(char* card_title)
     card_bitmap->y                               = 218;
     card_bitmap->width                           = 352;
     card_bitmap->height                          = 496;
-    card_bitmap->asset_path = GetCardPath(card_title);
+    card_bitmap->asset_path = GetCardPath(GetCardId(card_title));
 
     AddObjectToDrawLayer(card_bitmap);
 
     SetTextContent(card_title_textobject, "%s", card_title);
-    SetTextContent(card_desc_textobject,  "%s", GetCardDescription(card_title));
+    SetTextContent(card_desc_textobject,  "%s", GetCardDescription(GetCardId(card_title)));
 
 }
 

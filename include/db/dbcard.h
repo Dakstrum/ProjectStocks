@@ -16,26 +16,26 @@ typedef struct Card {
 
 typedef struct PlayerCard {
 
-	int player_card_id;
-	int player_id;
-	int card_id;
+	unsigned int player_card_id;
+	unsigned int player_id;
+	unsigned int card_id;
 
 } PlayerCard;
 
 
 void InitializeCards();
 int GetCardId(char* card_title);
-char* GetCardPath(char* card_title);
-int GetCardPriceModifier(char* card_title);
-float GetCardModifierLength(char* card_title);
-char* GetCardDescription(char* card_title);
+char* GetCardPath(unsigned int card_id);
+int GetCardPriceModifier(unsigned int card_id);
+float GetCardModifierLength(unsigned int card_id);
+char* GetCardDescription(unsigned int card_id);
 void AddCardToPlayer(int card_id);
 int GetNumOfPlayerPositiveCards();
 int GetNumOfPlayerNegativeCards();
 void InitializePlayerCards();
 PlayerCard *GetAllPlayerCards();
-char* GetCardTitle(int card_id);
-int GetCardType(char* card_title);
+char* GetCardTitle(unsigned int card_id);
+int GetCardType(unsigned int card_id);
 int GetNumOfPlayerCards();
 void RemoveCardFromPlayer(int player_card_id);
 int GetPlayerCardId(int temp_card_id);
