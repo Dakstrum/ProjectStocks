@@ -32,10 +32,9 @@ static DrawObject *player_date_textobject  = NULL;
 static DrawObject *card_title_textobject   = NULL;
 static DrawObject *card_desc_textobject    = NULL;
 
-static DrawObject *apply_button = NULL;
-
 static DrawObject *card_bitmap    = NULL;
 
+static int current_button_idx = -1;
 
 void CardsMenuRenderLogic();
 
@@ -58,8 +57,6 @@ void InitializeCardsMenu()
     }
 
     cards_menu = GetJSONMenuAndAddToDrawLayer("CardsMenu");
-
-    InitializePlayerCards();
 
     InitalizePositiveCardsScrollBox();
     InitalizeNegativeCardsScrollBox();
@@ -93,9 +90,6 @@ void InitializeCardsMenuTextAndButtons()
     card_desc_textobject    = GetDrawObjectFromJsonLayer("CardsMenuCardDescriptionTextObject");
     card_desc_textobject->width = 400;
     AddObjectToDrawLayer(card_desc_textobject);
-
-    apply_button = GetDrawObjectFromJsonLayer("CardsMenuApplyButtonObject");
-    RemoveDrawObject(apply_button);
 
 
 }
@@ -144,6 +138,8 @@ void LoadCardClick(char *scroll_box_content, unsigned short int index)
     if (card_title_textobject == NULL || card_desc_textobject == NULL)
         return;
 
+    current_button_idx = index;
+
     InitializeCardBitmapAndText(scroll_box_content);
 
 }
@@ -157,6 +153,7 @@ void PopulatePositiveCardsScollBox(DrawObject *object)
     for(int i = 0; i < GetNumOfPlayerCards(); i++)
         if(GetCardType(temp[i].card_id) == 1)
         {
+            LogF("i: %d",  GetNumOfPlayerCards());
             object->scrollbox.text_content[scrollbox_num] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
             scrollbox_num++;
         }
@@ -223,6 +220,13 @@ void InitalizeNegativeCardsScrollBox()
 
 void ApplyMenu_BCB()
 {
+    if (current_button_idx == -1)
+    {
+
+        DisplayPopupOnDrawLayer("No Card Selected", "assets/images/generalpurposemenus/popups/redpopup.png");
+        return;
+
+    }
    
     if (apply_card_menu == NULL) {
 
@@ -238,6 +242,7 @@ void ApplyMenu_BCB()
         ClearCurrentDrawLayer();
         cards_menu      = NULL;
         InitializeCardsMenu();
+        current_button_idx = -1;
         
     }
 
@@ -245,7 +250,7 @@ void ApplyMenu_BCB()
 
 void InitializeCardBitmapAndText(char* card_title)
 {
-
+    /*
     if(card_bitmap)
         RemoveDrawObject(card_bitmap);
     
@@ -258,7 +263,7 @@ void InitializeCardBitmapAndText(char* card_title)
     card_bitmap->asset_path = GetCardPath(GetCardId(card_title));
 
     AddObjectToDrawLayer(card_bitmap);
-
+    */
     SetTextContent(card_title_textobject, "%s", card_title);
     SetTextContent(card_desc_textobject,  "%s", GetCardDescription(GetCardId(card_title)));
 
@@ -277,5 +282,6 @@ void CleanCardsMenu()
     cards_menu      = NULL;
     apply_card_menu = NULL;
 
+    current_button_idx = -1;
 
 }

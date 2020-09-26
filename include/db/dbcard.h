@@ -37,7 +37,7 @@ PlayerCard *GetAllPlayerCards();
 char* GetCardTitle(unsigned int card_id);
 int GetCardType(unsigned int card_id);
 int GetNumOfPlayerCards();
-void RemoveCardFromPlayer(int player_card_id);
+void RemoveCardFromPlayer(unsigned int player_card_id);
 int GetPlayerCardId(int temp_card_id);
 void InitializeCardInformation();
 void SaveCards();
