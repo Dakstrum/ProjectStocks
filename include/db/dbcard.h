@@ -39,6 +39,8 @@ int GetCardType(unsigned int card_id);
 int GetNumOfPlayerCards();
 void RemoveCardFromPlayer(int player_card_id);
 int GetPlayerCardId(int temp_card_id);
+void InitializeCardInformation();
+void SaveCards();
 
 
 #endif

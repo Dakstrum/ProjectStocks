@@ -12,6 +12,7 @@
 #include "dbcompany.h"
 #include "dbaccount.h"
 #include "dbsave.h"
+#include "dbcard.h"
 
 static atomic_long game_time;
 static atomic_long game_time_real_dt;
@@ -212,6 +213,7 @@ void CreateNewSave(char *save_name, char *player_name)
     CreateNewSaveEntries(save_name, player_name);
 
     InitializeAccountInformation();
+    InitializeCardInformation();
 
 }
 
@@ -232,6 +234,7 @@ void LoadSave(int load_save_id, int save_player_id)
     account_money = save.save_player_money;
 
     InitializeAccountInformation();
+    InitializeCardInformation();
 
 }
 

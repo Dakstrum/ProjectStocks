@@ -8,6 +8,7 @@
 #include "optionsmenu.h"
 #include "dbaccount.h"
 #include "drawlayerutils.h"
+#include "dbcard.h"
 
 static MenuWithChilds *in_game_pause_menu = NULL;
 
@@ -47,6 +48,7 @@ void PauseMenuSave_BCB()
 {
 
     StorePlayerData();
+    SaveCards();
     
 }
 

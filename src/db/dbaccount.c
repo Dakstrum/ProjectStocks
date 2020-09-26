@@ -20,10 +20,10 @@ typedef struct OwnedStocks
 
 } OwnedStocks;
 
-static unsigned int num_companies = 0;
-static OwnedStocks owned_stocks   = {NULL, NULL};
+static unsigned int num_companies         = 0;
+static OwnedStocks owned_stocks           = {NULL, NULL};
 static Transactions *account_transactions = NULL;
-static Queue *transaction_queue   = NULL;
+static Queue *transaction_queue           = NULL;
 
 void IncreaseTransactionSizeIfNeeded(Transactions *transaction_temp)
 {

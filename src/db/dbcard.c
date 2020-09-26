@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <string.h>
 
+#include "queue.h"
 #include "shared.h"
 #include "dbutils.h"
 #include "dbcard.h"
@@ -11,6 +12,7 @@
 static Vector *cards        = NULL;
 static Vector *player_cards = NULL;
 
+static Queue *card_queue   = NULL;
 
 //Cards
 int GetCardId(char* card_title)
@@ -172,14 +174,16 @@ int GetPlayerCardId(int temp_card_id)
 void AddCardToPlayer(int card_id)
 {
 
-    ExecuteQueryF(NULL, NULL, "INSERT INTO PlayerCards (PlayerId, CardId) VALUES (%d, %d)", GetCurrentPlayerId(), card_id);
+    static char *query = "INSERT INTO PlayerCards (PlayerId, CardId) VALUES (%d, %d);";
+    Queue_PushMessage(card_queue, GetFormattedPointer(query, GetCurrentPlayerId(), card_id));
 
 }
 
 void RemoveCardFromPlayer(int player_card_id)
 {
 
-    ExecuteQueryF(NULL, NULL, "DELETE FROM PlayerCards WHERE PlayerCardId = %d", player_card_id);
+    static char *query = "DELETE FROM PlayerCards WHERE PlayerCardId = %d";
+    Queue_PushMessage(card_queue, GetFormattedPointer(query, player_card_id));
     
 }
 
@@ -214,7 +218,6 @@ int GetNumOfPlayerPositiveCards()
 
     return amount;
 
-
 }
 
 int GetNumOfPlayerNegativeCards()
@@ -230,4 +233,25 @@ int GetNumOfPlayerNegativeCards()
 
     return amount;
  
+}
+
+void SaveCards()
+{
+
+    Vector *vector = Queue_GetLockFreeVector(card_queue);
+
+    sqlite3 *db;
+    if (sqlite3_open_v2(DefaultConnection(), &db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE, NULL) != SQLITE_OK)
+        return;
+
+    ExecuteTransaction(db, vector);
+    Vector_DeletePtrs(vector);
+
+}
+
+void InitializeCardInformation()
+{
+
+    card_queue = Queue_Create();
+
 }

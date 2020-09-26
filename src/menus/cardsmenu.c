@@ -68,6 +68,8 @@ void InitializeCardsMenu()
 
     InitializeSpeedSelectObject("CardsMenu");
 
+    //AddCardToPlayer(1);
+
 }
 
 void CardsMenuRenderLogic()
