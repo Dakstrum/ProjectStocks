@@ -46,10 +46,12 @@ void InitializeCardMenuCompanyScrollBox();
 void InitializeCardsMenuTextAndButtons();
 void InitializeCardBitmapAndText(char* card_title);
 void ApplyMenu_BCB();
+void CleanCardsMenu();
 
 void InitializeCardsMenu() 
 {
 
+    CleanCardsMenu();
     if (CreateNewDrawLayer() == -1) {
 
         Log("STUB: cards Menu could not create new draw layer");
@@ -64,8 +66,6 @@ void InitializeCardsMenu()
     InitializeCardsMenuTextAndButtons(); 
 
     InitializeSpeedSelectObject("CardsMenu");
-
-    //AddCardToPlayer(1);
 
 }
 
@@ -91,7 +91,6 @@ void InitializeCardsMenuTextAndButtons()
     card_desc_textobject->width = 400;
     AddObjectToDrawLayer(card_desc_textobject);
 
-
 }
 
 void PopulateCardMenuCompanyScrollBox(DrawObject *object)
@@ -101,7 +100,6 @@ void PopulateCardMenuCompanyScrollBox(DrawObject *object)
         object->scrollbox.text_content[i]  = GetCompanyName(i+1);
 
 }
-
 
 void CardMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
@@ -151,13 +149,18 @@ void PopulatePositiveCardsScollBox(DrawObject *object)
     int scrollbox_num = 0;
 
     for(int i = 0; i < GetNumOfPlayerCards(); i++)
+    {
+
         if(GetCardType(temp[i].card_id) == 1)
         {
-            LogF("i: %d",  GetNumOfPlayerCards());
+
             object->scrollbox.text_content[scrollbox_num] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
             scrollbox_num++;
+
         }
-        
+
+    }
+
 }
 
 void InitalizePositiveCardsScrollBox() 
@@ -181,19 +184,20 @@ void InitalizePositiveCardsScrollBox()
 
 }
 
-
 void PopulateNegativeCardsScollBox(DrawObject *object)
 {
     
     PlayerCard *temp  = GetAllPlayerCards();
     int scrollbox_num = 0;
 
-    for(int i = 0; i < GetNumOfPlayerCards(); i++)
+    for(int i = 0; i < GetNumOfPlayerCards(); i++)  {
         if(GetCardType(temp[i].card_id) == 0)
         {
             object->scrollbox.text_content[scrollbox_num] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
             scrollbox_num++;
         }
+
+    }
 
 }
 
@@ -250,9 +254,13 @@ void ApplyMenu_BCB()
 
 void InitializeCardBitmapAndText(char* card_title)
 {
-    /*
-    if(card_bitmap)
+    
+
+    if(card_bitmap) {
+        
         RemoveDrawObject(card_bitmap);
+        card_bitmap = NULL;
+    }
     
     card_bitmap = CreateNewDrawObject();
     card_bitmap->type                            = MENU;
@@ -263,7 +271,7 @@ void InitializeCardBitmapAndText(char* card_title)
     card_bitmap->asset_path = GetCardPath(GetCardId(card_title));
 
     AddObjectToDrawLayer(card_bitmap);
-    */
+    
     SetTextContent(card_title_textobject, "%s", card_title);
     SetTextContent(card_desc_textobject,  "%s", GetCardDescription(GetCardId(card_title)));
 

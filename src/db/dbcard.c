@@ -99,7 +99,6 @@ int GetCardType(unsigned int card_id)
     else
         return 0;
 
-
 }
 
 int Card_Callback(void *card, int argc, char **argv, char **col_name) 
@@ -169,8 +168,6 @@ int GetPlayerCardId(int temp_card_id)
 
 }
 
-
-
 void AddCardToPlayer(int card_id)
 {
 
@@ -194,8 +191,7 @@ void AddCardToPlayer(int card_id)
 void RemoveCardFromPlayer(unsigned int player_card_id)
 {
 
-    static char *query = "DELETE FROM PlayerCards WHERE PlayerCardId = %d";
-    Queue_PushMessage(card_queue, GetFormattedPointer(query, player_card_id));
+    static char *query = "DELETE FROM PlayerCards WHERE PlayerCardId = (SELECT PC.PlayerCardId FROM PlayerCards PC WHERE PC.PlayerId = %d AND PC.SaveId = %d AND PC.CardId = %d LIMIT 1);";
 
     PlayerCard *temp = player_cards->elements;
 
@@ -203,6 +199,7 @@ void RemoveCardFromPlayer(unsigned int player_card_id)
 
         if(temp[i].player_card_id == player_card_id) {
 
+            Queue_PushMessage(card_queue, GetFormattedPointer(query, temp[i].player_id, temp[i].save_id, temp[i].card_id));
             Vector_Remove(player_cards, i);
             break;
         }
