@@ -18,6 +18,7 @@ typedef struct PlayerCard {
 
 	unsigned int player_card_id;
 	unsigned int player_id;
+	unsigned int save_id;
 	unsigned int card_id;
 
 } PlayerCard;

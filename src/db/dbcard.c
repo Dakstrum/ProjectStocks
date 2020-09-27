@@ -143,7 +143,8 @@ int PlayerCard_Callback(void *card, int argc, char **argv, char **col_name)
 
     temp.player_card_id = atoi(argv[0]);
     temp.player_id      = atoi(argv[1]);
-    temp.card_id        = atoi(argv[2]);
+    temp.save_id        = atoi(argv[2]);
+    temp.card_id        = atoi(argv[3]);
 
     Vector_PushBack(player_cards, &temp);
 
@@ -155,9 +156,14 @@ int GetPlayerCardId(int temp_card_id)
 {
 
     PlayerCard *temp = (PlayerCard *)player_cards->elements;
-    for (size_t i = 0; i < player_cards->num_elements; i++)
-        if (temp[i].card_id == (unsigned int)temp_card_id)
+    for (size_t i = 0; i < player_cards->num_elements; i++) {
+
+        if (temp[i].card_id == (unsigned int)temp_card_id) {
+
             return temp[i].player_card_id;
+
+        }
+    }
 
     return 0;
 
@@ -166,9 +172,17 @@ int GetPlayerCardId(int temp_card_id)
 void AddCardToPlayer(int card_id)
 {
 
-    static char *query = "INSERT INTO PlayerCards (PlayerId, CardId) VALUES (%d, %d);";
-    Queue_PushMessage(card_queue, GetFormattedPointer(query, GetCurrentPlayerId(), card_id));
+    static char *query = "INSERT INTO PlayerCards (PlayerId, SaveId, CardId) VALUES (%d, %d, %d);";
+    Queue_PushMessage(card_queue, GetFormattedPointer(query, GetCurrentPlayerId(), GetSaveId(), card_id));
 
+    PlayerCard temp;
+
+    temp.player_card_id = GetPlayerCardId(card_id);
+    temp.player_id      = GetCurrentPlayerId();
+    temp.save_id        = GetSaveId();
+    temp.card_id        = card_id;
+
+    Vector_PushBack(player_cards, &temp);
 }
 
 void RemoveCardFromPlayer(unsigned int player_card_id)
@@ -199,7 +213,6 @@ int GetNumOfPlayerCards()
     return player_cards->num_elements;
 
 }
-
 
 
 PlayerCard *GetAllPlayerCards()
@@ -259,6 +272,6 @@ void InitializeCardInformation()
     card_queue = Queue_Create();
 
     player_cards = Vector_Create(sizeof(PlayerCard), 4);
-    ExecuteQueryF(&PlayerCard_Callback, NULL, "SELECT C.PlayerCardId, C.PlayerId, C.CardId FROM PlayerCards C");
+    ExecuteQueryF(&PlayerCard_Callback, NULL, "SELECT C.PlayerCardId, C.PlayerId, C.SaveId, C.CardId FROM PlayerCards C");
 
 }
