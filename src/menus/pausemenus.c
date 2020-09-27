@@ -10,6 +10,8 @@
 #include "drawlayerutils.h"
 #include "dbcard.h"
 
+#include "timer.h"
+
 static MenuWithChilds *in_game_pause_menu = NULL;
 
 void ToggleInGamePauseMenu()
@@ -19,11 +21,13 @@ void ToggleInGamePauseMenu()
 
         CreateNewDrawLayer();
         in_game_pause_menu = GetJSONMenuAndAddToDrawLayer("PauseMenu");
+        Timer_Pause();
         
     } else {
 
         ClearCurrentDrawLayer();
         in_game_pause_menu = NULL;
+        Timer_Unpause();
 
     }
 
@@ -32,6 +36,7 @@ void ToggleInGamePauseMenu()
 void PauseMenuMainMenu_BCB()
 {
 
+    Timer_Unpause();
     ClearDrawLayers();
     SwitchToRenderingMainMenu();
 
