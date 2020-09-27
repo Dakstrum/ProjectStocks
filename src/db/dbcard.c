@@ -169,18 +169,24 @@ int GetPlayerCardId(int temp_card_id)
 
 }
 
+
+
 void AddCardToPlayer(int card_id)
 {
+
+    static unsigned int fake_unique_id = 1000000000;
 
     static char *query = "INSERT INTO PlayerCards (PlayerId, SaveId, CardId) VALUES (%d, %d, %d);";
     Queue_PushMessage(card_queue, GetFormattedPointer(query, GetCurrentPlayerId(), GetSaveId(), card_id));
 
     PlayerCard temp;
 
-    temp.player_card_id = GetPlayerCardId(card_id);
+    temp.player_card_id = fake_unique_id;
     temp.player_id      = GetCurrentPlayerId();
     temp.save_id        = GetSaveId();
     temp.card_id        = card_id;
+
+    fake_unique_id++;
 
     Vector_PushBack(player_cards, &temp);
 }

@@ -65,7 +65,7 @@ void InitializeCardsMenu()
 
     InitializeSpeedSelectObject("CardsMenu");
 
-    AddCardToPlayer(1);
+    //AddCardToPlayer(1);
 
 }
 
