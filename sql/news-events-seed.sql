@@ -22,6 +22,8 @@ VALUES
 	(2, 'Unimpressive Games: Has released an epic game? What?', -.10, 10),
 	(3, 'WhySpace: Has affirmed that we need not good to space and that Earth has all the pollution we need!', .05, 5),
 	(4, 'Interstellar Business Robots: Wait, we still exist?', -.10, 5),
-	(5, 'A recent study finds back right tires often hit nails', -.20, 5),
-	(6, 'There has been a recent surge in sword related violence', .15, 15),
-	(7, 'K3 News Event', .15, 15);
+	(5, 'Pear Event', -.20, 5),
+	(6, 'A recent study finds back right tires often hit nails', -.20, 5),
+	(7, 'There has been a recent surge in sword related violence', .15, 15),
+	(8, 'K3 News Event', .15, 15),
+	(9, 'Ferrit News Event', .15, 15);
