@@ -274,7 +274,7 @@ void InitalizeAccountMenuCompanyScrollbox()
     object->y          = 230;
     object->width      = 288;
     object->height     = 603;
-    object->asset_path = "assets/images/companyicons/StocksBox.png";
+    object->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
 
     object->scrollbox.num_items    = GetNumCompanies();
     object->scrollbox.box_click    = &AccountMenuCompanyScrollBoxClick;

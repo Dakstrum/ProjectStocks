@@ -119,7 +119,7 @@ void InitializeCardMenuCompanyScrollBox()
     object->y          = 363;
     object->width      = 288;
     object->height     = 350;
-    object->asset_path = "assets/images/companyicons/StocksBox.png";
+    object->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
 
     object->scrollbox.num_items    = GetNumCompanies();
     object->scrollbox.box_click    = &CardMenuCompanyScrollBoxClick;
@@ -172,7 +172,7 @@ void InitalizePositiveCardsScrollBox()
     object->y          = 233;
     object->width      = 288;
     object->height     = 809;
-    object->asset_path = "assets/images/companyicons/StocksBox.png";
+    object->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
 
     object->scrollbox.num_items        = GetNumOfPlayerPositiveCards();
     object->scrollbox.box_click        = &LoadCardClick;
@@ -210,7 +210,7 @@ void InitalizeNegativeCardsScrollBox()
     object->y          = 233;
     object->width      = 288;
     object->height     = 809;
-    object->asset_path = "assets/images/companyicons/StocksBox.png";
+    object->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
 
     object->scrollbox.num_items        = GetNumOfPlayerNegativeCards();
     object->scrollbox.box_click        = &LoadCardClick;

@@ -197,11 +197,11 @@ void InitalizeSaveScrollBox()
     saves_scrollbox = CreateScrollBoxObject();
 
     saves_scrollbox->type       = SCROLLBOX;
-    saves_scrollbox->x          = 535;
+    saves_scrollbox->x          = 537;
     saves_scrollbox->y          = 226;
     saves_scrollbox->width      = 288;
     saves_scrollbox->height     = 603;
-    saves_scrollbox->asset_path = "assets/images/companyicons/SaveBox.png";
+    saves_scrollbox->asset_path = "assets/images/savemenus/assets/SaveBox.png";
 
     saves_scrollbox->scrollbox.num_items    = saves->num_elements;
     saves_scrollbox->scrollbox.box_click    = &SelectSaveClick;
