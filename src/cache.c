@@ -46,7 +46,7 @@ ALLEGRO_BITMAP *GetNewlyAddedBitmapFromCache(char *asset_path)
 ALLEGRO_BITMAP *GetBitmapFromCache(char *asset_path) 
 {
 
-    if (asset_path == NULL || strcmp(asset_path,"") == 0)
+    if (asset_path == NULL || strlen(asset_path) == 0)
         return NULL;
 
     BitmapCache *cache = (BitmapCache *)bitmap_vector->elements;
@@ -55,7 +55,9 @@ ALLEGRO_BITMAP *GetBitmapFromCache(char *asset_path)
         if (strcmp(asset_path, cache[i].asset_path) == 0)
             return cache[i].bitmap;
 
-    return GetNewlyAddedBitmapFromCache(asset_path);
+    ALLEGRO_BITMAP *bitmap = GetNewlyAddedBitmapFromCache(asset_path);
+    assert(bitmap != NULL);
+    return bitmap;
 
 }
 

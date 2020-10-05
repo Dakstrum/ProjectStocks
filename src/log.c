@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 #include <stdarg.h>
 #include <stdbool.h>
 
