@@ -66,13 +66,12 @@ void LogNoQueue(const char *str)
 void LogFNoQueue(const char *str, ...) 
 {
 
-    char buffer[2048];
     va_list args;
     va_start(args, str);
-    vsprintf(buffer, str, args);
+    char *buffer = GetFormattedPointerVaList(str, args);
 
     LogNoQueue(buffer);
-    va_end(args);
+    free(buffer);
 
 }
 
@@ -99,13 +98,13 @@ void LogF(const char *str, ...)
     char current_time[128];
     SetCurrentTime(current_time);
 
-    char buffer[1024];
     va_list args;
     va_start(args, str);
-    vsprintf(buffer, str, args);
-    va_end(args);
+    char *buffer = GetFormattedPointerVaList(str, args);
 
     Queue_PushMessage(log_queue, GetFormattedPointer("INSERT INTO LOGS (TimeStamp, Log) VALUES ('%s','%s');", current_time, buffer));
+
+    free(buffer);
 
 }
 
