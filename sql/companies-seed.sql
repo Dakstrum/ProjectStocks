@@ -37,5 +37,5 @@ VALUES
     (5, 'Pear Phone'),
 	(6, 'Premium Back Left Tire Package'),
     (7, 'Katana Package'),
-	(8, 'K3 Premium Subscription');
+	(8, 'K3 Premium Subscription'),
     (8, 'Ferrit News Premium Subscription');
