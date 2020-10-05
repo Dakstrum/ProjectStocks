@@ -21,8 +21,6 @@
 
 #define DSP_NUM 5
 
-
-
 static MenuWithChilds *account_menu = NULL;
 
 static DrawObject *player_money_textobject       = NULL;
@@ -47,7 +45,6 @@ static DrawObject *all_name_objects[DSP_NUM];
 static DrawObject *all_action_objects[DSP_NUM];
 static DrawObject *all_date_objects[DSP_NUM];
 static DrawObject *all_share_amount_objects[DSP_NUM];
-
 
 char* GetTransactionAction(TransactionType type);
 
@@ -206,7 +203,7 @@ void PopulateAllStocksHistoryDisplay()
             time_t time_buf = transactions->date[i];
             strftime(transaction_time, 128, "%x", localtime(&time_buf));
 
-            SetTextContent(all_name_objects[i],         "%s", GetCompanyName(transactions->company_id[i]));
+            SetTextContent(all_name_objects[i],         "%s", GetCompanyAbbreviation(transactions->company_id[i]));
             SetTextContent(all_action_objects[i],       "%s", GetTransactionAction(transactions->type[i]));
             SetTextContent(all_date_objects[i],         "%s", transaction_time);
             SetTextContent(all_share_amount_objects[i], "%d", transactions->shares[i]);
@@ -284,7 +281,6 @@ void InitalizeAccountMenuCompanyScrollbox()
     AddObjectToDrawLayer(object);
 
 }
-
 
 void AccountDown_BCB()
 {
