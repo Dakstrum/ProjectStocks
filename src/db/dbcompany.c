@@ -120,6 +120,6 @@ void InitializeCompanies()
 {
 
     companies = Vector_Create(sizeof(Company), 4);
-    ExecuteQueryF(&Company_Callback, NULL, "SELECT C.CompanyId, C.CompanyName, C.CompanyDescription, C.CompanyAbbreviation, C.IPO, C.CategoryId FROM Company C");
+    ExecuteQueryF(&Company_Callback, NULL, "SELECT C.CompanyId, C.CompanyName, C.CompanyDescription, C.CompanyAbbreviation, C.IPO, C.CategoryId FROM System_Company C");
 
 }

@@ -59,7 +59,7 @@ void SeedDB()
 {
 
     bool seeded = false;
-    ExecuteQueryF(&SeedDB_Callback, &seeded, "SELECT * FROM DBEvents WHERE Event = 'Seeded'");
+    ExecuteQueryF(&SeedDB_Callback, &seeded, "SELECT * FROM DB_Events WHERE Event = 'Seeded'");
     if (seeded) {
         
         Log("Already seeded db");
@@ -72,7 +72,7 @@ void SeedDB()
     ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/ai.sql"));
     ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/cards-seed.sql"));
     ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/settings-seed.sql"));
-    ExecuteQueryF(NULL, NULL, "INSERT INTO DBEvents (Event) VALUES ('Seeded')");
+    ExecuteQueryF(NULL, NULL, "INSERT INTO DB_Events (Event) VALUES ('Seeded')");
 
 }
 

@@ -1,6 +1,6 @@
 
 INSERT INTO 
-    AIFirstNames (FirstName)
+    System_AIFirstNames (FirstName)
 VALUES
     ('Julia'),
     ('Kyle'),
@@ -10,7 +10,7 @@ VALUES
     ('Amelia');
 
 INSERT INTO 
-    AILastNames (LastName)
+    System_AILastNames (LastName)
 VALUES
     ('Muffin'),
     ('Kip'),

@@ -1,7 +1,7 @@
 
 
 INSERT INTO
-    Cards (CardName, CardDesc, Cardpath, PriceModifier, ModifierLength)
+    System_Cards (CardName, CardDesc, Cardpath, PriceModifier, ModifierLength)
 VALUES
     ('Deadly Product',         'Spread false narrative about a deadly product from this company.', 'assets/images/cards/deadlyproduct.png', -5.0, 10),
     ('Fake Positive Earnings', 'Show positive company earnings', 'assets/images/cards/Temp.png', 3.0, 5),

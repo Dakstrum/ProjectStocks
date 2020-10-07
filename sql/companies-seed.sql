@@ -1,7 +1,7 @@
 
 
 INSERT INTO
-    Category (CategoryName)
+    System_Category (CategoryName)
 VALUES
     ('Video Games'),
     ('Aerospace'),
@@ -11,7 +11,7 @@ VALUES
     ('Technology Hardware');
 
 INSERT INTO 
-    Company (IPO, CompanyName, CompanyDescription, CompanyAbbreviation, CategoryId) 
+    System_Company (IPO, CompanyName, CompanyDescription, CompanyAbbreviation, CategoryId) 
 VALUES
     (25.0,  'WeBeHard',                     'WeBeHard is a video game company. Their rise to fame was from publishing extremely difficult games causing controversial rage among players',                                   'WBH',  1),
     (35.0,  'Unimpressive Games',           'Unimpressive Games Inc is a video game company. Being founded in Tom Swetner''s mother''s basement has since grown.',                                                           'UG',   1),
@@ -27,7 +27,7 @@ VALUES
     (45.0,  'TheBackUp',                    ' ''Its not if you fuck up, its when'' says TheBackUps CEO. Specializing in underground bunkers for when disaster strikes',                                                      'TBU',  4);
 
 INSERT INTO
-	CompanyProducts (CompanyId, ProductName)
+	System_CompanyProducts (CompanyId, ProductName)
 VALUES
 	(1, 'Naon'),
 	(1, 'Backdoor Belief'),

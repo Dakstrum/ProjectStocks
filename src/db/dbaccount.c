@@ -128,7 +128,7 @@ void InsertStockTransaction(char *company_name, float transaction_amount, int st
     const unsigned int player_id  = GetCurrentPlayerId();
     const unsigned int company_id = GetCompanyId(company_name);
     const time_t game_time        = GetGameTime();
-    static char *query            = "INSERT INTO Transactions (SaveId, PlayerId, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, %d, %d, %.2f, %d, %d);";
+    static char *query            = "INSERT INTO Player_Transactions (PlayerId, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, %d, %.2f, %d, %d);";
     Queue_PushMessage(transaction_queue, GetFormattedPointer(query, save_id, player_id, company_id, transaction_amount, stocks_exchanged, game_time));
 
     IncreaseTransactionSizeIfNeeded(account_transactions);
@@ -236,7 +236,7 @@ struct Transactions *GetAllSavedTransactions()
 {
 
     Transactions *transactions = GetNewTransactions();
-    ExecuteQueryF(&SetTransactionCallback, transactions, "SELECT * FROM Transactions WHERE SaveId=%d AND PlayerId=%d", GetSaveId(), GetCurrentPlayerId());
+    ExecuteQueryF(&SetTransactionCallback, transactions, "SELECT * FROM Player_Transactions AND PlayerId=%d", GetCurrentPlayerId());
     return transactions;
 
 }
@@ -279,7 +279,7 @@ void InitializeOwnedStocks()
     for (size_t i = 0; i< num_companies;i++)
         owned_stocks.owned_amount[i] = 0;
 
-    ExecuteQueryF(&GetOwnedStocks_CallBack, NULL, "SELECT SUM(StocksExchanged), CompanyId FROM Transactions WHERE SaveId=%d AND PlayerId=%d GROUP BY CompanyId", GetSaveId(), GetCurrentPlayerId());
+    ExecuteQueryF(&GetOwnedStocks_CallBack, NULL, "SELECT SUM(StocksExchanged), CompanyId FROM Player_Transactions WHERE PlayerId=%d GROUP BY CompanyId", GetCurrentPlayerId());
 
 }
 

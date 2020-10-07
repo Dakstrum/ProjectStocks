@@ -26,7 +26,7 @@ int InsertPlayerEntry(int save_id, char *player_name, double money, int save_own
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("INSERT INTO Players (SaveId, PlayerName, Money, SaveOwner) VALUES (%d, '%s', %.14f, %d)", save_id, player_name, money, save_owner), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Game_Players (SaveId, PlayerName, Money, SaveOwner) VALUES (%d, '%s', %.14f, %d)", save_id, player_name, money, save_owner), NULL, NULL, db);
         player_id = sqlite3_last_insert_rowid(db);
 
     }
@@ -40,7 +40,7 @@ int InsertSaveEntry(char *save_name, unsigned int game_seed)
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("INSERT INTO Saves (SaveName, RandomSeed) VALUES ('%s', %d)", save_name, game_seed), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("INSERT INTO Game_Saves (SaveName, RandomSeed) VALUES ('%s', %d)", save_name, game_seed), NULL, NULL, db);
         save_id = sqlite3_last_insert_rowid(db);
 
     }
@@ -53,7 +53,7 @@ void DeleteSave(int save_id)
 
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("DELETE FROM Players WHERE SaveId = %d; DELETE FROM Saves WHERE SaveId = %d;", save_id, save_id), NULL, NULL, db);
+        ExecuteQuery(GetFormattedPointer("DELETE FROM Game_Players WHERE SaveId = %d; DELETE FROM Saves WHERE SaveId = %d;", save_id, save_id), NULL, NULL, db);
     
     sqlite3_close(db);
 
@@ -77,7 +77,7 @@ unsigned int GetSaveSeedWithSaveId(int save_id)
 
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("SELECT RandomSeed FROM Saves WHERE SaveId=%d", save_id), &GetSaveSeedCallback, &seed, db);
+        ExecuteQuery(GetFormattedPointer("SELECT RandomSeed FROM Game_Saves WHERE SaveId=%d", save_id), &GetSaveSeedCallback, &seed, db);
 
     sqlite3_close(db);
 
@@ -107,7 +107,7 @@ char *GetSaveNameFromSaveId(int save_id)
 
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("SELECT SaveName FROM Saves WHERE SaveId = %d", save_id), &GetSaveNameFromSaveIdCallback, &save_name, db);
+        ExecuteQuery(GetFormattedPointer("SELECT SaveName FROM Game_Saves WHERE SaveId = %d", save_id), &GetSaveNameFromSaveIdCallback, &save_name, db);
 
     sqlite3_close(db);
 
@@ -137,7 +137,7 @@ char *GetPlayerNameFromSaveName(char *save_name)
 
     sqlite3 *db;
     if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("SELECT PlayerName FROM Saves WHERE SaveName = '%s'", save_name), &GetPlayerNameFromSaveNameCallback, &player_name, db);
+        ExecuteQuery(GetFormattedPointer("SELECT PlayerName FROM Game_Saves WHERE SaveName = '%s'", save_name), &GetPlayerNameFromSaveNameCallback, &player_name, db);
 
     sqlite3_close(db);
 
@@ -175,7 +175,7 @@ int GetAllSaves_Callback(void *saves, int argc, char **argv, char **col_name)
 Vector *GetAllSaves() 
 {
     Vector *saves = Vector_Create(sizeof(PlayerSave), 16);
-    char *query   = "SELECT S.SaveId, S.SaveName, S.TimeSpentInGame, S.RandomSeed, P.PlayerId, P.PlayerName, P.Money FROM Saves S "
+    char *query   = "SELECT S.SaveId, S.SaveName, S.TimeSpentInGame, S.RandomSeed, P.PlayerId, P.PlayerName, P.Money FROM Game_Saves S "
                     "INNER JOIN Players P ON P.SaveId = S.SaveId "
                     "WHERE P.SaveOwner = 1";
 
@@ -215,7 +215,7 @@ PlayerSave GetSaveData(int save_id)
 {
 
     PlayerSave save;
-    char *query = "SELECT S.SaveId, S.SaveName, S.TimeSpentInGame, S.RandomSeed, P.PlayerId, P.PlayerName, P.Money FROM Saves S "
+    char *query = "SELECT S.SaveId, S.SaveName, S.TimeSpentInGame, S.RandomSeed, P.PlayerId, P.PlayerName, P.Money FROM Game_Saves S "
                   "INNER JOIN Players P ON P.SaveId = S.SaveId "
                   "WHERE P.SaveOwner = 1 AND S.SaveId = %d";
     ExecuteQueryF(&GetSaveData_Callback, &save, query, save_id);
@@ -226,8 +226,8 @@ PlayerSave GetSaveData(int save_id)
 void SavePlayerData(PlayerSave save)
 {
 
-    char *query = "UPDATE Saves SET TimeSpentInGame = %d WHERE SaveId = %d;"
-                  "UPDATE Players SET Money = %f WHERE PlayerId = %d;";
+    char *query = "UPDATE Game_Saves SET TimeSpentInGame = %d WHERE SaveId = %d;"
+                  "UPDATE Game_Players SET Money = %f WHERE PlayerId = %d;";
 
     ExecuteQueryF(NULL, NULL, query, save.time_spent_in_game, save.save_id, save.save_player_money, save.save_player_id);
 

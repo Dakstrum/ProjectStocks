@@ -1,13 +1,13 @@
 
 INSERT INTO 
-	GlobalEvents (Event, PriceModifier, ModifierLength)
+	System_GlobalEvents (Event, PriceModifier, ModifierLength)
 VALUES
 	('War was declared! Between whom? Who knows!', .1, 10),
 	('Alien Invasion has begun! Will the chickens nugget survive?', -.2, 20),
 	('Global warming has displaced millions of chickens. They have migrated north in the great, ChickenPocalype.', -.15, 5);
 
 INSERT INTO
-	CategoryEvents (CategoryId, Event, PriceModifier, ModifierLength)
+	System_CategoryEvents (CategoryId, Event, PriceModifier, ModifierLength)
 VALUES
 	(1, 'Due to the recent pandemic, video game sales have surged!', .15, 10),
 	(2, 'Rocket fuel has skyrocketed in prices, literally!', -.15, 10),
@@ -17,7 +17,7 @@ VALUES
 	(6, 'hardware conflicts', 0.10, 5);
 
 INSERT INTO
-	CompanyEvents (CompanyId, Event, PriceModifier, ModifierLength)
+	System_CompanyEvents (CompanyId, Event, PriceModifier, ModifierLength)
 VALUES
 	(1, 'WeBeHard: CEO has gotten soft on running his company.', -.20, 10),
 	(2, 'Unimpressive Games: Has released an epic game? What?', -.10, 10),

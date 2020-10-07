@@ -25,7 +25,7 @@ WindowSettings GetWindowSettingsFromDB()
 {
 
     WindowSettings settings = {1920, 1080, WINDOWED, 0};
-    ExecuteQueryF(&SetWindowSettingsIfExists, &settings, "SELECT WindowWidth, WindowHeight, WindowStyle, FPS, FullScreen FROM Settings");
+    ExecuteQueryF(&SetWindowSettingsIfExists, &settings, "SELECT WindowWidth, WindowHeight, WindowStyle, FPS, FullScreen FROM Game_Settings");
     return settings;
 
 }
@@ -33,13 +33,13 @@ WindowSettings GetWindowSettingsFromDB()
 void SetWindowResolutionSettings(int width, int height)
 {
 
-    ExecuteQueryF(NULL, NULL,"UPDATE Settings SET WindowWidth = %d, WindowHeight = %d WHERE SettingsId = 1;", width, height );
+    ExecuteQueryF(NULL, NULL,"UPDATE Game_Settings SET WindowWidth = %d, WindowHeight = %d WHERE SettingsId = 1;", width, height );
 
 }
 
 void SetFullScreenSettings(int arg)
 {
 
-    ExecuteQueryF(NULL, NULL,"UPDATE Settings SET FullScreen = %d WHERE SettingsId = 1;", arg );
+    ExecuteQueryF(NULL, NULL,"UPDATE Game_Settings SET FullScreen = %d WHERE SettingsId = 1;", arg );
 
 }

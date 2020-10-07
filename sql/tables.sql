@@ -1,27 +1,5 @@
-CREATE TABLE IF NOT EXISTS Company
-(
-    CompanyId INTEGER PRIMARY KEY,
-    CategoryId INTEGER NOT NULL, 
-    Ipo DOUBLE NOT NULL, 
-    CompanyName VARCHAR(50) NOT NULL,
-    CompanyDescription VARCHAR(128) NOT NULL,
-    CompanyAbbreviation VARCHAR(5) NOT NULL
-);
 
-CREATE TABLE IF NOT EXISTS Category
-(
-    CategoryId INTEGER PRIMARY KEY,
-    CategoryName VARCHAR(30)
-);
-
-CREATE TABLE IF NOT EXISTS CompanyProducts
-(
-    CompanyProductId INTEGER PRIMARY KEY,
-    CompanyId INT NOT NULL,
-    ProductName VARCHAR(40)
-);
-
-CREATE TABLE IF NOT EXISTS CompanyMetadata
+CREATE TABLE IF NOT EXISTS Game_CompanyMetadata
 (
     CompanyMetaId INTEGER PRIMARY KEY, 
     CompanyId INT NOT NULL, 
@@ -32,7 +10,15 @@ CREATE TABLE IF NOT EXISTS CompanyMetadata
     EntryTime DATETIME NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Players
+CREATE TABLE IF NOT EXISTS Game_Saves
+(
+    SaveId INTEGER PRIMARY KEY, 
+    SaveName VARCHAR(20) NOT NULL, 
+    TimeSpentInGame UNSIGNED BIG INT DEFAULT(0), 
+    RandomSeed UNSIGNED BIG INT
+);
+
+CREATE TABLE IF NOT EXISTS Game_Players
 (
     PlayerId INTEGER PRIMARY KEY, 
     SaveId INT NOT NULL, 
@@ -41,26 +27,7 @@ CREATE TABLE IF NOT EXISTS Players
     SaveOwner INT NOT NULL DEFAULT(0)
 );
 
-CREATE TABLE IF NOT EXISTS Saves
-(
-    SaveId INTEGER PRIMARY KEY, 
-    SaveName VARCHAR(20) NOT NULL, 
-    TimeSpentInGame UNSIGNED BIG INT DEFAULT(0), 
-    RandomSeed UNSIGNED BIG INT
-);
-
-CREATE TABLE IF NOT EXISTS Transactions
-(
-    TransactionId INTEGER PRIMARY KEY, 
-    SaveId INT NOT NULL, 
-    PlayerId INT NOT NULL, 
-    CompanyId INT NOT NULL, 
-    TransactionAmount DOUBLE NOT NULL, 
-    StocksExchanged INT NOT NULL, 
-    TransactionTime DATETIME NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS Settings
+CREATE TABLE IF NOT EXISTS Game_Settings
 (
     SettingsId INTEGER PRIMARY KEY, 
     WindowWidth UNSIGNED INT NOT NULL, 
@@ -70,7 +37,55 @@ CREATE TABLE IF NOT EXISTS Settings
     FullScreen UNSIGNED INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS GlobalEvents
+CREATE TABLE IF NOT EXISTS Player_Transactions
+(
+    TransactionId INTEGER PRIMARY KEY, 
+    PlayerId INT NOT NULL, 
+    CompanyId INT NOT NULL, 
+    TransactionAmount DOUBLE NOT NULL, 
+    StocksExchanged INT NOT NULL, 
+    TransactionTime DATETIME NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Player_Cards
+(
+    PlayerCardId INTEGER PRIMARY KEY,
+    PlayerId INTEGER NOT NULL,
+    SaveId INTEGER NOT NULL,
+    CardId INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Player_CardsPlayed
+(
+    PlayerCardsPlayedId INTEGER PRIMARY KEY,
+    PlayerCardId INTEGER NOT NULL,
+    PlayedTime DATETIME NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS DB_Events
+(
+    DBEventId INTEGER PRIMARY KEY,
+    Event VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS System_Company
+(
+    CompanyId INTEGER PRIMARY KEY,
+    CategoryId INTEGER NOT NULL, 
+    Ipo DOUBLE NOT NULL, 
+    CompanyName VARCHAR(50) NOT NULL,
+    CompanyDescription VARCHAR(128) NOT NULL,
+    CompanyAbbreviation VARCHAR(5) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS System_CompanyProducts
+(
+    CompanyProductId INTEGER PRIMARY KEY,
+    CompanyId INT NOT NULL,
+    ProductName VARCHAR(40)
+);
+
+CREATE TABLE IF NOT EXISTS System_GlobalEvents
 (
     GlobalEventId INTEGER PRIMARY KEY,
     Event VARCHAR(128) NOT NULL,
@@ -78,7 +93,13 @@ CREATE TABLE IF NOT EXISTS GlobalEvents
     ModifierLength INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS CategoryEvents
+CREATE TABLE IF NOT EXISTS System_Category
+(
+    CategoryId INTEGER PRIMARY KEY,
+    CategoryName VARCHAR(30)
+);
+
+CREATE TABLE IF NOT EXISTS System_CategoryEvents
 (
     CategoryEventId INTEGER PRIMARY KEY,
     CategoryId INT NOT NULL,
@@ -87,7 +108,7 @@ CREATE TABLE IF NOT EXISTS CategoryEvents
     ModifierLength INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS CompanyEvents
+CREATE TABLE IF NOT EXISTS System_CompanyEvents
 (
     CompanyEventId INTEGER PRIMARY KEY,
     CompanyId INT NOT NULL,
@@ -96,25 +117,19 @@ CREATE TABLE IF NOT EXISTS CompanyEvents
     ModifierLength INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS AIFirstNames
+CREATE TABLE IF NOT EXISTS System_AIFirstNames
 (
     FirstNameId INTEGER PRIMARY KEY,
     FirstName VARCHAR(128) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS AILastNames
+CREATE TABLE IF NOT EXISTS System_AILastNames
 (
     LastNameId INTEGER PRIMARY KEY,
     LastName VARCHAR(128) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS DBEvents
-(
-    DBEventId INTEGER PRIMARY KEY,
-    Event VARCHAR(128) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS Cards
+CREATE TABLE IF NOT EXISTS System_Cards
 (
     CardId INTEGER PRIMARY KEY,
     CardName VARCHAR(128) NOT NULL,
@@ -122,19 +137,4 @@ CREATE TABLE IF NOT EXISTS Cards
     CardPath VARCHAR(256) NOT NULL,
     PriceModifier DOUBLE NOT NULL,
     ModifierLength INT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS PlayerCards
-(
-    PlayerCardId INTEGER PRIMARY KEY,
-    PlayerId INTEGER NOT NULL,
-    SaveId INTEGER NOT NULL,
-    CardId INTEGER NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS PlayerCardsPlayed
-(
-    PlayerCardsPlayedId INTEGER PRIMARY KEY,
-    PlayerCardId INTEGER NOT NULL,
-    PlayedTime DATETIME NOT NULL
 );

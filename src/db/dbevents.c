@@ -105,14 +105,14 @@ void InitializeCompanyEvents()
 
 	}
 
-	ExecuteQueryF(&Events_Callback, &company_events, "SELECT CompanyId, Event, PriceModifier, ModifierLength FROM CompanyEvents;");
+	ExecuteQueryF(&Events_Callback, &company_events, "SELECT CompanyId, Event, PriceModifier, ModifierLength FROM System_CompanyEvents;");
 
 }
 
 void InitializeCategoryEvents()
 {
 
-	ExecuteQueryF(&NumCategories_Callback, &num_categories, "SELECT COUNT(CategoryName) FROM Category");
+	ExecuteQueryF(&NumCategories_Callback, &num_categories, "SELECT COUNT(CategoryName) FROM System_Category");
 
 	category_events.num_elements = num_categories;
 	category_events.id           = malloc(sizeof(unsigned int) * num_categories);
@@ -125,7 +125,7 @@ void InitializeCategoryEvents()
 
 	}
 
-	ExecuteQueryF(&Events_Callback, &category_events, "SELECT CategoryId, Event, PriceModifier, ModifierLength FROM CategoryEvents");
+	ExecuteQueryF(&Events_Callback, &category_events, "SELECT CategoryId, Event, PriceModifier, ModifierLength FROM System_CategoryEvents");
 
 }
 
@@ -134,7 +134,7 @@ void InitializeGlobalEvents()
 
 	global_events = Vector_Create(sizeof(Event), 16);
 
-	ExecuteQueryF(&GlobalEvents_Callback, NULL, "SELECT Event, PriceModifier, ModifierLength FROM GlobalEvents");
+	ExecuteQueryF(&GlobalEvents_Callback, NULL, "SELECT Event, PriceModifier, ModifierLength FROM System_GlobalEvents");
 
 }
 
