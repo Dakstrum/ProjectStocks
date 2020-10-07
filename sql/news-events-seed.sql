@@ -28,6 +28,18 @@ VALUES
 	(7, 'There has been a recent surge in sword related violence', .15, 15),
 	(8, 'K3 News Event', .15, 15),
 	(9, 'Ferrit News Event', .15, 15),
-	(10, 'Annoy Scooters Event', .15, 15),
-	(11, 'Sun Suc Event', .15, 15),
-	(12, 'The BackUp Event', .15, 15);
+
+	(10, 'AnoyScooters has shown a fast and efficient(but a little risky) way of transporting the elderly by themselves!',            .15, 15),
+	(11, 'AnoyScooters has been trying to keep its recent electrical fires in the dark',                                             -.15, 15),
+	(12, 'AnoyScooters release its new Scooter ''''The Anoyr'''' sparking rage in citizens that live in cities with its loud noise', -.15, 15),
+	(13, 'AnoyScooters product used in a spree of robberies. These easy to use scooters zoomed in between law enforcement.',         -.15, 15),
+	(14, 'AnoyScooters has updated their software after controversy about electrical failure.',                                       .15, 15),
+
+	(15, 'SunSuc has partnered with WhySpace to further their advancements in space.',            .15, 15),
+	(16, 'SunSucs most recent miner has been engulfed by our sun and has been destroyed',        -.15, 15),
+	(17, 'SunSucs HQ has been surrounded by Sun conservationists demanding the CEO resign. ',    -.15, 15),
+	(17, 'SunSucs most recent solar panel design shows promise and future government contracts.', .15, 15),
+	(18, 'SunSucs rocket lauch crashes down into small town causing worry of future launches',   -.15, 15),
+
+	(19, 'The BackUp did a recent 1 month bunker test resulting in 30 healthy humans to become schizophrenic.', -.15, 15),
+	(20, 'The BackUp has received government contracts to build bunkers that only take in government employees.', .15, 15);
