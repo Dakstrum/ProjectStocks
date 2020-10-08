@@ -72,7 +72,7 @@ void InitializeMainMenu()
     
     main_menu = GetJSONMenuAndAddToDrawLayer("MainMenu");
     
-    Test_Animations();
+    //Test_Animations();
     MainMenuRenderLogic();
     StopSimulation();
     CleanMenus();
