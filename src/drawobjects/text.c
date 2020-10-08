@@ -94,6 +94,21 @@ void SetTextContent(DrawObject *object, const char *str, ...)
 
 }
 
+void SetTextColor(DrawObject *object, unsigned char r, unsigned char g, unsigned char b, unsigned char a) 
+{
+
+    if (object == NULL)
+        return;
+
+    assert(object->type == TEXT);
+
+    object->text.r = r;
+    object->text.g = g;
+    object->text.b = b;
+    object->text.a = a;
+
+}
+
 DrawObject *Text_Create()
 {
 
