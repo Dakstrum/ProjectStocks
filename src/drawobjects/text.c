@@ -107,6 +107,8 @@ void SetTextColor(DrawObject *object, unsigned char r, unsigned char g, unsigned
     object->text.b = b;
     object->text.a = a;
 
+    object->text.color = al_map_rgba(object->text.r, object->text.g, object->text.b, object->text.a);
+
 }
 
 DrawObject *Text_Create()

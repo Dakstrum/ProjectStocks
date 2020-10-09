@@ -77,7 +77,6 @@ void InitializeStocksMenu()
 
     InitializeSpeedSelectObject("StocksMenu");
     DrawLayer_AddManager(NewsManager_Create(1400, 300));
-    SetTextColor(stock_change_textobject, 203, 34, 255, 255);
 
 }
 
@@ -89,11 +88,15 @@ void StocksMenusRenderLogic()
     if(stocks_menu)
     {
 
-        //SetTextContent(stock_change_textobject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
+        SetTextContent(stock_change_textobject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
         SetTextContent(player_money_textobject, "%.2f", GetAccountMoney());
         SetTextContent(player_date_textobject,  "%s",   GetDate());
         SetTextContent(stock_price_textobject,  "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
-        SetTextColor(stock_change_textobject, 255,255,255,255);
+
+        if(GetCurrentStockChange(GetCompanyNameViewing()) > 0)
+            SetTextColor(stock_change_textobject, 0, 79, 37, 255);
+        else
+            SetTextColor(stock_change_textobject, 204, 48, 56, 255);
 
     }
 
@@ -129,8 +132,6 @@ void InitalizeStocksMenuText()
     SetTextContent(stock_change_textobject,  "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
     SetTextContent(player_money_textobject,  "%.2f", GetAccountMoney());
     SetTextContent(stock_price_textobject,   "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
-
-    SetTextColor(stock_change_textobject, 203, 34, 255, 255);
 
 }
 
