@@ -236,7 +236,7 @@ struct Transactions *GetAllSavedTransactions()
 {
 
     Transactions *transactions = GetNewTransactions();
-    ExecuteQueryF(&SetTransactionCallback, transactions, "SELECT * FROM Player_Transactions AND PlayerId=%d", GetCurrentPlayerId());
+    ExecuteQueryF(&SetTransactionCallback, transactions, "SELECT * FROM Player_Transactions WHERE PlayerId=%d", GetCurrentPlayerId());
     return transactions;
 
 }

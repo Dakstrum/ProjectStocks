@@ -176,7 +176,7 @@ Vector *GetAllSaves()
 {
     Vector *saves = Vector_Create(sizeof(PlayerSave), 16);
     char *query   = "SELECT S.SaveId, S.SaveName, S.TimeSpentInGame, S.RandomSeed, P.PlayerId, P.PlayerName, P.Money FROM Game_Saves S "
-                    "INNER JOIN Players P ON P.SaveId = S.SaveId "
+                    "INNER JOIN Game_Players P ON P.SaveId = S.SaveId "
                     "WHERE P.SaveOwner = 1";
 
     ExecuteQueryF(&GetAllSaves_Callback, saves, query);
@@ -216,7 +216,7 @@ PlayerSave GetSaveData(int save_id)
 
     PlayerSave save;
     char *query = "SELECT S.SaveId, S.SaveName, S.TimeSpentInGame, S.RandomSeed, P.PlayerId, P.PlayerName, P.Money FROM Game_Saves S "
-                  "INNER JOIN Players P ON P.SaveId = S.SaveId "
+                  "INNER JOIN Game_Players P ON P.SaveId = S.SaveId "
                   "WHERE P.SaveOwner = 1 AND S.SaveId = %d";
     ExecuteQueryF(&GetSaveData_Callback, &save, query, save_id);
     return save;
