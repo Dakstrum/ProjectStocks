@@ -68,7 +68,8 @@ void InitializeStocksMenu()
 
     }
 
-    stocks_menu = GetJSONMenuAndAddToDrawLayer("StocksMenu");
+    stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
+    AddMenuWithChildsToDrawLayer(stocks_menu);
     InitalizeStocksMenuText();
     InitializeCompanyScrollBox();
 
@@ -82,6 +83,7 @@ void InitializeStocksMenu()
 
 void StocksMenusRenderLogic()
 {
+    
     if (player_money_textobject == NULL)
         return;
 
@@ -115,7 +117,7 @@ void StocksMenusRenderLogic()
         SetTextContent(transaction_menu_projected_textobject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("SellTextBox")));
 
     }
-
+    
 }
 
 
