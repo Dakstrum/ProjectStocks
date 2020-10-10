@@ -124,7 +124,8 @@ void InitalizeResolutionScrollbox()
     object->y      = 410;
     object->width  = 288;
     object->height = 310;
-    object->asset_path = "assets/images/savemenus/assets/SaveBox.png";
+    object->scrollbox.vertical_spacing = 69;
+    object->asset_path = "assets/images/generalpurposemenus/optionsmenu/selectoptionresolutionbox.png";
 
     object->scrollbox.num_items        = 6;
     object->scrollbox.box_click        = &ChangeResolutionClick;

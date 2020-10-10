@@ -201,6 +201,7 @@ void InitalizeSaveScrollBox()
     saves_scrollbox->y          = 226;
     saves_scrollbox->width      = 288;
     saves_scrollbox->height     = 603;
+    saves_scrollbox->scrollbox.vertical_spacing = 69;
     saves_scrollbox->asset_path = "assets/images/scrollbox/SaveBox.png";
 
     saves_scrollbox->scrollbox.num_items    = saves->num_elements;
