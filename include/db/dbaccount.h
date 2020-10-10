@@ -43,5 +43,6 @@ void SaveTransactions();
 
 int GetOwnedStockAmount(char *company_name);
 void InitializeAccountInformation();
+float GetAccountNetWorth();
 
 #endif

@@ -11,6 +11,8 @@
 #include "dbcompany.h"
 #include "dbaccount.h"
 #include "dbsave.h"
+#include "log.h"
+#include "simulation.h"
 
 typedef struct OwnedStocks
 {
@@ -330,5 +332,18 @@ void InitializeAccountInformation()
     InitializeOwnedStocks();
     InitializeTransactions();
     transaction_queue = Queue_Create();
+
+}
+
+float GetAccountNetWorth()
+{
+    float networth = 0;
+    for(int i = 1; i < GetNumCompanies(); i++) {
+
+        float networth_of_specific_stock = GetOwnedStockAmount(GetCompanyName(i)) * CurrentStockPrice(GetCompanyName(i));
+        networth = networth + networth_of_specific_stock;
+
+    }
+    return networth;
 
 }

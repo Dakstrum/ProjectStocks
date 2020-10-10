@@ -39,6 +39,7 @@ static DrawObject *selected_share_price_objects[DSP_NUM];
 static DrawObject *selected_transaction_objects[DSP_NUM];
 
 static DrawObject *historydisplay_pages_textobject = NULL;
+static DrawObject *networth_textobject = NULL;
 
 //All Stocks History Text Objects
 static DrawObject *all_name_objects[DSP_NUM];
@@ -94,6 +95,7 @@ void AccountMenuRenderLogic()
     SetTextContent(player_date_textobject,        "%s",   GetDate());
     SetTextContent(stock_price_textobject,        "%.2f", CurrentStockPrice(company_viewing));
     SetTextContent(owned_stock_amount_textobject, "%d",   GetOwnedStockAmount(company_viewing));
+    SetTextContent(networth_textobject,           "%.2f", GetAccountNetWorth());
 
 }
 
@@ -107,6 +109,7 @@ void InitalizeAccountMenuText()
     stock_price_textobject          = GetJSONObjectAndAddToDrawLayer("AccountMenuStockPriceTextObject");
     owned_stock_amount_textobject   = GetJSONObjectAndAddToDrawLayer("AccountMenuAmountOwnedTextObject");
     historydisplay_pages_textobject = GetJSONObjectAndAddToDrawLayer("AccountMenupageTextObject");
+    networth_textobject             = GetJSONObjectAndAddToDrawLayer("AccountMenunetworthTextObject");
 
     SetTextContent(company_name_textobject, "%s", GetCompanyNameViewing());
     SetTextContent(company_about_textobject, "%s", GetCompanyDescriptionRef(GetCompanyId(GetCompanyNameViewing())));
@@ -314,5 +317,6 @@ void CleanAccountMenu()
     stock_price_textobject          = NULL;
     owned_stock_amount_textobject   = NULL;
     historydisplay_pages_textobject = NULL;
+    networth_textobject = NULL;
 
 }
