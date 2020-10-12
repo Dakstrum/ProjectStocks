@@ -232,6 +232,7 @@ void InitializeCompanyScrollBox()
 
 void PopulateStocksScrollBox(DrawObject *object)
 {
+    
     int num_companies = GetNumCompanies();
     for (int i = 0; i < num_companies; i++) {
 

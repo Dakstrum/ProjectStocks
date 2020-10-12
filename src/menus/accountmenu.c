@@ -247,8 +247,14 @@ void ClearAccountHistoryDisplay()
 void PopulateAccountMenuCompanyScrollBox(DrawObject *object)
 {
 
-    for(int i = 0; i < GetNumCompanies(); i++)
-        object->scrollbox.text_content[i]  = GetCompanyAbbreviation(i+1);
+    int num_companies = GetNumCompanies();
+    for(int i = 0; i < num_companies; i++) {
+
+        object->scrollbox.text_content[i]  = GetCompanyAbbreviation(i + 1);
+        object->scrollbox.icon_paths[i] = GetCompanyIconPath(i + 1);
+        object->scrollbox.sub_text_content[i] = GetCompanyName(i + 1);
+
+    }
 
 }
 
@@ -276,9 +282,13 @@ void InitalizeAccountMenuCompanyScrollbox()
     object->height     = 803;
     object->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
 
-    object->scrollbox.num_items    = GetNumCompanies();
+    unsigned int num_companies = GetNumCompanies();
+
+    object->scrollbox.num_items    = num_companies;
     object->scrollbox.box_click    = &AccountMenuCompanyScrollBoxClick;
-    object->scrollbox.text_content = malloc(sizeof(char *) * GetNumCompanies());
+    object->scrollbox.text_content     = malloc(sizeof(char *) * num_companies);
+    object->scrollbox.sub_text_content = malloc(sizeof(char *) * num_companies);
+    object->scrollbox.icon_paths       = malloc(sizeof(char *) * num_companies);
 
     PopulateAccountMenuCompanyScrollBox(object);
     AddObjectToDrawLayer(object);
