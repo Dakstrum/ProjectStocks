@@ -53,7 +53,7 @@ INSERT INTO
     System_CompanyIcons (CompanyId, IconPath)
 VALUES
     (1, 'assets/images/companyicons/webehard.png'),
-    (2, 'assets/images/unimpressivegames.png'),
-    (3, 'assets/images/whyspace.png'),
-    (4, 'assets/images/interstellarbusinessrobots.png'),
-    (8, 'assets/images/k3news.png');
+    (2, 'assets/images/companyicons/unimpressivegames.png'),
+    (3, 'assets/images/companyicons/whyspace.png'),
+    (4, 'assets/images/companyicons/intersetellerbusinessrobots.png'),
+    (8, 'assets/images/companyicons/k3news.png');

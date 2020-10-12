@@ -56,6 +56,7 @@ ALLEGRO_BITMAP *GetBitmapFromCache(char *asset_path)
             return cache[i].bitmap;
 
     ALLEGRO_BITMAP *bitmap = GetNewlyAddedBitmapFromCache(asset_path);
+
     assert(bitmap != NULL);
     return bitmap;
 

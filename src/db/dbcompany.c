@@ -113,7 +113,7 @@ char *GetCompanyIconPath(unsigned int company_id)
     CompanyIconPath *paths = company_icons->elements;
     for (size_t i = 0; i < company_icons->num_elements;i++)
         if (paths[i].company_id == company_id)
-            return strdup(paths[i].company_icon_path);
+            return paths[i].company_icon_path;
 
     return NULL;
 

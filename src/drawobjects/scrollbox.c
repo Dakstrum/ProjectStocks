@@ -1,4 +1,5 @@
 
+#include <stdlib.h>
 #include <math.h>
 #include <assert.h>
 
@@ -9,6 +10,19 @@
 #include "cache.h"
 
 #include "drawobject.h"
+
+void InitIconPaths(DrawObject *object) 
+{
+    object->scrollbox.icons = malloc(sizeof(ALLEGRO_BITMAP *) * object->scrollbox.num_items);
+    for (size_t i = 0; i < object->scrollbox.num_items;i++) {
+
+        object->scrollbox.icons[i] = NULL;
+        if (object->scrollbox.icon_paths[i] != NULL)
+            object->scrollbox.icons[i] = GetBitmapFromCache(object->scrollbox.icon_paths[i]);
+
+    }
+
+}
 
 void InitScrollbox(DrawObject *object)
 {
@@ -31,8 +45,52 @@ void InitScrollbox(DrawObject *object)
 
     }
 
+    if (object->scrollbox.icon_paths != NULL)
+        InitIconPaths(object);
+
+    assert(object->scrollbox.text_style->font != NULL);
+
     if (object->scrollbox.text_style->font == NULL)
         Log("font is null");
+
+}
+
+void DrawRegularBox(DrawObject *object, int i, int x, int box_y)
+{
+
+    al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
+    DrawGenericTinted(object->scrollbox.boxes_bitmap, x, box_y, al_map_rgba(255, 255, 255, object->scrollbox.currently_tinted == i ? 150 : 255));
+
+    if (object->scrollbox.icons != NULL && object->scrollbox.icons[i] != NULL) {
+
+        DrawGeneric(object->scrollbox.icons[i], x + 10, box_y + 5);
+        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 100, box_y + 5, 0, object->scrollbox.text_content[i]);
+
+    } else {
+
+        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30, box_y + 5, 0, object->scrollbox.text_content[i]);
+
+    }
+    al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_INVERSE_ALPHA);
+
+}
+
+void DrawTiltedBox(DrawObject *object, int i, int x, int x_offset, int box_y, unsigned char alpha_mask)
+{
+
+    DrawGenericTinted(object->scrollbox.boxes_bitmap, x + x_offset, box_y, al_map_rgba(255, 255, 255, alpha_mask));
+
+    if (object->scrollbox.icons != NULL && object->scrollbox.icons[i] != NULL) {
+
+        DrawGeneric(object->scrollbox.icons[i], x + x_offset + 10, box_y + 5);
+        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 100 + x_offset, box_y + 5, 0, object->scrollbox.text_content[i]);
+
+    } else {
+
+        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30 + x_offset, box_y + 5, 0, object->scrollbox.text_content[i]);
+
+    }
+
 
 }
 
@@ -60,15 +118,11 @@ void DrawScrollBox(DrawObject *object)
             unsigned char alpha_mask = 255 - (unsigned char)(percent_diff * 255.0 * 4.0);
             float x_offset           = percent_diff * 400.0;
 
-            DrawGenericTinted(object->scrollbox.boxes_bitmap, x + x_offset, box_y, al_map_rgba(255, 255, 255, alpha_mask));
-            al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30 + x_offset, box_y + 20, 0, object->scrollbox.text_content[i]);
+            DrawTiltedBox(object, i, x, x_offset, box_y, alpha_mask);
 
         } else {
 
-            al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
-            DrawGenericTinted(object->scrollbox.boxes_bitmap, x, box_y, al_map_rgba(255, 255, 255, object->scrollbox.currently_tinted == i ? 150 : 255));
-            al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30, box_y + 20, 0, object->scrollbox.text_content[i]);
-            al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_INVERSE_ALPHA);
+            DrawRegularBox(object, i, x, box_y);
 
         }
 
@@ -95,13 +149,17 @@ void CleanUpScrollbox(DrawObject *object)
     if (object->scrollbox.text_content != NULL)
         free(object->scrollbox.text_content);
 
-    if (object->scrollbox.icon_paths != NULL)
+    if (object->scrollbox.icon_paths != NULL) {
+
         free(object->scrollbox.icon_paths);
+        //free(object->scrollbox.icons);
+
+    }
 
     object->scrollbox.icons        = NULL;
+    object->scrollbox.icon_paths   = NULL;
     object->scrollbox.text_style   = NULL;
     object->scrollbox.text_content = NULL;
-    object->scrollbox.icon_paths   = NULL;
     
 }
 
