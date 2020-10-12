@@ -150,9 +150,11 @@ typedef struct ScrollBox {
     unsigned short int num_items;
     short int currently_tinted;
     char **text_content;
+    char **sub_text_content;
     char **icon_paths;
 
     ALLEGRO_BITMAP **icons;
+    ALLEGRO_FONT *sub_text_font;
     TextStyle *text_style;
 
 } ScrollBox;

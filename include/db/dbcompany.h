@@ -21,6 +21,7 @@ char *GetCompanyNameRef(unsigned int company_id);
 char *GetCompanyAbbreviation(unsigned int company_id);
 char *GetCompanyAbbreviationRef(unsigned int company_id);
 char *GetCompanyDescriptionRef(unsigned int company_id);
+char *GetCompanyIconPath(unsigned int company_id);
 
 unsigned int GetCompanyId(const char *company_name);
 int GetNumCompanies();
