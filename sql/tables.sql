@@ -78,6 +78,13 @@ CREATE TABLE IF NOT EXISTS System_Company
     CompanyAbbreviation VARCHAR(5) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS System_CompanyIcons
+(
+    CompanyIcon INTEGER PRIMARY KEY,
+    CompanyId INTEGER NOT NULL,
+    IconPath VARCHAR(256) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS System_CompanyProducts
 (
     CompanyProductId INTEGER PRIMARY KEY,

@@ -228,8 +228,12 @@ void InitializeCompanyScrollBox()
 
 void PopulateStocksScrollBox(DrawObject *object)
 {
-    for(int i = 0; i < GetNumCompanies(); i++)
-        object->scrollbox.text_content[i] = GetCompanyAbbreviation(i+1);
+    int num_companies = GetNumCompanies();
+    for (int i = 0; i < num_companies; i++) {
+
+        object->scrollbox.text_content[i] = GetCompanyAbbreviation(i + 1);
+
+    }
 
 }
 
@@ -334,9 +338,11 @@ void Sell_BCB()
         DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
         AddMoney(amount_in_text_box * current_stock_price);
 
-    } 
-    else 
+    } else {
+
         DisplayPopupOnDrawLayer("Unable to sell stock", "assets/images/generalpurposemenus/popups/redpopup.png");
+
+    }
 
 }
 
@@ -361,8 +367,11 @@ void Buy_BCB()
         SubtractMoney(amount_in_text_box * current_stock_price);
 
     } 
-    else
+    else {
+
         DisplayPopupOnDrawLayer("Unable to purchase stock", "assets/images/generalpurposemenus/popups/redpopup.png");
+
+    }
 
 }
 

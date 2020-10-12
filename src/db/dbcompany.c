@@ -8,13 +8,33 @@
 #include "dbcompany.h"
 #include "log.h"
 
-static Vector *companies = NULL;
+typedef struct CompanyIconPath
+{
+    unsigned int company_id;
+    char company_icon_path[128];
+
+} CompanyIconPath;
+
+static Vector *companies     = NULL;
+static Vector *company_icons = NULL;
 
 Company *GetAllCompanies()
 {
 
     assert(companies != NULL);
     return (Company *)companies->elements;
+
+}
+
+Company *GetCompany(unsigned int company_id)
+{
+
+    Company *temp = (Company *)companies->elements;
+    for (size_t i = 0; i < companies->num_elements;i++)
+        if (temp[i].company_id == company_id)
+            return &temp[i];
+
+    return NULL;
 
 }
 
@@ -30,12 +50,10 @@ char *GetCompanyName(unsigned int company_id)
 char *GetCompanyNameRef(unsigned int company_id)
 {
 
-    Company *temp = (Company *)companies->elements;
-    for (size_t i = 0; i < companies->num_elements;i++)
-        if (temp[i].company_id == company_id)
-            return temp[i].company_name;
+    Company *temp = GetCompany(company_id);
+    assert(temp != NULL);
+    return temp->company_name;
 
-    return NULL;
 
 }
 
@@ -51,24 +69,18 @@ char *GetCompanyAbbreviation(unsigned int company_id)
 char *GetCompanyAbbreviationRef(unsigned int company_id)
 {
 
-    Company *temp = (Company *)companies->elements;
-    for (size_t i = 0; i < companies->num_elements;i++)
-        if (temp[i].company_id == company_id)
-            return temp[i].company_abbreviation;
-
-    return NULL;
+    Company *temp = GetCompany(company_id);
+    assert(temp != NULL);
+    return temp->company_abbreviation;
 
 }
 
 char *GetCompanyDescriptionRef(unsigned int company_id)
 {
 
-    Company *temp = (Company *)companies->elements;
-    for (size_t i = 0; i < companies->num_elements;i++)
-        if (temp[i].company_id == company_id)
-            return temp[i].company_description;
-
-    return NULL;
+    Company *temp = GetCompany(company_id);
+    assert(temp != NULL);
+    return temp->company_description;
 
 }
 
@@ -95,6 +107,18 @@ int GetNumCompanies()
 
 }
 
+char *GetCompanyIconPath(unsigned int company_id)
+{
+
+    CompanyIconPath *paths = company_icons->elements;
+    for (size_t i = 0; i < company_icons->num_elements;i++)
+        if (paths[i].company_id == company_id)
+            return strdup(paths[i].company_icon_path);
+
+    return NULL;
+
+}
+
 int Company_Callback(void *company, int argc, char **argv, char **col_name) 
 {
 
@@ -116,10 +140,28 @@ int Company_Callback(void *company, int argc, char **argv, char **col_name)
 
 }
 
+int Company_Icon_Callback(void *company, int argc, char **argv, char **col_name)
+{
+
+    if (argc == 0)
+        return 0;
+
+    CompanyIconPath icon;
+    icon.company_id = atoi(argv[0]);
+    strncpy(icon.company_icon_path, argv[1], 128);
+
+    Vector_PushBack(company_icons, &icon);
+
+    return 0;
+
+}
+
 void InitializeCompanies()
 {
 
     companies = Vector_Create(sizeof(Company), 4);
+    company_icons = Vector_Create(sizeof(CompanyIconPath), 4);
+    ExecuteQueryF(&Company_Icon_Callback, NULL, "SELECT CompanyId, IconPath FROM System_CompanyIcons");
     ExecuteQueryF(&Company_Callback, NULL, "SELECT C.CompanyId, C.CompanyName, C.CompanyDescription, C.CompanyAbbreviation, C.IPO, C.CategoryId FROM System_Company C");
 
 }
