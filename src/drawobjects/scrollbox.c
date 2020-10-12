@@ -35,6 +35,7 @@ void InitScrollbox(DrawObject *object)
     TextStyle *text_style          = scrollbox->text_style;
     text_style->font               = GetFontFromCache(text_style->font_path, text_style->font_size);
     text_style->color              = al_map_rgba(text_style->r, text_style->g, text_style->b, text_style->a);
+    scrollbox->sub_text_font       = GetFontFromCache(text_style->font_path, text_style->font_size * .60);
 
     if (object->scrollbox.box_height * object->scrollbox.num_items > object->height) {
 
@@ -66,6 +67,9 @@ void DrawRegularBox(DrawObject *object, int i, int x, int box_y)
         DrawGeneric(object->scrollbox.icons[i], x + 10, box_y + 5);
         al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 100, box_y + 5, 0, object->scrollbox.text_content[i]);
 
+        if (object->scrollbox.sub_text_content != NULL)
+            al_draw_text(object->scrollbox.sub_text_font, object->scrollbox.text_style->color, x + 100, box_y + 40, 0, object->scrollbox.sub_text_content[i]);
+
     } else {
 
         al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30, box_y + 5, 0, object->scrollbox.text_content[i]);
@@ -84,6 +88,9 @@ void DrawTiltedBox(DrawObject *object, int i, int x, int x_offset, int box_y, un
 
         DrawGeneric(object->scrollbox.icons[i], x + x_offset + 10, box_y + 5);
         al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 100 + x_offset, box_y + 5, 0, object->scrollbox.text_content[i]);
+
+        if (object->scrollbox.sub_text_content != NULL)
+            al_draw_text(object->scrollbox.sub_text_font, object->scrollbox.text_style->color, x + 100 + x_offset, box_y + 40, 0, object->scrollbox.sub_text_content[i]);
 
     } else {
 
@@ -156,10 +163,14 @@ void CleanUpScrollbox(DrawObject *object)
 
     }
 
+    if (object->scrollbox.sub_text_content != NULL)
+        free(object->scrollbox.sub_text_content);
+
     object->scrollbox.icons        = NULL;
     object->scrollbox.icon_paths   = NULL;
     object->scrollbox.text_style   = NULL;
     object->scrollbox.text_content = NULL;
+    object->scrollbox.sub_text_content = NULL;
     
 }
 
@@ -196,6 +207,8 @@ DrawObject *CreateScrollBoxObject()
     object->scrollbox.text_style->b         = 0;
     object->scrollbox.text_style->font_path = "assets/font/DanielLinssenM5/m5x7.ttf";
     object->scrollbox.text_content          = NULL;
+    object->scrollbox.sub_text_content      = NULL;
+    object->scrollbox.sub_text_font         = NULL;
 
     return object;
 }
