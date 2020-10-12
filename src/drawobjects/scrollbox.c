@@ -8,12 +8,14 @@
 #include "log.h"
 #include "draw.h"
 #include "cache.h"
+#include "vector.h"
 
 #include "drawobject.h"
 
 void InitIconPaths(DrawObject *object) 
 {
-    object->scrollbox.icons = malloc(sizeof(ALLEGRO_BITMAP *) * object->scrollbox.num_items);
+
+
     for (size_t i = 0; i < object->scrollbox.num_items;i++) {
 
         object->scrollbox.icons[i] = NULL;
@@ -35,7 +37,6 @@ void InitScrollbox(DrawObject *object)
     TextStyle *text_style          = scrollbox->text_style;
     text_style->font               = GetFontFromCache(text_style->font_path, text_style->font_size);
     text_style->color              = al_map_rgba(text_style->r, text_style->g, text_style->b, text_style->a);
-    scrollbox->sub_text_font       = GetFontFromCache(text_style->font_path, text_style->font_size * .60);
 
     if (object->scrollbox.box_height * object->scrollbox.num_items > object->height) {
 
@@ -46,8 +47,8 @@ void InitScrollbox(DrawObject *object)
 
     }
 
-    if (object->scrollbox.icon_paths != NULL)
-        InitIconPaths(object);
+    InitIconPaths(DrawObject *object);
+    InitTextFont(DrawObject *object);
 
     assert(object->scrollbox.text_style->font != NULL);
 
@@ -79,22 +80,22 @@ void DrawRegularBox(DrawObject *object, int i, int x, int box_y)
 
 }
 
-void DrawTiltedBox(DrawObject *object, int i, int x, int x_offset, int box_y, unsigned char alpha_mask)
+void DrawTiltedBox(DrawObject *object, int i, int x_offsetted, int box_y, unsigned char alpha_mask)
 {
 
-    DrawGenericTinted(object->scrollbox.boxes_bitmap, x + x_offset, box_y, al_map_rgba(255, 255, 255, alpha_mask));
+    DrawGenericTinted(object->scrollbox.boxes_bitmap, x_offsetted, box_y, al_map_rgba(255, 255, 255, alpha_mask));
 
     if (object->scrollbox.icons != NULL && object->scrollbox.icons[i] != NULL) {
 
-        DrawGeneric(object->scrollbox.icons[i], x + x_offset + 10, box_y + 5);
-        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 100 + x_offset, box_y + 5, 0, object->scrollbox.text_content[i]);
+        DrawGeneric(object->scrollbox.icons[i], x_offsetted + 10, box_y + 5);
+        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x_offsetted + 100, box_y + 5, 0, object->scrollbox.text_content[i]);
 
         if (object->scrollbox.sub_text_content != NULL)
-            al_draw_text(object->scrollbox.sub_text_font, object->scrollbox.text_style->color, x + 100 + x_offset, box_y + 40, 0, object->scrollbox.sub_text_content[i]);
+            al_draw_text(object->scrollbox.sub_text_font, object->scrollbox.text_style->color, x_offsetted + 100, box_y + 40, 0, object->scrollbox.sub_text_content[i]);
 
     } else {
 
-        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30 + x_offset, box_y + 5, 0, object->scrollbox.text_content[i]);
+        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x_offsetted + 30, box_y + 5, 0, object->scrollbox.text_content[i]);
 
     }
 
@@ -125,7 +126,7 @@ void DrawScrollBox(DrawObject *object)
             unsigned char alpha_mask = 255 - (unsigned char)(percent_diff * 255.0 * 4.0);
             float x_offset           = percent_diff * 400.0;
 
-            DrawTiltedBox(object, i, x, x_offset, box_y, alpha_mask);
+            DrawTiltedBox(object, i, x + x_offset, box_y, alpha_mask);
 
         } else {
 
@@ -134,6 +135,20 @@ void DrawScrollBox(DrawObject *object)
         }
 
     }
+
+}
+
+void CleanUpVectors(DrawObject *object)
+{
+
+    if (object->scrollbox.text_content != NULL)
+        for (size_t i = 0; i < object->scrollbox.num_items;i++)
+            Vector_Delete(object->scrollbox.text_content[i]);
+
+
+    if (object->scrollbox.icons != NULL)
+        for (size_t i = 0; i < object->scrollbox.num_items;i++)
+            Vector_Delete(object->scrollbox.icons);
 
 }
 
@@ -146,31 +161,12 @@ void CleanUpScrollbox(DrawObject *object)
     if (object->scrollbox.text_style != NULL)
         free(object->scrollbox.text_style);
 
-    for (unsigned short int i = 0; i < object->scrollbox.num_items; i++) {
-
-        free(object->scrollbox.text_content[i]);
-        object->scrollbox.text_content[i] = NULL;
-
-    }
-
-    if (object->scrollbox.text_content != NULL)
-        free(object->scrollbox.text_content);
-
-    if (object->scrollbox.icon_paths != NULL) {
-
-        free(object->scrollbox.icon_paths);
-        //free(object->scrollbox.icons);
-
-    }
-
-    if (object->scrollbox.sub_text_content != NULL)
-        free(object->scrollbox.sub_text_content);
+    CleanUpVectors(object);
 
     object->scrollbox.icons        = NULL;
     object->scrollbox.icon_paths   = NULL;
     object->scrollbox.text_style   = NULL;
     object->scrollbox.text_content = NULL;
-    object->scrollbox.sub_text_content = NULL;
     
 }
 
@@ -194,10 +190,10 @@ DrawObject *CreateScrollBoxObject()
     object->scrollbox.min_vertical_offset   = 0;
     object->scrollbox.max_vertical_offset   = 0;
     object->scrollbox.box_click             = NULL;
-    object->scrollbox.text_content          = NULL;
     object->scrollbox.boxes_bitmap          = NULL;
+
+    object->scrollbox.text_content          = NULL;
     object->scrollbox.icons                 = NULL;
-    object->scrollbox.icon_paths            = NULL;
 
     object->scrollbox.text_style            = malloc(sizeof(TextStyle));
     object->scrollbox.text_style->font_size = 40;
@@ -207,8 +203,35 @@ DrawObject *CreateScrollBoxObject()
     object->scrollbox.text_style->b         = 0;
     object->scrollbox.text_style->font_path = "assets/font/DanielLinssenM5/m5x7.ttf";
     object->scrollbox.text_content          = NULL;
-    object->scrollbox.sub_text_content      = NULL;
-    object->scrollbox.sub_text_font         = NULL;
 
     return object;
+}
+
+ScrollboxText CreateScrollboxText()
+{
+
+    ScrollboxText text;
+    text.font = NULL;
+    text.text = NULL;
+
+    text.rx = 0;
+    text.ry = 0;
+
+    text.font_size = 0;
+
+    return text;
+
+}
+
+ScrollboxIcon CreateScrollboxIcon()
+{
+
+    ScrollboxIcon icon;
+
+    icon.rx = 0;
+    icon.ry = 0;
+
+    icon.icon_path = NULL;
+    icon.icon = NULL;
+
 }

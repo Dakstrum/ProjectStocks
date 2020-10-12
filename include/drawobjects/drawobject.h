@@ -7,6 +7,7 @@
 #include <allegro5/allegro_font.h>
 
 #include "shared.h"
+#include "vector.h"
 
 typedef struct RGBA {
 
@@ -149,12 +150,10 @@ typedef struct ScrollBox {
 
     unsigned short int num_items;
     short int currently_tinted;
-    char **text_content;
-    char **sub_text_content;
-    char **icon_paths;
 
-    ALLEGRO_BITMAP **icons;
-    ALLEGRO_FONT *sub_text_font;
+    Vector **text_content;
+    Vector **icons;
+
     TextStyle *text_style;
 
 } ScrollBox;
