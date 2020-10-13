@@ -270,4 +270,6 @@ ScrollboxIcon CreateScrollboxIcon()
     icon.icon_path = NULL;
     icon.icon = NULL;
 
+    return icon;
+
 }
