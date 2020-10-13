@@ -82,13 +82,13 @@ void SetScrollboxIconsForCompanies(DrawObject *object)
 
 }
 
-DrawObject *GetCompaniesScrollbox()
+DrawObject *GetCompaniesScrollbox(int x, int y, void (*click)(char *scroll_box_content, unsigned short int index))
 {
 
     DrawObject *object = CreateScrollBoxObject();
 
-    object->x          = 0;
-    object->y          = 0;
+    object->x          = x;
+    object->y          = y;
     object->width      = 288;
     object->height     = 803;
     object->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
@@ -96,7 +96,7 @@ DrawObject *GetCompaniesScrollbox()
     unsigned int num_companies = GetNumCompanies();
 
     object->scrollbox.num_items    = num_companies;
-    object->scrollbox.box_click    = &AccountMenuCompanyScrollBoxClick;
+    object->scrollbox.box_click    = click;
     object->scrollbox.text_content = malloc(sizeof(Vector *) * num_companies);
     object->scrollbox.icons        = malloc(sizeof(Vector *) * num_companies);
     

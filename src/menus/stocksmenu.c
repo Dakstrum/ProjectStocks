@@ -209,38 +209,7 @@ void LoadCompanyScrollBoxClick(char *scroll_box_content, unsigned short int inde
 void InitializeCompanyScrollBox()
 {
 
-    DrawObject *object = CreateScrollBoxObject();
-
-    object->x          = 2;
-    object->y          = 230;
-    object->width      = 288;
-    object->height     = 803;
-    object->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
-
-    unsigned int num_companies = GetNumCompanies();
-
-    object->scrollbox.num_items        = num_companies;
-    object->scrollbox.box_click        = &LoadCompanyScrollBoxClick;
-    object->scrollbox.text_content     = malloc(sizeof(char *) * num_companies);
-    object->scrollbox.sub_text_content = malloc(sizeof(char *) * num_companies);
-    object->scrollbox.icon_paths       = malloc(sizeof(char *) * num_companies);
-
-    PopulateStocksScrollBox(object);
-    AddObjectToDrawLayer(object);
-
-}
-
-void PopulateStocksScrollBox(DrawObject *object)
-{
-    
-    int num_companies = GetNumCompanies();
-    for (int i = 0; i < num_companies; i++) {
-
-        object->scrollbox.text_content[i] = GetCompanyAbbreviation(i + 1);
-        object->scrollbox.icon_paths[i] = GetCompanyIconPath(i + 1);
-        object->scrollbox.sub_text_content[i] = GetCompanyName(i + 1);
-
-    }
+    AddObjectToDrawLayer(GetCompaniesScrollbox(2, 230, &LoadCompanyScrollBoxClick));
 
 }
 
