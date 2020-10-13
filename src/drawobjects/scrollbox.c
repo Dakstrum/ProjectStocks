@@ -15,12 +15,36 @@
 void InitIconPaths(DrawObject *object) 
 {
 
+    if (object->scrollbox.icons == NULL)
+        return;
 
     for (size_t i = 0; i < object->scrollbox.num_items;i++) {
 
-        object->scrollbox.icons[i] = NULL;
-        if (object->scrollbox.icon_paths[i] != NULL)
-            object->scrollbox.icons[i] = GetBitmapFromCache(object->scrollbox.icon_paths[i]);
+        ScrollboxIcon *icons = object->scrollbox.icons[i]->elements;
+        for (size_t k = 0; k < object->scrollbox.icons[i]->num_elements;k++) {
+
+            icons[k].icon = GetBitmapFromCache(icons[k].icon_path);
+
+        }
+
+    }
+
+}
+
+void InitTextFont(DrawObject *object)
+{
+
+    if (object->scrollbox.text_content == NULL)
+        return;
+
+    for (size_t i = 0; i < object->scrollbox.num_items;i++) {
+
+        ScrollboxText *text = object->scrollbox.text_content[i]->elements;
+        for (size_t k = 0; k < object->scrollbox.text_content[i]->num_elements;k++) {
+
+            text[k].font = GetFontFromCache(object->scrollbox.text_style->font_path, text[k].font_size);
+
+        }
 
     }
 
@@ -47,13 +71,35 @@ void InitScrollbox(DrawObject *object)
 
     }
 
-    InitIconPaths(DrawObject *object);
-    InitTextFont(DrawObject *object);
+    InitIconPaths(object);
+    InitTextFont(object);
 
     assert(object->scrollbox.text_style->font != NULL);
 
     if (object->scrollbox.text_style->font == NULL)
         Log("font is null");
+
+}
+
+void DrawText(DrawObject *object, int i, int x, int box_y)
+{
+
+    size_t num_elements = object->scrollbox.text_content[i]->num_elements;
+    ScrollboxText *text = object->scrollbox.text_content[i]->elements;
+
+    for (size_t k = 0; k < num_elements;k++)
+        al_draw_text(text[k].font, object->scrollbox.text_style->color, x + text[k].rx, y + text[k].ry, 0, text[k].text);
+
+}
+
+void DrawIcons(DrawObject *object, int i, int x, int box_y)
+{
+
+    size_t num_elements = object->scrollbox.icons[i]->num_elements;
+    ScrollboxIcon *icons = object->scrollbox.icons[i]->elements;
+
+    for (size_t k = 0; k < num_elements;k++)
+        DrawGeneric(icons[k].icon, x + icons[k].rx, box_y + icons[k].ry);
 
 }
 
@@ -63,41 +109,27 @@ void DrawRegularBox(DrawObject *object, int i, int x, int box_y)
     al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
     DrawGenericTinted(object->scrollbox.boxes_bitmap, x, box_y, al_map_rgba(255, 255, 255, object->scrollbox.currently_tinted == i ? 150 : 255));
 
-    if (object->scrollbox.icons != NULL && object->scrollbox.icons[i] != NULL) {
+    if (object->scrollbox.icons != NULL)
+        DrawIcons(object, i, x, box_y);
 
-        DrawGeneric(object->scrollbox.icons[i], x + 10, box_y + 5);
-        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 100, box_y + 5, 0, object->scrollbox.text_content[i]);
+    if (object->scrollbox.text_content != NULL)
+        DrawText(object, i, x, box_y);
 
-        if (object->scrollbox.sub_text_content != NULL)
-            al_draw_text(object->scrollbox.sub_text_font, object->scrollbox.text_style->color, x + 100, box_y + 40, 0, object->scrollbox.sub_text_content[i]);
 
-    } else {
-
-        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x + 30, box_y + 5, 0, object->scrollbox.text_content[i]);
-
-    }
     al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_INVERSE_ALPHA);
 
 }
 
-void DrawTiltedBox(DrawObject *object, int i, int x_offsetted, int box_y, unsigned char alpha_mask)
+void DrawOffsettedBox(DrawObject *object, int i, int x_offsetted, int box_y, unsigned char alpha_mask)
 {
 
     DrawGenericTinted(object->scrollbox.boxes_bitmap, x_offsetted, box_y, al_map_rgba(255, 255, 255, alpha_mask));
 
-    if (object->scrollbox.icons != NULL && object->scrollbox.icons[i] != NULL) {
+    if (object->scrollbox.icons != NULL)
+        DrawIcons(object, i, x_offsetted, box_y);
 
-        DrawGeneric(object->scrollbox.icons[i], x_offsetted + 10, box_y + 5);
-        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x_offsetted + 100, box_y + 5, 0, object->scrollbox.text_content[i]);
-
-        if (object->scrollbox.sub_text_content != NULL)
-            al_draw_text(object->scrollbox.sub_text_font, object->scrollbox.text_style->color, x_offsetted + 100, box_y + 40, 0, object->scrollbox.sub_text_content[i]);
-
-    } else {
-
-        al_draw_text(object->scrollbox.text_style->font, object->scrollbox.text_style->color, x_offsetted + 30, box_y + 5, 0, object->scrollbox.text_content[i]);
-
-    }
+    if (object->scrollbox.text_content != NULL)
+        DrawText(object, i, x_offsetted, box_y);
 
 
 }
@@ -126,7 +158,7 @@ void DrawScrollBox(DrawObject *object)
             unsigned char alpha_mask = 255 - (unsigned char)(percent_diff * 255.0 * 4.0);
             float x_offset           = percent_diff * 400.0;
 
-            DrawTiltedBox(object, i, x + x_offset, box_y, alpha_mask);
+            DrawOffsettedBox(object, i, x + x_offset, box_y, alpha_mask);
 
         } else {
 
@@ -141,14 +173,18 @@ void DrawScrollBox(DrawObject *object)
 void CleanUpVectors(DrawObject *object)
 {
 
-    if (object->scrollbox.text_content != NULL)
-        for (size_t i = 0; i < object->scrollbox.num_items;i++)
-            Vector_Delete(object->scrollbox.text_content[i]);
+    if (object->scrollbox.text_content == NULL)
+        return;
+
+    for (size_t i = 0; i < object->scrollbox.num_items;i++)
+        Vector_Delete(object->scrollbox.text_content[i]);
 
 
-    if (object->scrollbox.icons != NULL)
-        for (size_t i = 0; i < object->scrollbox.num_items;i++)
-            Vector_Delete(object->scrollbox.icons);
+    if (object->scrollbox.icons == NULL)
+        return;
+
+    for (size_t i = 0; i < object->scrollbox.num_items;i++)
+        Vector_Delete(object->scrollbox.icons);
 
 }
 
