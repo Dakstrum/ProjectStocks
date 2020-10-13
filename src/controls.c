@@ -121,6 +121,7 @@ bool MouseInScrollBoxArea(DrawObject *object, const int x, const int y, const in
         return false;
 
     return true;
+
 }
 
 bool CheckForScrollboxClick(DrawObject *object, const int x, const int y) 
@@ -131,7 +132,8 @@ bool CheckForScrollboxClick(DrawObject *object, const int x, const int y)
         if (MouseInScrollBoxArea(object, x, y, i)) {
 
             PlaySample(BUTTON_CLICK);
-            object->scrollbox.box_click(object->scrollbox.text_content[i], i);
+            ScrollboxText *text = object->scrollbox.text_content[i]->elements;
+            object->scrollbox.box_click(text[0].text, i);
             break;
 
         }
@@ -153,6 +155,7 @@ bool HandledMouseClickInScrollBox(int x, int y)
             return true;
 
     return false;
+    
 }
 
 void InitializeControls() 
