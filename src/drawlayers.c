@@ -275,7 +275,7 @@ void ClearUpGeneric(DrawObject *object)
         case VIDEO    : CleanUpVideo(object);    break;
         case TEXT     : CleanUpText(object);     break;
         case TEXTBOX  : CleanUpTextBox(object);  break;
-        case SCROLLBOX: CleanUpScrollbox(object); break;
+        case SCROLLBOX: Scrollbox_Clean(object); break;
 
     }
 
@@ -325,7 +325,7 @@ int AddScrollBoxToDrawLayer(DrawObject *object)
 
     }
 
-    InitScrollbox(object);
+    Scrollbox_Init(object);
     return AddDrawObjectToDrawLayer(object);
 
 }
@@ -516,7 +516,7 @@ void DrawObjectOfTypeGen(DrawObject *object)
         case TEXT:      DrawText(object);      break;
         case TEXTBOX:   DrawTextBox(object);   break;
         case GRAPH:     DrawGraph(object);     break;
-        case SCROLLBOX: DrawScrollBox(object); break;
+        case SCROLLBOX: Scrollbox_Draw(object); break;
 
     }
 

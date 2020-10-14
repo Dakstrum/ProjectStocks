@@ -26,13 +26,13 @@ typedef struct ScrollboxIcon
 
 } ScrollboxIcon;
 
-void InitScrollbox(DrawObject *object);
-void DrawScrollBox(DrawObject *object);
-void CleanUpScrollbox(DrawObject *object);
+void Scrollbox_Init(DrawObject *object);
+void Scrollbox_Draw(DrawObject *object);
+void Scrollbox_Clean(DrawObject *object);
 
-DrawObject *CreateScrollBoxObject();
+DrawObject *Scrollbox_Create();
 
-ScrollboxText CreateScrollboxText();
-ScrollboxIcon CreateScrollboxIcon();
+ScrollboxText Scrollbox_CreateText();
+ScrollboxIcon Scrollbox_CreateIcon();
 
 #endif

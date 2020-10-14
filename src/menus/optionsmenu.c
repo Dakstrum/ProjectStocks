@@ -142,7 +142,7 @@ void ChangeResolutionClick(char *scroll_box_content, unsigned short int index)
 void InitalizeResolutionScrollbox()
 {
 
-    DrawObject *object = CreateScrollBoxObject();
+    DrawObject *object = Scrollbox_Create();
 
     object->x      = 1060;
     object->y      = 410;

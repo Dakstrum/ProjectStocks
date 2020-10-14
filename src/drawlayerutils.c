@@ -89,7 +89,7 @@ void SetScrollboxIconsForCompanies(DrawObject *object)
 DrawObject *GetCompaniesScrollbox(int x, int y, void (*click)(char *scroll_box_content, unsigned short int index))
 {
 
-    DrawObject *object = CreateScrollBoxObject();
+    DrawObject *object = Scrollbox_Create();
 
     object->x          = x;
     object->y          = y;

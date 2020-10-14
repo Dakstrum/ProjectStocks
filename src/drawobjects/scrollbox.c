@@ -51,7 +51,7 @@ void InitTextFont(DrawObject *object)
 
 }
 
-void InitScrollbox(DrawObject *object)
+void Scrollbox_Init(DrawObject *object)
 {
     
     object->scrollbox.boxes_bitmap = GetBitmapFromCache(object->asset_path);
@@ -135,7 +135,7 @@ void DrawOffsettedBox(DrawObject *object, int i, int x_offsetted, int box_y, uns
 
 }
 
-void DrawScrollBox(DrawObject *object) 
+void Scrollbox_Draw(DrawObject *object) 
 {
 
     const int x = object->x;
@@ -189,7 +189,7 @@ void CleanUpVectors(DrawObject *object)
 
 }
 
-void CleanUpScrollbox(DrawObject *object)
+void Scrollbox_Clean(DrawObject *object)
 {
     
     if (object->scrollbox.text_style != NULL)
@@ -203,7 +203,7 @@ void CleanUpScrollbox(DrawObject *object)
     
 }
 
-DrawObject *CreateScrollBoxObject()
+DrawObject *Scrollbox_Create()
 {
 
     DrawObject *object = CreateNewDrawObject();
@@ -240,7 +240,7 @@ DrawObject *CreateScrollBoxObject()
     return object;
 }
 
-ScrollboxText CreateScrollboxText()
+ScrollboxText Scrollbox_CreateText()
 {
 
     ScrollboxText text;
@@ -256,7 +256,7 @@ ScrollboxText CreateScrollboxText()
 
 }
 
-ScrollboxIcon CreateScrollboxIcon()
+ScrollboxIcon Scrollbox_CreateIcon()
 {
 
     ScrollboxIcon icon;

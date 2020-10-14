@@ -113,7 +113,7 @@ void CardMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short int 
 void InitializeCardMenuCompanyScrollBox() 
 {
 
-    DrawObject *object = CreateScrollBoxObject();
+    DrawObject *object = Scrollbox_Create();
 
     object->x          = 757;
     object->y          = 363;
@@ -166,7 +166,7 @@ void PopulatePositiveCardsScollBox(DrawObject *object)
 void InitalizePositiveCardsScrollBox() 
 {
 
-    DrawObject *object = CreateScrollBoxObject();
+    DrawObject *object = Scrollbox_Create();
 
     object->x          = 50;
     object->y          = 233;
@@ -204,7 +204,7 @@ void PopulateNegativeCardsScollBox(DrawObject *object)
 void InitalizeNegativeCardsScrollBox() 
 {
 
-    DrawObject *object = CreateScrollBoxObject();
+    DrawObject *object = Scrollbox_Create();
 
     object->x          = 480;
     object->y          = 233;

@@ -197,7 +197,7 @@ void InitalizeSaveScrollBox()
 {
 
     saves           = GetAllSaves();
-    saves_scrollbox = CreateScrollBoxObject();
+    saves_scrollbox = Scrollbox_Create();
 
     saves_scrollbox->x          = 537;
     saves_scrollbox->y          = 226;
