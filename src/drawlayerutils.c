@@ -61,10 +61,10 @@ void SetScrollboxTextContentForCompanies(DrawObject *object)
 
 		Vector *text = object->scrollbox.text_content[i];
 
-		ScrollboxText company_abr = {100, 5, NULL, 40, GetCompanyAbbreviation(i + 1)};
+		ScrollboxText company_abr = {100, 5, NULL, 40, GetCompanyAbbreviationRef(i + 1)};
 		Vector_PushBack(text, &company_abr);
 
-		ScrollboxText company_name = {100, 40, NULL, 24, GetCompanyName(i + 1)};
+		ScrollboxText company_name = {100, 40, NULL, 24, GetCompanyNameRef(i + 1)};
 		Vector_PushBack(text, &company_name);
 
 	}
@@ -80,7 +80,6 @@ void SetScrollboxIconsForCompanies(DrawObject *object)
 		Vector *icons = object->scrollbox.icons[i];
 
 		ScrollboxIcon icon = {10, 5, GetCompanyIconPath(i + 1), NULL};
-        LogF("%s", GetCompanyIconPath(i+1));
 		Vector_PushBack(icons, &icon);
 
 	}

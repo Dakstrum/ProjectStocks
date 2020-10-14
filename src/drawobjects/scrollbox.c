@@ -191,9 +191,6 @@ void CleanUpVectors(DrawObject *object)
 
 void CleanUpScrollbox(DrawObject *object)
 {
-
-    if (object->scrollbox.icons != NULL)
-        free(object->scrollbox.icons);
     
     if (object->scrollbox.text_style != NULL)
         free(object->scrollbox.text_style);
