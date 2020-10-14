@@ -11,6 +11,7 @@
 #include "vector.h"
 
 #include "drawobject.h"
+#include "scrollbox.h"
 
 void InitIconPaths(DrawObject *object) 
 {
@@ -81,18 +82,18 @@ void InitScrollbox(DrawObject *object)
 
 }
 
-void DrawText(DrawObject *object, int i, int x, int box_y)
+void Scrollbox_DrawText(DrawObject *object, int i, int x, int box_y)
 {
 
     size_t num_elements = object->scrollbox.text_content[i]->num_elements;
     ScrollboxText *text = object->scrollbox.text_content[i]->elements;
 
     for (size_t k = 0; k < num_elements;k++)
-        al_draw_text(text[k].font, object->scrollbox.text_style->color, x + text[k].rx, y + text[k].ry, 0, text[k].text);
+        al_draw_text(text[k].font, object->scrollbox.text_style->color, x + text[k].rx, box_y + text[k].ry, 0, text[k].text);
 
 }
 
-void DrawIcons(DrawObject *object, int i, int x, int box_y)
+void Scrollbox_DrawIcons(DrawObject *object, int i, int x, int box_y)
 {
 
     size_t num_elements = object->scrollbox.icons[i]->num_elements;
@@ -110,10 +111,10 @@ void DrawRegularBox(DrawObject *object, int i, int x, int box_y)
     DrawGenericTinted(object->scrollbox.boxes_bitmap, x, box_y, al_map_rgba(255, 255, 255, object->scrollbox.currently_tinted == i ? 150 : 255));
 
     if (object->scrollbox.icons != NULL)
-        DrawIcons(object, i, x, box_y);
+        Scrollbox_DrawIcons(object, i, x, box_y);
 
     if (object->scrollbox.text_content != NULL)
-        DrawText(object, i, x, box_y);
+        Scrollbox_DrawText(object, i, x, box_y);
 
 
     al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_INVERSE_ALPHA);
@@ -126,10 +127,10 @@ void DrawOffsettedBox(DrawObject *object, int i, int x_offsetted, int box_y, uns
     DrawGenericTinted(object->scrollbox.boxes_bitmap, x_offsetted, box_y, al_map_rgba(255, 255, 255, alpha_mask));
 
     if (object->scrollbox.icons != NULL)
-        DrawIcons(object, i, x_offsetted, box_y);
+        Scrollbox_DrawIcons(object, i, x_offsetted, box_y);
 
     if (object->scrollbox.text_content != NULL)
-        DrawText(object, i, x_offsetted, box_y);
+        Scrollbox_DrawText(object, i, x_offsetted, box_y);
 
 
 }
@@ -184,7 +185,7 @@ void CleanUpVectors(DrawObject *object)
         return;
 
     for (size_t i = 0; i < object->scrollbox.num_items;i++)
-        Vector_Delete(object->scrollbox.icons);
+        Vector_Delete(object->scrollbox.icons[i]);
 
 }
 
@@ -199,10 +200,9 @@ void CleanUpScrollbox(DrawObject *object)
 
     CleanUpVectors(object);
 
-    object->scrollbox.icons        = NULL;
-    object->scrollbox.icon_paths   = NULL;
-    object->scrollbox.text_style   = NULL;
     object->scrollbox.text_content = NULL;
+    object->scrollbox.icons        = NULL;
+    object->scrollbox.text_style   = NULL;
     
 }
 

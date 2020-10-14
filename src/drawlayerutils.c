@@ -40,10 +40,14 @@ MenuWithChilds *GetJSONMenuAndAddToDrawLayer(char* menu_name)
 void InitScrollboxVectors(DrawObject *object)
 {
 
-	for (size_t i = 0; i < object->scrollbox.num_items;i++) {
+    size_t num_elements = object->scrollbox.num_items;
+    object->scrollbox.text_content = malloc(sizeof(Vector *) * num_elements);
+    object->scrollbox.icons        = malloc(sizeof(Vector *) * num_elements);
 
-		object->scrollbox.text_content[i] = Vector_Create(sizeof(ScrollboxText) * 4);
-		object->scrollbox.icons[i]        = Vector_Create(sizeof(ScrollboxIcon) * 4);
+	for (size_t i = 0; i < num_elements;i++) {
+
+		object->scrollbox.text_content[i] = Vector_Create(sizeof(ScrollboxText), 4);
+		object->scrollbox.icons[i]        = Vector_Create(sizeof(ScrollboxIcon), 4);
 
 	}
 
@@ -52,16 +56,16 @@ void InitScrollboxVectors(DrawObject *object)
 void SetScrollboxTextContentForCompanies(DrawObject *object) 
 {
 
-    int num_companies = GetNumCompanies();
+    size_t num_companies = GetNumCompanies();
 	for (size_t i = 0; i < num_companies;i++) {
 
 		Vector *text = object->scrollbox.text_content[i];
 
 		ScrollboxText company_abr = {100, 5, NULL, 40, GetCompanyAbbreviation(i + 1)};
-		Vector_Pushback(text, &company_abr);
+		Vector_PushBack(text, &company_abr);
 
 		ScrollboxText company_name = {100, 40, NULL, 24, GetCompanyName(i + 1)};
-		Vector_Pushback(text, &company_name);
+		Vector_PushBack(text, &company_name);
 
 	}
 
@@ -70,13 +74,14 @@ void SetScrollboxTextContentForCompanies(DrawObject *object)
 void SetScrollboxIconsForCompanies(DrawObject *object)
 {
 
-    int num_companies = GetNumCompanies();
+    size_t num_companies = GetNumCompanies();
 	for (size_t i = 0; i < num_companies;i++) {
 
 		Vector *icons = object->scrollbox.icons[i];
 
 		ScrollboxIcon icon = {10, 5, GetCompanyIconPath(i + 1), NULL};
-		Vector_Pushback(icons, &icon);
+        LogF("%s", GetCompanyIconPath(i+1));
+		Vector_PushBack(icons, &icon);
 
 	}
 
@@ -95,10 +100,8 @@ DrawObject *GetCompaniesScrollbox(int x, int y, void (*click)(char *scroll_box_c
 
     unsigned int num_companies = GetNumCompanies();
 
-    object->scrollbox.num_items    = num_companies;
-    object->scrollbox.box_click    = click;
-    object->scrollbox.text_content = malloc(sizeof(Vector *) * num_companies);
-    object->scrollbox.icons        = malloc(sizeof(Vector *) * num_companies);
+    object->scrollbox.num_items = num_companies;
+    object->scrollbox.box_click = click;
     
     InitScrollboxVectors(object);
     SetScrollboxTextContentForCompanies(object);

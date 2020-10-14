@@ -72,16 +72,6 @@ void SetSaveInfoText(char *save_name, char *player_name)
     SetTextContent(player_name_textobject, "%s", player_name);
 }
 
-void PopulateSaveScrollBox(DrawObject *object)
-{
-    PlayerSave *temp = (PlayerSave *)saves->elements;
-    for(size_t i = 0; i < saves->num_elements; i++)
-        object->scrollbox.text_content[i] = temp[i].save_name;
-
-}
-
-
-
 void StartGame()
 {
 
@@ -190,13 +180,25 @@ void SelectSaveClick(char *save_name, unsigned short int index)
 
 }
 
+void PopulateSaveScrollBox(DrawObject *object)
+{
+
+    PlayerSave *temp = (PlayerSave *)saves->elements;
+    for(size_t i = 0; i < saves->num_elements; i++) {
+
+        ScrollboxText text = {30, 5, NULL, 40, temp[i].save_name};
+        Vector_PushBack(object->scrollbox.text_content[i], &text);
+
+    }
+
+}
+
 void InitalizeSaveScrollBox() 
 {
 
     saves           = GetAllSaves();
     saves_scrollbox = CreateScrollBoxObject();
 
-    saves_scrollbox->type       = SCROLLBOX;
     saves_scrollbox->x          = 537;
     saves_scrollbox->y          = 226;
     saves_scrollbox->width      = 288;
@@ -206,8 +208,8 @@ void InitalizeSaveScrollBox()
 
     saves_scrollbox->scrollbox.num_items    = saves->num_elements;
     saves_scrollbox->scrollbox.box_click    = &SelectSaveClick;
-    saves_scrollbox->scrollbox.text_content = malloc(sizeof(char *) * saves->num_elements);
 
+    InitScrollboxVectors(saves_scrollbox);
     PopulateSaveScrollBox(saves_scrollbox);
     AddObjectToDrawLayer(saves_scrollbox);
 

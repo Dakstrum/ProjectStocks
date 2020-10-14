@@ -14,6 +14,7 @@
 #include "generalpurposemenus.h"
 #include "account.h"
 #include "pausemenus.h"
+#include "scrollbox.h"
 
 // leave last character as null character. Leave one character for flicker;
 static const int MAX_CHARS_IN_TEXTBOX  = 126;
