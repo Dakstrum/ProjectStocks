@@ -26,6 +26,26 @@ static MenuWithChilds *display_menu = NULL;
 
 static DrawObject *fullscreen_button = NULL;
 
+typedef struct Resolution 
+{
+
+    char *resolution;
+    int width;
+    int height;
+
+} Resolution;
+
+#define NUM_RESOLUTIONS 6
+static Resolution resolutions[NUM_RESOLUTIONS] = 
+{
+    {"1920x1080", 1920, 1080},
+    {"1366x768", 1366, 768},
+    {"1440x900", 1440, 900},
+    {"1536x864", 1536, 864},
+    {"1024x768", 1024, 768},
+    {"1280x720", 1280, 720}
+};
+
 void ChangeResolutionClick(char *scroll_box_content, unsigned short int index);
 void InitalizeResolutionScrollbox();
 void UpdateFullScreenButton();
@@ -104,12 +124,16 @@ void ToggleDisplayMenu()
 void ChangeResolutionClick(char *scroll_box_content, unsigned short int index)
 {
 
-    if(strcmp(scroll_box_content, "1920x1080") == 0) Window_Resize(1920, 1080);
-    if(strcmp(scroll_box_content, "1366x768")  == 0) Window_Resize(1366, 768);
-    if(strcmp(scroll_box_content, "1440x900")  == 0) Window_Resize(1440, 900);
-    if(strcmp(scroll_box_content, "1536x864")  == 0) Window_Resize(1536, 864);
-    if(strcmp(scroll_box_content, "1024x768")  == 0) Window_Resize(1024, 768);
-    if(strcmp(scroll_box_content, "1280x720")  == 0) Window_Resize(1280, 720);
+    for (size_t i = 0; i < NUM_RESOLUTIONS;i++) {
+
+        if (strcmp(scroll_box_content, resolutions[i].resolution) == 0) {
+
+            Window_Resize(resolutions[i].width, resolutions[i].height);
+            break;
+
+        }
+
+    }
 
     UpdateFullScreenButton();
 
@@ -127,18 +151,19 @@ void InitalizeResolutionScrollbox()
     object->scrollbox.vertical_spacing = 69;
     object->asset_path = "assets/images/generalpurposemenus/optionsmenu/selectoptionresolutionbox.png";
 
-    object->scrollbox.num_items        = 6;
-    object->scrollbox.box_click        = &ChangeResolutionClick;
-    object->scrollbox.text_content     = malloc(sizeof(char *) * object->scrollbox.num_items);
+    object->scrollbox.num_items = NUM_RESOLUTIONS;
+    object->scrollbox.box_click = &ChangeResolutionClick;
+
+    InitScrollboxVectors(object);
+
+    for (size_t i = 0; i < NUM_RESOLUTIONS;i++) {
+
+        ScrollboxText text = {30, 5, NULL, 40, resolutions[i].resolution};
+        Vector_PushBack(object->scrollbox.text_content[i], &text);
+
+    }
 
     AddObjectToDrawLayer(object);
-
-    object->scrollbox.text_content[0]  = GetFormattedPointer("1920x1080");
-    object->scrollbox.text_content[1]  = GetFormattedPointer("1366x768");
-    object->scrollbox.text_content[2]  = GetFormattedPointer("1440x900");
-    object->scrollbox.text_content[3]  = GetFormattedPointer("1536x864");
-    object->scrollbox.text_content[4]  = GetFormattedPointer("1024x768");
-    object->scrollbox.text_content[5]  = GetFormattedPointer("1280x720");
 
 }
 
