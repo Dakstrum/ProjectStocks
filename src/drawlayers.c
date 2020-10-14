@@ -577,13 +577,13 @@ char *GetTextFromTextBox(char *object_name)
 }
 
 
-DrawObjectTypeCollection *GetObjectsByType(DrawType type)
+DrawObjectCollection *GetObjectsByType(DrawType type)
 {
 
     if (current_draw_layer == -1)
         return NULL;
 
-    DrawObjectTypeCollection *collection = malloc(sizeof(DrawObjectTypeCollection));
+    DrawObjectCollection *collection = malloc(sizeof(DrawObjectCollection));
     collection->num_objects = 0;
     collection->objects     = malloc(sizeof(DrawObject *) * MAX_OBJECTS_PER_LAYER);
     DrawObject *object      = NULL;
@@ -603,7 +603,7 @@ DrawObjectTypeCollection *GetObjectsByType(DrawType type)
 
 }
 
-void DisposeDrawObjectTypeCollection(DrawObjectTypeCollection *collection)
+void DisposeDrawObjectTypeCollection(DrawObjectCollection *collection)
 {
 
     if (collection == NULL)

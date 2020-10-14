@@ -189,7 +189,7 @@ void DisplayGraph(char *company_name, TimeSpan time_span)
 char *GetCurrentCompanyFromGraph()
 {
 
-    DrawObjectTypeCollection *current_draw_layer_graphs = GetObjectsByType(GRAPH);
+    DrawObjectCollection *current_draw_layer_graphs = GetObjectsByType(GRAPH);
     return current_draw_layer_graphs->objects[0]->graph.company;
 
 }

@@ -252,12 +252,12 @@ typedef struct MenuWithChilds
 
 } MenuWithChilds;
 
-typedef struct DrawObjectTypeCollection {
+typedef struct DrawObjectCollection {
 
     DrawObject **objects;
     unsigned short int num_objects;
 
-} DrawObjectTypeCollection;
+} DrawObjectCollection;
 
 void DrawObjects_Initialize();
 DrawObject *CreateNewDrawObject();

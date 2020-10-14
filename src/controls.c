@@ -53,7 +53,7 @@ bool HandleMouseClick(DrawObject *object, int x, int y)
 bool HandledMouseClickInButtonAreas(int x, int y) 
 {
 
-    DrawObjectTypeCollection *collection = GetObjectsByType(BUTTON); 
+    DrawObjectCollection *collection = GetObjectsByType(BUTTON); 
 
     if (collection == NULL)
         return false;
@@ -90,7 +90,7 @@ bool ToggledTextBoxActiveFlag(DrawObject *object, int x, int y)
 bool HandledMouseClickInTextbox(int x, int y)
 {
 
-    DrawObjectTypeCollection *collection = GetObjectsByType(TEXTBOX);
+    DrawObjectCollection *collection = GetObjectsByType(TEXTBOX);
 
     if (collection == NULL)
         return false;
@@ -147,7 +147,7 @@ bool CheckForScrollboxClick(DrawObject *object, const int x, const int y)
 bool HandledMouseClickInScrollBox(int x, int y)
 {
 
-    DrawObjectTypeCollection *collection = GetObjectsByType(SCROLLBOX);
+    DrawObjectCollection *collection = GetObjectsByType(SCROLLBOX);
     if (collection == NULL)
         return false;
 
@@ -196,7 +196,7 @@ bool HandleScrollEventInArea(DrawObject *object, ALLEGRO_EVENT event)
 void HandleScrollWheelEvent(ALLEGRO_EVENT event)
 {
 
-    DrawObjectTypeCollection *collection = GetObjectsByType(SCROLLBOX);
+    DrawObjectCollection *collection = GetObjectsByType(SCROLLBOX);
     if (collection == NULL)
         return;
 
@@ -367,7 +367,7 @@ void TintButtons()
     static ALLEGRO_MOUSE_STATE state;
     al_get_mouse_state(&state);
 
-    DrawObjectTypeCollection *collection = GetObjectsByType(BUTTON);
+    DrawObjectCollection *collection = GetObjectsByType(BUTTON);
 
     if (collection == NULL)
         return;
@@ -390,7 +390,7 @@ void TintScrollBox()
     static ALLEGRO_MOUSE_STATE state;
     al_get_mouse_state(&state);
 
-    DrawObjectTypeCollection *collection = GetObjectsByType(SCROLLBOX);
+    DrawObjectCollection *collection = GetObjectsByType(SCROLLBOX);
 
     if (collection == NULL)
         return;
