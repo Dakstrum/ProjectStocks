@@ -56,4 +56,5 @@ VALUES
     (2, 'assets/images/companyicons/unimpressivegames.png'),
     (3, 'assets/images/companyicons/whyspace.png'),
     (4, 'assets/images/companyicons/intersetellerbusinessrobots.png'),
+    (5, 'assets/images/companyicons/pear.png'),
     (8, 'assets/images/companyicons/k3news.png');
