@@ -9,7 +9,7 @@ typedef struct Company {
     unsigned int category_id;
     float ipo;
     char company_name[64];
-    char company_description[128];
+    char company_description[256];
     char company_abbreviation[6];
 
 } Company;

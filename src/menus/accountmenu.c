@@ -103,7 +103,12 @@ void InitalizeAccountMenuText()
 {
 
     company_name_textobject         = GetJSONObjectAndAddToDrawLayer("AccountMenuCompanyNameTextObject");
-    company_about_textobject        = GetJSONObjectAndAddToDrawLayer("AccountMenuAboutCompanyTextObject");
+
+    company_about_textobject        = GetDrawObjectFromJsonLayer("AccountMenuAboutCompanyTextObject");
+    company_about_textobject->width = 835;
+    AddObjectToDrawLayer(company_about_textobject);
+    
+
     player_money_textobject         = GetJSONObjectAndAddToDrawLayer("AccountMenuAccountMoneyTextObject");
     player_date_textobject          = GetJSONObjectAndAddToDrawLayer("AccountMenuAccountDateTextObject");
     stock_price_textobject          = GetJSONObjectAndAddToDrawLayer("AccountMenuStockPriceTextObject");

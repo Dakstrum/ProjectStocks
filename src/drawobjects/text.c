@@ -116,7 +116,7 @@ DrawObject *Text_Create()
 
     DrawObject *object       = CreateNewDrawObject();
     object->asset_path       = "assets/font/DanielLinssenM5/m5x7.ttf";
-    object->width            = 325;
+    object->width            = 400;
     object->type             = TEXT;
     object->text.bitmap_path = NULL;
     object->text.bitmap      = NULL;
