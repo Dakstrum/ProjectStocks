@@ -120,7 +120,6 @@ void StocksMenusRenderLogic()
     
 }
 
-
 void InitalizeStocksMenuText()
 {
 

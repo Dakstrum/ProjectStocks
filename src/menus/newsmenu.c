@@ -13,6 +13,7 @@
 #include "generalpurposemenus.h"
 #include "drawlayerutils.h"
 #include "menu.h"
+#include "textbox.h"
 #include <time.h>
 
 static MenuWithChilds *news_menu = NULL;
@@ -36,9 +37,9 @@ static DrawObject *thurs_bitmap  = NULL;
 static DrawObject *fri_bitmap    = NULL;
 static DrawObject *sat_bitmap    = NULL;
 
-
 void InitalizeNewsMenuText();
 void NewsMenuRenderLogic();
+void InitializeSearchTextBox();
 
 void TempCreateWeatherBitMaps(); //TEMP
 
@@ -58,6 +59,8 @@ void InitializeNewsMenu()
     InitializeSpeedSelectObject("NewsMenu");
 
     NewsMenuRenderLogic();
+
+    InitializeSearchTextBox();
 }
 
 void InitalizeNewsMenuText()
@@ -89,12 +92,8 @@ void NewsMenuRenderLogic()
 
 }
 
-
-
 void TempCreateWeatherBitMaps() //This function is nasty. Will change when I can create bitmaps and not menus
 {
-
-    
 
     sun_bitmap = CreateNewDrawObject();
     sun_bitmap->type                            = MENU;
@@ -156,27 +155,44 @@ void TempCreateWeatherBitMaps() //This function is nasty. Will change when I can
         int weather_num;
         weather_num = rand() % 3 + 0;
 
-        if(weather_num == 0)
-        {
+        if(weather_num == 0) {
+
             all_weather_bitmaps[i]->asset_path = "assets/images/newsmenu/newsmenuassets/sunny.png";
             SetTextContent(all_weather_temps_textobjects[i], "%d", rand() % (99 + 1 - 75) + 75);
+            
         }
 
         
-        if(weather_num == 1)
-        {
+        if(weather_num == 1) {
+
             all_weather_bitmaps[i]->asset_path = "assets/images/newsmenu/newsmenuassets/cloudy.png";
             SetTextContent(all_weather_temps_textobjects[i], "%d", rand() % (75 + 1 - 70) + 70);
+            
         }
 
-        if(weather_num == 2)
-        {
+        if(weather_num == 2) {
+
             all_weather_bitmaps[i]->asset_path = "assets/images/newsmenu/newsmenuassets/rain.png";
             SetTextContent(all_weather_temps_textobjects[i], "%d", rand() % (70 + 1 - 60) + 60);
+
         }
         
         AddObjectToDrawLayer(all_weather_bitmaps[i]);
+
     }
+
+}
+
+void InitializeSearchTextBox()
+{
+
+    DrawObject *savename_tb = CreateTextBoxObject("SearchTextBox", "", 38, TEXTBOX_ACCEPT_ALPHABET_CHARACTERS | TEXTBOX_ACCEPT_NUMBER_CHARACTERS);
+    savename_tb->x          = 561;
+    savename_tb->y          = 171;
+    savename_tb->width      = 440;
+    savename_tb->height     = 30;
+
+    AddObjectToDrawLayer(savename_tb);
 
 }
 

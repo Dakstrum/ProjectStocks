@@ -79,24 +79,6 @@ void InitializeMainMenu()
 
 }
 
-void ButtonTintTest() 
-{
-
-    // TEST CODE
-    DrawObject *object = GetDrawObjectByName("StartButton");
-    if (object == NULL)
-        return;
-
-    SetButtonTint(object, GetRGBA(217, 17, 39, 255));
-}
-
-void ScrollBoxClick(char *scroll_box_content, unsigned short int index)
-{
-
-    LogF("Got click %s", scroll_box_content);
-    
-}
-
 void Start_BCB()
 {
     
