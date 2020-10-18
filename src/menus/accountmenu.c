@@ -38,8 +38,9 @@ static DrawObject *selected_share_amount_objects[DSP_NUM];
 static DrawObject *selected_share_price_objects[DSP_NUM];
 static DrawObject *selected_transaction_objects[DSP_NUM];
 
-static DrawObject *historydisplay_pages_textobject = NULL;
-static DrawObject *networth_textobject = NULL;
+static DrawObject *historydisplay_pages_textobject       = NULL;
+static DrawObject *historydisplay_currentpage_textobject = NULL;
+static DrawObject *networth_textobject                   = NULL;
 
 //All Stocks History Text Objects
 static DrawObject *all_name_objects[DSP_NUM];
@@ -109,12 +110,13 @@ void InitalizeAccountMenuText()
     AddObjectToDrawLayer(company_about_textobject);
     
 
-    player_money_textobject         = GetJSONObjectAndAddToDrawLayer("AccountMenuAccountMoneyTextObject");
-    player_date_textobject          = GetJSONObjectAndAddToDrawLayer("AccountMenuAccountDateTextObject");
-    stock_price_textobject          = GetJSONObjectAndAddToDrawLayer("AccountMenuStockPriceTextObject");
-    owned_stock_amount_textobject   = GetJSONObjectAndAddToDrawLayer("AccountMenuAmountOwnedTextObject");
-    historydisplay_pages_textobject = GetJSONObjectAndAddToDrawLayer("AccountMenupageTextObject");
-    networth_textobject             = GetJSONObjectAndAddToDrawLayer("AccountMenunetworthTextObject");
+    player_money_textobject               = GetJSONObjectAndAddToDrawLayer("AccountMenuAccountMoneyTextObject");
+    player_date_textobject                = GetJSONObjectAndAddToDrawLayer("AccountMenuAccountDateTextObject");
+    stock_price_textobject                = GetJSONObjectAndAddToDrawLayer("AccountMenuStockPriceTextObject");
+    owned_stock_amount_textobject         = GetJSONObjectAndAddToDrawLayer("AccountMenuAmountOwnedTextObject");
+    historydisplay_pages_textobject       = GetJSONObjectAndAddToDrawLayer("AccountMenupageTextObject");
+    historydisplay_currentpage_textobject = GetJSONObjectAndAddToDrawLayer("AccountMenucurrentpageTextObject");
+    networth_textobject                   = GetJSONObjectAndAddToDrawLayer("AccountMenunetworthTextObject");
 
     SetTextContent(company_name_textobject, "%s", GetCompanyNameViewing());
     SetTextContent(company_about_textobject, "%s", GetCompanyDescriptionRef(GetCompanyId(GetCompanyNameViewing())));
@@ -172,9 +174,11 @@ void PopulateSelectedStockHistoryDisplay(char* company)
 void SetHistoryDisplayPageNumber(unsigned int num_transactions)
 {
 
-    int amount_of_pages = ceil(num_transactions / 5) + 1;
+    int amount_of_pages = ceil((float)num_transactions / 5);
+    int current_page    = GetAccountHistoryDisplayNum() / 5;
 
-    SetTextContent(historydisplay_pages_textobject,  "%d", amount_of_pages);
+    SetTextContent(historydisplay_pages_textobject,        "%d", amount_of_pages);
+    SetTextContent(historydisplay_currentpage_textobject,  "%d", current_page + 1);
 
 }
 
