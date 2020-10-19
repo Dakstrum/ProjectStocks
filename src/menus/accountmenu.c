@@ -174,7 +174,7 @@ void PopulateSelectedStockHistoryDisplay(char* company)
 void SetHistoryDisplayPageNumber(unsigned int num_transactions)
 {
 
-    int amount_of_pages = ceil((float)num_transactions / 5);
+    int amount_of_pages = ceil((float)num_transactions  / 5);
     int current_page    = GetAccountHistoryDisplayNum() / 5;
 
     SetTextContent(historydisplay_pages_textobject,        "%d", amount_of_pages);
