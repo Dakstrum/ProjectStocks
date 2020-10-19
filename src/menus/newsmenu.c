@@ -92,65 +92,41 @@ void NewsMenuRenderLogic()
 
 }
 
+void InitalizeNewsMenuCategoryScrollbox() 
+{
+
+    //AddObjectToDrawLayer(GetCompaniesScrollbox(2, 230, &AccountMenuCompanyScrollBoxClick));
+
+}
+
+
+ 
 void TempCreateWeatherBitMaps() //This function is nasty. Will change when I can create bitmaps and not menus
 {
 
-    sun_bitmap = CreateNewDrawObject();
-    sun_bitmap->type                            = MENU;
-    sun_bitmap->x                               = 1292;
-    sun_bitmap->y                               = 417;
-    sun_bitmap->width                           = 30;
-    sun_bitmap->height                          = 30;
-    
-    mon_bitmap = CreateNewDrawObject();
-    mon_bitmap->type                            = MENU;
-    mon_bitmap->x                               = 1374;
-    mon_bitmap->y                               = 417;
-    mon_bitmap->width                           = 30;
-    mon_bitmap->height                          = 30;
-    
-    tues_bitmap = CreateNewDrawObject();
-    tues_bitmap->type                            = MENU;
-    tues_bitmap->x                               = 1470;
-    tues_bitmap->y                               = 417;
-    tues_bitmap->width                           = 30;
-    tues_bitmap->height                          = 30;
-    
-    wed_bitmap = CreateNewDrawObject();
-    wed_bitmap->type                            = MENU;
-    wed_bitmap->x                               = 1561;
-    wed_bitmap->y                               = 417;
-    wed_bitmap->width                           = 30;
-    wed_bitmap->height                          = 30;
-
+    sun_bitmap   = CreateNewDrawObject();    
+    mon_bitmap   = CreateNewDrawObject();    
+    tues_bitmap  = CreateNewDrawObject();    
+    wed_bitmap   = CreateNewDrawObject();
     thurs_bitmap = CreateNewDrawObject();
-    thurs_bitmap->type                          = MENU;
-    thurs_bitmap->x                             = 1660;
-    thurs_bitmap->y                             = 417;
-    thurs_bitmap->width                         = 30;
-    thurs_bitmap->height                        = 30;
+    fri_bitmap   = CreateNewDrawObject();
+    sat_bitmap   = CreateNewDrawObject();  
 
-    fri_bitmap = CreateNewDrawObject();
-    fri_bitmap->type                          = MENU;
-    fri_bitmap->x                             = 1740;
-    fri_bitmap->y                             = 417;
-    fri_bitmap->width                         = 30;
-    fri_bitmap->height                        = 30;
-
-    sat_bitmap = CreateNewDrawObject();
-    sat_bitmap->type                          = MENU;
-    sat_bitmap->x                             = 1813;
-    sat_bitmap->y                             = 417;
-    sat_bitmap->width                         = 30;
-    sat_bitmap->height                        = 30;
-    
     srand(time(NULL));
+
+    int week_bitmap_x[7] = {1292, 1374, 1470, 1561, 1660, 1740, 1813};
 
     DrawObject *all_weather_bitmaps[7] = {sun_bitmap, mon_bitmap, tues_bitmap, wed_bitmap, thurs_bitmap, fri_bitmap, sat_bitmap};
     DrawObject *all_weather_temps_textobjects[7]   = {sun_temp_textobject, mon_temp_textobject , tues_temp_textobject, wed_temp_textobject, thurs_temp_textobject, fri_temp_textobject, sat_temp_textobject};
 
     for(int i = 0; i < 7; i++)
     {
+
+        all_weather_bitmaps[i]->type   = MENU;
+        all_weather_bitmaps[i]->x      = week_bitmap_x[i];
+        all_weather_bitmaps[i]->y      = 417;
+        all_weather_bitmaps[i]->width  = 30;
+        all_weather_bitmaps[i]->height = 30;
 
         int weather_num;
         weather_num = rand() % 3 + 0;
