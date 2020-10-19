@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS Game_Players
 (
     PlayerId INTEGER PRIMARY KEY, 
     SaveId INT NOT NULL, 
-    PlayerName VARCHAR(20) NOT NULL, 
+    PlayerName VARCHAR(64) NOT NULL, 
     Money DOUBLE NOT NULL, 
     SaveOwner INT NOT NULL DEFAULT(0)
 );
