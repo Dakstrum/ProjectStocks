@@ -255,7 +255,13 @@ void InitOwnedStocks()
     for (size_t i = 0; i< num_companies;i++)
         owned_stocks.owned_amount[i] = 0;
 
-    ExecuteQueryF(&GetOwnedStocks_CallBack, NULL, "SELECT SUM(StocksExchanged), CompanyId FROM Player_Transactions WHERE PlayerId=%d GROUP BY CompanyId", GetCurrentPlayerId());
+
+    char *query =   "SELECT SUM(PT.StocksExchanged), PT.CompanyId, PT.PlayerId FROM Player_Transactions PT "
+                    "INNER JOIN Game_Players GP ON GP.PlayerId = PT.PlayerId "
+                    "WHERE GP.SaveId = %d "
+                    "GROUP BY PT.CompanyId, PT.PlayerId ";
+
+    ExecuteQueryF(&GetOwnedStocks_CallBack, NULL, query, GetSaveId());
 
 }
 
