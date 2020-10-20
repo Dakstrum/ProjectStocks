@@ -179,7 +179,6 @@ void InitalizePositiveCardsScrollBox()
     object->scrollbox.text_content     = malloc(sizeof(char *) * GetNumOfPlayerPositiveCards());
     
     PopulatePositiveCardsScollBox(object);
-    
     AddObjectToDrawLayer(object);
 
 }
@@ -191,10 +190,12 @@ void PopulateNegativeCardsScollBox(DrawObject *object)
     int scrollbox_num = 0;
 
     for(int i = 0; i < GetNumOfPlayerCards(); i++)  {
-        if(GetCardType(temp[i].card_id) == 0)
-        {
+
+        if(GetCardType(temp[i].card_id) == 0) {
+
             object->scrollbox.text_content[scrollbox_num] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
             scrollbox_num++;
+
         }
 
     }
@@ -217,7 +218,6 @@ void InitalizeNegativeCardsScrollBox()
     object->scrollbox.text_content     = malloc(sizeof(char *) * GetNumOfPlayerNegativeCards());
 
     PopulateNegativeCardsScollBox(object);
-
     AddObjectToDrawLayer(object);
 
 }

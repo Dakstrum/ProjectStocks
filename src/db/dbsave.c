@@ -20,6 +20,20 @@ int GetSaveIdCallback(void *save_id, int argc, char **argv, char **col_name)
 
 }
 
+void InsertAIPlayerEntry(int save_id) 
+{
+
+    char *query =   "INSERT INTO Game_Players (SaveId, PlayerName, Money, SaveOwner) "
+                    "SELECT "
+                    "%d,"
+                    "(SELECT FirstName FROM System_AIFirstnames ORDER BY RANDOM() LIMIT 1) || ' ' || (SELECT LastName FROM System_AILastNames ORDER BY RANDOM() LIMIT 1),"
+                    "15000,"
+                    "0";
+
+    ExecuteQueryF(NULL, NULL, query, save_id);
+
+}
+
 int InsertPlayerEntry(int save_id, char *player_name, double money, int save_owner)
 {
     int player_id = -1;
