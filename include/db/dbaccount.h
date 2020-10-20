@@ -30,8 +30,20 @@ typedef struct Transactions
 
 } Transactions;
 
-bool AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtract, float price_per_stock);
-void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float price_per_stock);
+typedef struct Transaction
+{
+
+    int transaction_id;
+    time_t transaction_date;
+    int shares_exchanged;
+    float price_per_share;
+    float transaction_amount;
+    TransactionType type;
+
+} Transaction;
+
+bool AttemptToSubtractFromCurrentStock(unsigned int player_id, char *company_name, int amount_to_subtract, float price_per_stock);
+void AttemptToAddFromCurrentStock(unsigned int player_id, char *company_name, int amount_to_add, float price_per_stock);
 
 char *GetSaveNameFromSaveId(int save_id);
 char *GetPlayerNameFromSaveName(char *save_name);

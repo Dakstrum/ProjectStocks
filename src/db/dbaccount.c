@@ -13,6 +13,7 @@
 #include "dbsave.h"
 #include "log.h"
 #include "simulation.h"
+#include "vector.h"
 
 typedef struct OwnedStocks
 {
@@ -22,10 +23,13 @@ typedef struct OwnedStocks
 
 } OwnedStocks;
 
-static unsigned int num_companies         = 0;
-static OwnedStocks owned_stocks           = {NULL, NULL};
-static Transactions *account_transactions = NULL;
-static Queue *transaction_queue           = NULL;
+static unsigned int num_companies = 0;
+static OwnedStocks owned_stocks   = {NULL, NULL};
+static Queue *transaction_queue   = NULL;
+
+static Vector *transactions = NULL;
+static Vector *company_ids  = NULL;
+static Vector *player_ids   = NULL;
 
 void IncreaseTransactionSizeIfNeeded(Transactions *transaction_temp)
 {
@@ -42,36 +46,6 @@ void IncreaseTransactionSizeIfNeeded(Transactions *transaction_temp)
     transaction_temp->pershare    = realloc(transaction_temp->pershare,    sizeof(float) * transaction_temp->size);
     transaction_temp->type        = realloc(transaction_temp->type,        sizeof(TransactionType) * transaction_temp->size);
 
-
-}
-
-Transactions *GetNewTransactions() 
-{
-
-    Transactions *transactions     = malloc(sizeof(Transactions));
-    transactions->id               = malloc(sizeof(int) * 128);
-    transactions->company_id       = malloc(sizeof(int) * 128);
-    transactions->transaction      = malloc(sizeof(float) * 128);
-    transactions->shares           = malloc(sizeof(int) * 128);
-    transactions->pershare         = malloc(sizeof(float) * 128);
-    transactions->type             = malloc(sizeof(TransactionType) * 128);
-    transactions->date             = malloc(sizeof(time_t) * 128);
-    transactions->num_transactions = 0;
-    transactions->size             = 128;
-
-    for(int i = 0; i < 128; i++) {
-
-        transactions->id[i]          = 0;
-        transactions->company_id[i]  = 0;
-        transactions->transaction[i] = 0;
-        transactions->shares[i]      = 0;
-        transactions->pershare[i]    = 0;
-        transactions->date[i]        = 0;
-        transactions->type[i]        = BUY;
-
-    }
-
-    return transactions;
 
 }
 
@@ -123,11 +97,10 @@ void ModifyOwnedStockAmount(char *company_name, int amount)
 
 }
 
-void InsertStockTransaction(char *company_name, float transaction_amount, int stocks_exchanged) 
+void InsertStockTransaction(unsigned int player_id, char *company_name, float transaction_amount, int stocks_exchanged) 
 {
 
     const unsigned int save_id    = GetSaveId();
-    const unsigned int player_id  = GetCurrentPlayerId();
     const unsigned int company_id = GetCompanyId(company_name);
     const time_t game_time        = GetGameTime();
     static char *query            = "INSERT INTO Player_Transactions (PlayerId, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, %d, %.2f, %d, %d);";
@@ -146,7 +119,7 @@ void InsertStockTransaction(char *company_name, float transaction_amount, int st
 }
 
 
-void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float price_per_stock)
+void AttemptToAddFromCurrentStock(unsigned int player_id, char *company_name, int amount_to_add, float price_per_stock)
 {
 
     ModifyOwnedStockAmount(company_name, amount_to_add);
@@ -154,7 +127,7 @@ void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float p
 
 }
 
-bool AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtract, float price_per_stock)
+bool AttemptToSubtractFromCurrentStock(unsigned int player_id, char *company_name, int amount_to_subtract, float price_per_stock)
 {
 
     if (GetOwnedStockAmount(company_name) < amount_to_subtract)
@@ -172,20 +145,24 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
     if (argc == 0)
         return 0;
 
-    Transactions *transaction_temp  = (Transactions *)transaction;
-    const int temp_num_transactions = transaction_temp->num_transactions;
-    IncreaseTransactionSizeIfNeeded(transaction_temp);
+    int player_id  = atoi(argv[1]);
+    int company_id = atoi(argv[2]);
 
-    transaction_temp->id[temp_num_transactions]          = atoi(argv[0]);
-    transaction_temp->company_id[temp_num_transactions]  = atoi(argv[3]);
-    transaction_temp->transaction[temp_num_transactions] = (float)atof(argv[4]);
-    transaction_temp->shares[temp_num_transactions]      = atoi(argv[5]);
-    transaction_temp->date[temp_num_transactions]        = atoi(argv[6]);
-    transaction_temp->type[temp_num_transactions]        = GetTransactionType(transaction_temp);
-    transaction_temp->pershare[temp_num_transactions]    = GetAmountPerShare(transaction_temp);
-    transaction_temp->num_transactions++;
+    Vector_PushBack(company_ids, &company_id);
+    Vector_PushBack(player_ids, &player_id);
+
+    Transaction transaction;
+    transaction.transaction_id     = atoi(argv[0]);
+    transaction.transaction_amount = atof(argv[3]);
+    transaction.shares_exhanged    = atoi(argv[4]);
+    transaction.transaction_date   = atoi(argv[5]);
+    transaction.price_per_share    = transaction.transaction_amount / transaction.shares_exhanged;
+    transaction.type = transaction.transaction_amount < 0 ? BUY : SELL;
+
+    Vector_PushBack(transactions, &transaction);
     
     return 0;
+    
 }
 
 
@@ -231,15 +208,16 @@ Transactions *GetAllTransactions()
 
     return transactions;
 
-
 }
 
-struct Transactions *GetAllSavedTransactions()
+void InitSavedTransactions()
 {
 
-    Transactions *transactions = GetNewTransactions();
-    ExecuteQueryF(&SetTransactionCallback, transactions, "SELECT * FROM Player_Transactions WHERE PlayerId=%d", GetCurrentPlayerId());
-    return transactions;
+    char *query =   "SELECT PT.* FROM Player_Transactions PT "
+                    "INNER JOIN Game_Players GP ON GP.PlayerId = PT.PlayerId "
+                    "WHERE GP.SaveId = %d";
+
+    ExecuteQueryF(&SetTransactionCallback, NULL, query, GetSaveId());
 
 }
 
@@ -299,44 +277,32 @@ void SaveTransactions()
 
 }
 
-void FreeTransactions(Transactions *transactions)
-{
-
-    free(transactions->id);
-    free(transactions->pershare);
-    free(transactions->shares);
-    free(transactions->transaction);
-    free(transactions->date);
-    free(transactions->type);
-    free(transactions);
-
-}
-
-void InitializeTransactions()
-{
-
-    if (account_transactions != NULL) {
-
-        FreeTransactions(account_transactions);
-        account_transactions = NULL;
-
-    }
-    account_transactions = GetAllSavedTransactions();
-
-}
-
 void InitializeAccountInformation()
 {
 
+    if (transactions == NULL) {
+
+        transactions = Vector_Create(sizeof(Transaction), 32);
+        company_ids  = Vector_Create(sizeof(int), 32);
+        player_ids   = Vector_Create(sizeof(int), 32); 
+
+    } else {
+
+        Vector_Reset(transactions);
+        Vector_Reset(company_ids);
+        Vector_Reset(player_ids);
+
+    }
 
     InitializeOwnedStocks();
-    InitializeTransactions();
+    InitSavedTransactions();
     transaction_queue = Queue_Create();
 
 }
 
 float GetAccountNetWorth()
 {
+
     float networth = 0;
     for(int i = 1; i < GetNumCompanies(); i++) {
 
