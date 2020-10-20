@@ -20,6 +20,7 @@ void DeleteSave(int save_id);
 
 int InsertSaveEntry(char *save_name, unsigned int game_seed);
 int InsertPlayerEntry(int save_id, char *player_name, double money, int save_owner);
+void InsertAIPlayerEntry(int save_id);
 
 void SavePlayerData(PlayerSave save);
 Vector *GetAllSaves();
