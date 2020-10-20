@@ -15,21 +15,17 @@
 #include "simulation.h"
 #include "vector.h"
 
-typedef struct OwnedStocks
-{
-
-    unsigned int *company_id;
-    unsigned int *owned_amount;
-
-} OwnedStocks;
 
 static unsigned int num_companies = 0;
-static OwnedStocks owned_stocks   = {NULL, NULL};
 static Queue *transaction_queue   = NULL;
 
 static Vector *transactions = NULL;
-static Vector *company_ids  = NULL;
-static Vector *player_ids   = NULL;
+static Vector *transaction_company_ids = NULL;
+static Vector *transaction_player_ids  = NULL;
+
+static Vector *owned_stocks = NULL;
+static Vector *owned_company_ids = NULL;
+static Vector *owned_player_ids  = NULL;
 
 void IncreaseTransactionSizeIfNeeded(Transactions *transaction_temp)
 {
@@ -162,7 +158,7 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
     Vector_PushBack(transactions, &transaction);
     
     return 0;
-    
+
 }
 
 
@@ -241,7 +237,7 @@ int GetOwnedStocks_CallBack(void *owned_amount, int argc, char **argv, char **co
 
 }
 
-void InitializeOwnedStocks()
+void InitOwnedStocks()
 {
 
     Company *companies = GetAllCompanies();
@@ -277,14 +273,18 @@ void SaveTransactions()
 
 }
 
-void InitializeAccountInformation()
+void InitVectors() 
 {
 
     if (transactions == NULL) {
 
-        transactions = Vector_Create(sizeof(Transaction), 32);
-        company_ids  = Vector_Create(sizeof(int), 32);
-        player_ids   = Vector_Create(sizeof(int), 32); 
+        transactions             = Vector_Create(sizeof(Transaction), 32);
+        transaction_company_ids  = Vector_Create(sizeof(int), 32);
+        transaction_player_ids   = Vector_Create(sizeof(int), 32); 
+
+        owned_stocks      = Vector_Create(sizeof(int), 32);
+        owned_company_ids = Vector_Create(sizeof(int), 32);
+        owned_player_ids  = Vector_Create(sizeof(int), 32);
 
     } else {
 
@@ -292,9 +292,20 @@ void InitializeAccountInformation()
         Vector_Reset(company_ids);
         Vector_Reset(player_ids);
 
+        Vector_Reset(owned_stocks);
+        Vector_Reset(owned_company_ids);
+        Vector_Reset(owned_player_ids);
+
     }
 
-    InitializeOwnedStocks();
+}
+
+void InitializeAccountInformation()
+{
+
+
+    InitVectors();
+    InitOwnedStocks();
     InitSavedTransactions();
     transaction_queue = Queue_Create();
 
