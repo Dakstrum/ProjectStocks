@@ -12,6 +12,14 @@ typedef struct Event
 
 } Event;
 
+typedef struct System_Category
+{
+
+	unsigned int category_id;
+	char category_name[32];
+
+} System_Category;
+
 
 void InitializeEvents();
 Event *GetRandomGlobalEvent();
@@ -20,5 +28,7 @@ Event *GetRandomCompanyEvent(int company_id);
 
 int GetNumCompanyCategories();
 int *GetCompanyCategoryIds();
+char* GetCompanyCatergoryName(int category_id);
+char* GetCompanyCategory(unsigned int category_id);
 
 #endif

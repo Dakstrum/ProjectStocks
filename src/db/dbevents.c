@@ -9,6 +9,7 @@
 #include "dbutils.h"
 #include "dbevents.h"
 #include "dbcompany.h"
+#include "shared.h"
 
 typedef struct Events
 {
@@ -19,7 +20,8 @@ typedef struct Events
 
 } Events;
 
-static Vector *global_events = NULL;
+static Vector *global_events      = NULL;
+static Vector *company_categories = NULL;
 static Events category_events;
 static Events company_events;
 
@@ -129,6 +131,30 @@ void InitializeCategoryEvents()
 
 }
 
+int SystemCategory_Callback(void *card, int argc, char **argv, char **col_name) 
+{
+	
+    if (argc == 0)
+        return 0;
+
+    System_Category temp;
+
+    temp.category_id = atoi(argv[0]);
+    strncpy(temp.category_name, argv[1], 32);
+
+    Vector_PushBack(company_categories, &temp);
+
+    return 0;
+
+}
+void InitializeSystemCategory()
+{
+
+	company_categories = Vector_Create(sizeof(System_Category), 4);
+	ExecuteQueryF(&SystemCategory_Callback, NULL, "SELECT C.CategoryId, C.CategoryName FROM System_Category C");
+
+}
+
 void InitializeGlobalEvents()
 {
 
@@ -144,6 +170,7 @@ void InitializeEvents()
 	InitializeCompanyEvents();
 	InitializeCategoryEvents();
 	InitializeGlobalEvents();
+	InitializeSystemCategory();
 
 }
 
@@ -186,6 +213,14 @@ int GetNumCompanyCategories()
 {
 
 	return num_categories;
+
+}
+
+char* GetCompanyCategory(unsigned int category_id)
+{
+
+	System_Category *temp = (System_Category *)company_categories->elements;
+	return temp[category_id].category_name;
 
 }
 

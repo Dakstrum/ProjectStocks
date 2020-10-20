@@ -18,6 +18,7 @@
 #include "dbcompany.h"
 #include "vector.h"
 #include "generalpurposemenus.h"
+#include "dbevents.h"
 
 DrawObject *GetJSONObjectAndAddToDrawLayer(char* object_name)
 {
@@ -105,6 +106,45 @@ DrawObject *GetCompaniesScrollbox(int x, int y, void (*click)(char *scroll_box_c
     InitScrollboxVectors(object);
     SetScrollboxTextContentForCompanies(object);
     SetScrollboxIconsForCompanies(object);
+
+    return object;
+
+}
+
+void SetScrollboxTextContentForCategories(DrawObject *object) 
+{
+
+    size_t num_categorys = GetNumCompanyCategories();
+    for (size_t i = 0; i < num_categorys; i++) {
+
+        Vector *text = object->scrollbox.text_content[i];
+
+        ScrollboxText category_text = {100, 5, NULL, 40, GetCompanyCategory(i)};
+        Vector_PushBack(text, &category_text);
+
+    }
+
+}
+
+DrawObject *GetCategoryScrollbox(int x, int y, void (*click)(char *scroll_box_content, unsigned short int index))
+{
+
+    DrawObject *object = Scrollbox_Create();
+
+    object->x          = x;
+    object->y          = y;
+    object->width      = 288;
+    object->height     = 803;
+    object->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
+
+    unsigned int num_categorys = GetNumCompanyCategories();
+
+    object->scrollbox.num_items = num_categorys;
+    object->scrollbox.box_click = click;
+    
+    InitScrollboxVectors(object);
+    SetScrollboxTextContentForCategories(object);
+    //SetScrollboxIconsForCompanies(object); //I will eventually have Icons for the catergories
 
     return object;
 

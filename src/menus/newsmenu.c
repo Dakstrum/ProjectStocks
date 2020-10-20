@@ -14,6 +14,8 @@
 #include "drawlayerutils.h"
 #include "menu.h"
 #include "textbox.h"
+#include "dbevents.h"
+#include "dbevents.h"
 #include <time.h>
 
 static MenuWithChilds *news_menu = NULL;
@@ -41,7 +43,8 @@ void InitalizeNewsMenuText();
 void NewsMenuRenderLogic();
 void InitializeSearchTextBox();
 
-void TempCreateWeatherBitMaps(); //TEMP
+void TempCreateWeatherBitMaps();
+void InitalizeNewsMenuCategoryScrollbox();
 
 void InitializeNewsMenu() 
 { 
@@ -54,7 +57,7 @@ void InitializeNewsMenu()
     }
     
     news_menu = GetJSONMenuAndAddToDrawLayer("NewsMenu");
-
+    InitalizeNewsMenuCategoryScrollbox();
     InitalizeNewsMenuText();
     InitializeSpeedSelectObject("NewsMenu");
 
@@ -92,15 +95,27 @@ void NewsMenuRenderLogic()
 
 }
 
+void NewsMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
+{
+
+    //char *company_name = GetCompanyName(index+1);
+    //SetCompanyIdViewing(GetCompanyId(company_name));
+    //ClearAccountHistoryDisplay();
+    //PopulateSelectedStockHistoryDisplay(company_name);
+
+    //SetTextContent(company_name_textobject, "%s", company_name);
+    //SetTextContent(company_about_textobject, "%s", GetCompanyDescriptionRef(GetCompanyId(GetCompanyNameViewing())));
+
+}
+
 void InitalizeNewsMenuCategoryScrollbox() 
 {
 
-    //AddObjectToDrawLayer(GetCompaniesScrollbox(2, 230, &AccountMenuCompanyScrollBoxClick));
+    AddObjectToDrawLayer(GetCategoryScrollbox(2, 230, &NewsMenuCompanyScrollBoxClick));
 
 }
 
 
- 
 void TempCreateWeatherBitMaps() //This function is nasty. Will change when I can create bitmaps and not menus
 {
 
