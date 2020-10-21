@@ -98,6 +98,21 @@ unsigned int GetCompanyId(const char *company_name)
 
 }
 
+/*unsigned int GetCompanyCategoryId(const char *company_name)
+{
+
+    assert(company_name != NULL);
+
+    Company *temp = (Company *)companies->elements;
+    for (size_t i = 0; i < companies->num_elements;i++)
+        if (strcmp(temp[i].company_name, company_name) == 0)
+            return temp[i].company_id;
+
+    return 0;
+
+}*/
+
+
 
 int GetNumCompanies()
 {

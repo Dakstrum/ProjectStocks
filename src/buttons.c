@@ -140,6 +140,8 @@ void InitializeNewsButtons()
     AddButton("NewsMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
     AddButton("NewsMenuSpeed3ButtonObject",   &SpeedThree_BCB);
 
+    AddButton("NewsMenuscrollbox_backButtonObject", &ScrollboxBack_BCB);
+
 }
 
 void InitializeGeneralPurposeButtons()

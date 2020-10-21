@@ -72,6 +72,9 @@ def DetermineButtonPNG(dimensions, matrix_str, name):
 	if((int(float(dimensions[15]))) == 18 and (int(float(dimensions[16]))) == 20): #Checkbox
 		DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/checkbox.png")
 
+	if((int(float(dimensions[15]))) == 48 and (int(float(dimensions[16]))) == 57): #Checkbox
+		DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/arrowbuttonleft1.png")
+
 	AddButtonObjectToJSON(DefaultObject_1)
 
 def AddButtonObjectToJSON(ButtonObject):

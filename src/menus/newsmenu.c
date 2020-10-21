@@ -16,6 +16,7 @@
 #include "textbox.h"
 #include "dbevents.h"
 #include "dbevents.h"
+#include "dbcompany.h"
 #include <time.h>
 
 static MenuWithChilds *news_menu = NULL;
@@ -45,6 +46,7 @@ void InitializeSearchTextBox();
 
 void TempCreateWeatherBitMaps();
 void InitalizeNewsMenuCategoryScrollbox();
+void InitalizeNewsMenuCategorySpecificCompanyScrollbox(int cat_id);
 
 void InitializeNewsMenu() 
 { 
@@ -95,26 +97,38 @@ void NewsMenuRenderLogic()
 
 }
 
-void NewsMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
+int CategoryScrollBox                  = 0;
+int CategorySpecificCompaniesScrollBox = 0;
+
+void NewsMenuCategoryScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
-
-    //char *company_name = GetCompanyName(index+1);
-    //SetCompanyIdViewing(GetCompanyId(company_name));
-    //ClearAccountHistoryDisplay();
-    //PopulateSelectedStockHistoryDisplay(company_name);
-
-    //SetTextContent(company_name_textobject, "%s", company_name);
-    //SetTextContent(company_about_textobject, "%s", GetCompanyDescriptionRef(GetCompanyId(GetCompanyNameViewing())));
+    RemoveDrawObject(GetCategoryScrollbox());
+    CategoryScrollBox = 0;
+    InitalizeNewsMenuCategorySpecificCompanyScrollbox((unsigned)index + 1);
 
 }
 
 void InitalizeNewsMenuCategoryScrollbox() 
 {
 
-    AddObjectToDrawLayer(GetCategoryScrollbox(2, 230, &NewsMenuCompanyScrollBoxClick));
+    AddObjectToDrawLayer(CreateCategoryScrollbox(2, 230, &NewsMenuCategoryScrollBoxClick));
+    CategoryScrollBox = 1;
 
 }
 
+void NewsMenuCategorySpecificCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
+{
+    
+    LogF("Get News about %s", scroll_box_content);
+}
+
+void InitalizeNewsMenuCategorySpecificCompanyScrollbox(int cat_id) 
+{
+
+    AddObjectToDrawLayer(CreateCategorySpecificCompaniesScrollbox(2, 230, cat_id, &NewsMenuCategorySpecificCompanyScrollBoxClick));
+    CategorySpecificCompaniesScrollBox = 1;
+
+}
 
 void TempCreateWeatherBitMaps() //This function is nasty. Will change when I can create bitmaps and not menus
 {
@@ -184,6 +198,27 @@ void InitializeSearchTextBox()
     savename_tb->height     = 30;
 
     AddObjectToDrawLayer(savename_tb);
+
+}
+
+void ScrollboxBack_BCB()
+{
+    if(CategoryScrollBox == 1)
+    {
+
+        return;
+
+    }
+    else
+    {
+
+        RemoveDrawObject(GetCategorySpecificCompaniesScrollbox());
+        CategorySpecificCompaniesScrollBox = 0;
+        InitalizeNewsMenuCategoryScrollbox();
+
+    }
+
+
 
 }
 

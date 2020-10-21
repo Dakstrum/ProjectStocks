@@ -20,6 +20,9 @@
 #include "generalpurposemenus.h"
 #include "dbevents.h"
 
+DrawObject *category_scrollbox                    = NULL;
+DrawObject *category_specific_companies_scrollbox = NULL;
+
 DrawObject *GetJSONObjectAndAddToDrawLayer(char* object_name)
 {
 
@@ -87,7 +90,115 @@ void SetScrollboxIconsForCompanies(DrawObject *object)
 
 }
 
-DrawObject *GetCompaniesScrollbox(int x, int y, void (*click)(char *scroll_box_content, unsigned short int index))
+void SetScrollboxTextContentForCategories(DrawObject *object) 
+{
+
+    size_t num_categorys = GetNumCompanyCategories();
+    for (size_t i = 0; i < num_categorys; i++) {
+
+        Vector *text = object->scrollbox.text_content[i];
+
+        ScrollboxText category_text = {100, 5, NULL, 40, GetCompanyWithCategory(i)};
+        Vector_PushBack(text, &category_text);
+
+    }
+
+}
+
+void SetScrollboxTextContentForCategoriesSpecificCompanies(DrawObject *object, int cat_id) 
+{
+
+    Company *companies   = GetAllCompanies();
+    size_t num_companies = GetNumCompanies();
+
+    for (size_t i = 0; i < num_companies;i++) {
+        if(companies[i].category_id == (unsigned)cat_id) {
+
+            Vector *text = object->scrollbox.text_content[i];
+
+            ScrollboxText company_name = {100, 5, NULL, 40, companies[i].company_name};
+            Vector_PushBack(text, &company_name);
+
+        }
+
+    }
+
+}
+
+DrawObject *CreateCategoryScrollbox(int x, int y, void (*click)(char *scroll_box_content, unsigned short int index))
+{
+
+    category_scrollbox = Scrollbox_Create();
+
+    category_scrollbox->x          = x;
+    category_scrollbox->y          = y;
+    category_scrollbox->width      = 288;
+    category_scrollbox->height     = 803;
+    category_scrollbox->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
+
+    unsigned int num_categorys = GetNumCompanyCategories();
+
+    category_scrollbox->scrollbox.num_items = num_categorys;
+    category_scrollbox->scrollbox.box_click = click;
+    
+    InitScrollboxVectors(category_scrollbox);
+    SetScrollboxTextContentForCategories(category_scrollbox);
+    //SetScrollboxIconsForCompanies(object); //I will eventually have Icons for the catergories
+
+    return category_scrollbox;
+
+}
+
+DrawObject *GetCategoryScrollbox()
+{
+
+    return category_scrollbox;
+
+}
+
+DrawObject *CreateCategorySpecificCompaniesScrollbox(int x, int y, int cat_id, void (*click)(char *scroll_box_content, unsigned short int index))
+{
+
+    category_specific_companies_scrollbox = Scrollbox_Create();
+
+    category_specific_companies_scrollbox->x          = x;
+    category_specific_companies_scrollbox->y          = y;
+    category_specific_companies_scrollbox->width      = 288;
+    category_specific_companies_scrollbox->height     = 803;
+    category_specific_companies_scrollbox->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
+
+    
+    Company *companies = GetAllCompanies();
+
+    unsigned int amount_of_comapanies = 0;
+
+    for(int i = 0; i < GetNumCompanies(); i++)
+        if(companies[i].category_id == (unsigned)cat_id)
+        {
+            LogF("comp: %s", companies[i].company_name);
+            amount_of_comapanies++;
+        }
+    LogF("numOf: %d", amount_of_comapanies);
+
+    category_specific_companies_scrollbox->scrollbox.num_items = amount_of_comapanies;
+    category_specific_companies_scrollbox->scrollbox.box_click = click;
+    
+    InitScrollboxVectors(category_specific_companies_scrollbox);
+    SetScrollboxTextContentForCategoriesSpecificCompanies(category_specific_companies_scrollbox, cat_id);
+    //SetScrollboxIconsForCompanies(category_specific_companies_scrollbox); //I will eventually have Icons for the catergories
+    
+    return category_specific_companies_scrollbox;
+
+}
+
+DrawObject *GetCategorySpecificCompaniesScrollbox()
+{
+
+    return category_specific_companies_scrollbox;
+
+}
+
+DrawObject *CreateCompaniesScrollbox(int x, int y, void (*click)(char *scroll_box_content, unsigned short int index))
 {
 
     DrawObject *object = Scrollbox_Create();
@@ -106,45 +217,6 @@ DrawObject *GetCompaniesScrollbox(int x, int y, void (*click)(char *scroll_box_c
     InitScrollboxVectors(object);
     SetScrollboxTextContentForCompanies(object);
     SetScrollboxIconsForCompanies(object);
-
-    return object;
-
-}
-
-void SetScrollboxTextContentForCategories(DrawObject *object) 
-{
-
-    size_t num_categorys = GetNumCompanyCategories();
-    for (size_t i = 0; i < num_categorys; i++) {
-
-        Vector *text = object->scrollbox.text_content[i];
-
-        ScrollboxText category_text = {100, 5, NULL, 40, GetCompanyCategory(i)};
-        Vector_PushBack(text, &category_text);
-
-    }
-
-}
-
-DrawObject *GetCategoryScrollbox(int x, int y, void (*click)(char *scroll_box_content, unsigned short int index))
-{
-
-    DrawObject *object = Scrollbox_Create();
-
-    object->x          = x;
-    object->y          = y;
-    object->width      = 288;
-    object->height     = 803;
-    object->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
-
-    unsigned int num_categorys = GetNumCompanyCategories();
-
-    object->scrollbox.num_items = num_categorys;
-    object->scrollbox.box_click = click;
-    
-    InitScrollboxVectors(object);
-    SetScrollboxTextContentForCategories(object);
-    //SetScrollboxIconsForCompanies(object); //I will eventually have Icons for the catergories
 
     return object;
 

@@ -212,7 +212,7 @@ void LoadCompanyScrollBoxClick(char *scroll_box_content, unsigned short int inde
 void InitializeCompanyScrollBox()
 {
 
-    AddObjectToDrawLayer(GetCompaniesScrollbox(2, 230, &LoadCompanyScrollBoxClick));
+    AddObjectToDrawLayer(CreateCompaniesScrollbox(2, 230, &LoadCompanyScrollBoxClick));
 
 }
 

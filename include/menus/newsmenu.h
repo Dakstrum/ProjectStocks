@@ -6,4 +6,6 @@ void NewsMenuRenderLogic();
 
 void CleanNewsMenu();
 
+void ScrollboxBack_BCB();
+
 #endif

@@ -260,16 +260,20 @@ void AccountMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short i
     SetCompanyIdViewing(GetCompanyId(company_name));
     ClearAccountHistoryDisplay();
     PopulateSelectedStockHistoryDisplay(company_name);
+    SetAccountHistoryDisplayNum(1);
 
     SetTextContent(company_name_textobject, "%s", company_name);
     SetTextContent(company_about_textobject, "%s", GetCompanyDescriptionRef(GetCompanyId(GetCompanyNameViewing())));
+    SetTextContent(historydisplay_currentpage_textobject,  "%d", GetAccountHistoryDisplayNum(0));
+
+
 
 }
 
 void InitalizeAccountMenuCompanyScrollbox() 
 {
 
-    AddObjectToDrawLayer(GetCompaniesScrollbox(2, 230, &AccountMenuCompanyScrollBoxClick));
+    AddObjectToDrawLayer(CreateCompaniesScrollbox(2, 230, &AccountMenuCompanyScrollBoxClick));
 
 }
 

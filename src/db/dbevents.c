@@ -216,7 +216,7 @@ int GetNumCompanyCategories()
 
 }
 
-char* GetCompanyCategory(unsigned int category_id)
+char* GetCompanyWithCategory(unsigned int category_id)
 {
 
 	System_Category *temp = (System_Category *)company_categories->elements;
