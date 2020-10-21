@@ -20,9 +20,6 @@
 #include "generalpurposemenus.h"
 #include "dbevents.h"
 
-DrawObject *category_scrollbox                    = NULL;
-DrawObject *category_specific_companies_scrollbox = NULL;
-
 DrawObject *GetJSONObjectAndAddToDrawLayer(char* object_name)
 {
 
@@ -111,13 +108,17 @@ void SetScrollboxTextContentForCategoriesSpecificCompanies(DrawObject *object, i
     Company *companies   = GetAllCompanies();
     size_t num_companies = GetNumCompanies();
 
+    size_t vct_idx = 0;
+
     for (size_t i = 0; i < num_companies;i++) {
+
         if(companies[i].category_id == (unsigned)cat_id) {
 
-            Vector *text = object->scrollbox.text_content[i];
+            Vector *text = object->scrollbox.text_content[vct_idx];
 
             ScrollboxText company_name = {100, 5, NULL, 40, companies[i].company_name};
             Vector_PushBack(text, &company_name);
+            vct_idx++;
 
         }
 
@@ -128,7 +129,7 @@ void SetScrollboxTextContentForCategoriesSpecificCompanies(DrawObject *object, i
 DrawObject *CreateCategoryScrollbox(int x, int y, void (*click)(char *scroll_box_content, unsigned short int index))
 {
 
-    category_scrollbox = Scrollbox_Create();
+    DrawObject *category_scrollbox = Scrollbox_Create();
 
     category_scrollbox->x          = x;
     category_scrollbox->y          = y;
@@ -149,17 +150,10 @@ DrawObject *CreateCategoryScrollbox(int x, int y, void (*click)(char *scroll_box
 
 }
 
-DrawObject *GetCategoryScrollbox()
-{
-
-    return category_scrollbox;
-
-}
-
 DrawObject *CreateCategorySpecificCompaniesScrollbox(int x, int y, int cat_id, void (*click)(char *scroll_box_content, unsigned short int index))
 {
 
-    category_specific_companies_scrollbox = Scrollbox_Create();
+    DrawObject *category_specific_companies_scrollbox = Scrollbox_Create();
 
     category_specific_companies_scrollbox->x          = x;
     category_specific_companies_scrollbox->y          = y;
@@ -174,11 +168,7 @@ DrawObject *CreateCategorySpecificCompaniesScrollbox(int x, int y, int cat_id, v
 
     for(int i = 0; i < GetNumCompanies(); i++)
         if(companies[i].category_id == (unsigned)cat_id)
-        {
-            LogF("comp: %s", companies[i].company_name);
             amount_of_comapanies++;
-        }
-    LogF("numOf: %d", amount_of_comapanies);
 
     category_specific_companies_scrollbox->scrollbox.num_items = amount_of_comapanies;
     category_specific_companies_scrollbox->scrollbox.box_click = click;
@@ -187,13 +177,6 @@ DrawObject *CreateCategorySpecificCompaniesScrollbox(int x, int y, int cat_id, v
     SetScrollboxTextContentForCategoriesSpecificCompanies(category_specific_companies_scrollbox, cat_id);
     //SetScrollboxIconsForCompanies(category_specific_companies_scrollbox); //I will eventually have Icons for the catergories
     
-    return category_specific_companies_scrollbox;
-
-}
-
-DrawObject *GetCategorySpecificCompaniesScrollbox()
-{
-
     return category_specific_companies_scrollbox;
 
 }

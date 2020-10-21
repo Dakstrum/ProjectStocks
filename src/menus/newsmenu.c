@@ -40,6 +40,9 @@ static DrawObject *thurs_bitmap  = NULL;
 static DrawObject *fri_bitmap    = NULL;
 static DrawObject *sat_bitmap    = NULL;
 
+DrawObject *category_scrollbox                    = NULL;
+DrawObject *category_specific_companies_scrollbox = NULL;
+
 void InitalizeNewsMenuText();
 void NewsMenuRenderLogic();
 void InitializeSearchTextBox();
@@ -102,7 +105,7 @@ int CategorySpecificCompaniesScrollBox = 0;
 
 void NewsMenuCategoryScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
-    RemoveDrawObject(GetCategoryScrollbox());
+    RemoveDrawObject(category_scrollbox);
     CategoryScrollBox = 0;
     InitalizeNewsMenuCategorySpecificCompanyScrollbox((unsigned)index + 1);
 
@@ -111,7 +114,8 @@ void NewsMenuCategoryScrollBoxClick(char *scroll_box_content, unsigned short int
 void InitalizeNewsMenuCategoryScrollbox() 
 {
 
-    AddObjectToDrawLayer(CreateCategoryScrollbox(2, 230, &NewsMenuCategoryScrollBoxClick));
+    category_scrollbox = CreateCategoryScrollbox(2, 230, &NewsMenuCategoryScrollBoxClick);
+    AddObjectToDrawLayer(category_scrollbox);
     CategoryScrollBox = 1;
 
 }
@@ -120,12 +124,15 @@ void NewsMenuCategorySpecificCompanyScrollBoxClick(char *scroll_box_content, uns
 {
     
     LogF("Get News about %s", scroll_box_content);
+
 }
 
 void InitalizeNewsMenuCategorySpecificCompanyScrollbox(int cat_id) 
 {
 
-    AddObjectToDrawLayer(CreateCategorySpecificCompaniesScrollbox(2, 230, cat_id, &NewsMenuCategorySpecificCompanyScrollBoxClick));
+    category_specific_companies_scrollbox = CreateCategorySpecificCompaniesScrollbox(2, 230, cat_id, &NewsMenuCategorySpecificCompanyScrollBoxClick);
+    AddObjectToDrawLayer(category_specific_companies_scrollbox);
+
     CategorySpecificCompaniesScrollBox = 1;
 
 }
@@ -212,13 +219,11 @@ void ScrollboxBack_BCB()
     else
     {
 
-        RemoveDrawObject(GetCategorySpecificCompaniesScrollbox());
+        RemoveDrawObject(category_specific_companies_scrollbox);
         CategorySpecificCompaniesScrollBox = 0;
         InitalizeNewsMenuCategoryScrollbox();
 
     }
-
-
 
 }
 
