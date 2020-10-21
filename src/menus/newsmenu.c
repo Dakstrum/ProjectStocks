@@ -106,7 +106,7 @@ int CategorySpecificCompaniesScrollBox = 0;
 void NewsMenuCategoryScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
     RemoveDrawObject(category_scrollbox);
-    CategoryScrollBox = 0;
+    category_scrollbox = NULL;
     InitalizeNewsMenuCategorySpecificCompanyScrollbox((unsigned)index + 1);
 
 }
@@ -116,7 +116,6 @@ void InitalizeNewsMenuCategoryScrollbox()
 
     category_scrollbox = CreateCategoryScrollbox(2, 230, &NewsMenuCategoryScrollBoxClick);
     AddObjectToDrawLayer(category_scrollbox);
-    CategoryScrollBox = 1;
 
 }
 
@@ -132,8 +131,6 @@ void InitalizeNewsMenuCategorySpecificCompanyScrollbox(int cat_id)
 
     category_specific_companies_scrollbox = CreateCategorySpecificCompaniesScrollbox(2, 230, cat_id, &NewsMenuCategorySpecificCompanyScrollBoxClick);
     AddObjectToDrawLayer(category_specific_companies_scrollbox);
-
-    CategorySpecificCompaniesScrollBox = 1;
 
 }
 
@@ -210,7 +207,7 @@ void InitializeSearchTextBox()
 
 void ScrollboxBack_BCB()
 {
-    if(CategoryScrollBox == 1)
+    if(category_scrollbox)
     {
 
         return;
@@ -220,7 +217,7 @@ void ScrollboxBack_BCB()
     {
 
         RemoveDrawObject(category_specific_companies_scrollbox);
-        CategorySpecificCompaniesScrollBox = 0;
+        category_specific_companies_scrollbox = NULL;
         InitalizeNewsMenuCategoryScrollbox();
 
     }
