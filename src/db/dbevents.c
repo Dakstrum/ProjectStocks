@@ -224,6 +224,8 @@ char* GetCompanyWithCategory(unsigned int category_id)
 
 }
 
+
+
 int *GetCompanyCategoryIds()
 {
 

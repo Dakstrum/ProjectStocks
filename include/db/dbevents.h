@@ -27,6 +27,7 @@ Event *GetRandomCategoryEvent(int category_id);
 Event *GetRandomCompanyEvent(int company_id);
 
 int GetNumCompanyCategories();
+Vector *GetCompanyCategories();
 int *GetCompanyCategoryIds();
 char* GetCompanyCatergoryName(int category_id);
 char* GetCompanyWithCategory(unsigned int category_id);

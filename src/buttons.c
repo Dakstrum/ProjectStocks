@@ -192,10 +192,10 @@ void InitializePauseMenusButtons()
 void InitializeOptionsButtons()
 {
 
-    AddButton("OptionsMenuExitButtonObject",          &OptionsMenuExit_BCB);
+    AddButton("OptionsMenuExitButtonObject",       &OptionsMenuExit_BCB);
     AddButton("OptionsMenuResolutionButtonObject", &OptionsMenuResolution_BCB);  
 
-    AddButton("DisplayMenuExitButtonObject", &DisplayMenuExit_BCB);
+    AddButton("DisplayMenuExitButtonObject",       &DisplayMenuExit_BCB);
     AddButton("DisplayMenuFullScreenButtonObject", &DisplayMenuFullScreen_BCB);  
 
 }

@@ -21,8 +21,9 @@
 
 static MenuWithChilds *news_menu = NULL;
 
-static DrawObject *player_money_textobject = NULL;
-static DrawObject *player_date_textobject  = NULL;
+static DrawObject *player_money_textobject     = NULL;
+static DrawObject *player_date_textobject      = NULL;
+static DrawObject *scrollbox_title_textobject  = NULL;
 
 static DrawObject *sun_temp_textobject    = NULL;
 static DrawObject *mon_temp_textobject    = NULL;
@@ -74,8 +75,9 @@ void InitializeNewsMenu()
 void InitalizeNewsMenuText()
 {
 
-    player_money_textobject = GetJSONObjectAndAddToDrawLayer("NewsMenuAccountMoneyTextObject");
-    player_date_textobject  = GetJSONObjectAndAddToDrawLayer("NewsMenuAccountDateTextObject");
+    player_money_textobject     = GetJSONObjectAndAddToDrawLayer("NewsMenuAccountMoneyTextObject");
+    player_date_textobject      = GetJSONObjectAndAddToDrawLayer("NewsMenuAccountDateTextObject");
+    scrollbox_title_textobject  = GetJSONObjectAndAddToDrawLayer("NewsMenuscrollbox_titleTextObject");
 
     sun_temp_textobject     = GetJSONObjectAndAddToDrawLayer("NewsMenusuntTextObject");
     mon_temp_textobject     = GetJSONObjectAndAddToDrawLayer("NewsMenumontTextObject");
@@ -84,6 +86,8 @@ void InitalizeNewsMenuText()
     thurs_temp_textobject   = GetJSONObjectAndAddToDrawLayer("NewsMenuthurstTextObject");
     fri_temp_textobject     = GetJSONObjectAndAddToDrawLayer("NewsMenufritTextObject");
     sat_temp_textobject     = GetJSONObjectAndAddToDrawLayer("NewsMenusattTextObject");
+
+    SetTextContent(scrollbox_title_textobject, "%s", "Categories");
 
     TempCreateWeatherBitMaps();
 
@@ -100,11 +104,9 @@ void NewsMenuRenderLogic()
 
 }
 
-int CategoryScrollBox                  = 0;
-int CategorySpecificCompaniesScrollBox = 0;
-
 void NewsMenuCategoryScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
+
     RemoveDrawObject(category_scrollbox);
     category_scrollbox = NULL;
     InitalizeNewsMenuCategorySpecificCompanyScrollbox((unsigned)index + 1);
@@ -123,11 +125,14 @@ void NewsMenuCategorySpecificCompanyScrollBoxClick(char *scroll_box_content, uns
 {
     
     LogF("Get News about %s", scroll_box_content);
+    SetTextContent(scrollbox_title_textobject, "%s", scroll_box_content);
 
 }
 
 void InitalizeNewsMenuCategorySpecificCompanyScrollbox(int cat_id) 
 {
+
+    SetTextContent(scrollbox_title_textobject, "%s", GetCompanyWithCategory(cat_id - 1));
 
     category_specific_companies_scrollbox = CreateCategorySpecificCompaniesScrollbox(2, 230, cat_id, &NewsMenuCategorySpecificCompanyScrollBoxClick);
     AddObjectToDrawLayer(category_specific_companies_scrollbox);
@@ -208,17 +213,14 @@ void InitializeSearchTextBox()
 void ScrollboxBack_BCB()
 {
     if(category_scrollbox)
-    {
-
         return;
 
-    }
-    else
-    {
+    else {
 
         RemoveDrawObject(category_specific_companies_scrollbox);
         category_specific_companies_scrollbox = NULL;
         InitalizeNewsMenuCategoryScrollbox();
+        SetTextContent(scrollbox_title_textobject, "%s", "Categories");
 
     }
 
@@ -245,6 +247,9 @@ void CleanNewsMenu()
     thurs_bitmap  = NULL;
     fri_bitmap    = NULL;
     sat_bitmap    = NULL;
+
+    category_scrollbox                    = NULL;
+    category_specific_companies_scrollbox = NULL;
 
     news_menu = NULL;
 

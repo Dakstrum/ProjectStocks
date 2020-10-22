@@ -116,8 +116,35 @@ void SetScrollboxTextContentForCategoriesSpecificCompanies(DrawObject *object, i
 
             Vector *text = object->scrollbox.text_content[vct_idx];
 
-            ScrollboxText company_name = {100, 5, NULL, 40, companies[i].company_name};
+            ScrollboxText company_abr = {100, 5, NULL, 40, GetCompanyAbbreviationRef(i + 1)};
+            Vector_PushBack(text, &company_abr);
+
+            ScrollboxText company_name = {100, 40, NULL, 24, companies[i].company_name};
             Vector_PushBack(text, &company_name);
+            vct_idx++;
+
+        }
+
+    }
+
+}
+
+void SetScrollboxIconsContentForCategoriesSpecificCompanies(DrawObject *object, int cat_id)
+{
+
+    Company *companies   = GetAllCompanies();
+    size_t num_companies = GetNumCompanies();
+
+    size_t vct_idx = 0;
+
+    for (size_t i = 0; i < num_companies;i++) {
+
+        if(companies[i].category_id == (unsigned)cat_id) {
+
+            Vector *icons = object->scrollbox.icons[vct_idx];
+
+            ScrollboxIcon icon = {10, 5, GetCompanyIconPath(i+ 1), NULL};
+            Vector_PushBack(icons, &icon);
             vct_idx++;
 
         }
@@ -175,7 +202,7 @@ DrawObject *CreateCategorySpecificCompaniesScrollbox(int x, int y, int cat_id, v
     
     InitScrollboxVectors(category_specific_companies_scrollbox);
     SetScrollboxTextContentForCategoriesSpecificCompanies(category_specific_companies_scrollbox, cat_id);
-    //SetScrollboxIconsForCompanies(category_specific_companies_scrollbox); //I will eventually have Icons for the catergories
+    SetScrollboxIconsContentForCategoriesSpecificCompanies(category_specific_companies_scrollbox, cat_id);
     
     return category_specific_companies_scrollbox;
 
