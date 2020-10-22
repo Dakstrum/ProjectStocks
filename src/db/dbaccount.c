@@ -19,6 +19,8 @@
 static unsigned int num_companies = 0;
 static Queue *transaction_queue   = NULL;
 
+static Vector *save_player_ids = NULL;
+
 static Vector *transactions = NULL;
 static Vector *transaction_company_ids = NULL;
 static Vector *transaction_player_ids  = NULL;
@@ -223,16 +225,25 @@ int GetOwnedStocks_CallBack(void *owned_amount, int argc, char **argv, char **co
     if (argc == 0)
         return 0;
 
-    unsigned int company_id = (unsigned int)atoi(argv[1]);
-    for (size_t i = 0; i < num_companies;i++) {
+    int *company_ids         = owned_company_ids->elements;
+    int *player_ids          = owned_player_ids->elements;
+    int *owned_stocks_amount = owned_stocks->elements;
 
-        if (owned_stocks.company_id[i] != company_id)
-            continue;
+    int owned_amount = atoi(argv[0]);
+    int company_id   = atoi(argv[1]);
+    int player_id    = atoi(argv[2]);
 
-        owned_stocks.owned_amount[i] = (unsigned int)atoi(argv[0]);
-        break;
+    for (size_t i = 0; i < owned_company_ids->num_elements;i++) {
+
+        if (player_id == player_ids[i] && company_id == company_ids[i]) {
+
+            owned_stocks_amount[i] = owned_amount;
+            break;
+
+        }
 
     }
+
     return 0;
 
 }
@@ -241,19 +252,22 @@ void InitOwnedStocks()
 {
 
     Company *companies = GetAllCompanies();
-    if (owned_stocks.company_id == NULL) {
+    num_companies = GetNumCompanies();
 
-        num_companies = GetNumCompanies();
-        owned_stocks.company_id   = malloc(sizeof(int) * num_companies);
-        owned_stocks.owned_amount = malloc(sizeof(int) * num_companies);
+    size_t num_player_ids = save_player_ids->num_elements;
+    int *player_ids = save_player_ids->elements;
 
-        for (size_t i = 0; i< num_companies;i++)
-            owned_stocks.company_id[i] = companies[i].company_id;
+    for (size_t i = 0; i < num_player_ids;i++) {
+
+        for (size_t j = 0; j < num_companies;j++) {
+
+            Vector_PushBack(owned_company_ids, &companies[i].company_id);
+            Vector_PushBack(owned_stocks, &0);
+            Vector_PushBack(owned_player_ids, &player_ids[i]);
+
+        }
 
     }
-
-    for (size_t i = 0; i< num_companies;i++)
-        owned_stocks.owned_amount[i] = 0;
 
 
     char *query =   "SELECT SUM(PT.StocksExchanged), PT.CompanyId, PT.PlayerId FROM Player_Transactions PT "
@@ -262,6 +276,28 @@ void InitOwnedStocks()
                     "GROUP BY PT.CompanyId, PT.PlayerId ";
 
     ExecuteQueryF(&GetOwnedStocks_CallBack, NULL, query, GetSaveId());
+
+}
+
+int PlayerId_Callback(void *player, int argc, char **argv, char **col_name)
+{
+
+    if (argc == 0)
+        return -1;
+
+    int player_id = atoi(argv[0]);
+
+    Vector_PushBack(save_player_ids, &player_id);
+
+    return 0;
+
+}
+
+void InitPlayerIds()
+{
+
+    char *query = "SELECT PlayerId FROM Game_Players WHERE SaveId = %d";
+    ExecuteQueryF(&PlayerId_Callback, NULL, query, GetSaveId());
 
 }
 
@@ -292,6 +328,8 @@ void InitVectors()
         owned_company_ids = Vector_Create(sizeof(int), 32);
         owned_player_ids  = Vector_Create(sizeof(int), 32);
 
+        save_player_ids   = Vector_create(sizeof(int), 4);
+
     } else {
 
         Vector_Reset(transactions);
@@ -302,6 +340,8 @@ void InitVectors()
         Vector_Reset(owned_company_ids);
         Vector_Reset(owned_player_ids);
 
+        Vector_Reset(save_player_ids);
+
     }
 
 }
@@ -311,6 +351,7 @@ void InitializeAccountInformation()
 
 
     InitVectors();
+    InitPlayerIds();
     InitOwnedStocks();
     InitSavedTransactions();
     transaction_queue = Queue_Create();
