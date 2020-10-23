@@ -162,7 +162,7 @@ void InitializeSellMenuText()
     transaction_menu_amountowned_textobject  = GetJSONObjectAndAddToDrawLayer("SellMenuAmountOwnedTextObject");
 
     SetTextContent(transaction_menu_company_name_textobject, "%s", GetCompanyAbbreviationRef(GetCompanyId(selected_company_name)));
-    SetTextContent(transaction_menu_amountowned_textobject, "%d", GetOwnedStockAmount(selected_company_name));
+    SetTextContent(transaction_menu_amountowned_textobject, "%d", GetOwnedStockAmount(GetCurrentPlayerId(), selected_company_name));
 
 }
 

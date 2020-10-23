@@ -33,10 +33,7 @@ static Vector *owned_player_ids  = NULL;
 TransactionType GetTransactionType(float transaction_amount)
 {
 
-    if(transaction.transaction_amount < 0)
-        return BUY;
-    else
-        return SELL;
+    return transaction_amount < 0 ? BUY : SELL;
 
 }
 
@@ -99,16 +96,15 @@ void ModifyOwnedStockAmount(uint32_t player_id, char *company_name, int amount)
 void InsertStockTransaction(unsigned int player_id, char *company_name, float transaction_amount, int stocks_exchanged) 
 {
 
-    const uint32_t save_id    = GetSaveId();
-    const uint32_t company_id = GetCompanyId(company_name);
-    const time_t game_time        = GetGameTime();
-    static char *query            = "INSERT INTO Player_Transactions (PlayerId, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, %d, %.2f, %d, %d);";
+    uint32_t company_id = GetCompanyId(company_name);
+    time_t game_time    = GetGameTime();
+    static char *query  = "INSERT INTO Player_Transactions (PlayerId, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, %d, %.2f, %d, %d);";
     Queue_PushMessage(transaction_queue, GetFormattedPointer(query, player_id, company_id, transaction_amount, stocks_exchanged, game_time));
 
     Vector_PushBack(transaction_player_ids, &player_id);
     Vector_PushBack(transaction_company_ids, &company_id);
 
-    Transaction transaction = {0, game_time, stocks_exchanged, GetPricePerShare(stocks_exchanged, transaction_amount), transaction_amount, GetTransactionType(transaction_amount)};
+    Transaction transaction = {0, company_id, game_time, stocks_exchanged, GetPricePerShare(stocks_exchanged, transaction_amount), transaction_amount, GetTransactionType(transaction_amount)};
 
     Vector_PushBack(transactions, &transaction);
 
@@ -144,18 +140,19 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
     uint32_t player_id  = (uint32_t)atoi(argv[1]);
     uint32_t company_id = (uint32_t)atoi(argv[2]);
 
-    Vector_PushBack(company_ids, &company_id);
-    Vector_PushBack(player_ids, &player_id);
+    Vector_PushBack(transaction_company_ids, &company_id);
+    Vector_PushBack(transaction_player_ids, &player_id);
 
-    Transaction transaction;
-    transaction.transaction_id     = atoi(argv[0]);
-    transaction.transaction_amount = atof(argv[3]);
-    transaction.shares_exhanged    = atoi(argv[4]);
-    transaction.transaction_date   = atoi(argv[5]);
-    transaction.price_per_share    = transaction.transaction_amount / transaction.shares_exhanged;
-    transaction.type = transaction.transaction_amount < 0 ? BUY : SELL;
+    Transaction temp;
+    temp.transaction_id     = atoi(argv[0]);
+    temp.company_id         = company_id;
+    temp.transaction_amount = atof(argv[3]);
+    temp.shares_exchanged    = atoi(argv[4]);
+    temp.transaction_date   = atoi(argv[5]);
+    temp.price_per_share    = temp.transaction_amount / temp.shares_exchanged;
+    temp.type = temp.transaction_amount < 0 ? BUY : SELL;
 
-    Vector_PushBack(transactions, &transaction);
+    Vector_PushBack(transactions, &temp);
     
     return 0;
 
@@ -164,7 +161,7 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
 Vector *GetCompanyTransactions(uint32_t player_id, char *company)
 {
 
-    const int company_id = GetCompanyId(company);
+    uint32_t company_id = GetCompanyId(company);
 
     uint32_t *company_ids = transaction_company_ids->elements;
     uint32_t *player_ids = transaction_player_ids->elements;
@@ -229,15 +226,15 @@ int GetOwnedStocks_CallBack(void *owned_amount, int argc, char **argv, char **co
     uint32_t *player_ids          = owned_player_ids->elements;
     uint32_t *owned_stocks_amount = owned_stocks->elements;
 
-    uint32_t owned_amount = (uint32_t)atoi(argv[0]);
-    uint32_t company_id   = (uint32_t)atoi(argv[1]);
-    uint32_t player_id    = (uint32_t)atoi(argv[2]);
+    uint32_t stock_owned_amount = (uint32_t)atoi(argv[0]);
+    uint32_t company_id         = (uint32_t)atoi(argv[1]);
+    uint32_t player_id          = (uint32_t)atoi(argv[2]);
 
     for (size_t i = 0; i < owned_company_ids->num_elements;i++) {
 
         if (player_id == player_ids[i] && company_id == company_ids[i]) {
 
-            owned_stocks_amount[i] = owned_amount;
+            owned_stocks_amount[i] = stock_owned_amount;
             break;
 
         }
@@ -257,12 +254,14 @@ void InitOwnedStocks()
     size_t num_player_ids = save_player_ids->num_elements;
     uint32_t *player_ids = save_player_ids->elements;
 
+    uint32_t default_owned = 0;
+
     for (size_t i = 0; i < num_player_ids;i++) {
 
         for (size_t j = 0; j < num_companies;j++) {
 
             Vector_PushBack(owned_company_ids, &companies[i].company_id);
-            Vector_PushBack(owned_stocks, &0);
+            Vector_PushBack(owned_stocks, &default_owned);
             Vector_PushBack(owned_player_ids, &player_ids[i]);
 
         }
@@ -327,13 +326,13 @@ void InitVectors()
         owned_company_ids = Vector_Create(sizeof(uint32_t), 32);
         owned_player_ids  = Vector_Create(sizeof(uint32_t), 32);
 
-        save_player_ids   = Vector_create(sizeof(uint32_t), 4);
+        save_player_ids   = Vector_Create(sizeof(uint32_t), 4);
 
     } else {
 
         Vector_Reset(transactions);
-        Vector_Reset(company_ids);
-        Vector_Reset(player_ids);
+        Vector_Reset(transaction_company_ids);
+        Vector_Reset(transaction_player_ids);
 
         Vector_Reset(owned_stocks);
         Vector_Reset(owned_company_ids);

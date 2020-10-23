@@ -20,7 +20,8 @@ typedef enum TransactionType
 typedef struct Transaction
 {
 
-    int transaction_id;
+    uint32_t transaction_id;
+    uint32_t company_id;
     time_t transaction_date;
     int shares_exchanged;
     float price_per_share;
@@ -39,7 +40,7 @@ Vector *GetCompanyTransactions(uint32_t player_id, char *company);
 Vector *GetAllTransactions(uint32_t player_id);
 void SaveTransactions();
 
-int GetOwnedStockAmount(char *company_name);
+int GetOwnedStockAmount(uint32_t player_id, char *company_name);
 void InitializeAccountInformation();
 float GetAccountNetWorth(uint32_t player_id);
 
