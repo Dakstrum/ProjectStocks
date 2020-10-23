@@ -6,6 +6,8 @@
 
 #include <allegro5/allegro.h>
 
+#include "vector.h"
+
 #include "jsonlayer.h"
 #include "drawlayers.h"
 #include "log.h"
@@ -204,19 +206,19 @@ void InitializeAllStocksHistoryDisplay()
 void PopulateAllStocksHistoryDisplay()
 {
     
-    struct Transactions *transactions = GetAllTransactions();
-
+    Vector *transactions = GetAllTransactions(GetCurrentPlayerId());
     char transaction_time[128];
 
-    for (int i=0; i < DSP_NUM; i++) {
+    Transaction *temp = transactions->elements;
+    for (int i = 0; i < DSP_NUM; i++) {
 
-        if(transactions->shares[i]) {
+        if(i < transactions->num_elements) {
 
-            time_t time_buf = transactions->date[i];
+            time_t time_buf = temp->transaction_date[i];
             strftime(transaction_time, 128, "%x", localtime(&time_buf));
 
-            SetTextContent(all_name_objects[i],         "%s", GetCompanyAbbreviation(transactions->company_id[i]));
-            SetTextContent(all_action_objects[i],       "%s", GetTransactionAction(transactions->type[i]));
+            SetTextContent(all_name_objects[i],         "%s", GetCompanyAbbreviation(temp->company_id[i]));
+            SetTextContent(all_action_objects[i],       "%s", GetTransactionAction(temp->type[i]));
             SetTextContent(all_date_objects[i],         "%s", transaction_time);
             SetTextContent(all_share_amount_objects[i], "%d", transactions->shares[i]);
         }
