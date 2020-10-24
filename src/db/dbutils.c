@@ -73,6 +73,21 @@ char *DefaultConnection()
 
 }
 
+sqlite3 *GetOpenConnection(char *connection_string)
+{
+
+    sqlite3 *db = NULL;
+    if (sqlite3_open_v2(connection_string, &db, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE, NULL) != SQLITE_OK) {
+
+        LogF("Could not establish connection to %s", connection_string);
+        SetCleanUpToTrue();
+        return NULL;
+
+    }
+    return db;
+
+}
+
 int OpenConnection(sqlite3 **db, char *connection_string) 
 {
 

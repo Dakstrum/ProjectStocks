@@ -1,10 +1,13 @@
 #ifndef DBACCOUNT_H
 #define DBACCOUNT_H
 
+#include <stdint.h>
+
 #include <sqlite3.h>
 
 #include "graph.h"
 #include "shared.h"
+#include "vector.h"
 
 typedef enum TransactionType
 {
@@ -14,35 +17,31 @@ typedef enum TransactionType
 
 } TransactionType;
 
-typedef struct Transactions
+typedef struct Transaction
 {
 
-	int *id;
-    int *company_id;
-	TransactionType *type;
-    time_t *date;
-    int *shares;
-    float *pershare;
-    float *transaction;
+    uint32_t transaction_id;
+    uint32_t company_id;
+    time_t transaction_date;
+    int shares_exchanged;
+    float price_per_share;
+    float transaction_amount;
+    TransactionType type;
 
-    unsigned int num_transactions;
-    unsigned int size;
+} Transaction;
 
-} Transactions;
-
-bool AttemptToSubtractFromCurrentStock(char *company_name, int amount_to_subtract, float price_per_stock);
-void AttemptToAddFromCurrentStock(char *company_name, int amount_to_add, float price_per_stock);
+bool AttemptToSubtractFromCurrentStock(uint32_t player_id, char *company_name, int amount_to_subtract, float price_per_stock);
+void AttemptToAddFromCurrentStock(uint32_t player_id, char *company_name, int amount_to_add, float price_per_stock);
 
 char *GetSaveNameFromSaveId(int save_id);
 char *GetPlayerNameFromSaveName(char *save_name);
 
-Transactions *GetCompanyTransactions(char *company);
-Transactions *GetAllTransactions();
-void FreeTransactions(Transactions *transactions);
+Vector *GetCompanyTransactions(uint32_t player_id, char *company);
+Vector *GetAllTransactions(uint32_t player_id);
 void SaveTransactions();
 
-int GetOwnedStockAmount(char *company_name);
+int GetOwnedStockAmount(uint32_t player_id, char *company_name);
 void InitializeAccountInformation();
-float GetAccountNetWorth();
+float GetAccountNetWorth(uint32_t player_id);
 
 #endif

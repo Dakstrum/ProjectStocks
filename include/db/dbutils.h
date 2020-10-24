@@ -9,6 +9,7 @@ char *LoadSqlFile(const char *file);
 
 char *MemoryConnection();
 char *DefaultConnection();
+sqlite3 *GetOpenConnection(char *connection_string);
 int OpenConnection(sqlite3 **db, char *connection_string);
 int OpenConnectionCreate(sqlite3 **db, char *connection_string);
 

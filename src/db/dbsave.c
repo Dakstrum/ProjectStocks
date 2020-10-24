@@ -20,42 +20,51 @@ int GetSaveIdCallback(void *save_id, int argc, char **argv, char **col_name)
 
 }
 
+void InsertAIPlayerEntry(int save_id) 
+{
+
+    char *query =   "INSERT INTO Game_Players (SaveId, PlayerName, Money, SaveOwner) "
+                    "SELECT "
+                    "%d,"
+                    "(SELECT FirstName FROM System_AIFirstnames ORDER BY RANDOM() LIMIT 1) || ' ' || (SELECT LastName FROM System_AILastNames ORDER BY RANDOM() LIMIT 1),"
+                    "15000,"
+                    "0";
+
+    ExecuteQueryF(NULL, NULL, query, save_id);
+
+}
+
 int InsertPlayerEntry(int save_id, char *player_name, double money, int save_owner)
 {
-    int player_id = -1;
-    sqlite3 *db;
-    if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("INSERT INTO Game_Players (SaveId, PlayerName, Money, SaveOwner) VALUES (%d, '%s', %.14f, %d)", save_id, player_name, money, save_owner), NULL, NULL, db);
-        player_id = sqlite3_last_insert_rowid(db);
+    sqlite3 *db = GetOpenConnection(DefaultConnection());
 
-    }
+    ExecuteQueryFDB(NULL, NULL, db, "INSERT INTO Game_Players (SaveId, PlayerName, Money, SaveOwner) VALUES (%d, '%s', %.14f, %d)", save_id, player_name, money, save_owner);
+    int player_id = sqlite3_last_insert_rowid(db);
+
     sqlite3_close(db);
+
     return player_id;
 }
 
 int InsertSaveEntry(char *save_name, unsigned int game_seed)
 {
-    int save_id = -1;
-    sqlite3 *db;
-    if (OpenConnection(&db, DefaultConnection()) == 0) {
 
-        ExecuteQuery(GetFormattedPointer("INSERT INTO Game_Saves (SaveName, RandomSeed) VALUES ('%s', %d)", save_name, game_seed), NULL, NULL, db);
-        save_id = sqlite3_last_insert_rowid(db);
+    sqlite3 *db = GetOpenConnection(DefaultConnection());
 
-    }
+    ExecuteQueryFDB(NULL, NULL, db, "INSERT INTO Game_Saves (SaveName, RandomSeed) VALUES ('%s', %d)", save_name, game_seed);
+    int save_id = sqlite3_last_insert_rowid(db);
+
     sqlite3_close(db);
+
     return save_id;
+
 }
 
 void DeleteSave(int save_id)
 {
 
-    sqlite3 *db;
-    if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("DELETE FROM Game_Players WHERE SaveId = %d; DELETE FROM Saves WHERE SaveId = %d;", save_id, save_id), NULL, NULL, db);
-    
-    sqlite3_close(db);
+    ExecuteQueryF(NULL, NULL, "DELETE FROM Game_Players WHERE SaveId = %d; DELETE FROM Saves WHERE SaveId = %d;", save_id, save_id);
 
 }
 
@@ -75,11 +84,7 @@ unsigned int GetSaveSeedWithSaveId(int save_id)
 
     unsigned int seed = 0;
 
-    sqlite3 *db;
-    if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("SELECT RandomSeed FROM Game_Saves WHERE SaveId=%d", save_id), &GetSaveSeedCallback, &seed, db);
-
-    sqlite3_close(db);
+    ExecuteQueryF(&GetSaveSeedCallback, &seed, "SELECT RandomSeed FROM Game_Saves WHERE SaveId=%d", save_id);
 
     return seed;
 
@@ -105,11 +110,7 @@ char *GetSaveNameFromSaveId(int save_id)
 
     char *save_name = malloc(sizeof(char) * 128);
 
-    sqlite3 *db;
-    if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("SELECT SaveName FROM Game_Saves WHERE SaveId = %d", save_id), &GetSaveNameFromSaveIdCallback, &save_name, db);
-
-    sqlite3_close(db);
+    ExecuteQueryF(&GetSaveNameFromSaveIdCallback, &save_name, "SELECT SaveName FROM Game_Saves WHERE SaveId = %d", save_id);
 
     return save_name;
 
@@ -133,13 +134,9 @@ int GetPlayerNameFromSaveNameCallback(void *player_name, int argc, char **argv, 
 char *GetPlayerNameFromSaveName(char *save_name)
 {
 
-    char *player_name = malloc(sizeof(char) * 128);
+    char *player_name = malloc(128);
 
-    sqlite3 *db;
-    if (OpenConnection(&db, DefaultConnection()) == 0)
-        ExecuteQuery(GetFormattedPointer("SELECT PlayerName FROM Game_Saves WHERE SaveName = '%s'", save_name), &GetPlayerNameFromSaveNameCallback, &player_name, db);
-
-    sqlite3_close(db);
+    ExecuteQueryF(&GetPlayerNameFromSaveNameCallback, &player_name, "SELECT PlayerName FROM Game_Saves WHERE SaveName = '%s'", save_name);
 
     return player_name;
 

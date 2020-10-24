@@ -7,7 +7,17 @@ VALUES
     ('Lea'),
     ('John'),
     ('Charlie'),
-    ('Amelia');
+    ('Amelia'),
+    ('Arista'),
+    ('Hadrian'),
+    ('Juliette'),
+    ('Lukas'),
+    ('Ada'),
+    ('Tomie'),
+    ('Ben'),
+    ('Persephone'),
+    ("Thomas"),
+    ("Lee");
 
 INSERT INTO 
     System_AILastNames (LastName)
@@ -16,4 +26,13 @@ VALUES
     ('Kip'),
     ('Smith'),
     ('John'),
-    ('Knightly');
+    ('Knightly'),
+    ('Wong'),
+    ('Beckett'),
+    ('Hills'),
+    ('Johns'),
+    ('Want'),
+    ('Dover'),
+    ('Cummings'),
+    ('Apple'),
+    ('Orange');

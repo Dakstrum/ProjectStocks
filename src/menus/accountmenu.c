@@ -1,10 +1,13 @@
 #include <stdio.h>
+#include <stdint.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
 #include <allegro5/allegro.h>
+
+#include "vector.h"
 
 #include "jsonlayer.h"
 #include "drawlayers.h"
@@ -95,8 +98,8 @@ void AccountMenuRenderLogic()
     SetTextContent(player_money_textobject,       "%.2f", GetAccountMoney());
     SetTextContent(player_date_textobject,        "%s",   GetDate());
     SetTextContent(stock_price_textobject,        "%.2f", CurrentStockPrice(company_viewing));
-    SetTextContent(owned_stock_amount_textobject, "%d",   GetOwnedStockAmount(company_viewing));
-    SetTextContent(networth_textobject,           "%.2f", GetAccountNetWorth());
+    SetTextContent(owned_stock_amount_textobject, "%d",   GetOwnedStockAmount(GetCurrentPlayerId(), company_viewing));
+    SetTextContent(networth_textobject,           "%.2f", GetAccountNetWorth(GetCurrentPlayerId()));
 
 }
 
@@ -104,7 +107,6 @@ void InitalizeAccountMenuText()
 {
 
     company_name_textobject         = GetJSONObjectAndAddToDrawLayer("AccountMenuCompanyNameTextObject");
-
     company_about_textobject        = GetDrawObjectFromJsonLayer("AccountMenuAboutCompanyTextObject");
     company_about_textobject->width = 835;
     AddObjectToDrawLayer(company_about_textobject);
@@ -147,27 +149,32 @@ void InitializeSelectedStockHistoryDisplay()
 void PopulateSelectedStockHistoryDisplay(char* company)
 {
     
-    struct Transactions *transactions = GetCompanyTransactions(company);
-    
-    SetHistoryDisplayPageNumber(transactions->num_transactions);
+
+    Vector *transactions = GetCompanyTransactions(GetCurrentPlayerId(), company);
+    Transaction *temp    = transactions->elements;
+
+    SetHistoryDisplayPageNumber(transactions->num_elements);
     char transaction_time[128];
 
-    for (int i=0; i < DSP_NUM; i++) {
-        if(transactions->shares[GetAccountHistoryDisplayNum() + i]) {
+    for (int i = 0; i < DSP_NUM; i++) {
 
-            time_t time_buf = transactions->date[GetAccountHistoryDisplayNum() + i];
-            strftime(transaction_time, 128, "%x", localtime(&time_buf));
+        uint32_t off_idx = GetAccountHistoryDisplayNum() + i;
+        if (off_idx >= transactions->num_elements)
+            break;
 
-            SetTextContent(selected_action_objects[i],       "%s",   GetTransactionAction(transactions->type[GetAccountHistoryDisplayNum() + i]));
-            SetTextContent(selected_date_objects[i],         "%s",   transaction_time);
-            SetTextContent(selected_share_amount_objects[i], "%d",   transactions->shares[GetAccountHistoryDisplayNum() + i]);
-            SetTextContent(selected_share_price_objects[i],  "%.2f", transactions->pershare[GetAccountHistoryDisplayNum() + i]);
-            SetTextContent(selected_transaction_objects[i],  "%.2f", transactions->transaction[GetAccountHistoryDisplayNum() + i]);
+        time_t time_buf = temp[off_idx].transaction_date;
+        strftime(transaction_time, 128, "%x", localtime(&time_buf));
 
-        }
+        SetTextContent(selected_action_objects[i],       "%s",   GetTransactionAction(temp[off_idx].type));
+        SetTextContent(selected_date_objects[i],         "%s",   transaction_time);
+        SetTextContent(selected_share_amount_objects[i], "%d",   temp[off_idx].shares_exchanged);
+        SetTextContent(selected_share_price_objects[i],  "%.2f", temp[off_idx].price_per_share);
+        SetTextContent(selected_transaction_objects[i],  "%.2f", temp[off_idx].transaction_amount);
+
         
     }
-    FreeTransactions(transactions);
+
+    Vector_Delete(transactions);
     
 }
 
@@ -204,37 +211,38 @@ void InitializeAllStocksHistoryDisplay()
 void PopulateAllStocksHistoryDisplay()
 {
     
-    struct Transactions *transactions = GetAllTransactions();
-
+    Vector *transactions = GetAllTransactions(GetCurrentPlayerId());
     char transaction_time[128];
 
-    for (int i=0; i < DSP_NUM; i++) {
+    Transaction *temp = transactions->elements;
+    for (int i = 0; i < DSP_NUM; i++) {
 
-        if(transactions->shares[i]) {
+        if(i < transactions->num_elements) {
 
-            time_t time_buf = transactions->date[i];
+            time_t time_buf = temp[i].transaction_date;
             strftime(transaction_time, 128, "%x", localtime(&time_buf));
 
-            SetTextContent(all_name_objects[i],         "%s", GetCompanyAbbreviation(transactions->company_id[i]));
-            SetTextContent(all_action_objects[i],       "%s", GetTransactionAction(transactions->type[i]));
+            SetTextContent(all_name_objects[i],         "%s", GetCompanyAbbreviation(temp[i].company_id));
+            SetTextContent(all_action_objects[i],       "%s", GetTransactionAction(temp[i].type));
             SetTextContent(all_date_objects[i],         "%s", transaction_time);
-            SetTextContent(all_share_amount_objects[i], "%d", transactions->shares[i]);
+            SetTextContent(all_share_amount_objects[i], "%d", temp[i].shares_exchanged);
+
         }
         
     }
+    Vector_Delete(transactions);
 
-    FreeTransactions(transactions);
-    
 }
 
-char* GetTransactionAction(TransactionType type)
+char *GetTransactionAction(TransactionType type)
 {
 
-    if(type == 0)
+    if(type == BUY)
         return "Buy";
 
-    if(type == 1)
+    if(type == SELL)
         return "Sell";
+
     return "error";
 }
 

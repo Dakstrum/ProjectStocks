@@ -242,7 +242,6 @@ int GetNumOfPlayerNegativeCards()
 {
 
     int amount = 0;
-
     PlayerCard *temp = (PlayerCard *)player_cards->elements;
     
     for(size_t i = 0; i < player_cards->num_elements; i++)  

@@ -162,7 +162,7 @@ void InitializeSellMenuText()
     transaction_menu_amountowned_textobject  = GetJSONObjectAndAddToDrawLayer("SellMenuAmountOwnedTextObject");
 
     SetTextContent(transaction_menu_company_name_textobject, "%s", GetCompanyAbbreviationRef(GetCompanyId(selected_company_name)));
-    SetTextContent(transaction_menu_amountowned_textobject, "%d", GetOwnedStockAmount(selected_company_name));
+    SetTextContent(transaction_menu_amountowned_textobject, "%d", GetOwnedStockAmount(GetCurrentPlayerId(), selected_company_name));
 
 }
 
@@ -308,7 +308,7 @@ void Sell_BCB()
 
     char str[50];
     float current_stock_price = CurrentStockPrice(selected_company_name);
-    bool successful = AttemptToSubtractFromCurrentStock(GetCompanyNameViewing(), amount_in_text_box, CurrentStockPrice(selected_company_name));
+    bool successful = AttemptToSubtractFromCurrentStock(GetCurrentPlayerId(), GetCompanyNameViewing(), amount_in_text_box, CurrentStockPrice(selected_company_name));
 
     if (successful) {
 
@@ -337,7 +337,7 @@ void Buy_BCB()
     char str[50];
     if (CanMakeTransaction(amount_in_text_box * current_stock_price)) {
 
-        AttemptToAddFromCurrentStock(GetCompanyNameViewing(), amount_in_text_box, current_stock_price);
+        AttemptToAddFromCurrentStock(GetCurrentPlayerId(), GetCompanyNameViewing(), amount_in_text_box, current_stock_price);
         BuyMenu_BCB();
 
         sprintf(str, "Bought %d shares of %s", amount_in_text_box, GetCompanyNameViewing());

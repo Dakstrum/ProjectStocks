@@ -188,6 +188,9 @@ void CreateNewSaveEntries(char *save_name, char *player_name)
     if (atomic_load(&player_id) == -1)
         Log("Unable to create player");
 
+    for (size_t i = 0; i < 3;i++)
+        InsertAIPlayerEntry(save_id);
+
 }
 
 
