@@ -102,7 +102,7 @@ void StocksMenusRenderLogic()
 
     }
 
-    if(buy_menu)
+    else if(buy_menu)
     {
 
         SetTextContent(transaction_menu_pershare_textobject,  "%.2f", CurrentStockPrice(selected_company_name));
@@ -110,7 +110,7 @@ void StocksMenusRenderLogic()
 
     }
 
-    if(sell_menu)
+    else if(sell_menu)
     {
 
         SetTextContent(transaction_menu_pershare_textobject,  "%.2f", CurrentStockPrice(selected_company_name));

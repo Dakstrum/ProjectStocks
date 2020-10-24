@@ -187,9 +187,11 @@ void PopulateNegativeCardsScollBox(DrawObject *object)
 {
     
     PlayerCard *temp  = GetAllPlayerCards();
+    int cards_num     = GetNumOfPlayerCards();
     int scrollbox_num = 0;
 
-    for(int i = 0; i < GetNumOfPlayerCards(); i++)  {
+
+    for(int i = 0; i < cards_num; i++)  {
 
         if(GetCardType(temp[i].card_id) == 0) {
 

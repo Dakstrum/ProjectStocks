@@ -144,6 +144,7 @@ void CreateSave_BCB()
 {
 
     char *save_name_in_text_box = GetTextFromTextBox("SaveNameTextBox");
+    char *player_name_in_text_box = GetTextFromTextBox("PlayerNameTextBox");
     
     if (strlen(save_name_in_text_box) == 0) {
 
@@ -151,7 +152,6 @@ void CreateSave_BCB()
         return;
     }
 
-    char *player_name_in_text_box = GetTextFromTextBox("PlayerNameTextBox");
     if (strlen(player_name_in_text_box) == 0) {
 
         DisplayPopupOnDrawLayer("Plyaer Name is Necessary", "assets/images/generalpurposemenus/popups/yellowpopup.png");
@@ -169,7 +169,6 @@ void NewSaveMenuBack_BCB()
     ClearCurrentDrawLayer();
     
 }
-
 
 void SelectSaveClick(char *save_name, unsigned short int index)
 {

@@ -177,14 +177,14 @@ void TempCreateWeatherBitMaps() //This function is nasty. Will change when I can
         }
 
         
-        if(weather_num == 1) {
+        else if(weather_num == 1) {
 
             all_weather_bitmaps[i]->asset_path = "assets/images/newsmenu/newsmenuassets/cloudy.png";
             SetTextContent(all_weather_temps_textobjects[i], "%d", rand() % (75 + 1 - 70) + 70);
             
         }
 
-        if(weather_num == 2) {
+        else if(weather_num == 2) {
 
             all_weather_bitmaps[i]->asset_path = "assets/images/newsmenu/newsmenuassets/rain.png";
             SetTextContent(all_weather_temps_textobjects[i], "%d", rand() % (70 + 1 - 60) + 60);
