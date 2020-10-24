@@ -255,16 +255,16 @@ void ClearAccountHistoryDisplay()
 
 void AccountMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
-
+    SetAccountHistoryDisplayNum(0);
     char *company_name = GetCompanyName(index+1);
     SetCompanyIdViewing(GetCompanyId(company_name));
     ClearAccountHistoryDisplay();
     PopulateSelectedStockHistoryDisplay(company_name);
-    SetAccountHistoryDisplayNum(1);
+    
 
     SetTextContent(company_name_textobject, "%s", company_name);
     SetTextContent(company_about_textobject, "%s", GetCompanyDescriptionRef(GetCompanyId(GetCompanyNameViewing())));
-    SetTextContent(historydisplay_currentpage_textobject,  "%d", GetAccountHistoryDisplayNum(0));
+    SetTextContent(historydisplay_currentpage_textobject,  "%d", GetAccountHistoryDisplayNum());
 
 
 
