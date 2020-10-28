@@ -18,6 +18,7 @@
 #include "dbevents.h"
 #include "dbcompany.h"
 #include <time.h>
+#include "button.h"
 
 static MenuWithChilds *news_menu = NULL;
 
@@ -41,14 +42,16 @@ static DrawObject *thurs_bitmap  = NULL;
 static DrawObject *fri_bitmap    = NULL;
 static DrawObject *sat_bitmap    = NULL;
 
+static DrawObject *scroll_box_button   = NULL;
+
 DrawObject *category_scrollbox                    = NULL;
 DrawObject *category_specific_companies_scrollbox = NULL;
 
-void InitalizeNewsMenuText();
+void InitalizeNewsMenuTextAndButtons();
 void NewsMenuRenderLogic();
 void InitializeSearchTextBox();
 
-void TempCreateWeatherBitMaps();
+void InitalizeWeatherBitMaps();
 void InitalizeNewsMenuCategoryScrollbox();
 void InitalizeNewsMenuCategorySpecificCompanyScrollbox(int cat_id);
 
@@ -61,19 +64,23 @@ void InitializeNewsMenu()
         return;
 
     }
-    
+
     news_menu = GetJSONMenuAndAddToDrawLayer("NewsMenu");
+
+    InitalizeNewsMenuTextAndButtons();
     InitalizeNewsMenuCategoryScrollbox();
-    InitalizeNewsMenuText();
+    InitalizeWeatherBitMaps();
     InitializeSpeedSelectObject("NewsMenu");
+    InitializeSearchTextBox();
 
     NewsMenuRenderLogic();
 
-    InitializeSearchTextBox();
 }
 
-void InitalizeNewsMenuText()
+void InitalizeNewsMenuTextAndButtons()
 {
+
+    scroll_box_button = GetDrawObjectByName("NewsMenuscrollbox_backButtonObject");
 
     player_money_textobject     = GetJSONObjectAndAddToDrawLayer("NewsMenuAccountMoneyTextObject");
     player_date_textobject      = GetJSONObjectAndAddToDrawLayer("NewsMenuAccountDateTextObject");
@@ -88,8 +95,6 @@ void InitalizeNewsMenuText()
     sat_temp_textobject     = GetJSONObjectAndAddToDrawLayer("NewsMenusattTextObject");
 
     SetTextContent(scrollbox_title_textobject, "%s", "Categories");
-
-    TempCreateWeatherBitMaps();
 
 }
 
@@ -118,6 +123,8 @@ void InitalizeNewsMenuCategoryScrollbox()
 
     category_scrollbox = CreateCategoryScrollbox(2, 230, &NewsMenuCategoryScrollBoxClick);
     AddObjectToDrawLayer(category_scrollbox);
+    Log("SHOULD BE ROMOVING");
+    RemoveDrawObject(scroll_box_button);
 
 }
 
@@ -137,9 +144,11 @@ void InitalizeNewsMenuCategorySpecificCompanyScrollbox(int cat_id)
     category_specific_companies_scrollbox = CreateCategorySpecificCompaniesScrollbox(2, 230, cat_id, &NewsMenuCategorySpecificCompanyScrollBoxClick);
     AddObjectToDrawLayer(category_specific_companies_scrollbox);
 
+    scroll_box_button = GetJSONObjectAndAddToDrawLayer("NewsMenuscrollbox_backButtonObject");
+
 }
 
-void TempCreateWeatherBitMaps() //This function is nasty. Will change when I can create bitmaps and not menus
+void InitalizeWeatherBitMaps() //This function is nasty. Will change when I can create bitmaps and not menus
 {
 
     sun_bitmap   = CreateNewDrawObject();    
@@ -250,6 +259,8 @@ void CleanNewsMenu()
 
     category_scrollbox                    = NULL;
     category_specific_companies_scrollbox = NULL;
+
+    scroll_box_button = NULL;
 
     news_menu = NULL;
 
