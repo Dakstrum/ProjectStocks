@@ -63,6 +63,9 @@ def DetermineButtonPNG(dimensions, matrix_str, name):
 	if((int(float(dimensions[15]))) == 171 and (int(float(dimensions[16]))) == 57): #Button 3
 		DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/button3.png")
 
+	if((int(float(dimensions[15]))) == 323 and (int(float(dimensions[16]))) == 91): #Button 4
+		DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/button4.png")
+
 	if((int(float(dimensions[15]))) == 12 and (int(float(dimensions[16]))) == 12): #Arrow
 		DefaultObject_1 = ButtonObject(int(float(matrix_str[4])), int(float(matrix_str[5])), int(float(dimensions[15])), int(float(dimensions[16])), name, "assets/images/all_buttons/gamespeed/arrow.png")
 
