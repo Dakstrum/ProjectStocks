@@ -62,6 +62,13 @@ CREATE TABLE IF NOT EXISTS Player_CardsPlayed
     PlayedTime DATETIME NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS Player_CardsAgainst
+(
+    PlayerCardsAgainstId INTEGER PRIMARY KEY,
+    PlayerCardsPlayedId INTEGER NOT NULL,
+    CompanyId INTEGER NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS DB_Events
 (
     DBEventId INTEGER PRIMARY KEY,
