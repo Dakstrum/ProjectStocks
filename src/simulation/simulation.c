@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdatomic.h>
@@ -20,9 +21,9 @@
 typedef struct Sim 
 {
 
-    Company *companies;
-    StockPrices *prices;
-    float *random_event_chance;
+    Vector *companies;
+    Vector **prices;
+    Vector *random_event_chance;
 
     unsigned int num_companies;
 
@@ -56,10 +57,6 @@ typedef struct SimulationFrame
     float event_price_diff;
 
 } SimulationFrame;
-
-static EventSim global_events;
-static EventSimId category_events;
-static EventSimId company_events; 
 
 static const int HOURS_IN_YEAR         = 8760;
 static const int HOURS_IN_QUARTER_YEAR = HOURS_IN_YEAR / 4;
@@ -110,131 +107,14 @@ void SetRandomSeed()
 
 }
 
-void InitializeStockPrice(StockPrices *prices)
-{
-
-    prices->prices     = malloc(sizeof(float)  * STOCK_PRICE_SIZE);
-    prices->times      = malloc(sizeof(time_t) * STOCK_PRICE_SIZE);
-    prices->size       = STOCK_PRICE_SIZE;
-    prices->num_prices = 0;
-
-}
-
-void ReclaimUnusedStockPriceMemory(StockPrices *prices) 
-{
-
-    prices->size   = prices->num_prices;
-    prices->prices = realloc(prices->prices, sizeof(float) * (prices->size + 1));
-    prices->times  = realloc(prices->times, sizeof(time_t) * (prices->size + 1));
-
-}
-
 void SetCompanies() 
 {
 
-    sim_data.companies           = GetAllCompanies();
-    sim_data.num_companies       = GetNumCompanies();
-    sim_data.prices              = malloc(sizeof(StockPrices) * sim_data.num_companies);
-    sim_data.random_event_chance = malloc(sizeof(float) * sim_data.num_companies);
+    sim_data.companies = GetAllCompaniesVector();
+    sim_data.prices    = malloc(sizeof(Vector *) * sim_data.companies->num_elements);
 
-    for (size_t i = 0; i < sim_data.num_companies;i++) {
-
-        InitializeStockPrice(&sim_data.prices[i]);
-        sim_data.random_event_chance[i] = 0.0;
-
-    }
-
-}
-
-void GenerateGameEvents(EventSim *events, Event *(*GetRandomEvent)())
-{
-
-    time_t current_time = 0;
-    while (ShouldContinueSimulation(current_time)) {
-
-        int hours_passed = (HOURS_IN_QUARTER_YEAR + rand() % HOURS_IN_YEAR) * HOUR;
-        current_time    += hours_passed;
-        Vector_PushBack(events->event_times, &current_time);
-        Vector_PushBack(events->events, GetRandomEvent());
-
-    }
-
-}
-
-void GenerateGameEventsId(EventSim *events, int id, Event *(*GetRandomEvent)(int))
-{
-
-    time_t current_time = 0;
-    while (ShouldContinueSimulation(current_time)) {
-
-        int hours_passed = (HOURS_IN_QUARTER_YEAR + rand() % HOURS_IN_YEAR) * HOUR;
-        current_time    += hours_passed;
-        Vector_PushBack(events->event_times, &current_time);
-        Vector_PushBack(events->events, GetRandomEvent(id));
-
-    }
-
-}
-
-void InitializeCategoryEventGeneration()
-{
-
-    category_events.ids        = Vector_Create(sizeof(int), 16);
-    category_events.event_sims = Vector_Create(sizeof(EventSim), 16);
-
-    int num_categories = GetNumCompanyCategories();
-    int *category_ids  = GetCompanyCategoryIds();
-    for (int i = 0; i < num_categories;i++) {
-
-        Vector_PushBack(category_events.ids, &category_ids[i]);
-        EventSim temp;
-        temp.event_times = Vector_Create(sizeof(time_t), 16);
-        temp.events      = Vector_Create(sizeof(Event), 16);
-        Vector_PushBack(category_events.event_sims, &temp);
-        GenerateGameEventsId(&temp, category_ids[i], &GetRandomCategoryEvent);
-
-    }
-
-}
-
-void InitializeCompanyEventGeneration()
-{
-
-    company_events.ids        = Vector_Create(sizeof(int), 16);
-    company_events.event_sims = Vector_Create(sizeof(EventSim), 16);
-
-    for (unsigned int i = 0; i < sim_data.num_companies;i++) {
-
-        Vector_PushBack(company_events.ids, &sim_data.companies[i].company_id);
-        EventSim temp;
-        temp.event_times = Vector_Create(sizeof(time_t), 16);
-        temp.events      = Vector_Create(sizeof(Event), 16);
-        Vector_PushBack(company_events.event_sims, &temp);
-        GenerateGameEventsId(&temp, sim_data.companies[i].company_id, &GetRandomCompanyEvent);
-
-    }
-
-}
-
-void InitializeEventGeneration()
-{
-
-    global_events.event_times  = Vector_Create(sizeof(time_t), 16);
-    global_events.events       = Vector_Create(sizeof(Event), 16);
-
-    GenerateGameEvents(&global_events, GetRandomGlobalEvent);
-
-    InitializeCategoryEventGeneration();
-    InitializeCompanyEventGeneration();
-
-}
-
-void GenerateEvents()
-{
-
-    srand(seed);
-    InitializeEventGeneration();
-
+    for (size_t i = 0; i < sim_data.companies->num_elements;i++)
+        sim_data.prices[i] = Vector_Create(sizeof(StockPrice), STOCK_PRICE_SIZE);
 
 }
 
@@ -243,9 +123,10 @@ void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg)
 
     SetYearLapse(25);
     save_id = GetSaveId();
+    srand(seed);
     SetRandomSeed();
     SetCompanies();
-    GenerateEvents();
+    //GenerateEvents();
     GenerateDataForCompanies();
     atomic_store(&simulation_finished, true);
 
@@ -256,34 +137,23 @@ void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg)
 void GenerateDataForCompanies() 
 {
 
-    for (size_t i = 0;i < sim_data.num_companies;i++)
+    for (size_t i = 0;i < sim_data.companies->num_elements;i++)
         SimulationLoop(i);
 
 }
 
-void StoreStockPrice(StockPrices *prices, float price, time_t timestamp)
+void StoreStockPrice(Vector *prices, float price, time_t timestamp)
 {
 
-    if (prices->num_prices == prices->size) {
-
-        prices->size  += STOCK_PRICE_SIZE;
-        prices->prices = realloc(prices->prices, sizeof(float)  * prices->size);
-        prices->times  = realloc(prices->times,  sizeof(time_t) * prices->size);
-
-    }
-    prices->prices[prices->num_prices] = price;
-    prices->times[prices->num_prices]  = timestamp;
-    prices->num_prices++;
+    StockPrice price = {price, timestamp};
+    Vector_PushBack(prices, &price);
 
 }
 
 float GetRandomSign()
 {
 
-    if (rand()%2 == 0)
-        return -1.0;
-    else
-        return 1.0;
+    return rand() % 2 == 0 ? -1.0 : 1.0;
 
 }
 
@@ -308,148 +178,10 @@ float GetRandomEventMagnitude()
 
 }
 
-float GenerateRandomEvent(float last_price, unsigned int idx)
-{
-
-    sim_data.random_event_chance[idx] += GetRandomSign() * GetRandomFloat() + .1;
-    if (sim_data.random_event_chance[idx] < 0)
-        sim_data.random_event_chance[idx] = 0.0;
-
-    if (sim_data.random_event_chance[idx] > 50 + rand() % 50)
-        return .05 * last_price * GetRandomSign() * GetRandomFloat() * GetRandomEventMagnitude();
-
-    return 0.0;
-
-}
-
 float GenerateRandomPriceFluctuation(float last_price) 
 {
 
-    return GetRandomSign() * GetRandomFloat() * last_price * .01;
-
-}
-
-Event *GetGenericEventOnDay(EventSim *event_sim, time_t current_time)
-{
-
-    time_t *times = (time_t *)event_sim->event_times->elements;
-
-    for (size_t i = 0; i < event_sim->event_times->num_elements;i++)
-        if (times[i] == current_time)
-            return &((Event *)event_sim->events->elements)[i];
-
-    return NULL;
-
-}
-
-Event *GetGenericEventOnDayWithId(EventSimId *event_sim, time_t current_time, unsigned int id)
-{
-
-    unsigned int *ids    = event_sim->ids->elements;
-    EventSim *event_sims = event_sim->event_sims->elements;
-
-    for (unsigned int i = 0; i < event_sim->ids->num_elements;i++)
-        if (ids[i] == id)
-            return GetGenericEventOnDay(&event_sims[i], current_time);
-
-    return NULL;
-
-}
-
-Event *GetEventOnDay(time_t current_time, unsigned int idx)
-{
-
-    Event *event = NULL;
-    event = GetGenericEventOnDay(&global_events, current_time);
-
-    if (event != NULL)
-        return event;
-
-    unsigned int company_id = sim_data.companies[idx].company_id;
-    event = GetGenericEventOnDayWithId(&company_events, current_time, company_id);
-
-    if (event != NULL)
-        return event;
-
-    return NULL;
-
-}
-
-void CheckForEvent(SimulationFrame *frame, unsigned int idx) 
-{
-
-    if (frame->event != NULL)
-        return;
-
-    frame->event = GetEventOnDay(frame->current_time, idx);
-    if (frame->event != NULL) {
-
-        frame->event_end_time   = frame->current_time + frame->event->modifier_length * HOUR  * 24;
-        frame->event_price_diff = (frame->last_price * frame->event->price_modifier) / (frame->event->modifier_length * 24);
-
-    }
-
-}
-
-void CheckToEndEvent(SimulationFrame *frame)
-{
-
-    if (frame->current_time < frame->event_end_time)
-        return;
-
-    frame->event            = NULL;
-    frame->event_end_time   = 0;
-    frame->event_price_diff = 0;
-
-}
-
-char *AnyEventAtTime(time_t event_time, EventSim *sim)
-{
-
-    time_t *times    = (time_t *)sim->event_times->elements;
-    unsigned int num = sim->event_times->num_elements;
-
-    for (unsigned int i = 0; i < num;i++)
-        if (times[i] == event_time)
-            return ((Event *)sim->events->elements)[i].event;
-
-    return NULL;
-
-}
-
-char *AnyEventSimEventAtTime(time_t event_time, EventSimId *sim) 
-{
-
-    unsigned int num    = sim->event_sims->num_elements;
-    EventSim *event_sim = (EventSim *)sim->event_sims->elements;
-    char *event         = NULL;
-    for (unsigned int i = 0; i < num;i++) {
-
-        event = AnyEventAtTime(event_time, &event_sim[i]);
-        if (event != NULL)
-            return event;
-
-    }
-    return NULL;
-
-}
-
-char *GetAnyEventAtTime(time_t event_time) 
-{
-
-    char *event = AnyEventAtTime(event_time, &global_events);
-    if (event != NULL)
-        return event;
-
-    event = AnyEventSimEventAtTime(event_time, &category_events);
-    if (event != NULL)
-        return event;
-
-    event = AnyEventSimEventAtTime(event_time, &company_events);
-    if (event != NULL)
-        return event;
-
-    return NULL;
+    return GetRandomSign() * GetRandomFloat() * last_price * .0075;
 
 }
 
@@ -459,7 +191,7 @@ void SetNewPrice(SimulationFrame *frame, unsigned int idx)
     if (frame->event_price_diff > 0)
         frame->price = frame->last_price + frame->event_price_diff;
     else
-        frame->price = frame->last_price + GenerateRandomPriceFluctuation(frame->last_price) + GenerateRandomEvent(frame->last_price, idx);
+        frame->price = frame->last_price + GenerateRandomPriceFluctuation(frame->last_price);
     
     frame->last_price = frame->price; 
 
@@ -478,19 +210,15 @@ void SimulationLoop(unsigned int idx)
     frame.event_price_diff = 0;
 
     srand(sim_data.companies[idx].company_id + seed);
-    StoreStockPrice(&sim_data.prices[idx], frame.last_price, frame.current_time);
+    StoreStockPrice(sim_data.prices[idx], frame.last_price, frame.current_time);
 
     while (ShouldContinueSimulation(frame.current_time)) {
 
         frame.current_time += HOUR;  
-        CheckForEvent(&frame, idx);
-        CheckToEndEvent(&frame);
         SetNewPrice(&frame, idx);
         StoreStockPrice(&sim_data.prices[idx], frame.price, frame.current_time);
 
     }
-
-    ReclaimUnusedStockPriceMemory(&sim_data.prices[idx]);
 
 }
 
@@ -655,6 +383,27 @@ float GetCurrentStockChange(char *company_name)
     return change;
 }
 
+void Simulation_ModifyCompany(uint32_t company_id, float modifier, uint32_t days, char *event)
+{
+
+
+
+}
+
+void Simulation_ModifyCategory(uint32_t category_id, float modifier, uint32_t days, char *event)
+{
+
+
+
+}
+
+void Simulation_ModifyGlobal(float modifier, uint32_t days, char *event)
+{
+
+
+
+}
+
 static ALLEGRO_THREAD *stock_simulation_thread = NULL;
 
 void StartSimulation()
@@ -665,35 +414,20 @@ void StartSimulation()
 
 }
 
-void CleanUpEvents(EventSimId *event, int num_elements)
-{
-
-    EventSim *temp = (EventSim *)event->event_sims->elements;
-    for (int i = 0; i < num_elements;i++) {
-
-        Vector_Delete(temp[i].event_times);
-        Vector_Delete(temp[i].events);
-
-    }
-    Vector_Delete(event->event_sims);
-    Vector_Delete(event->ids);
-
-}
-
 void CleanSimulation()
 {
 
-    Vector_Delete(global_events.event_times);
-    Vector_Delete(global_events.events);
+    for (size_t i = 0; i < sim_data.companies->num_elements;i++) {
 
-    CleanUpEvents(&category_events, GetNumCompanyCategories());
-    CleanUpEvents(&company_events, sim_data.num_companies);
+        free(sim_data.prices[i]);
+
+    }
 
     free(sim_data.prices);
-    free(sim_data.random_event_chance);
-    sim_data.num_companies       = 0;
-    sim_data.prices              = NULL;
-    sim_data.random_event_chance = NULL;
+    free(sim_data.companies);
+
+    sim_data.prices = NULL;
+    sim_data.companies = NULL;
 
 }
 

@@ -3,6 +3,14 @@
 
 #include "shared.h"
 
+typedef struct StockPrice
+{
+
+	float price;
+	time_t date;
+
+};
+
 void InitializeSimulation();
 bool IsSimulationDone();
 void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg);
@@ -19,4 +27,5 @@ char *GetAnyEventAtTime(time_t event_time);
 
 void StartSimulation();
 void StopSimulation();
+
 #endif
