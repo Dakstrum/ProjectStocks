@@ -69,6 +69,30 @@ CREATE TABLE IF NOT EXISTS Player_CardsAgainst
     CompanyId INTEGER NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS Simulation_GlobalEvent
+(
+    SimGlobalEventId INTEGER PRIMARY KEY,
+    SaveId INTEGER NOT NULL,
+    GlobalEventId INTEGER NOT NULL,
+    EventTime DATETIME NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Simulation_CategoryEvent
+(
+    SimCategoryEventId INTEGER PRIMARY KEY,
+    SaveId INTEGER NOT NULL,
+    CategoryEventId INTEGER NOT NULL,
+    EventTime DATETIME NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Simulation_CompanyEvent
+(
+    SimCompanyEventId INTEGER PRIMARY KEY,
+    SaveId INTEGER NOT NULL,
+    CompanyEventId INTEGER NOT NULL,
+    EventTime DATETIME NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS DB_Events
 (
     DBEventId INTEGER PRIMARY KEY,
