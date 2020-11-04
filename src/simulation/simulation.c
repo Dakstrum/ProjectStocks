@@ -118,6 +118,13 @@ void SetCompanies()
 
 }
 
+void SimulateToSavePoint()
+{
+
+    
+
+}
+
 void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg) 
 {
 
@@ -126,6 +133,7 @@ void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg)
     srand(seed);
     SetRandomSeed();
     SetCompanies();
+    SimulateToSavePoint();
     //GenerateEvents();
     GenerateDataForCompanies();
     atomic_store(&simulation_finished, true);
