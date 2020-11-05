@@ -68,7 +68,7 @@ void InitializeMainMenu()
 
     }
 
-    SetInGameStatus(0);
+    Account_SetInGameStatus(0);
     
     main_menu = GetJSONMenuAndAddToDrawLayer("MainMenu");
     

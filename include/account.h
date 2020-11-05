@@ -15,8 +15,8 @@ void SetGameTime(time_t time_to_set);
 time_t GetGameTime();
 char *GetDate();
 
-void SetInGameStatus(int status);
-int GetInGameStatus();
+void Account_SetInGameStatus(int status);
+int Account_GetInGameStatus();
 
 void SetGameSpeed(const int speed);
 bool CanMakeTransaction(float amount);

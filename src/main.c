@@ -145,7 +145,6 @@ enum InitializeSuccess Initialize()
     InitializeShared();
     InitializeDatabases();
     InitializeCompanies();
-    InitializeCards();
     InitializeEvents();
     InitializeControls();
 

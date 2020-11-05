@@ -121,7 +121,7 @@ void SetCompanies()
 void SimulateToSavePoint()
 {
 
-    
+    atomic_store(&simulation_finished, true);
 
 }
 
@@ -136,7 +136,7 @@ void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg)
     SimulateToSavePoint();
     //GenerateEvents();
     GenerateDataForCompanies();
-    atomic_store(&simulation_finished, true);
+
 
     return NULL;
 

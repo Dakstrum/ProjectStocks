@@ -25,9 +25,9 @@ static atomic_int  player_id;
 
 static ALLEGRO_THREAD *account_thread = NULL;
 
-static float account_money   = 0;
+static float account_money = 0;
 
-static int in_game           = 0;
+static int in_game = 0;
 
 static char *current_time_buf = NULL;
 static const long ONE_HOUR = 3600;
@@ -37,16 +37,15 @@ static char *current_save_name   = NULL;
 
 static float sleep_time = 1.0;
 
-void *AccountEntry(ALLEGRO_THREAD *thread, void *arg);
 
-void SetInGameStatus(int status)
+void Account_SetInGameStatus(int status)
 {
 
     in_game = status;
 
 }
 
-int GetInGameStatus()
+int Account_GetInGameStatus()
 {
 
     return in_game;
@@ -109,6 +108,40 @@ unsigned int GetSaveSeed()
 
 }
 
+bool CheckToIncrementGametime(long int dt) 
+{
+
+    if (dt == atomic_load(&game_time_real_dt)) {
+
+        atomic_store(&game_time, atomic_load(&game_time) + atomic_load(&game_time_game_dt));
+        return true;
+
+    }
+    return false;
+
+}
+
+void *AccountEntry(ALLEGRO_THREAD *thread, void *arg) 
+{
+
+    long int dt = 0;
+    while (!ShouldICleanUp()) {
+
+        al_rest(sleep_time);
+        if (Timer_IsPaused())
+            continue;
+
+        
+
+        dt += 1;
+        if (CheckToIncrementGametime(dt))
+            dt = 0;
+
+    }
+    return NULL;
+
+}
+
 void InitAccount() 
 {
 
@@ -138,38 +171,6 @@ void SetGameTime(time_t time_to_set)
 {
 
     atomic_store(&game_time, time_to_set);
-
-}
-
-bool CheckToIncrementGametime(long int dt) 
-{
-
-    if (dt == atomic_load(&game_time_real_dt)) {
-
-        atomic_store(&game_time, atomic_load(&game_time) + atomic_load(&game_time_game_dt));
-        return true;
-
-    }
-    return false;
-
-}
-
-void *AccountEntry(ALLEGRO_THREAD *thread, void *arg) 
-{
-
-    long int dt = 0;
-    while (!ShouldICleanUp()) {
-
-        al_rest(sleep_time);
-        if (Timer_IsPaused())
-            continue;
-
-        dt += 1;
-        if (CheckToIncrementGametime(dt))
-            dt = 0;
-
-    }
-    return NULL;
 
 }
 

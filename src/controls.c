@@ -243,7 +243,7 @@ void HandlePauseMenu(ALLEGRO_EVENT event)
     if(DoesObjectExistInCurrentDrawLayer("LoadingVideo") || DoesObjectExistInCurrentDrawLayer("StartUpVideo") || DoesObjectExistInCurrentDrawLayer("DisplayMenu"))
         return;
 
-    if(GetInGameStatus() == 1)
+    if(Account_GetInGameStatus() == 1)
     {
         if(!DoesObjectExistInCurrentDrawLayer("OptionsMenu"))
             ToggleInGamePauseMenu();
