@@ -2,6 +2,7 @@
 #define DBCARDS_H
 
 #include "vector.h"
+#include "stdint.h"
 
 typedef struct Card {
 
@@ -23,7 +24,6 @@ typedef struct PlayerCard {
 } PlayerCard;
 
 
-void InitializeCards();
 int GetCardId(char* card_title);
 char* GetCardPath(unsigned int card_id);
 int GetCardPriceModifier(unsigned int card_id);
@@ -37,7 +37,7 @@ PlayerCard *GetAllPlayerCards();
 char* GetCardTitle(unsigned int card_id);
 int GetCardType(unsigned int card_id);
 int GetNumOfPlayerCards();
-void RemoveCardFromPlayer(unsigned int player_card_id);
+void DBCards_ApplyCard(uint32_t player_card_id, uint32_t company_id);
 int GetPlayerCardId(int temp_card_id);
 void InitializeCardInformation();
 void SaveCards();
