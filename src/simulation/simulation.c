@@ -101,7 +101,7 @@ void SetRandomSeed()
 {
 
     if (save_id != -1)
-        seed = GetSaveSeed();
+        seed = Account_GetSaveSeed();
     else
         seed = time(NULL);
 
@@ -129,7 +129,7 @@ void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg)
 {
 
     SetYearLapse(25);
-    save_id = GetSaveId();
+    save_id = Account_GetSaveId();
     srand(seed);
     SetRandomSeed();
     SetCompanies();
@@ -282,7 +282,7 @@ StockPrices *GetStockPricesFromNowUntil(char *company_name, time_t span)
     if (company_idx == -1)
         return NULL;
 
-    time_t current_time  = GetGameTime();
+    time_t current_time  = Account_GetGameTime();
     time_t previous_time = current_time - span;
 
     if (span == 0)
@@ -367,7 +367,7 @@ float CurrentStockPrice(char *company_name)
     if (company_idx == -1)
         return -1.0f;
 
-    time_t current_time = GetGameTime(); 
+    time_t current_time = Account_GetGameTime(); 
     for (size_t i = 0; i < sim_data.prices[company_idx].num_prices; i++)
         if (sim_data.prices[company_idx].times[i] == current_time)
             return sim_data.prices[company_idx].prices[i];

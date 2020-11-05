@@ -1,31 +1,31 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
 
-void InitAccount();
-unsigned int GetSaveSeed();
-int GetSaveId();
+void Account_Init();
+unsigned int Account_GetSaveSeed();
+int Account_GetSaveId();
 void CreateNewSave(char *save_name, char *player_name);
 void Save();
 void LoadSave(int load_save_id, int save_player_id);
-void StorePlayerData();
-int GetCurrentPlayerId();
+void Account_StorePlayerData();
+int Account_GetPlayerId();
 
 void SetGameTime(time_t time_to_set);
 
-time_t GetGameTime();
-char *GetDate();
+time_t Account_GetGameTime();
+char *Account_GetDate();
 
 void Account_SetInGameStatus(int status);
 int Account_GetInGameStatus();
 
 void SetGameSpeed(const int speed);
-bool CanMakeTransaction(float amount);
-void AddMoney(float amount);
-void SubtractMoney(float amount);
-void SetAccountMoney(float amount);
-float GetAccountMoney();
+bool Account_CanMakeTransaction(float amount);
+void Account_AddMoney(float amount);
+void Account_SubtractMoney(float amount);
+void Account_SetMoney(float amount);
+float Account_GetMoney();
 
-char *GetCurrentSaveName();
-char *GetCurrentPlayerName();
+char *Account_GetSaveName();
+char *Account_GetPlayerName();
 
 #endif

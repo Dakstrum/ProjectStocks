@@ -129,7 +129,7 @@ void NewsManager_PushNews(NewsManager *manager, char *content)
 void NewsManager_CheckForNews(NewsManager *manager)
 {
 
-	char *event = GetAnyEventAtTime(GetGameTime());
+	char *event = GetAnyEventAtTime(Account_GetGameTime());
 	if (event == NULL)
 		return;
 	

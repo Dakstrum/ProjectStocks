@@ -52,7 +52,7 @@ void PauseMenuOptions_BCB()
 void PauseMenuSave_BCB()
 {
 
-    StorePlayerData();
+    Account_StorePlayerData();
     SaveCards();
     
 }
@@ -61,7 +61,7 @@ void PauseMenuSave_BCB()
 void PauseMenuExit_BCB()
 {
 
-    //SetDBMoneyToLocalMoney(GetCurrentPlayerId());
+    //SetDBMoneyToLocalMoney(Account_GetPlayerId());
     SetCleanUpToTrue();
 
 }

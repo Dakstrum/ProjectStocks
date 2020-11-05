@@ -52,56 +52,56 @@ int Account_GetInGameStatus()
 
 }
 
-bool CanMakeTransaction(float amount) 
+bool Account_CanMakeTransaction(float amount) 
 {
 
     return account_money - amount >= 0.0;
 
 }
 
-void AddMoney(float amount)
+void Account_AddMoney(float amount)
 {
 
     account_money += amount;
 
 }
 
-void SubtractMoney(float amount)
+void Account_SubtractMoney(float amount)
 {
 
     account_money -= amount;
 
 }
 
-void SetAccountMoney(float amount)
+void Account_SetMoney(float amount)
 {
 
     account_money = amount;
 
 }
 
-float GetAccountMoney()
+float Account_GetMoney()
 {
 
     return account_money;
 
 }
 
-int GetCurrentPlayerId()
+int Account_GetPlayerId()
 {
 
     return atomic_load(&player_id);
 
 }
 
-int GetSaveId() 
+int Account_GetSaveId() 
 {
 
     return atomic_load(&save_id);
 
 }
 
-unsigned int GetSaveSeed() 
+unsigned int Account_GetSaveSeed() 
 {
 
     return atomic_load(&game_seed);
@@ -142,7 +142,7 @@ void *AccountEntry(ALLEGRO_THREAD *thread, void *arg)
 
 }
 
-void InitAccount() 
+void Account_Init() 
 {
 
     atomic_store(&save_id, -1);
@@ -160,7 +160,7 @@ void InitAccount()
 
 }
 
-time_t GetGameTime() 
+time_t Account_GetGameTime()
 {
 
     return atomic_load(&game_time);
@@ -235,7 +235,7 @@ void LoadSave(int load_save_id, int save_player_id)
 
 }
 
-void StorePlayerData() 
+void Account_StorePlayerData() 
 {
 
     PlayerSave save;
@@ -267,24 +267,24 @@ void SetGameSpeed(const int speed)
 }
 
 
-char *GetDate()
+char *Account_GetDate()
 {
 
-    time_t current_time = GetGameTime();
+    time_t current_time = Account_GetGameTime();
     strftime(current_time_buf, 128, "%HH %x", localtime(&current_time));
     
     return current_time_buf;
 
 }
 
-char *GetCurrentSaveName() 
+char *Account_GetSaveName() 
 {
 
     return current_save_name;
 
 }
 
-char *GetCurrentPlayerName()
+char *Account_GetPlayerName()
 {
 
     return current_player_name;

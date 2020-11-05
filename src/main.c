@@ -155,7 +155,7 @@ enum InitializeSuccess Initialize()
     InitializeEventQueue();
     InitializeJson();
     InitializeAudio();
-    InitAccount();
+    Account_Init();
     InitializeSimulation();
 
     DrawObjects_Initialize();
