@@ -14,13 +14,20 @@
 
 static MenuWithChilds *in_game_pause_menu = NULL;
 
+void CreateInGamePauseMenu()
+{
+
+    CreateNewDrawLayer();
+    in_game_pause_menu = GetJSONMenuAndAddToDrawLayer("PauseMenu");
+
+}
+
 void ToggleInGamePauseMenu()
 {
 
     if (in_game_pause_menu == NULL) {
 
-        CreateNewDrawLayer();
-        in_game_pause_menu = GetJSONMenuAndAddToDrawLayer("PauseMenu");
+        CreateInGamePauseMenu();
         Timer_Pause();
         
     } else {
@@ -45,6 +52,8 @@ void PauseMenuMainMenu_BCB()
 void PauseMenuOptions_BCB()
 {
 
+    ClearCurrentDrawLayer();
+    in_game_pause_menu = NULL;
     ToggleOptionsMenu();
 
 }
@@ -57,7 +66,6 @@ void PauseMenuSave_BCB()
     
 }
 
-
 void PauseMenuExit_BCB()
 {
 
@@ -68,5 +76,7 @@ void PauseMenuExit_BCB()
 
 void CleanPauseMenu()
 {
+
     in_game_pause_menu = NULL;
+    
 }

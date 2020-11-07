@@ -3,6 +3,7 @@
 
 void InitializeOptionsMenu(); 
 void ToggleOptionsMenu();
+void ToggleMainMenuOptionsMenu();
 void OptionsMenuExit_BCB();
 void OptionsMenuResolution_BCB();
 void DisplayMenuExit_BCB();

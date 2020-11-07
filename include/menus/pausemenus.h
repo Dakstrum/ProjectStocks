@@ -2,6 +2,7 @@
 #define PAUSEMENUS_H
 
 void ToggleInGamePauseMenu();
+void CreateInGamePauseMenu();
 
 void PauseMenuMainMenu_BCB();
 void PauseMenuOptions_BCB();

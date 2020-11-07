@@ -5,6 +5,7 @@ void InitializeMainMenu();
 void ShowStartMenu();
 void ToggleOptionsMenu();
 void MainMenuRenderLogic();
+int IsInMainMenu();
 
 void Start_BCB();
 void MainMenuOptions_BCB();

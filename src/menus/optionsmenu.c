@@ -20,6 +20,8 @@
 #include "drawlayerutils.h"
 #include "dbsettings.h"
 #include "button.h"
+#include "pausemenus.h"
+#include "mainmenu.h"
 
 static MenuWithChilds *options_menu = NULL;
 static MenuWithChilds *display_menu = NULL;
@@ -94,10 +96,28 @@ void ToggleOptionsMenu()
     } else {
 
         ClearCurrentDrawLayer();
+        CreateInGamePauseMenu();
         options_menu = NULL;
         
     }
 
+}
+
+void ToggleMainMenuOptionsMenu()
+{
+
+    if (options_menu == NULL) {
+
+        CreateNewDrawLayer();
+        options_menu = GetJSONMenuAndAddToDrawLayer("OptionsMenu");
+        
+    } else {
+
+
+        ClearCurrentDrawLayer();
+        options_menu = NULL;
+
+    }
 }
 
 void ToggleDisplayMenu()
@@ -182,8 +202,10 @@ void UpdateFullScreenButton()
 
 void OptionsMenuExit_BCB()
 {
-
-    ToggleOptionsMenu();
+    if(IsInMainMenu())
+        ToggleMainMenuOptionsMenu();
+    else
+        ToggleOptionsMenu();
 
 }
 

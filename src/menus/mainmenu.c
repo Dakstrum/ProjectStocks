@@ -36,6 +36,7 @@
 #include "animations.h"
 
 static MenuWithChilds *main_menu = NULL;
+int in_main_menu = 0;
 
 void CleanMenus();
 
@@ -72,10 +73,18 @@ void InitializeMainMenu()
     
     main_menu = GetJSONMenuAndAddToDrawLayer("MainMenu");
     
-    //Test_Animations();
+    in_main_menu = 1;
     MainMenuRenderLogic();
     StopSimulation();
     CleanMenus();
+
+}
+
+
+int IsInMainMenu()
+{
+
+    return in_main_menu;
 
 }
 
@@ -84,13 +93,16 @@ void Start_BCB()
     
     ClearDrawLayers();
     InitializeLoadSaveMenu();
+    in_main_menu = 0;
     
 }
+
 
 void MainMenuOptions_BCB()
 {
     
-    ToggleOptionsMenu();
+    ToggleMainMenuOptionsMenu();
+    
 
 }
 
