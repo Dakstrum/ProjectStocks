@@ -28,6 +28,13 @@ static MenuWithChilds *display_menu = NULL;
 
 static DrawObject *fullscreen_button = NULL;
 
+static DrawObject *resolution_textobject = NULL;
+
+static DrawObject *display_scrollbox = NULL;
+
+char* GetFormatedResolutionForText();
+int RemoveDisplayScrollbox();
+
 typedef struct Resolution 
 {
 
@@ -41,11 +48,11 @@ typedef struct Resolution
 static Resolution resolutions[NUM_RESOLUTIONS] = 
 {
     {"1920x1080", 1920, 1080},
-    {"1366x768", 1366, 768},
-    {"1440x900", 1440, 900},
-    {"1536x864", 1536, 864},
-    {"1024x768", 1024, 768},
-    {"1280x720", 1280, 720}
+    {"1366x768",  1366, 768},
+    {"1440x900",  1440, 900},
+    {"1536x864",  1536, 864},
+    {"1024x768",  1024, 768},
+    {"1280x720",  1280, 720}
 };
 
 void ChangeResolutionClick(char *scroll_box_content, unsigned short int index);
@@ -75,6 +82,7 @@ void InitializeDisplayMenu()
     }
 
     display_menu = GetJSONMenuAndAddToDrawLayer("DisplayMenu");
+    
     
 }
 
@@ -113,7 +121,6 @@ void ToggleMainMenuOptionsMenu()
         
     } else {
 
-
         ClearCurrentDrawLayer();
         options_menu = NULL;
 
@@ -127,18 +134,46 @@ void ToggleDisplayMenu()
 
         CreateNewDrawLayer();
         display_menu = GetJSONMenuAndAddToDrawLayer("DisplayMenu");
-        InitalizeResolutionScrollbox();
-        
+
+        resolution_textobject = GetJSONObjectAndAddToDrawLayer("DisplayMenuresolutionTextObject");
+        SetTextContent(resolution_textobject, "%s", GetFormatedResolutionForText());
+            
     } else {
 
+        RemoveDisplayScrollbox();
         ClearCurrentDrawLayer();
         display_menu = NULL;
+
     }
 
     fullscreen_button = GetDrawObjectByName("DisplayMenuFullScreenButtonObject");
-
     UpdateFullScreenButton();
 
+}
+
+int RemoveDisplayScrollbox()
+{
+
+    if(display_scrollbox)
+    {
+
+        RemoveDrawObject(display_scrollbox);
+        display_scrollbox = NULL;
+        return 1;
+
+    }
+    return 0;
+
+}
+
+char* GetFormatedResolutionForText()
+{
+
+    for(int i = 0; i < NUM_RESOLUTIONS; i++)
+        if(resolutions[i].width == Window_Width() && resolutions[i].height == Window_Height())
+            return resolutions[i].resolution;
+
+    return NULL;
 }
 
 void ChangeResolutionClick(char *scroll_box_content, unsigned short int index)
@@ -148,42 +183,46 @@ void ChangeResolutionClick(char *scroll_box_content, unsigned short int index)
 
         if (strcmp(scroll_box_content, resolutions[i].resolution) == 0) {
 
-            Window_Resize(resolutions[i].width, resolutions[i].height);
+            Window_Resize(resolutions[i].width, resolutions[i].height);    
             break;
 
         }
 
     }
 
+    SetTextContent(resolution_textobject, "%s", GetFormatedResolutionForText());
+    RemoveDisplayScrollbox();
     UpdateFullScreenButton();
 
 }
 
 void InitalizeResolutionScrollbox()
 {
+    if(RemoveDisplayScrollbox())
+        return;
+        
+    display_scrollbox = Scrollbox_Create();
 
-    DrawObject *object = Scrollbox_Create();
+    display_scrollbox->x      = 1173;
+    display_scrollbox->y      = 540;
+    display_scrollbox->width  = 288;
+    display_scrollbox->height = 510;
+    display_scrollbox->scrollbox.vertical_spacing = 69;
+    display_scrollbox->asset_path = "assets/images/generalpurposemenus/optionsmenu/selectoptionresolutionbox.png";
 
-    object->x      = 1060;
-    object->y      = 410;
-    object->width  = 288;
-    object->height = 310;
-    object->scrollbox.vertical_spacing = 69;
-    object->asset_path = "assets/images/generalpurposemenus/optionsmenu/selectoptionresolutionbox.png";
+    display_scrollbox->scrollbox.num_items = NUM_RESOLUTIONS;
+    display_scrollbox->scrollbox.box_click = &ChangeResolutionClick;
 
-    object->scrollbox.num_items = NUM_RESOLUTIONS;
-    object->scrollbox.box_click = &ChangeResolutionClick;
-
-    InitScrollboxVectors(object);
+    InitScrollboxVectors(display_scrollbox);
 
     for (size_t i = 0; i < NUM_RESOLUTIONS;i++) {
 
         ScrollboxText text = {30, 5, NULL, 40, resolutions[i].resolution};
-        Vector_PushBack(object->scrollbox.text_content[i], &text);
+        Vector_PushBack(display_scrollbox->scrollbox.text_content[i], &text);
 
     }
 
-    AddObjectToDrawLayer(object);
+    AddObjectToDrawLayer(display_scrollbox);
 
 }
 
@@ -212,7 +251,16 @@ void OptionsMenuExit_BCB()
 void DisplayMenuExit_BCB()
 {
 
-    ToggleDisplayMenu();
+    if(IsInMainMenu()) {
+
+        ToggleDisplayMenu();
+
+    } else {
+
+        ToggleDisplayMenu();
+        CreateInGamePauseMenu();
+
+    }
 
 }
 
@@ -221,12 +269,14 @@ void DisplayMenuFullScreen_BCB()
 
     Window_FullScreen();
     UpdateFullScreenButton();
+    SetTextContent(resolution_textobject, "%s", GetFormatedResolutionForText());
 
 }
 
 void OptionsMenuResolution_BCB()
 {
 
+    ToggleMainMenuOptionsMenu();
     ToggleDisplayMenu();
 
 }
@@ -234,8 +284,10 @@ void OptionsMenuResolution_BCB()
 void CleanOptionsMenu()
 {
 
-    options_menu = NULL;
-    display_menu = NULL;
-    fullscreen_button = NULL;
+    options_menu          = NULL;
+    display_menu          = NULL;
+    fullscreen_button     = NULL;
+    resolution_textobject = NULL;
+    display_scrollbox     = NULL;
 
 }

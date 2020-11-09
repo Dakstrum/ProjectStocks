@@ -8,6 +8,7 @@ void OptionsMenuExit_BCB();
 void OptionsMenuResolution_BCB();
 void DisplayMenuExit_BCB();
 void DisplayMenuFullScreen_BCB();
+void InitalizeResolutionScrollbox();
 
 void CleanOptionsMenu();
 
