@@ -169,7 +169,7 @@ void AddCardToPlayer(uint32_t player_id, uint32_t card_id)
     PlayerCard temp;
 
     temp.player_card_id = fake_unique_id;
-    temp.player_id      = Account_GetPlayerId();
+    temp.player_id      = player_id;
     temp.card_id        = card_id;
 
     fake_unique_id++;
