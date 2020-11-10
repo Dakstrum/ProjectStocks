@@ -29,7 +29,7 @@ char* GetCardPath(unsigned int card_id);
 int GetCardPriceModifier(unsigned int card_id);
 float GetCardModifierLength(unsigned int card_id);
 char* GetCardDescription(unsigned int card_id);
-void AddCardToPlayer(int card_id);
+void AddCardToPlayer(uint32_t player_id, uint32_t card_id);
 int GetNumOfPlayerPositiveCards();
 int GetNumOfPlayerNegativeCards();
 void InitializePlayerCards();

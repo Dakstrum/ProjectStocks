@@ -158,13 +158,13 @@ int GetPlayerCardId(int temp_card_id)
 
 }
 
-void AddCardToPlayer(int card_id)
+void AddCardToPlayer(uint32_t player_id, uint32_t card_id)
 {
 
-    static unsigned int fake_unique_id = 1000000000;
+    static uint32_t fake_unique_id = 1000000000;
 
     static char *query = "INSERT INTO Player_Cards (PlayerId CardId) VALUES (%d, %d);";
-    Queue_PushMessage(card_queue, GetFormattedPointer(query, Account_GetPlayerId(), Account_GetSaveId(), card_id));
+    Queue_PushMessage(card_queue, GetFormattedPointer(query, player_id, Account_GetSaveId(), card_id));
 
     PlayerCard temp;
 
@@ -177,7 +177,7 @@ void AddCardToPlayer(int card_id)
     Vector_PushBack(player_cards, &temp);
 }
 
-void DBCards_ApplyCard(unsigned int player_card_id, uint32_t company_id)
+void DBCards_ApplyCard(uint32_t player_card_id, uint32_t company_id)
 {
 
     char *delete_query = "DELETE FROM Player_Cards WHERE PlayerCardId = (SELECT PC.PlayerCardId FROM PlayerCards PC WHERE PC.PlayerId = %d AND PC.CardId = %d LIMIT 1);";
