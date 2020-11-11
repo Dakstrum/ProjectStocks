@@ -2,6 +2,7 @@
 #define STOCKSIMULATION_H
 
 #include "shared.h"
+#include "vector.h"
 
 typedef struct StockPrice
 {
@@ -9,16 +10,14 @@ typedef struct StockPrice
 	float price;
 	time_t date;
 
-};
+} StockPrice;
 
 void InitializeSimulation();
 bool IsSimulationDone();
 void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg);
 void SetEndYear(time_t end_year);
 
-char *GetAnyEventAtTime(time_t event_time);
-
-StockPrices *GetStockPricesFromNowUntil(char *company_name, time_t span);
+Vector *GetStockPricesFromNowUntil(char *company_name, time_t span);
 void ReduceStockPriceAmount(StockPrices *prices);
 float CurrentStockPrice(char *company_name);
 float GetCurrentStockChange(char *company_name);

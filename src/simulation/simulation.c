@@ -15,6 +15,7 @@
 #include "dbaccess.h"
 #include "dbevents.h"
 #include "dbcompany.h"
+#include "simulation.h"
 
 #define STOCK_PRICE_SIZE 4096
 
@@ -107,6 +108,13 @@ void SetRandomSeed()
 
 }
 
+void SetSaveId()
+{
+
+    save_id = Account_GetSaveId();
+
+}
+
 void SetCompanies() 
 {
 
@@ -129,9 +137,9 @@ void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg)
 {
 
     SetYearLapse(25);
-    save_id = Account_GetSaveId();
-    srand(seed);
+    SetSaveId();
     SetRandomSeed();
+    srand(seed);
     SetCompanies();
     SimulateToSavePoint();
     //GenerateEvents();
@@ -153,8 +161,8 @@ void GenerateDataForCompanies()
 void StoreStockPrice(Vector *prices, float price, time_t timestamp)
 {
 
-    StockPrice price = {price, timestamp};
-    Vector_PushBack(prices, &price);
+    StockPrice temp = {price, timestamp};
+    Vector_PushBack(prices, &temp);
 
 }
 
@@ -168,7 +176,7 @@ float GetRandomSign()
 float GetRandomFloat()
 {
 
-    return (float)rand()/RAND_MAX;
+    return (float)(rand()/RAND_MAX);
 
 }
 
@@ -208,6 +216,7 @@ void SetNewPrice(SimulationFrame *frame, unsigned int idx)
 void SimulationLoop(unsigned int idx) 
 {
 
+    /*
     SimulationFrame frame;
 
     frame.last_price       = sim_data.companies[idx].ipo;
@@ -227,6 +236,7 @@ void SimulationLoop(unsigned int idx)
         StoreStockPrice(&sim_data.prices[idx], frame.price, frame.current_time);
 
     }
+    */
 
 }
 
@@ -267,17 +277,22 @@ int GetYearFromBuff(char *buff)
 int GetCompanySimIndex(char *company_name)
 {
 
+    /*
+
     for (size_t i = 0; i < sim_data.num_companies;i++)
         if (strcmp(company_name, sim_data.companies[i].company_name) == 0)
             return i;
+
+    */
 
     return -1;
 
 }
 
-StockPrices *GetStockPricesFromNowUntil(char *company_name, time_t span)
+Vector *GetStockPricesFromNowUntil(char *company_name, time_t span)
 {
 
+/*
     int company_idx = GetCompanySimIndex(company_name);
     if (company_idx == -1)
         return NULL;
@@ -305,6 +320,8 @@ StockPrices *GetStockPricesFromNowUntil(char *company_name, time_t span)
     ReclaimUnusedStockPriceMemory(prices);
 
     return prices;
+    */
+    return NULL;
 
 }
 
@@ -329,6 +346,8 @@ int GetNumToReducePricesBy(StockPrices *prices)
 void RemoveElements(StockPrices *prices)
 {
 
+    /*
+
     int reduce_by = GetNumToReducePricesBy(prices);
     int new_index = 1;
     for (size_t i = 1; i < prices->num_prices;i++) {
@@ -343,12 +362,15 @@ void RemoveElements(StockPrices *prices)
 
     }
     prices->num_prices = new_index;
-    ReclaimUnusedStockPriceMemory(prices);
+
+    */
 
 }
 
 void ReduceStockPriceAmount(StockPrices *prices)
 {
+
+    /*
 
     if (prices == NULL)
         return;
@@ -358,11 +380,14 @@ void ReduceStockPriceAmount(StockPrices *prices)
 
     RemoveElements(prices);
 
+    */
+
 }
 
 float CurrentStockPrice(char *company_name) 
 {
 
+    /*
     int company_idx = GetCompanySimIndex(company_name);
     if (company_idx == -1)
         return -1.0f;
@@ -372,7 +397,16 @@ float CurrentStockPrice(char *company_name)
         if (sim_data.prices[company_idx].times[i] == current_time)
             return sim_data.prices[company_idx].prices[i];
 
+    */
+
     return -1.0f;
+
+}
+
+char *GetAnyEventAtTime(time_t event_time)
+{
+
+    return NULL;
 
 }
 

@@ -25,17 +25,15 @@ static atomic_int  player_id;
 
 static ALLEGRO_THREAD *account_thread = NULL;
 
+static float sleep_time = 1.0;
 static float account_money = 0;
-
 static int in_game = 0;
 
-static char *current_time_buf = NULL;
 static const long ONE_HOUR = 3600;
 
-static char *current_player_name = NULL;
-static char *current_save_name   = NULL;
-
-static float sleep_time = 1.0;
+static char current_time_buf[128];
+static char current_player_name[64];
+static char current_save_name[64];
 
 
 void Account_SetInGameStatus(int status)
@@ -153,10 +151,6 @@ void Account_Init()
 
     account_thread = al_create_thread(&AccountEntry, NULL);
     al_start_thread(account_thread);
-
-    current_time_buf    = malloc(128);
-    current_save_name   = malloc(64);
-    current_player_name = malloc(64);
 
 }
 
