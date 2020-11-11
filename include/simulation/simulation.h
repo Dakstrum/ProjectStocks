@@ -27,4 +27,8 @@ char *GetAnyEventAtTime(time_t event_time);
 void StartSimulation();
 void StopSimulation();
 
+void Simulation_Init(uint32_t game_seed, uint32_t save_id);
+void Simulation_SimulateUntil(time_t t);
+void Simulation_SimulateStep();
+
 #endif

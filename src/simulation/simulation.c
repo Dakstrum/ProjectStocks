@@ -101,17 +101,24 @@ void InitializeSimulation()
 void SetRandomSeed() 
 {
 
+    /*
+
     if (save_id != -1)
         seed = Account_GetSaveSeed();
     else
         seed = time(NULL);
+
+    */
 
 }
 
 void SetSaveId()
 {
 
+    /*
     save_id = Account_GetSaveId();
+
+    */
 
 }
 
@@ -149,6 +156,7 @@ void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg)
     return NULL;
 
 }
+
 
 void GenerateDataForCompanies() 
 {
@@ -446,19 +454,36 @@ void Simulation_ModifyGlobal(float modifier, uint32_t days, char *event)
 
 }
 
-static ALLEGRO_THREAD *stock_simulation_thread = NULL;
+void Simulation_SimulateUntil(time_t t)
+{
+
+
+}
+
+void Simulation_Init(uint32_t game_seed, uint32_t save_id)
+{
+
+
+
+}
+
+void Simulation_SimulateStep()
+{
+
+
+
+}
 
 void StartSimulation()
 {
 
-    stock_simulation_thread = al_create_thread(StockSimulationEntry, NULL);
-    al_start_thread(stock_simulation_thread);
 
 }
 
 void CleanSimulation()
 {
 
+    /*
     for (size_t i = 0; i < sim_data.companies->num_elements;i++) {
 
         free(sim_data.prices[i]);
@@ -470,18 +495,13 @@ void CleanSimulation()
 
     sim_data.prices = NULL;
     sim_data.companies = NULL;
+    */
 
 }
 
 void StopSimulation()
 {
 
-    if (stock_simulation_thread == NULL)
-        return;
-
-    al_join_thread(stock_simulation_thread, NULL);
-    al_destroy_thread(stock_simulation_thread);
-    stock_simulation_thread = NULL;
     atomic_store(&simulation_finished, false);
     CleanSimulation();
 

@@ -165,7 +165,7 @@ void AddCardToPlayer(uint32_t player_id, uint32_t card_id)
     static uint32_t fake_unique_id = 1000000000;
 
     static char *query = "INSERT INTO Player_Cards (PlayerId CardId) VALUES (%d, %d);";
-    Queue_PushMessage(card_queue, GetFormattedPointer(query, player_id, Account_GetSaveId(), card_id));
+    Queue_PushMessage(card_queue, GetFormattedPointer(query, player_id, Game_GetSaveId(), card_id));
 
     PlayerCard temp;
 
@@ -191,7 +191,7 @@ void DBCards_ApplyCard(uint32_t player_card_id, uint32_t company_id)
         if (temp[i].player_card_id == player_card_id) {
 
             Queue_PushMessage(card_queue, GetFormattedPointer(delete_query, temp[i].player_id, temp[i].card_id));
-            Queue_PushMessage(card_queue, GetFormattedPointer(insert_query, temp[i].card_id, Account_GetSaveId(), company_id, Game_GetGameTime()));
+            Queue_PushMessage(card_queue, GetFormattedPointer(insert_query, temp[i].card_id, Game_GetSaveId(), company_id, Game_GetGameTime()));
             Vector_Remove(player_cards, i);
             break;
 
@@ -283,7 +283,7 @@ void InitializeCardInformation()
     card_queue = Queue_Create();
 
     InitCardVectors();
-    ExecuteQueryF(&PlayerCard_Callback, NULL, "SELECT C.PlayerCardId, C.PlayerId, C.CardId FROM Player_Cards C WHERE SaveId = %d", Account_GetSaveId());
+    ExecuteQueryF(&PlayerCard_Callback, NULL, "SELECT C.PlayerCardId, C.PlayerId, C.CardId FROM Player_Cards C WHERE SaveId = %d", Game_GetSaveId());
     ExecuteQueryF(&Card_Callback, NULL, "SELECT C.CardId, C.CardName, C.CardDesc, C.CardPath, C.PriceModifier, C.ModifierLength FROM System_Cards C");
 
 }

@@ -1,5 +1,6 @@
 
 #include <time.h>
+#include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdatomic.h>
@@ -17,8 +18,6 @@
 #include "timer.h"
 #include "game.h"
 
-static atomic_uint game_seed;
-static atomic_int  save_id;
 static atomic_int  player_id;
 
 static float account_money = 0;
@@ -84,51 +83,39 @@ int Account_GetPlayerId()
 
 }
 
-int Account_GetSaveId() 
-{
-
-    return atomic_load(&save_id);
-
-}
-
-unsigned int Account_GetSaveSeed() 
-{
-
-    return atomic_load(&game_seed);
-
-}
-
 void Account_Init() 
 {
 
-    atomic_store(&save_id, -1);
-    atomic_store(&game_seed, 0);
 
 }
 
 void CreateNewSaveEntries(char *save_name, char *player_name) 
 {
-    atomic_store(&save_id, InsertSaveEntry(save_name, atomic_load(&game_seed)));
-    if (atomic_load(&save_id) == -1) {
+    int new_save_id = InsertSaveEntry(save_name, Game_GetSeed());
+    
+    if (new_save_id == -1) {
 
         Log("Unable to create save");
         return;
 
     }
+    Game_SetSaveId(new_save_id);
 
-    atomic_store(&player_id, InsertPlayerEntry(save_id, player_name, account_money, 1));
+    atomic_store(&player_id, InsertPlayerEntry(new_save_id, player_name, account_money, 1));
 
     if (atomic_load(&player_id) == -1)
         Log("Unable to create player");
 
     for (size_t i = 0; i < 3;i++)
-        InsertAIPlayerEntry(save_id);
+        InsertAIPlayerEntry(new_save_id);
 
 }
 
 
 void CreateNewSave(char *save_name, char *player_name)
 {
+
+    Game_Reset();
 
     account_money = 15000.0;
     strncpy(current_save_name, save_name, 32);
@@ -137,19 +124,21 @@ void CreateNewSave(char *save_name, char *player_name)
     current_save_name[31]   = '\0';
     current_player_name[31] = '\0';
 
-    atomic_store(&game_seed, time(NULL));
+    Game_SetSeed(time(NULL));
     Game_SetGameTime(3600);
     CreateNewSaveEntries(save_name, player_name);
 
     InitializeAccountInformation();
     InitializeCardInformation();
 
+    Game_Init();
+
 }
 
 void LoadSave(int load_save_id, int save_player_id)
 {
 
-    atomic_store(&save_id, load_save_id);
+    Game_SetSaveId(load_save_id);
     atomic_store(&player_id, save_player_id);
 
     PlayerSave save = GetSaveData(load_save_id);
@@ -157,7 +146,7 @@ void LoadSave(int load_save_id, int save_player_id)
     strncpy(current_save_name, save.save_name, 32);
     strncpy(current_player_name, save.save_player_name, 32);
 
-    atomic_store(&game_seed, save.game_seed);
+    Game_SetSeed(save.game_seed);
     Game_SetGameTime(save.time_spent_in_game);
 
     account_money = save.save_player_money;
@@ -174,9 +163,9 @@ void Account_StorePlayerData()
     save.save_name          = current_save_name;
     save.save_player_name   = current_player_name;
     save.time_spent_in_game = Game_GetGameTime();
-    save.game_seed          = game_seed;
+    save.game_seed          = Game_GetSeed();
     save.save_player_id     = player_id;
-    save.save_id            = save_id;
+    save.save_id            = Game_GetSaveId();
     save.save_player_money  = account_money;
 
     SavePlayerData(save);

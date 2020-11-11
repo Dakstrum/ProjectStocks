@@ -9,10 +9,11 @@
 #include "shared.h"
 #include "timer.h"
 #include "game.h"
+#include "simulation.h"
 
 static atomic_long game_time;
-static atomic_long game_time_real_dt;
-static atomic_long game_time_game_dt;
+static atomic_uint game_seed;
+static atomic_int  save_id;
 
 static ALLEGRO_THREAD *game_thread = NULL;
 
@@ -25,9 +26,9 @@ static char current_time_buf[128];
 bool Game_TryIncrement(long int dt) 
 {
 
-    if (dt == atomic_load(&game_time_real_dt)) {
+    if (dt == 2) {
 
-        atomic_store(&game_time, atomic_load(&game_time) + atomic_load(&game_time_game_dt));
+        atomic_store(&game_time, atomic_load(&game_time) + ONE_HOUR);
         return true;
 
     }
@@ -45,8 +46,6 @@ void *Game_Entry(ALLEGRO_THREAD *thread, void *arg)
         if (Timer_IsPaused())
             continue;
 
-        
-
         dt += 1;
         if (Game_TryIncrement(dt))
             dt = 0;
@@ -56,23 +55,24 @@ void *Game_Entry(ALLEGRO_THREAD *thread, void *arg)
 
 }
 
-void Game_Reset()
-{
-
-    atomic_store(&game_time, ONE_HOUR);
-    atomic_store(&game_time_real_dt, 2);
-    atomic_store(&game_time_game_dt, ONE_HOUR);
-
-}
-
 
 void Game_Init()
 {
 
-	Game_Reset();
-
     game_thread = al_create_thread(Game_Entry, NULL);
     al_start_thread(game_thread);
+
+}
+
+void Game_Reset()
+{
+
+    if (game_thread == NULL)
+        return;
+
+    al_join_thread(game_thread, NULL);
+    al_destroy_thread(game_thread);
+    game_thread = NULL;
 
 }
 
@@ -83,6 +83,34 @@ char *Game_GetDate()
     strftime(current_time_buf, 128, "%HH %x", localtime(&current_time));
     
     return current_time_buf;
+
+}
+
+void Game_SetSeed(uint32_t new_seed) 
+{
+
+    atomic_store(&game_seed, new_seed);
+
+}
+
+uint32_t Game_GetSeed()
+{
+
+    return atomic_load(&game_seed);
+
+}
+
+void Game_SetSaveId(uint32_t new_save_id) 
+{
+
+    atomic_store(&save_id, new_save_id);
+
+}
+
+uint32_t Game_GetSaveId()
+{
+
+    return atomic_load(&save_id);
 
 }
 

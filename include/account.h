@@ -2,8 +2,6 @@
 #define ACCOUNT_H
 
 void Account_Init();
-unsigned int Account_GetSaveSeed();
-int Account_GetSaveId();
 void CreateNewSave(char *save_name, char *player_name);
 void Save();
 void LoadSave(int load_save_id, int save_player_id);

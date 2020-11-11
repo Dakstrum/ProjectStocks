@@ -213,7 +213,7 @@ void InitSavedTransactions()
                     "INNER JOIN Game_Players GP ON GP.PlayerId = PT.PlayerId "
                     "WHERE GP.SaveId = %d";
 
-    ExecuteQueryF(&SetTransactionCallback, NULL, query, Account_GetSaveId());
+    ExecuteQueryF(&SetTransactionCallback, NULL, query, Game_GetSaveId());
 
 }
 
@@ -274,7 +274,7 @@ void InitOwnedStocks()
                     "WHERE GP.SaveId = %d "
                     "GROUP BY PT.CompanyId, PT.PlayerId ";
 
-    ExecuteQueryF(&GetOwnedStocks_CallBack, NULL, query, Account_GetSaveId());
+    ExecuteQueryF(&GetOwnedStocks_CallBack, NULL, query, Game_GetSaveId());
 
 }
 
@@ -296,7 +296,7 @@ void InitPlayerIds()
 {
 
     char *query = "SELECT PlayerId FROM Game_Players WHERE SaveId = %d";
-    ExecuteQueryF(&PlayerId_Callback, NULL, query, Account_GetSaveId());
+    ExecuteQueryF(&PlayerId_Callback, NULL, query, Game_GetSaveId());
 
 }
 
