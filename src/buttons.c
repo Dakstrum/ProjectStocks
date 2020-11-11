@@ -193,11 +193,16 @@ void InitializeOptionsButtons()
 {
 
     AddButton("OptionsMenuOptionsBackButtonObject", &OptionsMenuExit_BCB);
-    AddButton("OptionsMenuDisplayButtonObject",     &OptionsMenuResolution_BCB);  
+    AddButton("OptionsMenuDisplayButtonObject",     &ToggleDisplayMenu);
+    AddButton("OptionsMenuAudioButtonObject",       &ToggleAudioMenu);
 
     AddButton("DisplayMenuOptionsBackButtonObject", &DisplayMenuExit_BCB);
+    AddButton("DisplayMenuAudioButtonObject",       &ToggleAudioMenu);
     AddButton("DisplayMenuFullScreenButtonObject",  &DisplayMenuFullScreen_BCB);
     AddButton("DisplayMenuResolutionButtonObject",  &InitalizeResolutionScrollbox);
+
+    AddButton("AudioMenuOptionsBackButtonObject",   &AudioMenuExit_BCB);
+    AddButton("AudioMenuDisplayButtonObject",       &ToggleDisplayMenu);
 
 }
 

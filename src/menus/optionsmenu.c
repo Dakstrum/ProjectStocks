@@ -25,15 +25,21 @@
 
 static MenuWithChilds *options_menu = NULL;
 static MenuWithChilds *display_menu = NULL;
+static MenuWithChilds *audio_menu   = NULL;
 
 static DrawObject *fullscreen_button = NULL;
 
 static DrawObject *resolution_textobject = NULL;
+static DrawObject *master_textobject     = NULL;
+static DrawObject *music_textobject      = NULL;
+static DrawObject *fx_textobject         = NULL;
 
 static DrawObject *display_scrollbox = NULL;
 
 char* GetFormatedResolutionForText();
 int RemoveDisplayScrollbox();
+void ToggleAudioMenu();
+void SetAudioMenuTextContent();
 
 typedef struct Resolution 
 {
@@ -58,40 +64,6 @@ static Resolution resolutions[NUM_RESOLUTIONS] =
 void ChangeResolutionClick(char *scroll_box_content, unsigned short int index);
 void InitalizeResolutionScrollbox();
 void UpdateFullScreenButton();
-
-void InitializeOptionsMenu() 
-{
-
-    if (CreateNewDrawLayer() == -1) {
-
-        Log("STUB: options Menu could not create new draw layer");
-        return;
-    }
-
-    options_menu = GetJSONMenuAndAddToDrawLayer("OptionsMenu");
-    
-}
-
-void InitializeDisplayMenu() 
-{
-
-    if (CreateNewDrawLayer() == -1) {
-
-        Log("STUB: display Menu could not create new draw layer");
-        return;
-    }
-
-    display_menu = GetJSONMenuAndAddToDrawLayer("DisplayMenu");
-    
-    
-}
-
-void OptionsMenuRenderLogic()
-{
-
-
-
-}
 
 void ToggleOptionsMenu()
 {
@@ -130,6 +102,12 @@ void ToggleMainMenuOptionsMenu()
 void ToggleDisplayMenu()
 {
 
+    if(options_menu)
+        ToggleMainMenuOptionsMenu();
+
+    if(audio_menu)
+        ToggleAudioMenu();
+
     if (display_menu == NULL) {
 
         CreateNewDrawLayer();
@@ -148,6 +126,44 @@ void ToggleDisplayMenu()
 
     fullscreen_button = GetDrawObjectByName("DisplayMenuFullScreenButtonObject");
     UpdateFullScreenButton();
+
+}
+
+void ToggleAudioMenu()
+{
+
+    if(options_menu)
+        ToggleMainMenuOptionsMenu();
+
+    if(display_menu)
+        ToggleDisplayMenu();
+
+    if (audio_menu == NULL) {
+
+        CreateNewDrawLayer();
+        audio_menu = GetJSONMenuAndAddToDrawLayer("AudioMenu");
+        SetAudioMenuTextContent();
+
+            
+    } else {
+
+        ClearCurrentDrawLayer();
+        audio_menu = NULL;
+
+    }
+
+}
+
+void SetAudioMenuTextContent()
+{
+
+    master_textobject = GetJSONObjectAndAddToDrawLayer("AudioMenumaTextObject");
+    music_textobject  = GetJSONObjectAndAddToDrawLayer("AudioMenumuTextObject");
+    fx_textobject     = GetJSONObjectAndAddToDrawLayer("AudioMenufxTextObject"); 
+
+    SetTextContent(master_textobject, "%d", GetAudioMasterSetting());
+    SetTextContent(music_textobject,  "%d", GetAudioMusicSetting());
+    SetTextContent(fx_textobject,     "%d", GetAudioFxSetting());
 
 }
 
@@ -264,6 +280,22 @@ void DisplayMenuExit_BCB()
 
 }
 
+void AudioMenuExit_BCB()
+{
+
+    if(IsInMainMenu()) {
+
+        ToggleAudioMenu();
+
+    } else {
+
+        ToggleAudioMenu();
+        CreateInGamePauseMenu();
+
+    }
+
+}
+
 void DisplayMenuFullScreen_BCB()
 {
 
@@ -281,13 +313,59 @@ void OptionsMenuResolution_BCB()
 
 }
 
+void AudioMenuMasterDecrease()
+{
+
+
+
+}
+
+void AudioMenuMasterIncrease()
+{
+
+
+
+}
+
+void AudioMenuMusicDecrease()
+{
+
+
+
+}
+
+void AudioMenuMusicIncrease()
+{
+
+
+
+}
+
+void AudioMenuFxDecrease()
+{
+
+
+
+}
+
+void AudioMenuFxIncrease()
+{
+
+
+
+}
+
 void CleanOptionsMenu()
 {
 
-    options_menu          = NULL;
-    display_menu          = NULL;
-    fullscreen_button     = NULL;
+    options_menu = NULL;
+    display_menu = NULL;
+    audio_menu   = NULL;
+    fullscreen_button = NULL;
     resolution_textobject = NULL;
-    display_scrollbox     = NULL;
+    master_textobject     = NULL;
+    music_textobject      = NULL;
+    fx_textobject         = NULL;
+    display_scrollbox = NULL;
 
 }

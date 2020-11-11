@@ -43,3 +43,21 @@ void SetFullScreenSettings(int arg)
     ExecuteQueryF(NULL, NULL,"UPDATE Game_Settings SET FullScreen = %d WHERE SettingsId = 1;", arg );
 
 }
+
+int GetAudioMasterSetting()
+{
+
+    return 1;
+}
+
+int GetAudioMusicSetting()
+{
+
+    return 1;
+}
+
+int GetAudioFxSetting()
+{
+
+    return 1;
+}

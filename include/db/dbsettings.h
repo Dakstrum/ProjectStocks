@@ -23,4 +23,8 @@ WindowSettings GetWindowSettingsFromDB();
 void SetWindowResolutionSettings(int width, int height);
 void SetFullScreenSettings(int arg);
 
+int GetAudioMasterSetting();
+int GetAudioMusicSetting();
+int GetAudioFxSetting();
+
 #endif
