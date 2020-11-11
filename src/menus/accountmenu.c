@@ -17,6 +17,7 @@
 #include "text.h"
 #include "scrollbox.h"
 #include "account.h"
+#include "game.h"
 #include "simulation.h"
 #include "generalpurposemenus.h"
 #include "drawlayerutils.h"
@@ -96,7 +97,7 @@ void AccountMenuRenderLogic()
     char *company_viewing = GetCompanyNameViewing();
     
     SetTextContent(player_money_textobject,       "%.2f", Account_GetMoney());
-    SetTextContent(player_date_textobject,        "%s",   Account_GetDate());
+    SetTextContent(player_date_textobject,        "%s",   Game_GetDate());
     SetTextContent(stock_price_textobject,        "%.2f", CurrentStockPrice(company_viewing));
     SetTextContent(owned_stock_amount_textobject, "%d",   GetOwnedStockAmount(Account_GetPlayerId(), company_viewing));
     SetTextContent(networth_textobject,           "%.2f", GetAccountNetWorth(Account_GetPlayerId()));

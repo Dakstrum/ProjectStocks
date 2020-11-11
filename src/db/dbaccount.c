@@ -6,6 +6,7 @@
 
 #include "queue.h"
 #include "account.h"
+#include "game.h"
 #include "shared.h"
 #include "dbutils.h"
 #include "dbcompany.h"
@@ -97,7 +98,7 @@ void InsertStockTransaction(unsigned int player_id, char *company_name, float tr
 {
 
     uint32_t company_id = GetCompanyId(company_name);
-    time_t game_time    = Account_GetGameTime();
+    time_t game_time    = Game_GetGameTime();
     static char *query  = "INSERT INTO Player_Transactions (PlayerId, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, %d, %.2f, %d, %d);";
     Queue_PushMessage(transaction_queue, GetFormattedPointer(query, player_id, company_id, transaction_amount, stocks_exchanged, game_time));
 

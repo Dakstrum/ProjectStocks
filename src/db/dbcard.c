@@ -8,6 +8,7 @@
 #include "dbcard.h"
 #include "log.h"
 #include "account.h"
+#include "game.h"
 
 static Vector *cards        = NULL;
 static Vector *player_cards = NULL;
@@ -190,7 +191,7 @@ void DBCards_ApplyCard(uint32_t player_card_id, uint32_t company_id)
         if (temp[i].player_card_id == player_card_id) {
 
             Queue_PushMessage(card_queue, GetFormattedPointer(delete_query, temp[i].player_id, temp[i].card_id));
-            Queue_PushMessage(card_queue, GetFormattedPointer(insert_query, temp[i].card_id, Account_GetSaveId(), company_id, Account_GetGameTime()));
+            Queue_PushMessage(card_queue, GetFormattedPointer(insert_query, temp[i].card_id, Account_GetSaveId(), company_id, Game_GetGameTime()));
             Vector_Remove(player_cards, i);
             break;
 

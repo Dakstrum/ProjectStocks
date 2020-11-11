@@ -30,6 +30,9 @@
 #include "draw.h"
 #include "timer.h"
 #include "dbcard.h"
+#include "game.h"
+
+
 enum InitializeSuccess 
 {
 
@@ -156,6 +159,7 @@ enum InitializeSuccess Initialize()
     InitializeJson();
     InitializeAudio();
     Account_Init();
+    Game_Init();
     InitializeSimulation();
 
     DrawObjects_Initialize();

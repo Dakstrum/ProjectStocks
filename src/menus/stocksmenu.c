@@ -19,6 +19,7 @@
 #include "dbaccount.h"
 #include "dbcompany.h"
 #include "account.h"
+#include "game.h"
 #include "generalpurposemenus.h"
 #include "drawlayerutils.h"
 #include "textbox.h"
@@ -92,7 +93,7 @@ void StocksMenusRenderLogic()
 
         SetTextContent(stock_change_textobject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
         SetTextContent(player_money_textobject, "%.2f", Account_GetMoney());
-        SetTextContent(player_date_textobject,  "%s",   Account_GetDate());
+        SetTextContent(player_date_textobject,  "%s",   Game_GetDate());
         SetTextContent(stock_price_textobject,  "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
 
         if(GetCurrentStockChange(GetCompanyNameViewing()) > 0)

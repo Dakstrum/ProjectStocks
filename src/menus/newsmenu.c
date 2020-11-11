@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 
 #include <allegro5/allegro.h>
 
@@ -16,8 +17,8 @@
 #include "textbox.h"
 #include "dbevents.h"
 #include "dbevents.h"
+#include "game.h"
 #include "dbcompany.h"
-#include <time.h>
 
 static MenuWithChilds *news_menu = NULL;
 
@@ -100,7 +101,7 @@ void NewsMenuRenderLogic()
         return;
     
     SetTextContent(player_money_textobject, "%.2f", Account_GetMoney());
-    SetTextContent(player_date_textobject,  "%s",   Account_GetDate());
+    SetTextContent(player_date_textobject,  "%s",   Game_GetDate());
 
 }
 
