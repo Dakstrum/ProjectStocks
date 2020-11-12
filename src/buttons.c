@@ -186,6 +186,7 @@ void InitializePauseMenusButtons()
     AddButton("PauseMenuOptionsButtonObject",  &PauseMenuOptions_BCB);
     AddButton("PauseMenuSaveButtonObject",     &PauseMenuSave_BCB);
     AddButton("PauseMenuExitButtonObject",     &PauseMenuExit_BCB);
+    AddButton("PauseMenuResumeButtonObject",   &ToggleInGamePauseMenu);
 
 }
 
