@@ -129,7 +129,7 @@ void CreateNewSave(char *save_name, char *player_name)
     CreateNewSaveEntries(save_name, player_name);
 
     InitializeAccountInformation();
-    InitializeCardInformation();
+    DBCards_Init();
 
     Game_Init();
 
@@ -153,7 +153,7 @@ void LoadSave(int load_save_id, int save_player_id)
     account_money = save.save_player_money;
 
     InitializeAccountInformation();
-    InitializeCardInformation();
+    DBCards_Init();
 
     Game_Init();
 

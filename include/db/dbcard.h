@@ -39,7 +39,7 @@ int GetCardType(unsigned int card_id);
 int GetNumOfPlayerCards();
 void DBCards_ApplyCard(uint32_t player_card_id, uint32_t company_id);
 int GetPlayerCardId(int temp_card_id);
-void InitializeCardInformation();
+void DBCards_Init();
 void SaveCards();
 
 

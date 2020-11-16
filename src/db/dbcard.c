@@ -12,6 +12,7 @@
 
 static Vector *cards        = NULL;
 static Vector *player_cards = NULL;
+static Vector *played_cards = NULL;
 
 static Queue *card_queue   = NULL;
 
@@ -261,12 +262,23 @@ void SaveCards()
 
 }
 
-void InitCardVectors()
+int DBCards_PlayedCardsCallback(void *played_card, int argc, char **argv, char **col_name)
+{
+
+    if (argc == 0)
+        return 0;
+
+    return 0;
+
+}
+
+void DBCards_InitVectors()
 {
 
     if (player_cards != NULL) {
 
         Vector_Reset(player_cards);
+        Vector_Reset(played_cards);
 
     } else {
 
@@ -277,13 +289,14 @@ void InitCardVectors()
 
 }
 
-void InitializeCardInformation()
+void DBCards_Init()
 {
 
     card_queue = Queue_Create();
 
-    InitCardVectors();
-    ExecuteQueryF(&PlayerCard_Callback, NULL, "SELECT C.PlayerCardId, C.PlayerId, C.CardId FROM Player_Cards C WHERE SaveId = %d", Game_GetSaveId());
+    DBCards_InitVectors();
     ExecuteQueryF(&Card_Callback, NULL, "SELECT C.CardId, C.CardName, C.CardDesc, C.CardPath, C.PriceModifier, C.ModifierLength FROM System_Cards C");
+    ExecuteQueryF(&PlayerCard_Callback, NULL, "SELECT C.PlayerCardId, C.PlayerId, C.CardId FROM Player_Cards C WHERE SaveId = %d", Game_GetSaveId());
+    ExecuteQueryF(&DBCards_PlayedCardsCallback, NULL, "SELECT CardId, CompanyId, PlayedTime FROM Player_CardsPlayed WHERE SaveId = %d", Game_GetSaveId());
 
 }
