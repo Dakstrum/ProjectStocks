@@ -1,27 +1,37 @@
 #ifndef DBCARDS_H
 #define DBCARDS_H
 
+#include <stdint.h>
+
 #include "vector.h"
-#include "stdint.h"
 
 typedef struct Card {
 
-    unsigned int card_id;
+    uint32_t card_id;
     char card_name[32];
     char card_desc[255];
     char card_path[255];
     float price_modifier;
-    unsigned int modifier_length;
+    uint32_t modifier_length;
 
 } Card;
 
 typedef struct PlayerCard {
 
-	unsigned int player_card_id;
-	unsigned int player_id;
-	unsigned int card_id;
+	uint32_t player_card_id;
+	uint32_t player_id;
+	uint32_t card_id;
 
 } PlayerCard;
+
+typedef struct PlayedCard {
+
+	uint32_t company_id;
+	time_t played_time;
+	float price_modifier;
+	uint32_t modifier_length;
+
+} PlayedCard;
 
 
 int GetCardId(char* card_title);

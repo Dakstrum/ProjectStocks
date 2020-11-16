@@ -262,11 +262,31 @@ void SaveCards()
 
 }
 
+/*
+typedef struct PlayedCard {
+
+    uint32_t company_id;
+    time_t played_time;
+    float price_modifier;
+    uint32_t modifier_length;
+
+} PlayedCard;
+
+*/
+
 int DBCards_PlayedCardsCallback(void *played_card, int argc, char **argv, char **col_name)
 {
 
     if (argc == 0)
         return 0;
+
+    PlayedCard card;
+    card.company_id      = atoi(argv[0]);
+    card.played_time     = atol(argv[1]);
+    card.price_modifier  = atof(argv[2]);
+    card.modifier_length = atoi(argv[3]);
+
+    Vector_PushBack(played_cards, &card);
 
     return 0;
 
@@ -283,7 +303,8 @@ void DBCards_InitVectors()
     } else {
 
         cards        = Vector_Create(sizeof(Card), 4);
-        player_cards = Vector_Create(sizeof(PlayerCard), 4); 
+        player_cards = Vector_Create(sizeof(PlayerCard), 4);
+        played_cards = Vector_Create(sizeof(PlayedCard), 4); 
 
     }
 
@@ -294,9 +315,15 @@ void DBCards_Init()
 
     card_queue = Queue_Create();
 
+    char *played_cards_query =
+    "SELECT PCP.CompanyId, PCP.PlayedTime, SC.PriceModifier, SC.ModifierLength "
+    "Player_CardsPlayed PCP "
+    "INNER JOIN System_Cards SC ON SC.CardId = PCP.CardId "
+    "WHERE PCP.SaveId = %d";
+
     DBCards_InitVectors();
     ExecuteQueryF(&Card_Callback, NULL, "SELECT C.CardId, C.CardName, C.CardDesc, C.CardPath, C.PriceModifier, C.ModifierLength FROM System_Cards C");
     ExecuteQueryF(&PlayerCard_Callback, NULL, "SELECT C.PlayerCardId, C.PlayerId, C.CardId FROM Player_Cards C WHERE SaveId = %d", Game_GetSaveId());
-    ExecuteQueryF(&DBCards_PlayedCardsCallback, NULL, "SELECT CardId, CompanyId, PlayedTime FROM Player_CardsPlayed WHERE SaveId = %d", Game_GetSaveId());
+    ExecuteQueryF(&DBCards_PlayedCardsCallback, NULL, played_cards_query, Game_GetSaveId());
 
 }
