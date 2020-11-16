@@ -138,6 +138,7 @@ void CreateNewSave(char *save_name, char *player_name)
 void LoadSave(int load_save_id, int save_player_id)
 {
 
+    Game_Reset();
     Game_SetSaveId(load_save_id);
     atomic_store(&player_id, save_player_id);
 
@@ -153,6 +154,8 @@ void LoadSave(int load_save_id, int save_player_id)
 
     InitializeAccountInformation();
     InitializeCardInformation();
+
+    Game_Init();
 
 }
 

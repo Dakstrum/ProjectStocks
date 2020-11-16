@@ -36,8 +36,17 @@ bool Game_TryIncrement(long int dt)
 
 }
 
+void Game_InitSimulation()
+{
+
+
+
+}
+
 void *Game_Entry(ALLEGRO_THREAD *thread, void *arg) 
 {
+
+    Game_InitSimulation();
 
     long int dt = 0;
     while (!ShouldICleanUp()) {
@@ -132,7 +141,6 @@ void Game_SetSpeed(const int speed)
 {
 
     switch (speed) {
-
 
         case 2:  sleep_time = .5; break;
         case 3:  sleep_time = .1; break;

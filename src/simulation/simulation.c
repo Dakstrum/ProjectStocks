@@ -439,7 +439,7 @@ void Simulation_ModifyCompany(uint32_t company_id, float modifier, uint32_t days
 
 
 }
-
+ 
 void Simulation_ModifyCategory(uint32_t category_id, float modifier, uint32_t days, char *event)
 {
 
