@@ -501,6 +501,6 @@ void StopSimulation()
 {
 
     atomic_store(&simulation_finished, false);
-    CleanSimulation();
+    //CleanSimulation();
 
 }

@@ -76,7 +76,6 @@ void StartGame()
 {
 
     ClearDrawLayers();
-    StartSimulation();
     SwitchToLoadingScreen();
 
 }
