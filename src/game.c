@@ -39,7 +39,8 @@ bool Game_TryIncrement(long int dt)
 void Game_InitSimulation()
 {
 
-
+    Simulation_Init(atomic_load(&game_seed), atomic_load(&save_id));
+    Simulation_SimulateUntil(game_time + 3600 * 10);
 
 }
 
