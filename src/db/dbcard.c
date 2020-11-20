@@ -92,10 +92,10 @@ float GetCardModifierLength(unsigned int card_id)
 
 }
 
-Vector *DBCards_GetPlayedCards() 
+Vector *DBCards_GetPlayedModifiersCopy() 
 {
 
-    return played_cards;
+    return Vector_GetCopy(played_cards);
 
 }
 
@@ -268,18 +268,6 @@ void SaveCards()
     Vector_DeletePtrs(vector);
 
 }
-
-/*
-typedef struct PlayedCard {
-
-    uint32_t company_id;
-    time_t played_time;
-    float price_modifier;
-    uint32_t modifier_length;
-
-} PlayedCard;
-
-*/
 
 int DBCards_PlayedCardsCallback(void *played_card, int argc, char **argv, char **col_name)
 {

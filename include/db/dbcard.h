@@ -53,7 +53,7 @@ void SaveCards();
 void DBCards_ApplyCard(uint32_t player_card_id, uint32_t company_id);
 void DBCards_Init();
 
-Vector *DBCards_GetPlayedCards();
+Vector *DBCards_GetPlayedModifiersCopy();
 
 
 #endif

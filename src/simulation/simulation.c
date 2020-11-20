@@ -461,7 +461,7 @@ void Simulation_ModifyGlobal(float modifier, uint32_t days, char *event)
 void Simulation_LoadModifiers() 
 {
 
-    modifiers = DBCards_GetPlayedCards();
+    modifiers = DBCards_GetPlayedModifiersCopy();
 
 }
 
