@@ -74,7 +74,6 @@ static atomic_bool simulation_finished;
 static Sim sim_data;
 static int save_id   = 0;
 static uint32_t seed = 0;
-static time_t step_time = 0;
 
 static Vector *modifiers;
 
@@ -458,6 +457,29 @@ void Simulation_ModifyGlobal(float modifier, uint32_t days, char *event)
 
 }
 
+void Simulation_SimulateStep(time_t t)
+{
+
+
+
+}
+
+void Simulation_SimulateUntil(time_t t)
+{
+
+    time_t temp = t;
+
+    while (temp > 0) {
+
+        Simulation_SimulateStep(temp);
+        temp -= 3600;
+
+    }
+
+    atomic_store(&simulation_finished, true);
+
+}
+
 void Simulation_LoadModifiers() 
 {
 
@@ -465,20 +487,10 @@ void Simulation_LoadModifiers()
 
 }
 
-void Simulation_SimulateUntil(time_t t)
+void Simulation_Init(uint32_t new_game_seed)
 {
 
-    step_time = t;
-    atomic_store(&simulation_finished, true);
-
-}
-
-void Simulation_Init(uint32_t new_game_seed, uint32_t new_save_id)
-{
-
-    save_id = new_save_id;
-    seed = new_game_seed;
-    srand(seed);
+    srand(new_game_seed);
     Simulation_LoadModifiers();
 
 }
@@ -487,16 +499,6 @@ void Simulation_Reset()
 {
 
     atomic_store(&simulation_finished, false);
-    save_id   = 0;
-    seed      = 0;
-    step_time = 0;
-
-}
-
-void Simulation_SimulateStep()
-{
-
-
 
 }
 

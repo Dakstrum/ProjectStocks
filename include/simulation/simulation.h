@@ -24,9 +24,9 @@ float GetCurrentStockChange(char *company_name);
 
 char *GetAnyEventAtTime(time_t event_time);
 
-void Simulation_Init(uint32_t new_game_seed, uint32_t new_save_id);
+void Simulation_Init(uint32_t new_game_seed);
 void Simulation_SimulateUntil(time_t t);
-void Simulation_SimulateStep();
+void Simulation_SimulateStep(time_t t);
 void Simulation_Reset();
 
 #endif
