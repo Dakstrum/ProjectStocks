@@ -12,6 +12,7 @@
 #include "vector.h"
 #include "shared.h"
 #include "account.h"
+#include "dbcard.h"
 #include "dbaccess.h"
 #include "dbevents.h"
 #include "dbcompany.h"
@@ -74,6 +75,8 @@ static Sim sim_data;
 static int save_id   = 0;
 static uint32_t seed = 0;
 static time_t step_time = 0;
+
+static Vector *modifiers;
 
 void CleanupBeforeExit();
 
@@ -458,7 +461,7 @@ void Simulation_ModifyGlobal(float modifier, uint32_t days, char *event)
 void Simulation_LoadModifiers() 
 {
 
-
+    modifiers = DBCards_GetPlayedCards();
 
 }
 

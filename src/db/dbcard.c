@@ -92,6 +92,13 @@ float GetCardModifierLength(unsigned int card_id)
 
 }
 
+Vector *DBCards_GetPlayedCards() 
+{
+
+    return played_cards;
+
+}
+
 
 int GetCardType(unsigned int card_id)
 {
@@ -280,7 +287,7 @@ int DBCards_PlayedCardsCallback(void *played_card, int argc, char **argv, char *
     if (argc == 0)
         return 0;
 
-    PlayedCard card;
+    PlayedModifiers card;
     card.company_id      = atoi(argv[0]);
     card.played_time     = atol(argv[1]);
     card.price_modifier  = atof(argv[2]);
@@ -304,7 +311,7 @@ void DBCards_InitVectors()
 
         cards        = Vector_Create(sizeof(Card), 4);
         player_cards = Vector_Create(sizeof(PlayerCard), 4);
-        played_cards = Vector_Create(sizeof(PlayedCard), 4); 
+        played_cards = Vector_Create(sizeof(PlayedModifiers), 4); 
 
     }
 
