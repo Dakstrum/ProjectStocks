@@ -18,48 +18,6 @@
 #include "dbcompany.h"
 #include "simulation.h"
 
-#define STOCK_PRICE_SIZE 4096
-
-typedef struct Sim 
-{
-
-    Vector *companies;
-    Vector **prices;
-    Vector *random_event_chance;
-
-    unsigned int num_companies;
-
-} Sim;
-
-typedef struct EventSim 
-{
-
-    Vector *event_times;
-    Vector *events;
-
-} EventSim;
-
-typedef struct EventSimId 
-{
-
-    Vector *ids;
-    Vector *event_sims;
-
-} EventSimId;
-
-typedef struct SimulationFrame
-{
-
-    float last_price;
-    float price;
-    time_t current_time;
-    Event *event;
-
-    time_t event_end_time;
-    float event_price_diff;
-
-} SimulationFrame;
-
 static const int HOURS_IN_YEAR         = 8760;
 static const int HOURS_IN_QUARTER_YEAR = HOURS_IN_YEAR / 4;
 static const int HOURS_IN_HALF_YEAR    = HOURS_IN_YEAR / 2;
@@ -71,10 +29,8 @@ static int end_year   = 0;
 
 static atomic_bool simulation_finished;
 
-static Sim sim_data;
-static int save_id   = 0;
-static uint32_t seed = 0;
-
+static Vector *companies;
+static Vector **sim_data;
 static Vector *modifiers;
 
 void CleanupBeforeExit();
@@ -94,78 +50,10 @@ bool IsSimulationDone()
 
 }
 
-void InitializeSimulation() 
-{
-
-    atomic_store(&simulation_finished, false);
-
-}
-
-void SetRandomSeed() 
-{
-
-    /*
-
-    if (save_id != -1)
-        seed = Account_GetSaveSeed();
-    else
-        seed = time(NULL);
-
-    */
-
-}
-
-void SetSaveId()
-{
-
-    /*
-    save_id = Account_GetSaveId();
-
-    */
-
-}
-
-void SetCompanies() 
-{
-
-    sim_data.companies = GetAllCompaniesVector();
-    sim_data.prices    = malloc(sizeof(Vector *) * sim_data.companies->num_elements);
-
-    for (size_t i = 0; i < sim_data.companies->num_elements;i++)
-        sim_data.prices[i] = Vector_Create(sizeof(StockPrice), STOCK_PRICE_SIZE);
-
-}
-
 void SimulateToSavePoint()
 {
 
     atomic_store(&simulation_finished, true);
-
-}
-
-void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg) 
-{
-
-    SetYearLapse(25);
-    SetSaveId();
-    SetRandomSeed();
-    srand(seed);
-    SetCompanies();
-    SimulateToSavePoint();
-    //GenerateEvents();
-    GenerateDataForCompanies();
-
-
-    return NULL;
-
-}
-
-
-void GenerateDataForCompanies() 
-{
-
-    for (size_t i = 0;i < sim_data.companies->num_elements;i++)
-        SimulationLoop(i);
 
 }
 
@@ -181,6 +69,13 @@ float GetRandomSign()
 {
 
     return rand() % 2 == 0 ? -1.0 : 1.0;
+
+}
+
+void ReduceStockPriceAmount(StockPrices *prices)
+{
+
+    Log("ReduceStockPriceAmount: STUB Remove me!");
 
 }
 
@@ -209,45 +104,6 @@ float GenerateRandomPriceFluctuation(float last_price)
 {
 
     return GetRandomSign() * GetRandomFloat() * last_price * .0075;
-
-}
-
-void SetNewPrice(SimulationFrame *frame, unsigned int idx)
-{
-
-    if (frame->event_price_diff > 0)
-        frame->price = frame->last_price + frame->event_price_diff;
-    else
-        frame->price = frame->last_price + GenerateRandomPriceFluctuation(frame->last_price);
-    
-    frame->last_price = frame->price; 
-
-}
-
-void SimulationLoop(unsigned int idx) 
-{
-
-    /*
-    SimulationFrame frame;
-
-    frame.last_price       = sim_data.companies[idx].ipo;
-    frame.price            = 0.0;
-    frame.current_time     = 0;
-    frame.event            = NULL;
-    frame.event_end_time   = 0;
-    frame.event_price_diff = 0;
-
-    srand(sim_data.companies[idx].company_id + seed);
-    StoreStockPrice(sim_data.prices[idx], frame.last_price, frame.current_time);
-
-    while (ShouldContinueSimulation(frame.current_time)) {
-
-        frame.current_time += HOUR;  
-        SetNewPrice(&frame, idx);
-        StoreStockPrice(&sim_data.prices[idx], frame.price, frame.current_time);
-
-    }
-    */
 
 }
 
@@ -285,21 +141,6 @@ int GetYearFromBuff(char *buff)
 
 }
 
-int GetCompanySimIndex(char *company_name)
-{
-
-    /*
-
-    for (size_t i = 0; i < sim_data.num_companies;i++)
-        if (strcmp(company_name, sim_data.companies[i].company_name) == 0)
-            return i;
-
-    */
-
-    return -1;
-
-}
-
 Vector *GetStockPricesFromNowUntil(char *company_name, time_t span)
 {
 
@@ -333,65 +174,6 @@ Vector *GetStockPricesFromNowUntil(char *company_name, time_t span)
     return prices;
     */
     return NULL;
-
-}
-
-int GetNumToReducePricesBy(StockPrices *prices) 
-{
-
-    int reduce_by        = 1;
-    const int num_prices = prices->num_prices;
-    for (size_t i = 0; i < 24;i++) {
-
-
-        if (TRUNCATE_TO_AMOUNT/((float)num_prices/reduce_by) > 1.0)
-            return reduce_by;
-
-        reduce_by = reduce_by << 1;
-
-    }
-    return 4;
-
-}
-
-void RemoveElements(StockPrices *prices)
-{
-
-    /*
-
-    int reduce_by = GetNumToReducePricesBy(prices);
-    int new_index = 1;
-    for (size_t i = 1; i < prices->num_prices;i++) {
-
-        if ((i + 1) % reduce_by == 0 || (i + 1) == prices->num_prices) {
-
-            prices->prices[new_index] = prices->prices[i];
-            prices->times[new_index]  = prices->times[i];
-            new_index++;
-
-        }
-
-    }
-    prices->num_prices = new_index;
-
-    */
-
-}
-
-void ReduceStockPriceAmount(StockPrices *prices)
-{
-
-    /*
-
-    if (prices == NULL)
-        return;
-
-    if (TRUNCATE_TO_AMOUNT/(float)prices->num_prices > 1.0)
-        return;
-
-    RemoveElements(prices);
-
-    */
 
 }
 
@@ -468,11 +250,10 @@ void Simulation_SimulateUntil(time_t t)
 {
 
     time_t temp = t;
-
-    while (temp > 0) {
+    while (temp < t) {
 
         Simulation_SimulateStep(temp);
-        temp -= 3600;
+        temp += HOUR;
 
     }
 
@@ -487,10 +268,26 @@ void Simulation_LoadModifiers()
 
 }
 
+void Simulation_LoadCompanies()
+{
+
+    assert(sim_data == NULL);
+
+    companies = GetAllCompaniesVector();
+    sim_data  = malloc(sizeof(Vector *) * companies->num_elements);
+    for (size_t i = 0; i < companies->num_elements;i++) {
+
+        sim_data[i] = Vector_Create(sizeof(StockPrice), 4096);
+
+    }
+
+}
+
 void Simulation_Init(uint32_t new_game_seed)
 {
 
     srand(new_game_seed);
+    Simulation_LoadCompanies();
     Simulation_LoadModifiers();
 
 }
@@ -498,7 +295,21 @@ void Simulation_Init(uint32_t new_game_seed)
 void Simulation_Reset()
 {
 
+
     atomic_store(&simulation_finished, false);
+    Vector_Delete(modifiers);
+
+    for (size_t i = 0; i < companies->num_elements;i++) {
+
+        Vector_Delete(sim_data[i]);
+
+    }
+
+    free(sim_data);
+
+    sim_data  = NULL;
+    modifiers = NULL;
+    companies = NULL;
 
 }
 
