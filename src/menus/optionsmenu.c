@@ -105,7 +105,7 @@ void ToggleDisplayMenu()
     if(options_menu)
         ToggleMainMenuOptionsMenu();
 
-    if(audio_menu)
+    else if(audio_menu)
         ToggleAudioMenu();
 
     if (display_menu == NULL) {
@@ -118,7 +118,7 @@ void ToggleDisplayMenu()
             
     } else {
 
-        RemoveDisplayScrollbox();
+        display_scrollbox = NULL;
         ClearCurrentDrawLayer();
         display_menu = NULL;
 
@@ -135,7 +135,7 @@ void ToggleAudioMenu()
     if(options_menu)
         ToggleMainMenuOptionsMenu();
 
-    if(display_menu)
+    else if(display_menu)
         ToggleDisplayMenu();
 
     if (audio_menu == NULL) {
