@@ -1,5 +1,3 @@
-
-
 INSERT INTO
     System_Category (CategoryName)
 VALUES
@@ -20,8 +18,8 @@ VALUES
     (30.0,  'Pear',                         'Designs and develops consumer electronics. Known for the Pear phones and computers that are sold at a premium.',                                                                  'PEAR', 3),
     (15.0,  'Left Back Tire Insurance',     'Startup founded by Jim Roger a formerly homeless man, This business boasts a 75% reduction in traditional car insurance.',                                                        'LBTI', 4),
     (3.0,   'Sword Violence Insurance',     'With the rise of sword collecting Justin Yimber has sought out to protect those and their bodies from damage.',                                                                   'SWI',  4),
-    (12.0,  'K3 News',                      'News company reporting on drama, alliances, failures, and flourishing of companies traded on the stock market.',                                                                  'KTN',  5),
-    (45.0,  'Ferret News',                  'News company is known for its aggression toward other news providers and aggressive techniques in reporting news.',                                                               'FTN',  5),
+    (12.0,  'EVRYNBC',                      '',                                                                                                                                                                                'NBC',  5),
+    (45.0,  'Baked News',                   '',                                                                                                                                                                                'FTN',  5),
     (45.0,  'AnoyScooters',                 'Electric Scooters that are rented in cities across the world',                                                                                                                    'ANOY', 6),
     (45.0,  'SunSuc',                       'Rogger Jenkin plans to take advantage of that hot ball that we go around with miners and more. ''''We''ve sucked this place dry, Lets move on to better.'''' is his famous modo', 'SUN',  6),
     (45.0,  'TheBackUp',                    ' ''''Its not if you fuck up, its when'''' says TheBackUps CEO. Specializing in underground bunkers for when disaster strikes',                                                    'TBU',  4);
