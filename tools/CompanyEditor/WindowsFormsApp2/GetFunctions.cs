@@ -123,5 +123,78 @@ namespace WindowsFormsApp2
             return 0;
         }
 
+        public static int GetFirstNameIdFromFirstName(string first_name, Database database_object)
+        {
+
+            database_object.OpenConnection();
+
+            string query = "SELECT * FROM System_AIFirstNames";
+            SQLiteCommand select_command = new SQLiteCommand(query, database_object.myConnection);
+            SQLiteDataReader select_result = select_command.ExecuteReader();
+
+            if (select_result.HasRows)
+                while (select_result.Read())
+                    if (select_result["FirstName"].ToString() == first_name)
+                        return Int32.Parse(select_result["FirstNameId"].ToString());
+
+            database_object.CloseConnection();
+            return 0;
+        }
+
+        public static int GetLastNameIdFromLastName(string last_name, Database database_object)
+        {
+
+            database_object.OpenConnection();
+
+            string query = "SELECT * FROM System_AILastNames";
+            SQLiteCommand select_command = new SQLiteCommand(query, database_object.myConnection);
+            SQLiteDataReader select_result = select_command.ExecuteReader();
+
+            if (select_result.HasRows)
+                while (select_result.Read())
+                    if (select_result["LastName"].ToString() == last_name)
+                        return Int32.Parse(select_result["LastNameId"].ToString());
+
+            database_object.CloseConnection();
+            return 0;
+        }
+
+        public static int GetCategoryIdFromCategoryName(string category_name, Database database_object)
+        {
+
+            database_object.OpenConnection();
+
+            string query = "SELECT * FROM System_Category";
+            SQLiteCommand select_command = new SQLiteCommand(query, database_object.myConnection);
+            SQLiteDataReader select_result = select_command.ExecuteReader();
+
+            if (select_result.HasRows)
+                while (select_result.Read())
+                    if (select_result["CategoryName"].ToString() == category_name)
+                        return Int32.Parse(select_result["CategoryId"].ToString());
+
+            database_object.CloseConnection();
+            return 0;
+
+        }
+
+        public static int GetCardIdFromCardName(string card_name, Database database_object)
+        {
+
+            database_object.OpenConnection();
+
+            string query = "SELECT * FROM System_Cards";
+            SQLiteCommand select_command = new SQLiteCommand(query, database_object.myConnection);
+            SQLiteDataReader select_result = select_command.ExecuteReader();
+
+            if (select_result.HasRows)
+                while (select_result.Read())
+                    if (select_result["CardName"].ToString() == card_name)
+                        return Int32.Parse(select_result["CardId"].ToString());
+
+            database_object.CloseConnection();
+            return 0;
+
+        }
     }
 }

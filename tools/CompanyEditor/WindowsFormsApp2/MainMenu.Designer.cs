@@ -31,6 +31,9 @@
             this.CompanyEditorButton = new System.Windows.Forms.Button();
             this.EventEditorButton = new System.Windows.Forms.Button();
             this.CardEditorButton = new System.Windows.Forms.Button();
+            this.CategoryEditorButton = new System.Windows.Forms.Button();
+            this.ExportButton = new System.Windows.Forms.Button();
+            this.AINameEditorButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // CompanyEditorButton
@@ -45,7 +48,7 @@
             // 
             // EventEditorButton
             // 
-            this.EventEditorButton.Location = new System.Drawing.Point(12, 125);
+            this.EventEditorButton.Location = new System.Drawing.Point(12, 107);
             this.EventEditorButton.Name = "EventEditorButton";
             this.EventEditorButton.Size = new System.Drawing.Size(278, 62);
             this.EventEditorButton.TabIndex = 1;
@@ -55,18 +58,54 @@
             // 
             // CardEditorButton
             // 
-            this.CardEditorButton.Location = new System.Drawing.Point(12, 208);
+            this.CardEditorButton.Location = new System.Drawing.Point(12, 243);
             this.CardEditorButton.Name = "CardEditorButton";
             this.CardEditorButton.Size = new System.Drawing.Size(278, 62);
             this.CardEditorButton.TabIndex = 2;
             this.CardEditorButton.Text = "CardEditor";
             this.CardEditorButton.UseVisualStyleBackColor = true;
+            this.CardEditorButton.Click += new System.EventHandler(this.CardEditorButton_Click);
+            // 
+            // CategoryEditorButton
+            // 
+            this.CategoryEditorButton.Location = new System.Drawing.Point(12, 175);
+            this.CategoryEditorButton.Name = "CategoryEditorButton";
+            this.CategoryEditorButton.Size = new System.Drawing.Size(278, 62);
+            this.CategoryEditorButton.TabIndex = 3;
+            this.CategoryEditorButton.Text = "Category Editor";
+            this.CategoryEditorButton.UseVisualStyleBackColor = true;
+            this.CategoryEditorButton.Click += new System.EventHandler(this.CategoryEditorButton_Click);
+            // 
+            // ExportButton
+            // 
+            this.ExportButton.BackColor = System.Drawing.Color.MediumSeaGreen;
+            this.ExportButton.Location = new System.Drawing.Point(46, 404);
+            this.ExportButton.Name = "ExportButton";
+            this.ExportButton.Size = new System.Drawing.Size(205, 50);
+            this.ExportButton.TabIndex = 27;
+            this.ExportButton.Text = "Export To DB file";
+            this.ExportButton.UseVisualStyleBackColor = false;
+            this.ExportButton.Click += new System.EventHandler(this.ExportButton_Click);
+            // 
+            // AINameEditorButton
+            // 
+            this.AINameEditorButton.Location = new System.Drawing.Point(12, 311);
+            this.AINameEditorButton.Name = "AINameEditorButton";
+            this.AINameEditorButton.Size = new System.Drawing.Size(278, 62);
+            this.AINameEditorButton.TabIndex = 28;
+            this.AINameEditorButton.Text = "AINameEditor";
+            this.AINameEditorButton.UseVisualStyleBackColor = true;
+            this.AINameEditorButton.Click += new System.EventHandler(this.AINameEditorButton_Click);
             // 
             // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(302, 308);
+            this.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.ClientSize = new System.Drawing.Size(305, 466);
+            this.Controls.Add(this.AINameEditorButton);
+            this.Controls.Add(this.ExportButton);
+            this.Controls.Add(this.CategoryEditorButton);
             this.Controls.Add(this.CardEditorButton);
             this.Controls.Add(this.EventEditorButton);
             this.Controls.Add(this.CompanyEditorButton);
@@ -81,5 +120,8 @@
         private System.Windows.Forms.Button CompanyEditorButton;
         private System.Windows.Forms.Button EventEditorButton;
         private System.Windows.Forms.Button CardEditorButton;
+        private System.Windows.Forms.Button CategoryEditorButton;
+        private System.Windows.Forms.Button ExportButton;
+        private System.Windows.Forms.Button AINameEditorButton;
     }
 }

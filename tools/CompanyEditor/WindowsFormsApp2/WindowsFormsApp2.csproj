@@ -70,6 +70,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AINameEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AINameEditor.Designer.cs">
+      <DependentUpon>AINameEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CardEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CardEditor.Designer.cs">
+      <DependentUpon>CardEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="CreateNewFunctions.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="CompanyEditor.cs">
@@ -84,6 +96,12 @@
     <Compile Include="EventEditor.Designer.cs">
       <DependentUpon>EventEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="CategoryEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CategoryEditor.Designer.cs">
+      <DependentUpon>CategoryEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="GetFunctions.cs" />
     <Compile Include="MainMenu.cs">
       <SubType>Form</SubType>
@@ -91,13 +109,24 @@
     <Compile Include="MainMenu.Designer.cs">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </Compile>
+    <Compile Include="PopulateComboBox.cs" />
+    <Compile Include="PopulateListBox.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AINameEditor.resx">
+      <DependentUpon>AINameEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CardEditor.resx">
+      <DependentUpon>CardEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CompanyEditor.resx">
       <DependentUpon>CompanyEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EventEditor.resx">
       <DependentUpon>EventEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CategoryEditor.resx">
+      <DependentUpon>CategoryEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainMenu.resx">
       <DependentUpon>MainMenu.cs</DependentUpon>

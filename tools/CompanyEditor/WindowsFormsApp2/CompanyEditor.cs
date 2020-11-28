@@ -28,10 +28,13 @@ namespace WindowsFormsApp2
 
         private void Form1_Load(object sender, EventArgs e)
         {
-         
+
+            PopulateComboBox.Category(CategoryIdComboBox, database_object);
             PopulateCompanyList();
             PopulateWithCompany(1);
             CompaniesListBox.SelectedIndex = CompaniesListBox.Items.Count - 1;
+            
+
 
         }
 
@@ -246,6 +249,8 @@ namespace WindowsFormsApp2
             ClearCompaniesDisplay();
             PopulateCompanyList();
 
+            CompaniesListBox.SelectedIndex = CompaniesListBox.Items.Count - 1;
+
         }
 
         void UpdateCompanyProducts(int company_product_id)
@@ -390,21 +395,6 @@ namespace WindowsFormsApp2
             CreateNewFunctions.CreateNewEvent(int.Parse(CompanyIdText.Text), database_object);
             ClearCompanyEventsDisplay();
             PopulateCompanyEvents(int.Parse(CompanyIdText.Text));
-        }
-
-        private void ExportButton_Click(object sender, EventArgs e)
-        {
-
-
-            string fileName   = "blinky.db";
-            string sourcePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            string targetPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
-            string sourceFile = Path.Combine(sourcePath, fileName);
-            string destFile   = Path.Combine(targetPath, fileName);
-
-            File.Copy(sourceFile, destFile, true);
-
         }
     }
 }

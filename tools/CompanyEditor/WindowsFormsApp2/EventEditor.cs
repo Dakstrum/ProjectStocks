@@ -28,8 +28,11 @@ namespace WindowsFormsApp2
 
         private void EventEditor_Load(object sender, EventArgs e)
         {
+            PopulateComboBox.Category(CategoryIdComboBox, database_object);
+            PopulateComboBox.Category(CategoryEventsEditComboBox, database_object);
+
             PopulateGlobalEvents();
-            PopulateCategoryEvents(current_category_viewing - 1);
+            PopulateCategoryEvents(1);
             CategoryIdComboBox.SelectedIndex = current_category_viewing - 1;
         }
 
@@ -222,26 +225,23 @@ namespace WindowsFormsApp2
 
         private void AddCategoryEventButton_Click(object sender, EventArgs e)
         {
-            CreateNewFunctions.CreateNewCategoryEvent(database_object);
+            CreateNewFunctions.CreateNewCategoryEvent(database_object, current_category_viewing);
 
             ClearCategoryEventsListBox();
             PopulateCategoryEvents(current_category_viewing);
-
-        }
-        
-        private void CategoryIdComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            current_category_viewing = CategoryIdComboBox.SelectedIndex + 1;
-
-            ClearCategoryEventsListBox();
-            PopulateCategoryEvents(current_category_viewing);
-
-
         }
 
         private void SaveCategoryEventButton_Click(object sender, EventArgs e)
         {
             UpdateCategoryEvents(GetFunctions.GetCategoryEventIdFromEvent(CategoryEventListBox.SelectedItem.ToString(), database_object));
+        }
+
+        private void CategoryIdComboBox_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            current_category_viewing = CategoryIdComboBox.SelectedIndex + 1;
+
+            ClearCategoryEventsListBox();
+            PopulateCategoryEvents(current_category_viewing);
         }
     }
 }

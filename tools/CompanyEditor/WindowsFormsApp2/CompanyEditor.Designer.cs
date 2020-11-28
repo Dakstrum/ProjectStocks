@@ -51,7 +51,6 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.AddCompanyButton = new System.Windows.Forms.Button();
-            this.ExportButton = new System.Windows.Forms.Button();
             this.CompanyIdText = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -285,16 +284,6 @@
             this.AddCompanyButton.UseVisualStyleBackColor = true;
             this.AddCompanyButton.Click += new System.EventHandler(this.AddCompanyButton_Click);
             // 
-            // ExportButton
-            // 
-            this.ExportButton.Location = new System.Drawing.Point(1283, 633);
-            this.ExportButton.Name = "ExportButton";
-            this.ExportButton.Size = new System.Drawing.Size(205, 50);
-            this.ExportButton.TabIndex = 26;
-            this.ExportButton.Text = "Export To SQL file";
-            this.ExportButton.UseVisualStyleBackColor = true;
-            this.ExportButton.Click += new System.EventHandler(this.ExportButton_Click);
-            // 
             // CompanyIdText
             // 
             this.CompanyIdText.AutoSize = true;
@@ -432,13 +421,6 @@
             // CategoryIdComboBox
             // 
             this.CategoryIdComboBox.FormattingEnabled = true;
-            this.CategoryIdComboBox.Items.AddRange(new object[] {
-            "Video Games",
-            "Areospace",
-            "Software",
-            "Insurance",
-            "News",
-            "Hardware"});
             this.CategoryIdComboBox.Location = new System.Drawing.Point(15, 579);
             this.CategoryIdComboBox.Name = "CategoryIdComboBox";
             this.CategoryIdComboBox.Size = new System.Drawing.Size(121, 21);
@@ -537,7 +519,6 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.CompanyIdText);
-            this.Controls.Add(this.ExportButton);
             this.Controls.Add(this.AddCompanyButton);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -597,7 +578,6 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button AddCompanyButton;
-        private System.Windows.Forms.Button ExportButton;
         private System.Windows.Forms.Label CompanyIdText;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.PictureBox pictureBox1;

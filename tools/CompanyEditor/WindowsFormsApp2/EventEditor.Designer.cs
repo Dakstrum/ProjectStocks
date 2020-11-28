@@ -258,6 +258,7 @@
             this.AddCategoryEventButton.TabIndex = 53;
             this.AddCategoryEventButton.Text = "Add Category Event";
             this.AddCategoryEventButton.UseVisualStyleBackColor = true;
+            this.AddCategoryEventButton.Click += new System.EventHandler(this.AddCategoryEventButton_Click);
             // 
             // label6
             // 
@@ -281,18 +282,11 @@
             // CategoryIdComboBox
             // 
             this.CategoryIdComboBox.FormattingEnabled = true;
-            this.CategoryIdComboBox.Items.AddRange(new object[] {
-            "Video Games",
-            "Areospace",
-            "Software",
-            "Insurance",
-            "News",
-            "Hardware"});
             this.CategoryIdComboBox.Location = new System.Drawing.Point(905, 23);
             this.CategoryIdComboBox.Name = "CategoryIdComboBox";
             this.CategoryIdComboBox.Size = new System.Drawing.Size(121, 21);
             this.CategoryIdComboBox.TabIndex = 65;
-            this.CategoryIdComboBox.SelectedIndexChanged += new System.EventHandler(this.CategoryIdComboBox_SelectedIndexChanged);
+            this.CategoryIdComboBox.SelectedIndexChanged += new System.EventHandler(this.CategoryIdComboBox_SelectedIndexChanged_1);
             // 
             // label7
             // 
@@ -306,13 +300,6 @@
             // CategoryEventsEditComboBox
             // 
             this.CategoryEventsEditComboBox.FormattingEnabled = true;
-            this.CategoryEventsEditComboBox.Items.AddRange(new object[] {
-            "Video Games",
-            "Areospace",
-            "Software",
-            "Insurance",
-            "News",
-            "Hardware"});
             this.CategoryEventsEditComboBox.Location = new System.Drawing.Point(689, 444);
             this.CategoryEventsEditComboBox.Name = "CategoryEventsEditComboBox";
             this.CategoryEventsEditComboBox.Size = new System.Drawing.Size(121, 21);
