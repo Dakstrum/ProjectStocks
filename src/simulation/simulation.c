@@ -239,10 +239,28 @@ void Simulation_ModifyGlobal(float modifier, uint32_t days, char *event)
 
 }
 
-void Simulation_SimulateStep(time_t t)
+void Simulation_RandomFluctuation(Vector *sim_data_step)
 {
 
 
+}
+
+void Simulation_SimulateStep(time_t t)
+{
+
+/*
+static Vector *companies;
+static Vector **sim_data;
+static Vector *modifiers;
+
+*/
+
+    for (size_t i = 0; i < companies->num_elements;i++) {
+
+
+
+
+    }
 
 }
 
@@ -275,9 +293,13 @@ void Simulation_LoadCompanies()
 
     companies = GetAllCompaniesVector();
     sim_data  = malloc(sizeof(Vector *) * companies->num_elements);
+    Company *companies_temp = companies->elements;
+
     for (size_t i = 0; i < companies->num_elements;i++) {
 
+        StockPrice stock_price = {companies_temp[i].ipo, 0};
         sim_data[i] = Vector_Create(sizeof(StockPrice), 4096);
+        Vector_PushBack(sim_data[i], &stock_price);
 
     }
 
