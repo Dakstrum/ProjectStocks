@@ -149,7 +149,6 @@ void LoadSave(int load_save_id, int save_player_id)
 
     Game_SetSeed(save.game_seed);
     Game_SetGameTime(save.time_spent_in_game);
-    LogF("%u", save.time_spent_in_game);
     account_money = save.save_player_money;
 
     InitializeAccountInformation();
