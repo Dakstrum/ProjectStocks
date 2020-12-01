@@ -12,6 +12,7 @@
 #include "account.h"
 #include "drawobject.h"
 #include "simulation.h"
+#include "game.h"
 
 typedef struct TimeSpanWithDiff 
 {
@@ -57,17 +58,48 @@ DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points)
 
 }
 
-void SetGraphPoints(DrawObject *object, StockPrices *stocks) 
+float Graph_GetMinPrice(Vector *stocks) 
 {
 
-    float point_width_diff   = (float)object->width / stocks->num_prices;
-    float min_price          = MinF(stocks->prices, stocks->num_prices);
-    float max_min_price_diff = MaxMinDiff(stocks->prices, stocks->num_prices);
+    StockPrice *prices = stocks->elements;
+    float min_price    = prices[0].price;
+    for (size_t i = 1; i < stocks->num_elements;i++) {
 
-    for (unsigned int i = 0; i < stocks->num_prices;i++) {
+        if (prices[i].price < min_price)
+            min_price = prices[i].price;
+
+    }
+    return min_price;
+
+}
+
+float Graph_GetMaxPrice(Vector *stocks) 
+{
+
+    StockPrice *prices = stocks->elements;
+    float max_price    = prices[0].price;
+    for (size_t i = 1; i < stocks->num_elements;i++) {
+
+        if (prices[i].price > max_price)
+            max_price = prices[i].price;
+
+    }
+    return max_price;  
+
+}
+
+void SetGraphPoints(DrawObject *object, Vector *stocks) 
+{
+
+    float point_width_diff   = (float)object->width / stocks->num_elements;
+    float min_price          = Graph_GetMinPrice(stocks);
+    float max_min_price_diff = Graph_GetMaxPrice(stocks) - min_price;
+
+    StockPrice *prices = stocks->elements;
+    for (unsigned int i = 0; i < stocks->num_elements;i++) {
 
         object->graph.points[i].x = point_width_diff*i;
-        object->graph.points[i].y = ((stocks->prices[i] - min_price)/(max_min_price_diff))*object->height;
+        object->graph.points[i].y = ((prices[i].price - min_price)/(max_min_price_diff))*object->height;
 
     }
 
@@ -76,14 +108,13 @@ void SetGraphPoints(DrawObject *object, StockPrices *stocks)
 DrawObject *GetConstructedGraphDrawObject(char *company_name, int timespan_index, int width, int height) 
 {
 
-    StockPrices *stocks = GetStockPricesFromNowUntil(company_name, timespans[timespan_index].diff);
+    Vector *stocks = GetStockPricesFromNowUntil(company_name, Game_GetGameTime(), timespans[timespan_index].diff);
     if (stocks == NULL)
         return NULL;
 
-    ReduceStockPriceAmount(stocks);
-
-    DrawObject *object = GetBasicGraphDrawObject(width, height, stocks->num_prices);
+    DrawObject *object = GetBasicGraphDrawObject(width, height, stocks->num_elements);
     SetGraphPoints(object, stocks);
+    Vector_Delete(stocks);
 
     return object;
 

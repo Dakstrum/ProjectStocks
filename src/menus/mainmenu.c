@@ -74,7 +74,6 @@ void InitializeMainMenu()
     
     //Test_Animations();
     MainMenuRenderLogic();
-    StopSimulation();
     CleanMenus();
 
 }

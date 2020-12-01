@@ -18,12 +18,6 @@
 #include "dbcompany.h"
 #include "simulation.h"
 
-static const int HOURS_IN_YEAR         = 8760;
-static const int HOURS_IN_QUARTER_YEAR = HOURS_IN_YEAR / 4;
-static const int HOURS_IN_HALF_YEAR    = HOURS_IN_YEAR / 2;
-static const int HOURS_IN_TWO_YEARS    = HOURS_IN_YEAR * 2;
-
-static const float TRUNCATE_TO_AMOUNT = 500.0;
 static const int HOUR = 3600;
 static int end_year   = 0;
 
@@ -72,13 +66,6 @@ float GetRandomSign()
 
 }
 
-void ReduceStockPriceAmount(StockPrices *prices)
-{
-
-    Log("ReduceStockPriceAmount: STUB Remove me!");
-
-}
-
 float GetRandomFloat()
 {
 
@@ -103,7 +90,6 @@ float GetRandomEventMagnitude()
 float GenerateRandomPriceFluctuation(float last_price) 
 {
 
-    LogF("%.7f , %f, %f, %f", last_price, GetRandomSign(), GetRandomFloat());
     return GetRandomSign() * GetRandomFloat() * last_price * .0075;
 
 }
@@ -142,51 +128,42 @@ int GetYearFromBuff(char *buff)
 
 }
 
-Vector *GetStockPricesFromNowUntil(char *company_name, time_t span)
+Vector *GetStockPricesBetween(Vector *sim_prices, time_t start_time, time_t end_time)
+{
+
+    Vector *prices = Vector_Create(sizeof(StockPrice), 128);
+    StockPrice *temp_prices = sim_prices->elements;
+
+    for (size_t i = 0; i < sim_prices->num_elements;i++) {
+
+        if (temp_prices[i].date >= start_time && temp_prices[i].date <= end_time)
+            Vector_PushBack(prices, &temp_prices[i]);
+
+    }
+
+    return prices;
+
+
+}
+
+Vector *GetStockPricesFromNowUntil(char *company_name, time_t current_time, time_t span)
 {
 
     Company *companies_temp = companies->elements;
-    StockPrice *prices = NULL;
-    for (size_t i = 0; i < companies->num_elements;i++) {
-
-        if (strcmp(company_name, companies_temp[i].company_name) == 0) {
-
-            
-
-        }
-        
-    }
-
-
-/*
-    int company_idx = GetCompanySimIndex(company_name);
-    if (company_idx == -1)
-        return NULL;
-
-    time_t current_time  = Account_GetGameTime();
     time_t previous_time = current_time - span;
 
-    if (span == 0)
+    if (span > current_time)
         previous_time = 0;
 
-    if (previous_time < 0)
-        previous_time = 0;
+    for (size_t i = 0; i < companies->num_elements;i++) {
 
-    StockPrices *prices = malloc(sizeof(StockPrices));
-    InitializeStockPrice(prices);
-    for (size_t i = 0; i < sim_data.prices[company_idx].num_prices;i++) {
+        if (strcmp(company_name, companies_temp[i].company_name) != 0)
+            continue;
 
-        if (sim_data.prices[company_idx].times[i] > current_time)
-            break;
-
-        if (sim_data.prices[company_idx].times[i] >= previous_time && sim_data.prices[company_idx].times[i] <= current_time)
-            StoreStockPrice(prices,sim_data.prices[company_idx].prices[i], sim_data.prices[company_idx].times[i]);
+        return GetStockPricesBetween(sim_data[i], previous_time, current_time);
 
     }
-    ReclaimUnusedStockPriceMemory(prices);
 
-    return prices;
-    */
     return NULL;
 
 }

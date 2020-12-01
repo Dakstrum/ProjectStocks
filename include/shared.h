@@ -21,15 +21,6 @@ typedef enum TimeSpan {
 
 } TimeSpan;
 
-typedef struct StockPrices {
-
-    float *prices;
-    time_t *times;
-    unsigned int num_prices;
-    unsigned int size;
-
-} StockPrices;
-
 void InitializeShared();
 bool ShouldICleanUp();
 void SetCleanUpToTrue();

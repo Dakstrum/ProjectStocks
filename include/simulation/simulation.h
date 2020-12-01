@@ -17,8 +17,7 @@ bool IsSimulationDone();
 void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg);
 void SetEndYear(time_t end_year);
 
-Vector *GetStockPricesFromNowUntil(char *company_name, time_t span);
-void ReduceStockPriceAmount(StockPrices *prices);
+Vector *GetStockPricesFromNowUntil(char *company_name, time_t current_time, time_t span);
 float CurrentStockPrice(char *company_name);
 float GetCurrentStockChange(char *company_name);
 
