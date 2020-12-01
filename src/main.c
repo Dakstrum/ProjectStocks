@@ -186,7 +186,6 @@ void InitializeEventQueue()
 void CleanUpGameThreads()
 {
 
-    StopSimulation();
 
 }
 

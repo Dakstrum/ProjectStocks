@@ -28,6 +28,7 @@ bool Game_TryIncrement(long int dt)
 
     if (dt == 2) {
 
+        Simulation_SimulateStep(atomic_load(&game_time) + ONE_HOUR);
         atomic_store(&game_time, atomic_load(&game_time) + ONE_HOUR);
         return true;
 

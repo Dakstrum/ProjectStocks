@@ -82,7 +82,7 @@ void ReduceStockPriceAmount(StockPrices *prices)
 float GetRandomFloat()
 {
 
-    return (float)(rand()/RAND_MAX);
+    return (float)rand()/(float)RAND_MAX;
 
 }
 
@@ -103,6 +103,7 @@ float GetRandomEventMagnitude()
 float GenerateRandomPriceFluctuation(float last_price) 
 {
 
+    LogF("%.7f , %f, %f, %f", last_price, GetRandomSign(), GetRandomFloat());
     return GetRandomSign() * GetRandomFloat() * last_price * .0075;
 
 }
@@ -144,6 +145,19 @@ int GetYearFromBuff(char *buff)
 Vector *GetStockPricesFromNowUntil(char *company_name, time_t span)
 {
 
+    Company *companies_temp = companies->elements;
+    StockPrice *prices = NULL;
+    for (size_t i = 0; i < companies->num_elements;i++) {
+
+        if (strcmp(company_name, companies_temp[i].company_name) == 0) {
+
+            
+
+        }
+        
+    }
+
+
 /*
     int company_idx = GetCompanySimIndex(company_name);
     if (company_idx == -1)
@@ -180,17 +194,18 @@ Vector *GetStockPricesFromNowUntil(char *company_name, time_t span)
 float CurrentStockPrice(char *company_name) 
 {
 
-    /*
-    int company_idx = GetCompanySimIndex(company_name);
-    if (company_idx == -1)
-        return -1.0f;
+    Company *companies_temp = companies->elements;
+    StockPrice *prices = NULL;
+    for (size_t i = 0; i < companies->num_elements;i++) {
 
-    time_t current_time = Account_GetGameTime(); 
-    for (size_t i = 0; i < sim_data.prices[company_idx].num_prices; i++)
-        if (sim_data.prices[company_idx].times[i] == current_time)
-            return sim_data.prices[company_idx].prices[i];
+        if (strcmp(company_name, companies_temp[i].company_name) == 0) {
 
-    */
+            prices = sim_data[i]->elements;
+            return prices[sim_data[i]->num_elements - 1].price;
+
+        }
+
+    }
 
     return -1.0f;
 
@@ -239,26 +254,20 @@ void Simulation_ModifyGlobal(float modifier, uint32_t days, char *event)
 
 }
 
-void Simulation_RandomFluctuation(Vector *sim_data_step)
-{
-
-
-}
 
 void Simulation_SimulateStep(time_t t)
 {
 
-/*
-static Vector *companies;
-static Vector **sim_data;
-static Vector *modifiers;
-
-*/
-
+    float value = 0.0;
+    StockPrice *prices = NULL;
     for (size_t i = 0; i < companies->num_elements;i++) {
 
+        prices = sim_data[i]->elements;
+        value  = prices[sim_data[i]->num_elements-1].price;
+        value  = value + GenerateRandomPriceFluctuation(value);
 
-
+        StockPrice price = {value, t};
+        Vector_PushBack(sim_data[i], &price);
 
     }
 
