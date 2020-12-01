@@ -256,7 +256,7 @@ void Simulation_SimulateStep(time_t t)
 void Simulation_SimulateUntil(time_t t)
 {
 
-    time_t temp = t;
+    time_t temp = 0;
     while (temp < t) {
 
         Simulation_SimulateStep(temp);

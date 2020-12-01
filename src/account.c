@@ -125,7 +125,7 @@ void CreateNewSave(char *save_name, char *player_name)
     current_player_name[31] = '\0';
 
     Game_SetSeed(time(NULL));
-    Game_SetGameTime(3600);
+    Game_SetGameTime(0);
     CreateNewSaveEntries(save_name, player_name);
 
     InitializeAccountInformation();
@@ -149,7 +149,7 @@ void LoadSave(int load_save_id, int save_player_id)
 
     Game_SetSeed(save.game_seed);
     Game_SetGameTime(save.time_spent_in_game);
-
+    LogF("%u", save.time_spent_in_game);
     account_money = save.save_player_money;
 
     InitializeAccountInformation();
