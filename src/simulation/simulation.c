@@ -155,6 +155,9 @@ Vector *GetStockPricesFromNowUntil(char *company_name, time_t current_time, time
     if (span > current_time)
         previous_time = 0;
 
+    if (span == 0)
+        previous_time = 0;
+
     for (size_t i = 0; i < companies->num_elements;i++) {
 
         if (strcmp(company_name, companies_temp[i].company_name) != 0)
