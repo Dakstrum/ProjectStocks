@@ -8,9 +8,11 @@
 #include "dbcard.h"
 #include "log.h"
 #include "account.h"
+#include "game.h"
 
 static Vector *cards        = NULL;
 static Vector *player_cards = NULL;
+static Vector *played_cards = NULL;
 
 static Queue *card_queue   = NULL;
 
@@ -90,6 +92,13 @@ float GetCardModifierLength(unsigned int card_id)
 
 }
 
+Vector *DBCards_GetPlayedModifiersCopy() 
+{
+
+    return Vector_GetCopy(played_cards);
+
+}
+
 
 int GetCardType(unsigned int card_id)
 {
@@ -123,15 +132,6 @@ int Card_Callback(void *card, int argc, char **argv, char **col_name)
 
 }
 
-void InitializeCards()
-{
-
-    cards = Vector_Create(sizeof(Card), 4);
-    ExecuteQueryF(&Card_Callback, NULL, "SELECT C.CardId, C.CardName, C.CardDesc, C.CardPath, C.PriceModifier, C.ModifierLength FROM System_Cards C");
-
-}
-
-//PlayerCards
 int PlayerCard_Callback(void *card, int argc, char **argv, char **col_name) 
 {
 
@@ -167,18 +167,18 @@ int GetPlayerCardId(int temp_card_id)
 
 }
 
-void AddCardToPlayer(int card_id)
+void AddCardToPlayer(uint32_t player_id, uint32_t card_id)
 {
 
-    static unsigned int fake_unique_id = 1000000000;
+    static uint32_t fake_unique_id = 1000000000;
 
     static char *query = "INSERT INTO Player_Cards (PlayerId CardId) VALUES (%d, %d);";
-    Queue_PushMessage(card_queue, GetFormattedPointer(query, GetCurrentPlayerId(), GetSaveId(), card_id));
+    Queue_PushMessage(card_queue, GetFormattedPointer(query, player_id, Game_GetSaveId(), card_id));
 
     PlayerCard temp;
 
     temp.player_card_id = fake_unique_id;
-    temp.player_id      = GetCurrentPlayerId();
+    temp.player_id      = player_id;
     temp.card_id        = card_id;
 
     fake_unique_id++;
@@ -186,20 +186,23 @@ void AddCardToPlayer(int card_id)
     Vector_PushBack(player_cards, &temp);
 }
 
-void RemoveCardFromPlayer(unsigned int player_card_id)
+void DBCards_ApplyCard(uint32_t player_card_id, uint32_t company_id)
 {
 
-    static char *query = "DELETE FROM Player_Cards WHERE PlayerCardId = (SELECT PC.PlayerCardId FROM PlayerCards PC WHERE PC.PlayerId = %d AND PC.CardId = %d LIMIT 1);";
+    char *delete_query = "DELETE FROM Player_Cards WHERE PlayerCardId = (SELECT PC.PlayerCardId FROM PlayerCards PC WHERE PC.PlayerId = %d AND PC.CardId = %d LIMIT 1);";
+    char *insert_query = "INSERT INTO Player_CardsPlayed (CardId, SaveId, CompanyId, PlayedTimed) VALUES (%d, %d, %d, %d)";
 
     PlayerCard *temp = player_cards->elements;
 
-    for(size_t i = 0; i < player_cards->num_elements; i++) {
+    for (size_t i = 0; i < player_cards->num_elements; i++) {
 
-        if(temp[i].player_card_id == player_card_id) {
+        if (temp[i].player_card_id == player_card_id) {
 
-            Queue_PushMessage(card_queue, GetFormattedPointer(query, temp[i].player_id, temp[i].card_id));
+            Queue_PushMessage(card_queue, GetFormattedPointer(delete_query, temp[i].player_id, temp[i].card_id));
+            Queue_PushMessage(card_queue, GetFormattedPointer(insert_query, temp[i].card_id, Game_GetSaveId(), company_id, Game_GetGameTime()));
             Vector_Remove(player_cards, i);
             break;
+
         }
 
     }
@@ -266,12 +269,56 @@ void SaveCards()
 
 }
 
-void InitializeCardInformation()
+int DBCards_PlayedCardsCallback(void *played_card, int argc, char **argv, char **col_name)
+{
+
+    if (argc == 0)
+        return 0;
+
+    PlayedModifiers card;
+    card.company_id      = atoi(argv[0]);
+    card.played_time     = atol(argv[1]);
+    card.price_modifier  = atof(argv[2]);
+    card.modifier_length = atoi(argv[3]);
+
+    Vector_PushBack(played_cards, &card);
+
+    return 0;
+
+}
+
+void DBCards_InitVectors()
+{
+
+    if (player_cards != NULL) {
+
+        Vector_Reset(player_cards);
+        Vector_Reset(played_cards);
+
+    } else {
+
+        cards        = Vector_Create(sizeof(Card), 4);
+        player_cards = Vector_Create(sizeof(PlayerCard), 4);
+        played_cards = Vector_Create(sizeof(PlayedModifiers), 4); 
+
+    }
+
+}
+
+void DBCards_Init()
 {
 
     card_queue = Queue_Create();
 
-    player_cards = Vector_Create(sizeof(PlayerCard), 4);
-    ExecuteQueryF(&PlayerCard_Callback, NULL, "SELECT C.PlayerCardId, C.PlayerId, C.CardId FROM Player_Cards C");
+    char *played_cards_query =
+    "SELECT PCP.CompanyId, PCP.PlayedTime, SC.PriceModifier, SC.ModifierLength "
+    "Player_CardsPlayed PCP "
+    "INNER JOIN System_Cards SC ON SC.CardId = PCP.CardId "
+    "WHERE PCP.SaveId = %d";
+
+    DBCards_InitVectors();
+    ExecuteQueryF(&Card_Callback, NULL, "SELECT C.CardId, C.CardName, C.CardDesc, C.CardPath, C.PriceModifier, C.ModifierLength FROM System_Cards C");
+    ExecuteQueryF(&PlayerCard_Callback, NULL, "SELECT C.PlayerCardId, C.PlayerId, C.CardId FROM Player_Cards C WHERE SaveId = %d", Game_GetSaveId());
+    ExecuteQueryF(&DBCards_PlayedCardsCallback, NULL, played_cards_query, Game_GetSaveId());
 
 }

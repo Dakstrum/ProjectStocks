@@ -1,6 +1,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include <stddef.h>
+
 typedef struct Vector {
 
     void *elements;
@@ -19,6 +21,8 @@ void Vector_PushBackPtr(Vector * vector, void *element);
 
 void Vector_Remove(Vector *vector, unsigned int element_idx);
 void Vector_RemovePrt(Vector *vector, unsigned int element_idx);
+
+Vector *Vector_GetCopy(Vector *vector);
 
 void Vector_Reset(Vector *vector);
 void Vector_Delete(Vector *vector);

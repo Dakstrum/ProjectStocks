@@ -1,5 +1,6 @@
 
 #include <time.h>
+#include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdatomic.h>
@@ -15,187 +16,106 @@
 #include "dbcard.h"
 
 #include "timer.h"
+#include "game.h"
 
-static atomic_long game_time;
-static atomic_long game_time_real_dt;
-static atomic_long game_time_game_dt;
-static atomic_uint game_seed;
-static atomic_int  save_id;
 static atomic_int  player_id;
 
-static ALLEGRO_THREAD *account_thread = NULL;
+static float account_money = 0;
+static int in_game = 0;
 
-static float account_money   = 0;
+static char current_player_name[64];
+static char current_save_name[64];
 
-static int in_game           = 0;
 
-static char *current_time_buf = NULL;
-static const long ONE_HOUR = 3600;
-
-static char *current_player_name = NULL;
-static char *current_save_name   = NULL;
-
-static float sleep_time = 1.0;
-
-void *AccountEntry(ALLEGRO_THREAD *thread, void *arg);
-
-void SetInGameStatus(int status)
+void Account_SetInGameStatus(int status)
 {
 
     in_game = status;
 
 }
 
-int GetInGameStatus()
+int Account_GetInGameStatus()
 {
 
     return in_game;
 
 }
 
-bool CanMakeTransaction(float amount) 
+bool Account_CanMakeTransaction(float amount) 
 {
 
     return account_money - amount >= 0.0;
 
 }
 
-void AddMoney(float amount)
+void Account_AddMoney(float amount)
 {
 
     account_money += amount;
 
 }
 
-void SubtractMoney(float amount)
+void Account_SubtractMoney(float amount)
 {
 
     account_money -= amount;
 
 }
 
-void SetAccountMoney(float amount)
+void Account_SetMoney(float amount)
 {
 
     account_money = amount;
 
 }
 
-float GetAccountMoney()
+float Account_GetMoney()
 {
 
     return account_money;
 
 }
 
-int GetCurrentPlayerId()
+int Account_GetPlayerId()
 {
 
     return atomic_load(&player_id);
 
 }
 
-int GetSaveId() 
+void Account_Init() 
 {
 
-    return atomic_load(&save_id);
-
-}
-
-unsigned int GetSaveSeed() 
-{
-
-    return atomic_load(&game_seed);
-
-}
-
-void InitAccount() 
-{
-
-    atomic_store(&save_id, -1);
-    atomic_store(&game_time, ONE_HOUR);
-    atomic_store(&game_time_real_dt, 2);
-    atomic_store(&game_seed, 0);
-    atomic_store(&game_time_game_dt, ONE_HOUR);
-
-    account_thread = al_create_thread(&AccountEntry, NULL);
-    al_start_thread(account_thread);
-
-    current_time_buf    = malloc(128);
-    current_save_name   = malloc(64);
-    current_player_name = malloc(64);
-
-}
-
-time_t GetGameTime() 
-{
-
-    return atomic_load(&game_time);
-
-}
-
-void SetGameTime(time_t time_to_set) 
-{
-
-    atomic_store(&game_time, time_to_set);
-
-}
-
-bool CheckToIncrementGametime(long int dt) 
-{
-
-    if (dt == atomic_load(&game_time_real_dt)) {
-
-        atomic_store(&game_time, atomic_load(&game_time) + atomic_load(&game_time_game_dt));
-        return true;
-
-    }
-    return false;
-
-}
-
-void *AccountEntry(ALLEGRO_THREAD *thread, void *arg) 
-{
-
-    long int dt = 0;
-    while (!ShouldICleanUp()) {
-
-        al_rest(sleep_time);
-        if (Timer_IsPaused())
-            continue;
-
-        dt += 1;
-        if (CheckToIncrementGametime(dt))
-            dt = 0;
-
-    }
-    return NULL;
 
 }
 
 void CreateNewSaveEntries(char *save_name, char *player_name) 
 {
-    atomic_store(&save_id, InsertSaveEntry(save_name, atomic_load(&game_seed)));
-    if (atomic_load(&save_id) == -1) {
+    int new_save_id = InsertSaveEntry(save_name, Game_GetSeed());
+    
+    if (new_save_id == -1) {
 
         Log("Unable to create save");
         return;
 
     }
+    Game_SetSaveId(new_save_id);
 
-    atomic_store(&player_id, InsertPlayerEntry(save_id, player_name, account_money, 1));
+    atomic_store(&player_id, InsertPlayerEntry(new_save_id, player_name, account_money, 1));
 
     if (atomic_load(&player_id) == -1)
         Log("Unable to create player");
 
     for (size_t i = 0; i < 3;i++)
-        InsertAIPlayerEntry(save_id);
+        InsertAIPlayerEntry(new_save_id);
 
 }
 
 
 void CreateNewSave(char *save_name, char *player_name)
 {
+
+    Game_Reset();
 
     account_money = 15000.0;
     strncpy(current_save_name, save_name, 32);
@@ -204,19 +124,22 @@ void CreateNewSave(char *save_name, char *player_name)
     current_save_name[31]   = '\0';
     current_player_name[31] = '\0';
 
-    atomic_store(&game_seed, time(NULL));
-    atomic_store(&game_time, ONE_HOUR);
+    Game_SetSeed(time(NULL));
+    Game_SetGameTime(3600);
     CreateNewSaveEntries(save_name, player_name);
 
     InitializeAccountInformation();
-    InitializeCardInformation();
+    DBCards_Init();
+
+    Game_Init();
 
 }
 
 void LoadSave(int load_save_id, int save_player_id)
 {
 
-    atomic_store(&save_id, load_save_id);
+    Game_Reset();
+    Game_SetSaveId(load_save_id);
     atomic_store(&player_id, save_player_id);
 
     PlayerSave save = GetSaveData(load_save_id);
@@ -224,26 +147,28 @@ void LoadSave(int load_save_id, int save_player_id)
     strncpy(current_save_name, save.save_name, 32);
     strncpy(current_player_name, save.save_player_name, 32);
 
-    atomic_store(&game_seed, save.game_seed);
-    atomic_store(&game_time, save.time_spent_in_game);
+    Game_SetSeed(save.game_seed);
+    Game_SetGameTime(save.time_spent_in_game);
 
     account_money = save.save_player_money;
 
     InitializeAccountInformation();
-    InitializeCardInformation();
+    DBCards_Init();
+
+    Game_Init();
 
 }
 
-void StorePlayerData() 
+void Account_StorePlayerData() 
 {
 
     PlayerSave save;
     save.save_name          = current_save_name;
     save.save_player_name   = current_player_name;
-    save.time_spent_in_game = atomic_load(&game_time);
-    save.game_seed          = game_seed;
+    save.time_spent_in_game = Game_GetGameTime();
+    save.game_seed          = Game_GetSeed();
     save.save_player_id     = player_id;
-    save.save_id            = save_id;
+    save.save_id            = Game_GetSaveId();
     save.save_player_money  = account_money;
 
     SavePlayerData(save);
@@ -251,39 +176,14 @@ void StorePlayerData()
 
 }
 
-void SetGameSpeed(const int speed) 
-{
-
-    switch (speed) {
-
-
-        case 2:  sleep_time = .5; break;
-        case 3:  sleep_time = .1; break;
-        default: sleep_time = 1.5; break;
-
-    }
-
-}
-
-
-char *GetDate()
-{
-
-    time_t current_time = GetGameTime();
-    strftime(current_time_buf, 128, "%HH %x", localtime(&current_time));
-    
-    return current_time_buf;
-
-}
-
-char *GetCurrentSaveName() 
+char *Account_GetSaveName() 
 {
 
     return current_save_name;
 
 }
 
-char *GetCurrentPlayerName()
+char *Account_GetPlayerName()
 {
 
     return current_player_name;

@@ -75,9 +75,7 @@ void SetSaveInfoText(char *save_name, char *player_name)
 void StartGame()
 {
 
-    SetInGameStatus(1);
     ClearDrawLayers();
-    StartSimulation();
     SwitchToLoadingScreen();
 
 }

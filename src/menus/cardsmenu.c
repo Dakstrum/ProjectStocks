@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <stdbool.h>
 
 #include <allegro5/allegro.h>
@@ -14,6 +15,7 @@
 #include "dbcompany.h"
 #include "dbaccount.h"
 #include "account.h"
+#include "game.h"
 #include "simulation.h"
 #include "scrollbox.h"
 #include "text.h"
@@ -75,8 +77,8 @@ void CardsMenuRenderLogic()
     if (player_money_textobject == NULL)
         return;
     
-    SetTextContent(player_money_textobject, "%.2f", GetAccountMoney());
-    SetTextContent(player_date_textobject,  "%s",   GetDate());
+    SetTextContent(player_money_textobject, "%.2f", Account_GetMoney());
+    SetTextContent(player_date_textobject,  "%s",   Game_GetDate());
 
 }
 
@@ -104,7 +106,8 @@ void PopulateCardMenuCompanyScrollBox(DrawObject *object)
 void CardMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
 
-    RemoveCardFromPlayer(GetPlayerCardId(GetCardId(card_title_textobject->text.content)));
+    uint32_t company_id = GetCompanyId(scroll_box_content);
+    DBCards_ApplyCard(GetPlayerCardId(GetCardId(card_title_textobject->text.content)), company_id);
     ApplyMenu_BCB();
     DisplayPopupOnDrawLayer("Added Card to Company", "assets/images/generalpurposemenus/popups/greenpopup.png");
 

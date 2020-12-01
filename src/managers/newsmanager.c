@@ -6,7 +6,7 @@
 #include "text.h"
 #include "log.h"
 #include "simulation.h"
-#include "account.h"
+#include "game.h"
 
 #include "drawobject.h"
 #include "drawlayers.h"
@@ -129,7 +129,7 @@ void NewsManager_PushNews(NewsManager *manager, char *content)
 void NewsManager_CheckForNews(NewsManager *manager)
 {
 
-	char *event = GetAnyEventAtTime(GetGameTime());
+	char *event = GetAnyEventAtTime(Game_GetGameTime());
 	if (event == NULL)
 		return;
 	

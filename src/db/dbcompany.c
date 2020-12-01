@@ -26,6 +26,14 @@ Company *GetAllCompanies()
 
 }
 
+Vector *GetAllCompaniesVector()
+{
+
+    assert(companies != NULL);
+    return companies;
+
+}
+
 Company *GetCompany(unsigned int company_id)
 {
 

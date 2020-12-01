@@ -19,6 +19,7 @@
 #include "dbaccount.h"
 #include "dbcompany.h"
 #include "account.h"
+#include "game.h"
 #include "generalpurposemenus.h"
 #include "drawlayerutils.h"
 #include "textbox.h"
@@ -91,8 +92,8 @@ void StocksMenusRenderLogic()
     {
 
         SetTextContent(stock_change_textobject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
-        SetTextContent(player_money_textobject, "%.2f", GetAccountMoney());
-        SetTextContent(player_date_textobject,  "%s",   GetDate());
+        SetTextContent(player_money_textobject, "%.2f", Account_GetMoney());
+        SetTextContent(player_date_textobject,  "%s",   Game_GetDate());
         SetTextContent(stock_price_textobject,  "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
 
         if(GetCurrentStockChange(GetCompanyNameViewing()) > 0)
@@ -135,7 +136,7 @@ void InitalizeStocksMenuText()
     stock_change_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuPriceChangeTextObject");
 
     SetTextContent(stock_change_textobject,  "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
-    SetTextContent(player_money_textobject,  "%.2f", GetAccountMoney());
+    SetTextContent(player_money_textobject,  "%.2f", Account_GetMoney());
     SetTextContent(stock_price_textobject,   "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
 
 }
@@ -162,7 +163,7 @@ void InitializeSellMenuText()
     transaction_menu_amountowned_textobject  = GetJSONObjectAndAddToDrawLayer("SellMenuAmountOwnedTextObject");
 
     SetTextContent(transaction_menu_company_name_textobject, "%s", GetCompanyAbbreviationRef(GetCompanyId(selected_company_name)));
-    SetTextContent(transaction_menu_amountowned_textobject, "%d", GetOwnedStockAmount(GetCurrentPlayerId(), selected_company_name));
+    SetTextContent(transaction_menu_amountowned_textobject, "%d", GetOwnedStockAmount(Account_GetPlayerId(), selected_company_name));
 
 }
 
@@ -308,14 +309,14 @@ void Sell_BCB()
 
     char str[50];
     float current_stock_price = CurrentStockPrice(selected_company_name);
-    bool successful = AttemptToSubtractFromCurrentStock(GetCurrentPlayerId(), GetCompanyNameViewing(), amount_in_text_box, CurrentStockPrice(selected_company_name));
+    bool successful = AttemptToSubtractFromCurrentStock(Account_GetPlayerId(), GetCompanyNameViewing(), amount_in_text_box, CurrentStockPrice(selected_company_name));
 
     if (successful) {
 
         SellMenu_BCB();
         sprintf(str, "Sold %d of %s", amount_in_text_box, GetCompanyNameViewing());
         DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
-        AddMoney(amount_in_text_box * current_stock_price);
+        Account_AddMoney(amount_in_text_box * current_stock_price);
 
     } else {
 
@@ -335,15 +336,15 @@ void Buy_BCB()
     float current_stock_price = CurrentStockPrice(selected_company_name);
 
     char str[50];
-    if (CanMakeTransaction(amount_in_text_box * current_stock_price)) {
+    if (Account_CanMakeTransaction(amount_in_text_box * current_stock_price)) {
 
-        AttemptToAddFromCurrentStock(GetCurrentPlayerId(), GetCompanyNameViewing(), amount_in_text_box, current_stock_price);
+        AttemptToAddFromCurrentStock(Account_GetPlayerId(), GetCompanyNameViewing(), amount_in_text_box, current_stock_price);
         BuyMenu_BCB();
 
         sprintf(str, "Bought %d shares of %s", amount_in_text_box, GetCompanyNameViewing());
         DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
 
-        SubtractMoney(amount_in_text_box * current_stock_price);
+        Account_SubtractMoney(amount_in_text_box * current_stock_price);
 
     } 
     else {

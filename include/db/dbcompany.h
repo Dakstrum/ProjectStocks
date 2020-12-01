@@ -15,6 +15,7 @@ typedef struct Company {
 } Company;
 
 Company *GetAllCompanies();
+Vector *GetAllCompaniesVector();
 
 char *GetCompanyName(unsigned int company_id);
 char *GetCompanyNameRef(unsigned int company_id);

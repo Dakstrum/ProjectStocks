@@ -11,6 +11,7 @@
 #include "drawlayers.h"
 #include "rendering.h"
 #include "log.h"
+#include "account.h"
 
 static DrawObject *video_object   = NULL;
 static DrawObject *loading_object = NULL;
@@ -66,6 +67,7 @@ void LoadingSequence()
         ClearDrawLayers();
         SwitchToRenderingStocksMenu();
         loading_object = NULL;
+        Account_SetInGameStatus(1);
 
     }
 

@@ -17,6 +17,7 @@
 #include "text.h"
 #include "scrollbox.h"
 #include "account.h"
+#include "game.h"
 #include "simulation.h"
 #include "generalpurposemenus.h"
 #include "drawlayerutils.h"
@@ -95,11 +96,11 @@ void AccountMenuRenderLogic()
 
     char *company_viewing = GetCompanyNameViewing();
     
-    SetTextContent(player_money_textobject,       "%.2f", GetAccountMoney());
-    SetTextContent(player_date_textobject,        "%s",   GetDate());
+    SetTextContent(player_money_textobject,       "%.2f", Account_GetMoney());
+    SetTextContent(player_date_textobject,        "%s",   Game_GetDate());
     SetTextContent(stock_price_textobject,        "%.2f", CurrentStockPrice(company_viewing));
-    SetTextContent(owned_stock_amount_textobject, "%d",   GetOwnedStockAmount(GetCurrentPlayerId(), company_viewing));
-    SetTextContent(networth_textobject,           "%.2f", GetAccountNetWorth(GetCurrentPlayerId()));
+    SetTextContent(owned_stock_amount_textobject, "%d",   GetOwnedStockAmount(Account_GetPlayerId(), company_viewing));
+    SetTextContent(networth_textobject,           "%.2f", GetAccountNetWorth(Account_GetPlayerId()));
 
 }
 
@@ -150,7 +151,7 @@ void PopulateSelectedStockHistoryDisplay(char* company)
 {
     
 
-    Vector *transactions = GetCompanyTransactions(GetCurrentPlayerId(), company);
+    Vector *transactions = GetCompanyTransactions(Account_GetPlayerId(), company);
     Transaction *temp    = transactions->elements;
 
     SetHistoryDisplayPageNumber(transactions->num_elements);
@@ -211,7 +212,7 @@ void InitializeAllStocksHistoryDisplay()
 void PopulateAllStocksHistoryDisplay()
 {
     
-    Vector *transactions = GetAllTransactions(GetCurrentPlayerId());
+    Vector *transactions = GetAllTransactions(Account_GetPlayerId());
     char transaction_time[128];
 
     Transaction *temp = transactions->elements;

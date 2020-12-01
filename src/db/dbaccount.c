@@ -6,6 +6,7 @@
 
 #include "queue.h"
 #include "account.h"
+#include "game.h"
 #include "shared.h"
 #include "dbutils.h"
 #include "dbcompany.h"
@@ -97,7 +98,7 @@ void InsertStockTransaction(unsigned int player_id, char *company_name, float tr
 {
 
     uint32_t company_id = GetCompanyId(company_name);
-    time_t game_time    = GetGameTime();
+    time_t game_time    = Game_GetGameTime();
     static char *query  = "INSERT INTO Player_Transactions (PlayerId, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, %d, %.2f, %d, %d);";
     Queue_PushMessage(transaction_queue, GetFormattedPointer(query, player_id, company_id, transaction_amount, stocks_exchanged, game_time));
 
@@ -212,7 +213,7 @@ void InitSavedTransactions()
                     "INNER JOIN Game_Players GP ON GP.PlayerId = PT.PlayerId "
                     "WHERE GP.SaveId = %d";
 
-    ExecuteQueryF(&SetTransactionCallback, NULL, query, GetSaveId());
+    ExecuteQueryF(&SetTransactionCallback, NULL, query, Game_GetSaveId());
 
 }
 
@@ -273,7 +274,7 @@ void InitOwnedStocks()
                     "WHERE GP.SaveId = %d "
                     "GROUP BY PT.CompanyId, PT.PlayerId ";
 
-    ExecuteQueryF(&GetOwnedStocks_CallBack, NULL, query, GetSaveId());
+    ExecuteQueryF(&GetOwnedStocks_CallBack, NULL, query, Game_GetSaveId());
 
 }
 
@@ -295,7 +296,7 @@ void InitPlayerIds()
 {
 
     char *query = "SELECT PlayerId FROM Game_Players WHERE SaveId = %d";
-    ExecuteQueryF(&PlayerId_Callback, NULL, query, GetSaveId());
+    ExecuteQueryF(&PlayerId_Callback, NULL, query, Game_GetSaveId());
 
 }
 
