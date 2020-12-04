@@ -58,7 +58,11 @@ namespace WindowsFormsApp2
 
             if (EventSelectresult.HasRows)
                 while (EventSelectresult.Read())
+                {
+                    Console.WriteLine(EventSelectresult["LastName"]);
                     NameListBox.Items.Add(EventSelectresult["LastName"]);
+                }
+                    
 
             NameListBox.SelectedIndex = NameListBox.Items.Count - 1;
             database_object.CloseConnection();

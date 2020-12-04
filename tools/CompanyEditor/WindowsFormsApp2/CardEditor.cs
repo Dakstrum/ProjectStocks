@@ -67,7 +67,7 @@ namespace WindowsFormsApp2
         }
 
         void UpdateCard(int card_id)
-        {
+        {                
 
             database_object.OpenConnection();
             string query = "Update System_Cards Set CardName = @cardname, CardDesc = @carddesc, CardPath = @cardpath, PriceModifier = @pricemodifier, ModifierLength = @modifierlength Where CardId = " + card_id;
@@ -90,15 +90,42 @@ namespace WindowsFormsApp2
         private void SaveCardButton_Click(object sender, EventArgs e)
         {
             UpdateCard(int.Parse(CardIdText.Text.ToString()));
-
         }
 
         private void AddCardButton_Click(object sender, EventArgs e)
         {
+
+            if (CreateNewFunctions.DoesThisAlreadyExist("System_Cards", "CardName", "BLANK", database_object))
+            {
+                MessageBox.Show("There is already a BLANK item", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+               
             CreateNewFunctions.CreateNewCard(database_object);
 
             CardListBox.Items.Clear();
             PopulateListBox.PopulateCardListBox(CardListBox, database_object);
+
+            PrimaryKey.UpdatePrimaryKey("System_Cards", "CardId", "CardName", database_object);
+
+            CardIdText.Text = GetFunctions.GetCardIdFromCardName(CardListBox.SelectedItem.ToString(), database_object).ToString();
+            PopulateCardModifiers(GetFunctions.GetCardIdFromCardName(CardListBox.SelectedItem.ToString(), database_object));
+        }
+
+        private void DeleteCardButton_Click(object sender, EventArgs e)
+        {
+
+            DeleteFunctions.DeleteRow("System_Cards", "CardName", CardListBox.SelectedItem.ToString(), database_object);
+
+            CardListBox.Items.Clear();
+            PopulateListBox.PopulateCardListBox(CardListBox, database_object);
+
+            PrimaryKey.UpdatePrimaryKey("System_Cards", "CardId", "CardName", database_object);
+
+            CardListBox.Items.Clear();
+            PopulateListBox.PopulateCardListBox(CardListBox, database_object);
+
         }
     }
 }

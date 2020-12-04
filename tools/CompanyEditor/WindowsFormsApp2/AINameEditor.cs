@@ -61,7 +61,7 @@ namespace WindowsFormsApp2
 
             if (NameComboBox.SelectedIndex == 1)
             {
-
+                
                 int category_id = GetFunctions.GetLastNameIdFromLastName(NameListBox.SelectedItem.ToString(), database_object);
                 string query = "Update System_AILastNames Set LastName = @lastname Where LastNameId = " + category_id;
 
@@ -78,6 +78,7 @@ namespace WindowsFormsApp2
             }
             else
             {
+               
                 int category_id = GetFunctions.GetFirstNameIdFromFirstName(NameListBox.SelectedItem.ToString(), database_object);
                 string query = "Update System_AIFirstNames Set FirstName = @firstname Where FirstNameId = " + category_id;
 
@@ -97,22 +98,63 @@ namespace WindowsFormsApp2
 
         private void AddNameButton_Click(object sender, EventArgs e)
         {
+
             if (NameComboBox.SelectedIndex == 1)
             {
+                if (CreateNewFunctions.DoesThisAlreadyExist("System_AILastNames", "LastName", "BLANK", database_object))
+                {
+                    MessageBox.Show("There is already a BLANK item", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 CreateNewFunctions.CreateNewLastName(database_object);
 
                 NameListBox.Items.Clear();
                 PopulateListBox.PopulateLastNameListBox(NameListBox, database_object);
+
+                PrimaryKey.UpdatePrimaryKey("System_AILastNames", "LastNameId", "LastName", database_object);
             }
             else
             {
+                if (CreateNewFunctions.DoesThisAlreadyExist("System_AIFirstNames", "FirstName", "BLANK", database_object))
+                {
+                    MessageBox.Show("There is already a BLANK item", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 CreateNewFunctions.CreateNewFirstName(database_object);
+                
 
                 NameListBox.Items.Clear();
                 PopulateListBox.PopulateFirstNameListBox(NameListBox, database_object);
+
+                PrimaryKey.UpdatePrimaryKey("System_AIFirstNames", "FirstNameId", "FirstName", database_object);
             }
 
 
+        }
+
+        private void DeleteNameButton_Click(object sender, EventArgs e)
+        {
+            if (NameComboBox.SelectedIndex == 1)
+            {
+                DeleteFunctions.DeleteRow("System_AILastNames", "LastName", NameListBox.SelectedItem.ToString(), database_object);
+
+                NameListBox.Items.Clear();
+                PopulateListBox.PopulateLastNameListBox(NameListBox, database_object);
+
+                PrimaryKey.UpdatePrimaryKey("System_AILastNames", "LastNameId", "LastName", database_object);
+
+            }
+            else
+            {
+                DeleteFunctions.DeleteRow("System_AIFirstNames", "FirstName", NameListBox.SelectedItem.ToString(), database_object);
+
+                NameListBox.Items.Clear();
+                PopulateListBox.PopulateFirstNameListBox(NameListBox, database_object);
+
+                PrimaryKey.UpdatePrimaryKey("System_AIFirstNames", "FirstNameId", "FirstName", database_object);
+            }
         }
     }
 }

@@ -46,10 +46,10 @@
             this.label6 = new System.Windows.Forms.Label();
             this.CompaniesListBox = new System.Windows.Forms.ListBox();
             this.AddProductButton = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.DeleteProductButton = new System.Windows.Forms.Button();
             this.AddEventButton = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
+            this.DeleteEventButton = new System.Windows.Forms.Button();
+            this.DeleteCompanyButton = new System.Windows.Forms.Button();
             this.AddCompanyButton = new System.Windows.Forms.Button();
             this.CompanyIdText = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -237,14 +237,15 @@
             this.AddProductButton.UseVisualStyleBackColor = true;
             this.AddProductButton.Click += new System.EventHandler(this.AddProductButton_Click);
             // 
-            // button2
+            // DeleteProductButton
             // 
-            this.button2.Location = new System.Drawing.Point(596, 267);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(102, 20);
-            this.button2.TabIndex = 21;
-            this.button2.Text = "Delete Product";
-            this.button2.UseVisualStyleBackColor = true;
+            this.DeleteProductButton.Location = new System.Drawing.Point(596, 267);
+            this.DeleteProductButton.Name = "DeleteProductButton";
+            this.DeleteProductButton.Size = new System.Drawing.Size(102, 20);
+            this.DeleteProductButton.TabIndex = 21;
+            this.DeleteProductButton.Text = "Delete Product";
+            this.DeleteProductButton.UseVisualStyleBackColor = true;
+            this.DeleteProductButton.Click += new System.EventHandler(this.DeleteProductButton_Click);
             // 
             // AddEventButton
             // 
@@ -256,23 +257,25 @@
             this.AddEventButton.UseVisualStyleBackColor = true;
             this.AddEventButton.Click += new System.EventHandler(this.AddEventButton_Click);
             // 
-            // button4
+            // DeleteEventButton
             // 
-            this.button4.Location = new System.Drawing.Point(1256, 267);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(132, 20);
-            this.button4.TabIndex = 23;
-            this.button4.Text = "Delete Event";
-            this.button4.UseVisualStyleBackColor = true;
+            this.DeleteEventButton.Location = new System.Drawing.Point(1256, 267);
+            this.DeleteEventButton.Name = "DeleteEventButton";
+            this.DeleteEventButton.Size = new System.Drawing.Size(132, 20);
+            this.DeleteEventButton.TabIndex = 23;
+            this.DeleteEventButton.Text = "Delete Event";
+            this.DeleteEventButton.UseVisualStyleBackColor = true;
+            this.DeleteEventButton.Click += new System.EventHandler(this.DeleteEventButton_Click);
             // 
-            // button5
+            // DeleteCompanyButton
             // 
-            this.button5.Location = new System.Drawing.Point(167, 267);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(93, 20);
-            this.button5.TabIndex = 24;
-            this.button5.Text = "Delete Company";
-            this.button5.UseVisualStyleBackColor = true;
+            this.DeleteCompanyButton.Location = new System.Drawing.Point(167, 267);
+            this.DeleteCompanyButton.Name = "DeleteCompanyButton";
+            this.DeleteCompanyButton.Size = new System.Drawing.Size(93, 20);
+            this.DeleteCompanyButton.TabIndex = 24;
+            this.DeleteCompanyButton.Text = "Delete Company";
+            this.DeleteCompanyButton.UseVisualStyleBackColor = true;
+            this.DeleteCompanyButton.Click += new System.EventHandler(this.DeleteCompanyButton_Click);
             // 
             // AddCompanyButton
             // 
@@ -520,10 +523,10 @@
             this.Controls.Add(this.label7);
             this.Controls.Add(this.CompanyIdText);
             this.Controls.Add(this.AddCompanyButton);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
+            this.Controls.Add(this.DeleteCompanyButton);
+            this.Controls.Add(this.DeleteEventButton);
             this.Controls.Add(this.AddEventButton);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.DeleteProductButton);
             this.Controls.Add(this.AddProductButton);
             this.Controls.Add(this.CompaniesListBox);
             this.Controls.Add(this.IPOTextBox);
@@ -573,10 +576,10 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ListBox CompaniesListBox;
         private System.Windows.Forms.Button AddProductButton;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button DeleteProductButton;
         private System.Windows.Forms.Button AddEventButton;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button DeleteEventButton;
+        private System.Windows.Forms.Button DeleteCompanyButton;
         private System.Windows.Forms.Button AddCompanyButton;
         private System.Windows.Forms.Label CompanyIdText;
         private System.Windows.Forms.Label label7;

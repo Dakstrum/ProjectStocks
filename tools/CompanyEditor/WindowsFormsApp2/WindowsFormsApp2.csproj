@@ -90,6 +90,7 @@
     <Compile Include="CompanyEditor.Designer.cs">
       <DependentUpon>CompanyEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="DeleteFunctions.cs" />
     <Compile Include="EventEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,6 +112,7 @@
     </Compile>
     <Compile Include="PopulateComboBox.cs" />
     <Compile Include="PopulateListBox.cs" />
+    <Compile Include="PrimaryKey.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AINameEditor.resx">

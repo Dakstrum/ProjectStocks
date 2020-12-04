@@ -16,7 +16,7 @@ namespace WindowsFormsApp2
             myConnection = new SQLiteConnection("Data Source=blinky.db");
             if (!File.Exists("./blinky.db"))
             {
-
+                Console.WriteLine("Cant Find DB");
             }
         }
 

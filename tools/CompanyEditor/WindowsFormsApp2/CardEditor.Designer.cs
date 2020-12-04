@@ -184,6 +184,7 @@
             this.DeleteCardButton.TabIndex = 21;
             this.DeleteCardButton.Text = "Delete Card";
             this.DeleteCardButton.UseVisualStyleBackColor = true;
+            this.DeleteCardButton.Click += new System.EventHandler(this.DeleteCardButton_Click);
             // 
             // CardEditor
             // 

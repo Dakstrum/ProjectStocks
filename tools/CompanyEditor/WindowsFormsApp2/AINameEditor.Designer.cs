@@ -62,6 +62,7 @@
             this.DeleteNameButton.TabIndex = 41;
             this.DeleteNameButton.Text = "Delete Name";
             this.DeleteNameButton.UseVisualStyleBackColor = true;
+            this.DeleteNameButton.Click += new System.EventHandler(this.DeleteNameButton_Click);
             // 
             // AddNameButton
             // 
@@ -85,10 +86,12 @@
             // 
             // NameListBox
             // 
+            this.NameListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.NameListBox.FormattingEnabled = true;
+            this.NameListBox.ItemHeight = 20;
             this.NameListBox.Location = new System.Drawing.Point(73, 55);
             this.NameListBox.Name = "NameListBox";
-            this.NameListBox.Size = new System.Drawing.Size(655, 290);
+            this.NameListBox.Size = new System.Drawing.Size(655, 284);
             this.NameListBox.TabIndex = 38;
             this.NameListBox.SelectedIndexChanged += new System.EventHandler(this.NameListBox_SelectedIndexChanged);
             // 

@@ -215,7 +215,7 @@ namespace WindowsFormsApp2
 
         }
 
-        void ClearCompaniesDisplay()
+        void ClearCompaniesList()
         {
             CompaniesListBox.Items.Clear();
         }
@@ -246,7 +246,7 @@ namespace WindowsFormsApp2
             var result = myInsertCommand.ExecuteNonQuery();
             database_object.CloseConnection();
 
-            ClearCompaniesDisplay();
+            ClearCompaniesList();
             PopulateCompanyList();
 
             CompaniesListBox.SelectedIndex = CompaniesListBox.Items.Count - 1;
@@ -374,27 +374,102 @@ namespace WindowsFormsApp2
         private void AddCompanyButton_Click(object sender, EventArgs e)
         {
 
-            
+            if (CreateNewFunctions.DoesThisAlreadyExist("System_Company", "CompanyName", "BLANK", database_object))
+            {
+                MessageBox.Show("There is already a BLANK item", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             CreateNewFunctions.CreateNewCompany(database_object);
             CreateNewFunctions.CreateNewIcon(int.Parse(CompanyIdText.Text) + 1, database_object);
-            ClearCompaniesDisplay();
+
+            ClearCompaniesList();
             PopulateCompanyList();
+
+            PrimaryKey.UpdatePrimaryKey("System_Company", "CompanyId", "CompanyName", database_object);
+
+            CompaniesListBox.SelectedIndex = CompaniesListBox.Items.Count - 1;
+
 
         }
 
         private void AddProductButton_Click(object sender, EventArgs e)
         {
+            if (CreateNewFunctions.DoesThisAlreadyExist("System_CompanyProducts", "ProductName", "Blank Product", database_object))
+            {
+                MessageBox.Show("There is already a BLANK item", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             CreateNewFunctions.CreateNewProduct(int.Parse(CompanyIdText.Text), database_object);
+            PrimaryKey.UpdatePrimaryKey("System_CompanyProducts", "CompanyProductId", "ProductName", database_object);
+
             ClearCompanyProductDisplay();
             PopulateCompanyProductsList(int.Parse(CompanyIdText.Text));
         }
 
         private void AddEventButton_Click(object sender, EventArgs e)
         {
+            if (CreateNewFunctions.DoesThisAlreadyExist("System_CompanyEvents", "Event", "Blank", database_object))
+            {
+                MessageBox.Show("There is already a BLANK item", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             CreateNewFunctions.CreateNewEvent(int.Parse(CompanyIdText.Text), database_object);
+            PrimaryKey.UpdatePrimaryKey("System_CompanyEvents", "CompanyEventId", "Event", database_object);
+
             ClearCompanyEventsDisplay();
             PopulateCompanyEvents(int.Parse(CompanyIdText.Text));
+        }
+
+        private void DeleteCompanyButton_Click(object sender, EventArgs e)
+        {
+
+            DeleteFunctions.DeleteRow("System_CompanyIcons",    "CompanyId", GetFunctions.GetCompanyIdFromName(CompaniesListBox.SelectedItem.ToString(), database_object).ToString(), database_object);
+            DeleteFunctions.DeleteRow("System_CompanyEvents",   "CompanyId", GetFunctions.GetCompanyIdFromName(CompaniesListBox.SelectedItem.ToString(), database_object).ToString(), database_object);
+            DeleteFunctions.DeleteRow("System_CompanyProducts", "CompanyId", GetFunctions.GetCompanyIdFromName(CompaniesListBox.SelectedItem.ToString(), database_object).ToString(), database_object);
+            DeleteFunctions.DeleteRow("System_Company",         "CompanyName", CompaniesListBox.SelectedItem.ToString(), database_object);
+
+            CompaniesListBox.Items.Clear();
+            PopulateCompanyList();
+
+            PrimaryKey.UpdatePrimaryKey("System_CompanyIcons", "CompanyId",   "CompanyId", database_object);
+            PrimaryKey.UpdatePrimaryKey("System_CompanyIcons", "CompanyIcon", "CompanyId", database_object);
+
+            PrimaryKey.UpdatePrimaryKey("System_CompanyEvents",  "CompanyEventId", "Event",     database_object);
+            PrimaryKey.SubstractOneAfter("System_CompanyEvents", "CompanyEventId", "CompanyId", int.Parse(CompanyIdText.Text), database_object);
+
+            PrimaryKey.UpdatePrimaryKey("System_CompanyProducts",  "CompanyProductId", "ProductName", database_object);
+            PrimaryKey.SubstractOneAfter("System_CompanyProducts", "CompanyProductId", "CompanyId",      int.Parse(CompanyIdText.Text), database_object);
+
+            PrimaryKey.UpdatePrimaryKey("System_Company", "CompanyId", "CompanyName", database_object);
+
+            CompaniesListBox.Items.Clear();
+            PopulateCompanyList();
+
+            CompaniesListBox.SelectedIndex = CompaniesListBox.Items.Count - 1;
+        }
+
+        private void DeleteProductButton_Click(object sender, EventArgs e)
+        {
+            DeleteFunctions.DeleteRow("System_CompanyProducts", "ProductName", ProductsListBox.SelectedItem.ToString(), database_object);
+
+            ProductsListBox.Items.Clear();
+            PopulateCompanyProductsList(int.Parse(CompanyIdText.Text));
+
+            PrimaryKey.UpdatePrimaryKey("System_CompanyProducts", "CompanyProductId", "ProductName", database_object);
+
+        }
+
+        private void DeleteEventButton_Click(object sender, EventArgs e)
+        {
+            DeleteFunctions.DeleteRow("System_CompanyEvents", "Event", EventListBox.SelectedItem.ToString(), database_object);
+
+            EventListBox.Items.Clear();
+            PopulateCompanyEvents(int.Parse(CompanyIdText.Text));
+
+            PrimaryKey.UpdatePrimaryKey("System_CompanyEvents", "CompanyEventId", "Event", database_object);
         }
     }
 }

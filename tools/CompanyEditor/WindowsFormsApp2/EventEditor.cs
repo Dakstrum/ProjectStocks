@@ -96,7 +96,7 @@ namespace WindowsFormsApp2
 
         void UpdateGlobalEvents(int global_event_id)
         {
-            
+
             database_object.OpenConnection();
             string query = "Update System_GlobalEvents Set Event = @event, PriceModifier = @pricemodifier, ModifierLength = @modifierlength Where GlobalEventId = " + global_event_id;
             SQLiteCommand myInsertCommand = new SQLiteCommand(query, database_object.myConnection);
@@ -110,7 +110,7 @@ namespace WindowsFormsApp2
 
             ClearGlobalEventsListBox();
             PopulateGlobalEvents();
-            
+
         }
 
         void ClearGlobalEventsListBox()
@@ -125,10 +125,20 @@ namespace WindowsFormsApp2
 
         private void AddGlobalEventButton_Click(object sender, EventArgs e)
         {
+
+            if (CreateNewFunctions.DoesThisAlreadyExist("System_GlobalEvents", "Event", "BLANK", database_object))
+            {
+                MessageBox.Show("There is already a BLANK item", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             CreateNewFunctions.CreateNewGlobalEvent(database_object);
 
             ClearGlobalEventsListBox();
             PopulateGlobalEvents();
+
+            PrimaryKey.UpdatePrimaryKey("System_GlobalEvents", "GlobalEventId", "Event", database_object);
+
+            PopulateGlobalEventsModifiers(GlobalEventListBox.SelectedIndex + 1); //STUFF ISNT UPDATING CORRECT, IDK, YOU FIX IT FUTURE JACK!!!
 
         }
 
@@ -218,6 +228,15 @@ namespace WindowsFormsApp2
             CategoryEventListBox.Items.Clear();
         }
 
+        void ClearCategoryEventModifiers()
+        {
+            CategoryEditTextBox.Text = "";
+            CategoryPriceModifierTextBox.Text = "";
+            CategoryModifierLenghtTextBox.Text = "";
+            CateogryEventIdText.Text = "";
+            CategoryEventsEditComboBox.SelectedIndex = CategoryIdComboBox.SelectedIndex;
+        }
+
         private void SaveCategoryEvent_Click(object sender, EventArgs e)
         {
             UpdateCategoryEvents(GetFunctions.GetCategoryEventIdFromEvent(CategoryEventListBox.SelectedItem.ToString(), database_object));
@@ -225,10 +244,20 @@ namespace WindowsFormsApp2
 
         private void AddCategoryEventButton_Click(object sender, EventArgs e)
         {
+            if (CreateNewFunctions.DoesThisAlreadyExist("System_CategoryEvents", "Event", "BLANK", database_object))
+            {
+                MessageBox.Show("There is already a BLANK item", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             CreateNewFunctions.CreateNewCategoryEvent(database_object, current_category_viewing);
 
             ClearCategoryEventsListBox();
             PopulateCategoryEvents(current_category_viewing);
+
+            //PrimaryKey.UpdatePrimaryKey("System_CategoryEvents", "CategoryEventId", "Event", database_object, CategoryEventListBox);
+
+            PopulateCategoryEventsModifiers(GetFunctions.GetCategoryEventIdFromEvent(CategoryEventListBox.SelectedItem.ToString(), database_object));
         }
 
         private void SaveCategoryEventButton_Click(object sender, EventArgs e)
@@ -241,7 +270,29 @@ namespace WindowsFormsApp2
             current_category_viewing = CategoryIdComboBox.SelectedIndex + 1;
 
             ClearCategoryEventsListBox();
+            ClearCategoryEventModifiers();
+
             PopulateCategoryEvents(current_category_viewing);
+        }
+
+        private void DeleteGloabalEventButton_Click(object sender, EventArgs e)
+        {
+            DeleteFunctions.DeleteRow("System_GlobalEvents", "Event", GlobalEventListBox.SelectedItem.ToString(), database_object);
+
+            GlobalEventListBox.Items.Clear();
+            PopulateGlobalEvents();
+
+            PrimaryKey.UpdatePrimaryKey("System_GlobalEvents", "GlobalEventId", "Event", database_object);
+        }
+
+        private void DeleteCategoryEventButton_Click(object sender, EventArgs e)
+        {
+            DeleteFunctions.DeleteRow("System_CategoryEvents", "Event", CategoryEventListBox.SelectedItem.ToString(), database_object);
+
+            CategoryEventListBox.Items.Clear();
+            PopulateCategoryEvents(CategoryIdComboBox.SelectedIndex + 1);
+
+            PrimaryKey.UpdatePrimaryKey("System_CategoryEvents", "CategoryEventId", "Event", database_object);
         }
     }
 }

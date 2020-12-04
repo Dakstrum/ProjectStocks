@@ -75,6 +75,7 @@
             this.DeleteGloabalEventButton.TabIndex = 35;
             this.DeleteGloabalEventButton.Text = "Delete Global Event";
             this.DeleteGloabalEventButton.UseVisualStyleBackColor = true;
+            this.DeleteGloabalEventButton.Click += new System.EventHandler(this.DeleteGloabalEventButton_Click);
             // 
             // AddGlobalEventButton
             // 
@@ -249,6 +250,7 @@
             this.DeleteCategoryEventButton.TabIndex = 54;
             this.DeleteCategoryEventButton.Text = "Delete Category Event";
             this.DeleteCategoryEventButton.UseVisualStyleBackColor = true;
+            this.DeleteCategoryEventButton.Click += new System.EventHandler(this.DeleteCategoryEventButton_Click);
             // 
             // AddCategoryEventButton
             // 

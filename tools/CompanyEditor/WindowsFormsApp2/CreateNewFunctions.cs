@@ -34,9 +34,10 @@ namespace WindowsFormsApp2
 
             database_object.OpenConnection();
 
-            string query = "INSERT INTO System_CompanyProducts ( CompanyId, `ProductName` ) VALUES (@companyid, @productname)";
+            string query = "INSERT INTO System_CompanyProducts ( CompanyProductId, CompanyId, `ProductName` ) VALUES (@companyproductid, @companyid, @productname)";
             SQLiteCommand myInsertCommand = new SQLiteCommand(query, database_object.myConnection);
 
+            myInsertCommand.Parameters.AddWithValue("@companyproductid", PrimaryKey.GetNextPrimaryKey("System_CompanyProducts", "CompanyProductId", database_object));
             myInsertCommand.Parameters.AddWithValue("@companyid",    company_id);
             myInsertCommand.Parameters.AddWithValue("@productname", "Blank Product");
 
@@ -54,7 +55,7 @@ namespace WindowsFormsApp2
             SQLiteCommand myInsertCommand = new SQLiteCommand(query, database_object.myConnection);
 
             myInsertCommand.Parameters.AddWithValue("@companyid", company_id);
-            myInsertCommand.Parameters.AddWithValue("@event", "Blank Event");
+            myInsertCommand.Parameters.AddWithValue("@event", "Blank");
             myInsertCommand.Parameters.AddWithValue("@pricemodifier", 0);
             myInsertCommand.Parameters.AddWithValue("@modifierlength", 0);
 
@@ -68,9 +69,10 @@ namespace WindowsFormsApp2
             
             database_object.OpenConnection();
 
-            string query = "INSERT INTO System_CompanyIcons (CompanyId, `IconPath`) VALUES (@companyid, @iconpath)";
+            string query = "INSERT INTO System_CompanyIcons (CompanyIcon, CompanyId, `IconPath`) VALUES (@companyicon, @companyid, @iconpath)";
             SQLiteCommand myInsertCommand = new SQLiteCommand(query, database_object.myConnection);
 
+            myInsertCommand.Parameters.AddWithValue("@companyicon", PrimaryKey.GetNextPrimaryKey("System_CompanyIcons", "CompanyIcon", database_object));
             myInsertCommand.Parameters.AddWithValue("@companyid", company_id);
             myInsertCommand.Parameters.AddWithValue("@iconpath", "");
 
@@ -100,10 +102,12 @@ namespace WindowsFormsApp2
         {
 
             database_object.OpenConnection();
-
-            string query = "INSERT INTO System_CategoryEvents (CategoryId, `Event`, PriceModifier, ModifierLength) VALUES (@categoryid, @event, @pricemodifier, @modifierlength)";
+            Console.WriteLine("CCV:"+current_category_viewing);
+            string query = "INSERT INTO System_CategoryEvents (CategoryEventId, CategoryId, `Event`, PriceModifier, ModifierLength) VALUES (@categoryeventid, @categoryid, @event, @pricemodifier, @modifierlength)";
             SQLiteCommand myInsertCommand = new SQLiteCommand(query, database_object.myConnection);
 
+            Console.WriteLine("SETTING IT TO "+ PrimaryKey.GetNextPrimaryKey("System_CategoryEvents", "Event", database_object));
+            myInsertCommand.Parameters.AddWithValue("@categoryeventid", PrimaryKey.GetNextPrimaryKey("System_CategoryEvents", "Event", database_object));
             myInsertCommand.Parameters.AddWithValue("@categoryid", current_category_viewing);
             myInsertCommand.Parameters.AddWithValue("@event", "BLANK");
             myInsertCommand.Parameters.AddWithValue("@pricemodifier", 0);
@@ -159,8 +163,30 @@ namespace WindowsFormsApp2
             myInsertCommand.Parameters.AddWithValue("@lastname", "BLANK");
 
             var result = myInsertCommand.ExecuteNonQuery();
+
             database_object.CloseConnection();
 
+        }
+
+        public static bool DoesThisAlreadyExist(string table, string column, string check_string, Database database_object)
+        {
+            database_object.OpenConnection();
+
+            string query = "SELECT " + column + " FROM " + table +" WHERE "+ column +" = " +"'"+ check_string +"'";
+            SQLiteCommand myInsertCommand = new SQLiteCommand(query, database_object.myConnection);
+
+            SQLiteDataReader result = myInsertCommand.ExecuteReader();
+            if (result.HasRows)
+                while (result.Read())
+                    if (result[column].ToString() == check_string)
+                        return true;
+                    else
+                        return false;
+            else
+                return false;
+
+            database_object.CloseConnection();
+            return true;
         }
     }
 }
