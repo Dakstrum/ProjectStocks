@@ -7,7 +7,6 @@
 #include <sqlite3.h>
 #include <allegro5/allegro.h>
 
-
 #include "log.h"
 #include "vector.h"
 #include "shared.h"
@@ -26,6 +25,8 @@ static atomic_bool simulation_finished;
 static Vector *companies;
 static Vector **sim_data;
 static Vector *modifiers;
+
+static uint16_t current_seed[3];
 
 void CleanupBeforeExit();
 
@@ -62,14 +63,14 @@ void StoreStockPrice(Vector *prices, float price, time_t timestamp)
 float GetRandomSign()
 {
 
-    return rand() % 2 == 0 ? -1.0 : 1.0;
+    return shared_nrand48(current_seed) % 2 == 0 ? -1.0 : 1.0;
 
 }
 
 float GetRandomFloat()
 {
 
-    return (float)rand()/(float)RAND_MAX;
+    return (float)shared_nrand48(current_seed)/2147483648;
 
 }
 
@@ -294,10 +295,19 @@ void Simulation_LoadCompanies()
 
 }
 
+void Simulation_InitRandom(uint32_t new_game_seed)
+{
+    srand(new_game_seed);
+    current_seed[0] = (new_game_seed >> 16); 
+    current_seed[1] = (new_game_seed ^ 0xFFFF0000);
+    current_seed[2] = (current_seed[0] ^ current_seed[1]);
+
+}
+
 void Simulation_Init(uint32_t new_game_seed)
 {
 
-    srand(new_game_seed);
+    Simulation_InitRandom(new_game_seed);
     Simulation_LoadCompanies();
     Simulation_LoadModifiers();
 

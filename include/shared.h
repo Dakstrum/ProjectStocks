@@ -2,8 +2,9 @@
 #define SHARED_H
 
 #include <time.h>
-#include <stdbool.h>
+#include <stdint.h>
 #include <stdarg.h>
+#include <stdbool.h>
 
 typedef enum TimeSpan {
 
@@ -42,5 +43,8 @@ struct timespec GetCurrentTime();
 struct timespec GetOffsetTime(long offset_in_milli);
 struct timespec GetTimespecDiff(struct timespec *t1, struct timespec *t2);
 float GetSeconds(struct timespec *t);
+
+long shared_nrand48(uint16_t xseed[3]);
+uint16_t *shared_seed48(uint16_t xseed[3]);
 
 #endif
