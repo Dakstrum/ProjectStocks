@@ -1,12 +1,12 @@
 #ifndef CARDSMENU_H
 #define CARDSMENU_H
 
-void InitializeCardsMenu();
-void CardsMenuRenderLogic();
+void CardsMenu_Init();
+void CardsMenu_RenderLogic();
 void ToggleCardsMenu();
 
-void ApplyMenu_BCB();
+void CardsMenu_PickCompanyMenu_CB();
 
-void CleanCardsMenu();
+void CardsMenu_Clean();
 
 #endif

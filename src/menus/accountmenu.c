@@ -52,20 +52,20 @@ static DrawObject *all_action_objects[DSP_NUM];
 static DrawObject *all_date_objects[DSP_NUM];
 static DrawObject *all_share_amount_objects[DSP_NUM];
 
-char* GetTransactionAction(TransactionType type);
+char* AccountMenu_GetTransactionActionType(TransactionType type);
 
-void InitalizeAccountMenuCompanyScrollbox();
-void PopulateSelectedStockHistoryDisplay(char* company);
+void AccountMenu_InitScrollbox();
+void AccountMenu_PopulateSelectedCompanyHistoryDisplay(char* company);
 
-void InitializeAllStocksHistoryDisplay();
-void PopulateAllStocksHistoryDisplay();
+void AccountMenu_InitAllStocksHistoryDisplay();
+void AccountMenu_PopulateAllStocksHistoryDisplay();
 
-void InitializeSelectedStockHistoryDisplay();
-void AccountMenuRenderLogic();
-void InitalizeAccountMenuText();
-void SetHistoryDisplayPageNumber(unsigned int num_transactions);
+void AccountMenu_InitSelectedCompanyHistoryDisplay();
+void AccountMenu_RenderLogic();
+void AccountMenu_InitText();
+void AccountMenu_SetHistoryDisplayPageNumber(unsigned int num_transactions);
 
-void InitializeAccountMenu() 
+void AccountMenu_Init() 
 {
 
     if (CreateNewDrawLayer() == -1) {
@@ -76,19 +76,19 @@ void InitializeAccountMenu()
 
     account_menu = GetJSONMenuAndAddToDrawLayer("AccountMenu");
 
-    InitalizeAccountMenuCompanyScrollbox();
-    InitalizeAccountMenuText();
+    AccountMenu_InitScrollbox();
+    AccountMenu_InitText();
     InitializeSpeedSelectObject("AccountMenu");
 
-    InitializeSelectedStockHistoryDisplay();
-    PopulateSelectedStockHistoryDisplay(GetCompanyNameViewing());
+    AccountMenu_InitSelectedCompanyHistoryDisplay();
+    AccountMenu_PopulateSelectedCompanyHistoryDisplay(GetCompanyNameViewing());
 
-    InitializeAllStocksHistoryDisplay();
-    PopulateAllStocksHistoryDisplay();
+    AccountMenu_InitAllStocksHistoryDisplay();
+    AccountMenu_PopulateAllStocksHistoryDisplay();
 
 }
 
-void AccountMenuRenderLogic()
+void AccountMenu_RenderLogic()
 {
 
     if (player_money_textobject == NULL)
@@ -104,7 +104,7 @@ void AccountMenuRenderLogic()
 
 }
 
-void InitalizeAccountMenuText()
+void AccountMenu_InitText()
 {
 
     company_name_textobject         = GetJSONObjectAndAddToDrawLayer("AccountMenuCompanyNameTextObject");
@@ -126,7 +126,7 @@ void InitalizeAccountMenuText()
 
 }
 
-void InitializeSelectedStockHistoryDisplay()
+void AccountMenu_InitSelectedCompanyHistoryDisplay()
 {
 
     static char *action_json_objects[DSP_NUM]       = {"AccountMenuAction1TextObject",      "AccountMenuAction2TextObject",      "AccountMenuAction3TextObject",      "AccountMenuAction4TextObject",      "AccountMenuAction5TextObject"};
@@ -147,14 +147,14 @@ void InitializeSelectedStockHistoryDisplay()
 
 }
 
-void PopulateSelectedStockHistoryDisplay(char* company)
+void AccountMenu_PopulateSelectedCompanyHistoryDisplay(char* company)
 {
     
 
     Vector *transactions = GetCompanyTransactions(Account_GetPlayerId(), company);
     Transaction *temp    = transactions->elements;
 
-    SetHistoryDisplayPageNumber(transactions->num_elements);
+    AccountMenu_SetHistoryDisplayPageNumber(transactions->num_elements);
     char transaction_time[128];
 
     for (int i = 0; i < DSP_NUM; i++) {
@@ -166,7 +166,7 @@ void PopulateSelectedStockHistoryDisplay(char* company)
         time_t time_buf = temp[off_idx].transaction_date;
         strftime(transaction_time, 128, "%x", localtime(&time_buf));
 
-        SetTextContent(selected_action_objects[i],       "%s",   GetTransactionAction(temp[off_idx].type));
+        SetTextContent(selected_action_objects[i],       "%s",   AccountMenu_GetTransactionActionType(temp[off_idx].type));
         SetTextContent(selected_date_objects[i],         "%s",   transaction_time);
         SetTextContent(selected_share_amount_objects[i], "%d",   temp[off_idx].shares_exchanged);
         SetTextContent(selected_share_price_objects[i],  "%.2f", temp[off_idx].price_per_share);
@@ -179,7 +179,7 @@ void PopulateSelectedStockHistoryDisplay(char* company)
     
 }
 
-void SetHistoryDisplayPageNumber(unsigned int num_transactions)
+void AccountMenu_SetHistoryDisplayPageNumber(unsigned int num_transactions)
 {
 
     int amount_of_pages = ceil((float)num_transactions  / 5);
@@ -190,7 +190,7 @@ void SetHistoryDisplayPageNumber(unsigned int num_transactions)
 
 }
 
-void InitializeAllStocksHistoryDisplay()
+void AccountMenu_InitAllStocksHistoryDisplay()
 {
 
     static char *name_json_objects[DSP_NUM]         = {"AccountMenuName11TextObject",   "AccountMenuName22TextObject",   "AccountMenuName33TextObject",   "AccountMenuName44TextObject",   "AccountMenuName55TextObject"};
@@ -209,7 +209,7 @@ void InitializeAllStocksHistoryDisplay()
 
 }
 
-void PopulateAllStocksHistoryDisplay()
+void AccountMenu_PopulateAllStocksHistoryDisplay()
 {
     
     Vector *transactions = GetAllTransactions(Account_GetPlayerId());
@@ -224,7 +224,7 @@ void PopulateAllStocksHistoryDisplay()
             strftime(transaction_time, 128, "%x", localtime(&time_buf));
 
             SetTextContent(all_name_objects[i],         "%s", GetCompanyAbbreviation(temp[i].company_id));
-            SetTextContent(all_action_objects[i],       "%s", GetTransactionAction(temp[i].type));
+            SetTextContent(all_action_objects[i],       "%s", AccountMenu_GetTransactionActionType(temp[i].type));
             SetTextContent(all_date_objects[i],         "%s", transaction_time);
             SetTextContent(all_share_amount_objects[i], "%d", temp[i].shares_exchanged);
 
@@ -235,7 +235,7 @@ void PopulateAllStocksHistoryDisplay()
 
 }
 
-char *GetTransactionAction(TransactionType type)
+char *AccountMenu_GetTransactionActionType(TransactionType type)
 {
 
     if(type == BUY)
@@ -247,7 +247,7 @@ char *GetTransactionAction(TransactionType type)
     return "error";
 }
 
-void ClearAccountHistoryDisplay()
+void AccountMenu_ClearSelectedCompanyHistoryDisplay()
 {
 
     for (int i=0; i < DSP_NUM; i++) {
@@ -262,14 +262,14 @@ void ClearAccountHistoryDisplay()
 
 }
 
-void AccountMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
+void AccountMenu_ScrollBoxClick(char *scroll_box_content, unsigned short int index)
 {
 
     SetAccountHistoryDisplayNum(0);
     char *company_name = GetCompanyName(index+1);
     SetCompanyIdViewing(GetCompanyId(company_name));
-    ClearAccountHistoryDisplay();
-    PopulateSelectedStockHistoryDisplay(company_name);
+    AccountMenu_ClearSelectedCompanyHistoryDisplay();
+    AccountMenu_PopulateSelectedCompanyHistoryDisplay(company_name);
     
 
     SetTextContent(company_name_textobject, "%s", company_name);
@@ -280,34 +280,34 @@ void AccountMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short i
 
 }
 
-void InitalizeAccountMenuCompanyScrollbox() 
+void AccountMenu_InitScrollbox() 
 {
 
-    AddObjectToDrawLayer(CreateCompaniesScrollbox(2, 230, &AccountMenuCompanyScrollBoxClick));
+    AddObjectToDrawLayer(CreateCompaniesScrollbox(2, 230, &AccountMenu_ScrollBoxClick));
 
 }
 
-void AccountDown_BCB()
+void AccountMenu_Down_CB()
 {
 
     SetAccountHistoryDisplayNum(GetAccountHistoryDisplayNum() + DSP_NUM);
-    ClearAccountHistoryDisplay();
-    PopulateSelectedStockHistoryDisplay(GetCompanyNameViewing());
+    AccountMenu_ClearSelectedCompanyHistoryDisplay();
+    AccountMenu_PopulateSelectedCompanyHistoryDisplay(GetCompanyNameViewing());
 
 }
 
-void AccountUp_BCB()
+void AccountMenu_Up_CB()
 {
     if(GetAccountHistoryDisplayNum() >= DSP_NUM) {
 
         SetAccountHistoryDisplayNum(GetAccountHistoryDisplayNum() - DSP_NUM);
-        ClearAccountHistoryDisplay();
-        PopulateSelectedStockHistoryDisplay(GetCompanyNameViewing());
+        AccountMenu_ClearSelectedCompanyHistoryDisplay();
+        AccountMenu_PopulateSelectedCompanyHistoryDisplay(GetCompanyNameViewing());
 
     }
 }
 
-void CleanAccountMenu()
+void AccountMenu_Clear()
 {
 
     SetAccountHistoryDisplayNum(0);

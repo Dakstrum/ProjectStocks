@@ -154,9 +154,9 @@ void CleanUpMainMenu()
 void CleanMenus() 
 {
 
-    CleanAccountMenu();
+    AccountMenu_Clear();
     CleanSaveMenu();
-    CleanCardsMenu();
+    CardsMenu_Clean();
     CleanGeneralPurposeMenu();
     CleanOptionsMenu();
     CleanPauseMenu();

@@ -116,15 +116,15 @@ void SwitchToRenderingNewsMenu()
 void SwitchToRenderingAccountMenu()
 {
 
-    InitializeAccountMenu();
-    RenderLogic = &AccountMenuRenderLogic;
+    AccountMenu_Init();
+    RenderLogic = &AccountMenu_RenderLogic;
 
 }
 
 void SwitchToRenderingCardsMenu()
 {
 
-    InitializeCardsMenu();
-    RenderLogic = &CardsMenuRenderLogic;
+    CardsMenu_Init();
+    RenderLogic = &CardsMenu_RenderLogic;
 
 }

@@ -119,8 +119,8 @@ void InitializeAccountButtons()
     AddButton("AccountMenuAccountTabButtonObject", &Account_BCB);
     AddButton("AccountMenuCardsTabButtonObject",   &Cards_BCB);
 
-    AddButton("AccountMenuDownButtonObject", &AccountDown_BCB);
-    AddButton("AccountMenuUpButtonObject",   &AccountUp_BCB);
+    AddButton("AccountMenuDownButtonObject", &AccountMenu_Down_CB);
+    AddButton("AccountMenuUpButtonObject",   &AccountMenu_Up_CB);
 
     AddButton("AccountMenuSpeed1ButtonObject",   &SpeedOne_BCB);
     AddButton("AccountMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
@@ -159,7 +159,7 @@ void InitializeGeneralPurposeButtons()
 
 }
 
-void InitializeCardsMenuButtons()
+void CardsMenu_InitButtons()
 {
 
     AddButton("CardsMenuStocksTabButtonObject",  &Stocks_BCB);
@@ -167,10 +167,10 @@ void InitializeCardsMenuButtons()
     AddButton("CardsMenuAccountTabButtonObject", &Account_BCB);
     AddButton("CardsMenuCardsTabButtonObject",   &Cards_BCB);
 
-    AddButton("CardsMenuApplyButtonObject", &ApplyMenu_BCB);
+    AddButton("CardsMenuApplyButtonObject", &CardsMenu_PickCompanyMenu_CB);
 
 
-    AddButton("ApplyCardMenuExitButtonObject", &ApplyMenu_BCB);
+    AddButton("ApplyCardMenuExitButtonObject", &CardsMenu_PickCompanyMenu_CB);
 
     AddButton("CardsMenuSpeed1ButtonObject",   &SpeedOne_BCB);
     AddButton("CardsMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
@@ -224,7 +224,7 @@ void InitializeButtons()
     InitializePauseMenusButtons();
     InitializeOptionsButtons();
     InitializeSaveMenuButtons();
-    InitializeCardsMenuButtons();
+    CardsMenu_InitButtons();
     InitializeNewsButtons();
 
 }

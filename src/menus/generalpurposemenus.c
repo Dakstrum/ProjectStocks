@@ -68,8 +68,8 @@ void CleanAll()
     ClearDrawLayers();
 
 
-    CleanAccountMenu();
-    CleanCardsMenu();
+    AccountMenu_Clear();
+    CardsMenu_Clean();
     CleanOptionsMenu();
     CleanStocksMenu();
 
