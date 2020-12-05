@@ -67,7 +67,7 @@ void CardsMenu_Init()
 
     CardsMenu_InitTextAndButtons(); 
 
-    InitializeSpeedSelectObject("CardsMenu");
+    GeneralPurposeMenus_InitSpeedSelectObject("CardsMenu");
 
 }
 
@@ -151,11 +151,9 @@ void CardsMenu_PopulatePositiveCardScrollbox(DrawObject *object)
     PlayerCard *temp  = GetAllPlayerCards();
     int scrollbox_num = 0;
 
-    for(int i = 0; i < GetNumOfPlayerCards(); i++)
-    {
+    for(int i = 0; i < GetNumOfPlayerCards(); i++) {
 
-        if(GetCardType(temp[i].card_id) == 1)
-        {
+        if(GetCardType(temp[i].card_id) == 1) {
 
             object->scrollbox.text_content[scrollbox_num] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
             scrollbox_num++;
@@ -229,8 +227,7 @@ void CardsMenu_InitNegativeScrollBox()
 
 void CardsMenu_PickCompanyMenu_CB()
 {
-    if (current_button_idx == -1)
-    {
+    if (current_button_idx == -1) {
 
         DisplayPopupOnDrawLayer("No Card Selected", "assets/images/generalpurposemenus/popups/redpopup.png");
         return;

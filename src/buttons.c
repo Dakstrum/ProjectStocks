@@ -72,10 +72,10 @@ void InitializeMainMenuButtons()
 void InitializeStocksMenuButtons()
 {
 
-    AddButton("StocksMenuStocksTabButtonObject",  &Stocks_BCB);
-    AddButton("StocksMenuNewsTabButtonObject",    &News_BCB);
-    AddButton("StocksMenuAccountTabButtonObject", &Account_BCB);
-    AddButton("StocksMenuCardsTabButtonObject",   &Cards_BCB);
+    AddButton("StocksMenuStocksTabButtonObject",  &GeneralPurposeMenus_InitStocksMenu_CB);
+    AddButton("StocksMenuNewsTabButtonObject",    &GeneralPurposeMenus_InitNewsMenu_CB);
+    AddButton("StocksMenuAccountTabButtonObject", &GeneralPurposeMenus_InitAccountMenu_CB);
+    AddButton("StocksMenuCardsTabButtonObject",   &GeneralPurposeMenus_InitCardsMenu_CB);
 
     AddButton("StocksMenuSellButtonObject",       &SellMenu_BCB);
     AddButton("StocksMenuBuyButtonObject",        &BuyMenu_BCB);
@@ -92,9 +92,9 @@ void InitializeStocksMenuButtons()
     AddButton("SellMenuExitButtonObject",         &SellMenu_BCB);
     AddButton("SellMenuSellButtonObject",         &Sell_BCB);
 
-    AddButton("StocksMenuSpeed1ButtonObject",   &SpeedOne_BCB);
-    AddButton("StocksMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
-    AddButton("StocksMenuSpeed3ButtonObject",   &SpeedThree_BCB);
+    AddButton("StocksMenuSpeed1ButtonObject",   &GeneralPurposeMenus_SetSpeedOne_CB);
+    AddButton("StocksMenuSpeed2ButtonObject",   &GeneralPurposeMenus_SetSpeedTwo_CB);
+    AddButton("StocksMenuSpeed3ButtonObject",   &GeneralPurposeMenus_SetSpeedThree_CB);
     
 }
 
@@ -114,31 +114,31 @@ void InitializeSaveMenuButtons()
 void InitializeAccountButtons()
 {
 
-    AddButton("AccountMenuStocksTabButtonObject",  &Stocks_BCB);
-    AddButton("AccountMenuNewsTabButtonObject",    &News_BCB);
-    AddButton("AccountMenuAccountTabButtonObject", &Account_BCB);
-    AddButton("AccountMenuCardsTabButtonObject",   &Cards_BCB);
+    AddButton("AccountMenuStocksTabButtonObject",  &GeneralPurposeMenus_InitStocksMenu_CB);
+    AddButton("AccountMenuNewsTabButtonObject",    &GeneralPurposeMenus_InitNewsMenu_CB);
+    AddButton("AccountMenuAccountTabButtonObject", &GeneralPurposeMenus_InitAccountMenu_CB);
+    AddButton("AccountMenuCardsTabButtonObject",   &GeneralPurposeMenus_InitCardsMenu_CB);
 
     AddButton("AccountMenuDownButtonObject", &AccountMenu_Down_CB);
     AddButton("AccountMenuUpButtonObject",   &AccountMenu_Up_CB);
 
-    AddButton("AccountMenuSpeed1ButtonObject",   &SpeedOne_BCB);
-    AddButton("AccountMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
-    AddButton("AccountMenuSpeed3ButtonObject",   &SpeedThree_BCB);
+    AddButton("AccountMenuSpeed1ButtonObject",   &GeneralPurposeMenus_SetSpeedOne_CB);
+    AddButton("AccountMenuSpeed2ButtonObject",   &GeneralPurposeMenus_SetSpeedTwo_CB);
+    AddButton("AccountMenuSpeed3ButtonObject",   &GeneralPurposeMenus_SetSpeedThree_CB);
 
 }
 
 void InitializeNewsButtons()
 {
 
-    AddButton("NewsMenuStocksTabButtonObject",  &Stocks_BCB);
-    AddButton("NewsMenuNewsTabButtonObject",    &News_BCB);
-    AddButton("NewsMenuAccountTabButtonObject", &Account_BCB);
-    AddButton("NewsMenuCardsTabButtonObject",   &Cards_BCB);
+    AddButton("NewsMenuStocksTabButtonObject",  &GeneralPurposeMenus_InitStocksMenu_CB);
+    AddButton("NewsMenuNewsTabButtonObject",    &GeneralPurposeMenus_InitNewsMenu_CB);
+    AddButton("NewsMenuAccountTabButtonObject", &GeneralPurposeMenus_InitAccountMenu_CB);
+    AddButton("NewsMenuCardsTabButtonObject",   &GeneralPurposeMenus_InitCardsMenu_CB);
 
-    AddButton("NewsMenuSpeed1ButtonObject",   &SpeedOne_BCB);
-    AddButton("NewsMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
-    AddButton("NewsMenuSpeed3ButtonObject",   &SpeedThree_BCB);
+    AddButton("NewsMenuSpeed1ButtonObject",   &GeneralPurposeMenus_SetSpeedOne_CB);
+    AddButton("NewsMenuSpeed2ButtonObject",   &GeneralPurposeMenus_SetSpeedTwo_CB);
+    AddButton("NewsMenuSpeed3ButtonObject",   &GeneralPurposeMenus_SetSpeedThree_CB);
 
     AddButton("NewsMenuscrollbox_backButtonObject", &ScrollboxBack_BCB);
 
@@ -147,34 +147,33 @@ void InitializeNewsButtons()
 void InitializeGeneralPurposeButtons()
 {
 
-    AddButton("StocksButton", &Stocks_BCB);
-    AddButton("NewsButton", &News_BCB);
-    AddButton("AccountButton", &Account_BCB);
-    AddButton("CardsButton", &Cards_BCB);
+    AddButton("StocksButton", &GeneralPurposeMenus_InitStocksMenu_CB);
+    AddButton("NewsButton", &GeneralPurposeMenus_InitNewsMenu_CB);
+    AddButton("AccountButton", &GeneralPurposeMenus_InitAccountMenu_CB);
+    AddButton("CardsButton", &GeneralPurposeMenus_InitCardsMenu_CB);
 
-    AddButton("PauseSpeedButton", &PauseSpeed_BCB);
-    AddButton("SpeedOneButton", &SpeedOne_BCB);
-    AddButton("SpeedTwoButton", &SpeedTwo_BCB);
-    AddButton("SpeedThreeButton", &SpeedThree_BCB);
+    AddButton("SpeedOneButton", &GeneralPurposeMenus_SetSpeedOne_CB);
+    AddButton("SpeedTwoButton", &GeneralPurposeMenus_SetSpeedTwo_CB);
+    AddButton("SpeedThreeButton", &GeneralPurposeMenus_SetSpeedThree_CB);
 
 }
 
 void CardsMenu_InitButtons()
 {
 
-    AddButton("CardsMenuStocksTabButtonObject",  &Stocks_BCB);
-    AddButton("CardsMenuNewsTabButtonObject",    &News_BCB);
-    AddButton("CardsMenuAccountTabButtonObject", &Account_BCB);
-    AddButton("CardsMenuCardsTabButtonObject",   &Cards_BCB);
+    AddButton("CardsMenuStocksTabButtonObject",  &GeneralPurposeMenus_InitStocksMenu_CB);
+    AddButton("CardsMenuNewsTabButtonObject",    &GeneralPurposeMenus_InitNewsMenu_CB);
+    AddButton("CardsMenuAccountTabButtonObject", &GeneralPurposeMenus_InitAccountMenu_CB);
+    AddButton("CardsMenuCardsTabButtonObject",   &GeneralPurposeMenus_InitCardsMenu_CB);
 
     AddButton("CardsMenuApplyButtonObject", &CardsMenu_PickCompanyMenu_CB);
 
 
     AddButton("ApplyCardMenuExitButtonObject", &CardsMenu_PickCompanyMenu_CB);
 
-    AddButton("CardsMenuSpeed1ButtonObject",   &SpeedOne_BCB);
-    AddButton("CardsMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
-    AddButton("CardsMenuSpeed3ButtonObject",   &SpeedThree_BCB);
+    AddButton("CardsMenuSpeed1ButtonObject",   &GeneralPurposeMenus_SetSpeedOne_CB);
+    AddButton("CardsMenuSpeed2ButtonObject",   &GeneralPurposeMenus_SetSpeedTwo_CB);
+    AddButton("CardsMenuSpeed3ButtonObject",   &GeneralPurposeMenus_SetSpeedThree_CB);
 
 }
 

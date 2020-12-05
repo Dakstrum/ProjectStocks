@@ -77,7 +77,7 @@ void InitializeStocksMenu()
     DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
     PopulateStockStatsText(GetCompanyNameViewing());
 
-    InitializeSpeedSelectObject("StocksMenu");
+    GeneralPurposeMenus_InitSpeedSelectObject("StocksMenu");
     DrawLayer_AddManager(NewsManager_Create(1400, 300));
 
 }

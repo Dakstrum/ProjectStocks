@@ -7,15 +7,7 @@
 #include <allegro5/allegro.h>
 
 #include "jsonlayer.h"
-
-#include "text.h"
-#include "drawobject.h"
-#include "button.h"
-#include "scrollbox.h"
-#include "drawlayers.h"
-
 #include "log.h"
-#include "shared.h"
 
 #include "accountmenu.h"
 #include "cardsmenu.h"
@@ -25,11 +17,7 @@
 #include "pausemenus.h"
 #include "savemenus.h"
 #include "stocksmenu.h"
-
-#include "simulation.h"
 #include "linkopener.h"
-#include "rendering.h"
-#include "dbaccess.h"
 #include "account.h"
 #include "drawlayerutils.h"
 
@@ -37,7 +25,7 @@
 
 static MenuWithChilds *main_menu = NULL;
 
-void CleanMenus();
+void GeneralPurposeMenus_CleanAllMenus();
 
 void Test_Animations() 
 {
@@ -73,7 +61,7 @@ void InitializeMainMenu()
     main_menu = GetJSONMenuAndAddToDrawLayer("MainMenu");
     
     MainMenuRenderLogic();
-    CleanMenus();
+    GeneralPurposeMenus_CleanAllMenus();
 
 }
 
@@ -148,18 +136,5 @@ void CleanUpMainMenu()
         free(main_menu);
     
     main_menu = NULL;
-
-}
-
-void CleanMenus() 
-{
-
-    AccountMenu_Clear();
-    CleanSaveMenu();
-    CardsMenu_Clean();
-    CleanGeneralPurposeMenu();
-    CleanOptionsMenu();
-    CleanPauseMenu();
-    CleanStocksMenu();
 
 }

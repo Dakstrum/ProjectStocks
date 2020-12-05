@@ -2,19 +2,18 @@
 #define GENERALPURPOSEMENUS_H
 
 void InitializeGeneralPurposeMenu();
-void InitializeSpeedSelectObject();
+void GeneralPurposeMenus_InitSpeedSelectObject();
 
 void ToggleGeneralPurposeMenus();
 
-void Stocks_BCB();
-void News_BCB();
-void Account_BCB();
-void Cards_BCB();
+void GeneralPurposeMenus_InitStocksMenu_CB();
+void GeneralPurposeMenus_InitNewsMenu_CB();
+void GeneralPurposeMenus_InitAccountMenu_CB();
+void GeneralPurposeMenus_InitCardsMenu_CB();
 
-void PauseSpeed_BCB();
-void SpeedOne_BCB();
-void SpeedTwo_BCB();
-void SpeedThree_BCB();
+void GeneralPurposeMenus_SetSpeedOne_CB();
+void GeneralPurposeMenus_SetSpeedTwo_CB();
+void GeneralPurposeMenus_SetSpeedThree_CB();
 
-void CleanGeneralPurposeMenu();
+void GeneralPurposeMenus_CleanSpeedButtons();
 #endif

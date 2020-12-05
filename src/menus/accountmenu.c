@@ -78,7 +78,7 @@ void AccountMenu_Init()
 
     AccountMenu_InitScrollbox();
     AccountMenu_InitText();
-    InitializeSpeedSelectObject("AccountMenu");
+    GeneralPurposeMenus_InitSpeedSelectObject("AccountMenu");
 
     AccountMenu_InitSelectedCompanyHistoryDisplay();
     AccountMenu_PopulateSelectedCompanyHistoryDisplay(GetCompanyNameViewing());

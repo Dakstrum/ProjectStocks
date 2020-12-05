@@ -70,7 +70,7 @@ void InitializeNewsMenu()
     InitalizeNewsMenuTextAndButtons();
     InitalizeNewsMenuCategoryScrollbox();
     InitalizeWeatherBitMaps();
-    InitializeSpeedSelectObject("NewsMenu");
+    GeneralPurposeMenus_InitSpeedSelectObject("NewsMenu");
     InitializeSearchTextBox();
 
     NewsMenuRenderLogic();
