@@ -2,7 +2,6 @@
 #define ACCOUNTMENU_H
 
 void AccountMenu_Init();
-void ToggleAccountMenu();
 void AccountMenu_RenderLogic();
 
 void AccountMenu_Down_CB();

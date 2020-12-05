@@ -114,7 +114,7 @@ void LoadSaveMenuBack_BCB()
 {
 
     ClearDrawLayers();
-    InitializeMainMenu();
+    MainMenu_Init();
 
 }
 

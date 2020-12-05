@@ -3,7 +3,6 @@
 
 void CardsMenu_Init();
 void CardsMenu_RenderLogic();
-void ToggleCardsMenu();
 
 void CardsMenu_PickCompanyMenu_CB();
 

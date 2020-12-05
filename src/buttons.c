@@ -56,16 +56,16 @@ void AddButton(char *button_name, void (*Callback)())
 
 }
 
-void InitializeMainMenuButtons() 
+void MainMenu_InitButtons() 
 {
 
-    AddButton("MainMenuStartButtonObject",   &Start_BCB);
-    AddButton("MainMenuOptionsButtonObject", &MainMenuOptions_BCB);
-    AddButton("MainMenuExitButtonObject",    &MainMenuExit_BCB);
-    AddButton("MainMenuGithubButtonObject",  &GitHub_BCB);
-    AddButton("MainMenuTwitterButtonObject", &Twitter_BCB);
-    AddButton("MainMenuYoutubeButtonObject", &Youtube_BCB);
-    AddButton("MainMenuWebsiteButtonObject", &Website_BCB);
+    AddButton("MainMenuStartButtonObject",   &MainMenu_Start_CB);
+    AddButton("MainMenuOptionsButtonObject", &MainMenu_Options_CB);
+    AddButton("MainMenuExitButtonObject",    &MainMenu_Exit_CB);
+    AddButton("MainMenuGithubButtonObject",  &MainMenu_GitHub_CB);
+    AddButton("MainMenuTwitterButtonObject", &MainMenu_Twitter_CB);
+    AddButton("MainMenuYoutubeButtonObject", &MainMenu_Youtube_CB);
+    AddButton("MainMenuWebsiteButtonObject", &MainMenu_Website_CB);
 
 }
 
@@ -216,7 +216,7 @@ void InitializeButtons()
 
     AddButton("STUB", &StubCallBack);
 
-    InitializeMainMenuButtons();
+    MainMenu_InitButtons();
     InitializeStocksMenuButtons();
     InitializeAccountButtons();
     InitializeGeneralPurposeButtons();

@@ -257,7 +257,7 @@ void UpdateFullScreenButton()
 
 void OptionsMenuExit_BCB()
 {
-    if(IsInMainMenu())
+    if(MainMenu_Active())
         ToggleMainMenuOptionsMenu();
     else
         ToggleOptionsMenu();
@@ -267,7 +267,7 @@ void OptionsMenuExit_BCB()
 void DisplayMenuExit_BCB()
 {
 
-    if(IsInMainMenu()) {
+    if(MainMenu_Active()) {
 
         ToggleDisplayMenu();
 
@@ -283,7 +283,7 @@ void DisplayMenuExit_BCB()
 void AudioMenuExit_BCB()
 {
 
-    if(IsInMainMenu()) {
+    if(MainMenu_Active()) {
 
         ToggleAudioMenu();
 

@@ -85,8 +85,8 @@ void CleanUpAddons()
 void SwitchToRenderingMainMenu() 
 {
 
-    InitializeMainMenu();
-    RenderLogic = &MainMenuRenderLogic;
+    MainMenu_Init();
+    RenderLogic = &MainMenu_RenderLogic;
 
 }
 
