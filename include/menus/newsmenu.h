@@ -1,11 +1,11 @@
 #ifndef NEWSMENU_H
 #define NEWSMENU_H
 
-void InitializeNewsMenu();
-void NewsMenuRenderLogic();
+void NewsMenu_Init();
+void NewsMenu_RenderLogic();
 
-void CleanNewsMenu();
+void NewsMenu_ScrollboxBack_CB();
 
-void ScrollboxBack_BCB();
+void NewsMenu_Clean();
 
 #endif

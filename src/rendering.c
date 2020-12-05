@@ -108,8 +108,8 @@ void SwitchToRenderingStocksMenu()
 void SwitchToRenderingNewsMenu()
 {
 
-    InitializeNewsMenu();
-    RenderLogic = &NewsMenuRenderLogic;
+    NewsMenu_Init();
+    RenderLogic = &NewsMenu_RenderLogic;
 
 }
 

@@ -142,8 +142,8 @@ void GeneralPurposeMenus_CleanAllMenus()
     CleanSaveMenu();
     CardsMenu_Clean();
     GeneralPurposeMenus_CleanSpeedButtons();
-    CleanOptionsMenu();
-    CleanPauseMenu();
+    OptionsMenu_Clean();
+    PauseMenu_Clean();
     CleanStocksMenu();
 
 }

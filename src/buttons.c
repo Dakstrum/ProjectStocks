@@ -140,7 +140,7 @@ void InitializeNewsButtons()
     AddButton("NewsMenuSpeed2ButtonObject",   &GeneralPurposeMenus_SetSpeedTwo_CB);
     AddButton("NewsMenuSpeed3ButtonObject",   &GeneralPurposeMenus_SetSpeedThree_CB);
 
-    AddButton("NewsMenuscrollbox_backButtonObject", &ScrollboxBack_BCB);
+    AddButton("NewsMenuscrollbox_backButtonObject", &NewsMenu_ScrollboxBack_CB);
 
 }
 
@@ -181,28 +181,28 @@ void CardsMenu_InitButtons()
 void InitializePauseMenusButtons()
 {
 
-    AddButton("PauseMenuMainMenuButtonObject", &PauseMenuMainMenu_BCB);
-    AddButton("PauseMenuOptionsButtonObject",  &PauseMenuOptions_BCB);
-    AddButton("PauseMenuSaveButtonObject",     &PauseMenuSave_BCB);
-    AddButton("PauseMenuExitButtonObject",     &PauseMenuExit_BCB);
-    AddButton("PauseMenuResumeButtonObject",   &ToggleInGamePauseMenu);
+    AddButton("PauseMenuMainMenuButtonObject", &PauseMenu_MainMenu_CB);
+    AddButton("PauseMenuOptionsButtonObject",  &PauseMenu_Options_CB);
+    AddButton("PauseMenuSaveButtonObject",     &PauseMenu_Save_CB);
+    AddButton("PauseMenuExitButtonObject",     &PauseMenu_Exit_CB);
+    AddButton("PauseMenuResumeButtonObject",   &PauseMenu_Toggle);
 
 }
 
 void InitializeOptionsButtons()
 {
 
-    AddButton("OptionsMenuOptionsBackButtonObject", &OptionsMenuExit_BCB);
-    AddButton("OptionsMenuDisplayButtonObject",     &ToggleDisplayMenu);
-    AddButton("OptionsMenuAudioButtonObject",       &ToggleAudioMenu);
+    AddButton("OptionsMenuOptionsBackButtonObject", &OptionsMenu_Exit_CB);
+    AddButton("OptionsMenuDisplayButtonObject",     &OptionsMenu_DisplayMenu_Toggle);
+    AddButton("OptionsMenuAudioButtonObject",       &OptionsMenu_AudioMenu_Toggle);
 
-    AddButton("DisplayMenuOptionsBackButtonObject", &DisplayMenuExit_BCB);
-    AddButton("DisplayMenuAudioButtonObject",       &ToggleAudioMenu);
-    AddButton("DisplayMenuFullScreenButtonObject",  &DisplayMenuFullScreen_BCB);
-    AddButton("DisplayMenuResolutionButtonObject",  &InitalizeResolutionScrollbox);
+    AddButton("DisplayMenuOptionsBackButtonObject", &OptionsMenu_DisplayMenu_Exit_CB);
+    AddButton("DisplayMenuAudioButtonObject",       &OptionsMenu_AudioMenu_Toggle);
+    AddButton("DisplayMenuFullScreenButtonObject",  &OptionsMenu_DisplayMenu_FullScreen_CB);
+    AddButton("DisplayMenuResolutionButtonObject",  &OptionsMenu_DisplayMenu_InitResolutionScrollbox);
 
-    AddButton("AudioMenuOptionsBackButtonObject",   &AudioMenuExit_BCB);
-    AddButton("AudioMenuDisplayButtonObject",       &ToggleDisplayMenu);
+    AddButton("AudioMenuOptionsBackButtonObject",   &OptionsMenu_AudioMenu_Exit_CB);
+    AddButton("AudioMenuDisplayButtonObject",       &OptionsMenu_DisplayMenu_Toggle);
 
 }
 

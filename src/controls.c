@@ -246,7 +246,7 @@ void HandlePauseMenu(ALLEGRO_EVENT event)
     if(Account_GetInGameStatus() == 1)
     {
         if(!DoesObjectExistInCurrentDrawLayer("OptionsMenu"))
-            ToggleInGamePauseMenu();
+            PauseMenu_Toggle();
     }
 
     else

@@ -72,7 +72,7 @@ void MainMenu_Start_CB()
 void MainMenu_Options_CB()
 {
     
-    ToggleMainMenuOptionsMenu();
+    OptionsMenu_MainMenuVersonToggle();
     
 
 }

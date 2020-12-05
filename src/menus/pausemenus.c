@@ -14,7 +14,7 @@
 
 static MenuWithChilds *in_game_pause_menu = NULL;
 
-void CreateInGamePauseMenu()
+void PauseMenu_Init()
 {
 
     CreateNewDrawLayer();
@@ -22,12 +22,12 @@ void CreateInGamePauseMenu()
 
 }
 
-void ToggleInGamePauseMenu()
+void PauseMenu_Toggle()
 {
 
     if (in_game_pause_menu == NULL) {
 
-        CreateInGamePauseMenu();
+        PauseMenu_Init();
         Timer_Pause();
         
     } else {
@@ -40,7 +40,7 @@ void ToggleInGamePauseMenu()
 
 }
 
-void PauseMenuMainMenu_BCB()
+void PauseMenu_MainMenu_CB()
 {
 
     Timer_Unpause();
@@ -49,16 +49,16 @@ void PauseMenuMainMenu_BCB()
 
 }
 
-void PauseMenuOptions_BCB()
+void PauseMenu_Options_CB()
 {
 
     ClearCurrentDrawLayer();
     in_game_pause_menu = NULL;
-    ToggleOptionsMenu();
+    OptionsMenu_Toggle();
 
 }
 
-void PauseMenuSave_BCB()
+void PauseMenu_Save_CB()
 {
 
     Account_StorePlayerData();
@@ -66,7 +66,7 @@ void PauseMenuSave_BCB()
     
 }
 
-void PauseMenuExit_BCB()
+void PauseMenu_Exit_CB()
 {
 
     //SetDBMoneyToLocalMoney(Account_GetPlayerId());
@@ -74,7 +74,7 @@ void PauseMenuExit_BCB()
 
 }
 
-void CleanPauseMenu()
+void PauseMenu_Clean()
 {
 
     in_game_pause_menu = NULL;
