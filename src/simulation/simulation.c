@@ -45,18 +45,19 @@ bool IsSimulationDone()
 
 }
 
-void SimulateToSavePoint()
+uint32_t Simulation_CompanyIndex(char *company_name)
 {
 
-    atomic_store(&simulation_finished, true);
+    Company *companies_temp = companies->elements;
+    for (size_t i = 0; i < companies->num_elements;i++) {
 
-}
+        if (strcmp(company_name, companies_temp[i].company_name) == 0) {
 
-void StoreStockPrice(Vector *prices, float price, time_t timestamp)
-{
+            return i;
 
-    StockPrice temp = {price, timestamp};
-    Vector_PushBack(prices, &temp);
+        }
+
+    }
 
 }
 
@@ -159,36 +160,17 @@ Vector *GetStockPricesFromNowUntil(char *company_name, time_t current_time, time
     if (span == 0)
         previous_time = 0;
 
-    for (size_t i = 0; i < companies->num_elements;i++) {
-
-        if (strcmp(company_name, companies_temp[i].company_name) != 0)
-            continue;
-
-        return GetStockPricesBetween(sim_data[i], previous_time, current_time);
-
-    }
-
-    return NULL;
+    uint32_t company_idx = Simulation_CompanyIndex(company_name);
+    return GetStockPricesBetween(sim_data[company_idx], previous_time, current_time);
 
 }
 
 float CurrentStockPrice(char *company_name) 
 {
 
-    Company *companies_temp = companies->elements;
-    StockPrice *prices = NULL;
-    for (size_t i = 0; i < companies->num_elements;i++) {
-
-        if (strcmp(company_name, companies_temp[i].company_name) == 0) {
-
-            prices = sim_data[i]->elements;
-            return prices[sim_data[i]->num_elements - 1].price;
-
-        }
-
-    }
-
-    return -1.0f;
+    uint32_t company_idx = Simulation_CompanyIndex(company_name);
+    StockPrice *prices   = sim_data[company_idx]->elements;
+    return prices[sim_data[company_idx]->num_elements - 1].price;
 
 }
 
