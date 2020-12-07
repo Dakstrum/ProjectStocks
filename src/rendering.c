@@ -100,8 +100,8 @@ void SwitchToLoadingScreen()
 void SwitchToRenderingStocksMenu()
 {
 
-    InitializeStocksMenu();
-    RenderLogic = &StocksMenusRenderLogic;
+    StocksMenu_Init();
+    RenderLogic = &StocksMenu_RenderLogic;
 
 }
 

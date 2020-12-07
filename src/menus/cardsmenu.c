@@ -64,7 +64,6 @@ void CardsMenu_Init()
 
     CardsMenu_InitPositiveScrollbox();
     CardsMenu_InitNegativeScrollBox();
-
     CardsMenu_InitTextAndButtons(); 
 
     GeneralPurposeMenus_InitSpeedSelectObject("CardsMenu");

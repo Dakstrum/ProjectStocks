@@ -139,11 +139,11 @@ void GeneralPurposeMenus_CleanAllMenus()
 {
 
     AccountMenu_Clear();
-    CleanSaveMenu();
+    SaveMenus_Clean();
     CardsMenu_Clean();
     GeneralPurposeMenus_CleanSpeedButtons();
     OptionsMenu_Clean();
     PauseMenu_Clean();
-    CleanStocksMenu();
+    StocksMenu_Clean();
 
 }

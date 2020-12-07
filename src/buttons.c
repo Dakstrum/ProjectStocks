@@ -69,7 +69,7 @@ void MainMenu_InitButtons()
 
 }
 
-void InitializeStocksMenuButtons()
+void StocksMenu_InitButtons()
 {
 
     AddButton("StocksMenuStocksTabButtonObject",  &GeneralPurposeMenus_InitStocksMenu_CB);
@@ -77,8 +77,8 @@ void InitializeStocksMenuButtons()
     AddButton("StocksMenuAccountTabButtonObject", &GeneralPurposeMenus_InitAccountMenu_CB);
     AddButton("StocksMenuCardsTabButtonObject",   &GeneralPurposeMenus_InitCardsMenu_CB);
 
-    AddButton("StocksMenuSellButtonObject",       &SellMenu_BCB);
-    AddButton("StocksMenuBuyButtonObject",        &BuyMenu_BCB);
+    AddButton("StocksMenuSellButtonObject",       &StocksMenu_SellMenu_BCB);
+    AddButton("StocksMenuBuyButtonObject",        &StocksMenu_BuyMenu_BCB);
 
     AddButton("StocksMenuDButtonObject",          &OneD_BCB);
     AddButton("StocksMenuWButtonObject",          &OneW_BCB);
@@ -86,11 +86,11 @@ void InitializeStocksMenuButtons()
     AddButton("StocksMenuYButtonObject",          &OneY_BCB);
     AddButton("StocksMenuAllButtonObject",        &All_BCB);
 
-    AddButton("BuyMenuExitButtonObject",          &BuyMenu_BCB);
-    AddButton("BuyMenuBuyButtonObject",           &Buy_BCB);
+    AddButton("BuyMenuExitButtonObject",          &StocksMenu_BuyMenu_BCB);
+    AddButton("BuyMenuBuyButtonObject",           &StocksMenu_BuyMenu_Buy_BCB);
 
-    AddButton("SellMenuExitButtonObject",         &SellMenu_BCB);
-    AddButton("SellMenuSellButtonObject",         &Sell_BCB);
+    AddButton("SellMenuExitButtonObject",         &StocksMenu_SellMenu_BCB);
+    AddButton("SellMenuSellButtonObject",         &StocksMenu_BuyMenu_Sell_BCB);
 
     AddButton("StocksMenuSpeed1ButtonObject",   &GeneralPurposeMenus_SetSpeedOne_CB);
     AddButton("StocksMenuSpeed2ButtonObject",   &GeneralPurposeMenus_SetSpeedTwo_CB);
@@ -101,13 +101,13 @@ void InitializeStocksMenuButtons()
 void InitializeSaveMenuButtons()            
 {
 
-    AddButton("LoadSaveMenuNewButtonObject",        &NewSaveMenu_BCB);
-    AddButton("LoadSaveMenuLoadButtonObject",       &LoadSaveMenuLoad_BCB);
-    AddButton("LoadSaveMenuBackButtonObject",       &LoadSaveMenuBack_BCB);
-    AddButton("LoadSaveMenuDeleteSaveButtonObject", &DeleteSave_BCB);
+    AddButton("LoadSaveMenuNewButtonObject",        &LoadSaveMenu_NewSave_CB);
+    AddButton("LoadSaveMenuLoadButtonObject",       &LoadSaveMenu_LoadSave_CB);
+    AddButton("LoadSaveMenuBackButtonObject",       &LoadSaveMenu_Back_CB);
+    AddButton("LoadSaveMenuDeleteSaveButtonObject", &LoadSaveMenu_DeleteSave_CB);
 
-    AddButton("NewSaveMenuBackButtonObject",        &NewSaveMenuBack_BCB);
-    AddButton("NewSaveMenuCreateButtonObject",      &CreateSave_BCB);
+    AddButton("NewSaveMenuBackButtonObject",        &NewSaveMenu_Back_CB);
+    AddButton("NewSaveMenuCreateButtonObject",      &NewSaveMenu_CreateSave_CB);
 
 }
 
@@ -217,7 +217,7 @@ void InitializeButtons()
     AddButton("STUB", &StubCallBack);
 
     MainMenu_InitButtons();
-    InitializeStocksMenuButtons();
+    StocksMenu_InitButtons();
     InitializeAccountButtons();
     InitializeGeneralPurposeButtons();
     InitializePauseMenusButtons();

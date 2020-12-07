@@ -48,18 +48,18 @@ static DrawObject *transaction_menu_pershare_textobject     = NULL;
 static DrawObject *transaction_menu_projected_textobject    = NULL;
 static DrawObject *transaction_menu_amountowned_textobject  = NULL;
 
-void DisplayGraph(char *company_name, TimeSpan time_span);
-void InitializeCompanyScrollBox();
+void StocksMenu_DisplayGraph(char *company_name, TimeSpan time_span);
+void StocksMenu_InitCompanyScrollbox();
 void PopulateStocksScrollBox(DrawObject *object);
-char *GetCurrentCompanyFromGraph();
-void StocksMenusRenderLogic();
-void PopulateStockStatsText(char *company_name);
-void InitalizeStocksMenuText();
-void InitializeTransactionMenuTextBoxes();
-void InitializeBuyMenuText();
-void InitializeSellMenuText();
+char *StocksMenu_CurrentCompanyFromGraph();
+void StocksMenu_RenderLogic();
+void StocksMenu_PopulateStockInfo(char *company_name);
+void StocksMenu_InitText();
+void StocksMenu_InitTransactionMenuText();
+void StocksMenu_BuyMenu_InitText();
+void StocksMenu_SellMenu_InitText();
 
-void InitializeStocksMenu() 
+void StocksMenu_Init() 
 { 
 
     if (CreateNewDrawLayer() == -1) {
@@ -71,18 +71,18 @@ void InitializeStocksMenu()
 
     stocks_menu = GetMenuWithChildsFromJsonLayer("StocksMenu");
     AddMenuWithChildsToDrawLayer(stocks_menu);
-    InitalizeStocksMenuText();
-    InitializeCompanyScrollBox();
+    StocksMenu_InitText();
+    StocksMenu_InitCompanyScrollbox();
 
-    DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
-    PopulateStockStatsText(GetCompanyNameViewing());
+    StocksMenu_DisplayGraph(GetCompanyNameViewing(), ONE_DAY);
+    StocksMenu_PopulateStockInfo(GetCompanyNameViewing());
 
     GeneralPurposeMenus_InitSpeedSelectObject("StocksMenu");
     DrawLayer_AddManager(NewsManager_Create(1400, 300));
 
 }
 
-void StocksMenusRenderLogic()
+void StocksMenu_RenderLogic()
 {
     
     if (player_money_textobject == NULL)
@@ -121,7 +121,7 @@ void StocksMenusRenderLogic()
     
 }
 
-void InitalizeStocksMenuText()
+void StocksMenu_InitText()
 {
 
     company_name_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuCompanyNameTextObject");
@@ -141,9 +141,9 @@ void InitalizeStocksMenuText()
 
 }
 
-void InitializeBuyMenuText()
+void StocksMenu_BuyMenu_InitText()
 {
-    InitializeTransactionMenuTextBoxes();
+    StocksMenu_InitTransactionMenuText();
 
     transaction_menu_company_name_textobject = GetJSONObjectAndAddToDrawLayer("BuyMenuCompanyNameTextObject");
     transaction_menu_pershare_textobject     = GetJSONObjectAndAddToDrawLayer("BuyMenuPricePerTextObject");
@@ -153,9 +153,9 @@ void InitializeBuyMenuText()
 
 }
 
-void InitializeSellMenuText()
+void StocksMenu_SellMenu_InitText()
 {
-    InitializeTransactionMenuTextBoxes();
+    StocksMenu_InitTransactionMenuText();
 
     transaction_menu_company_name_textobject = GetJSONObjectAndAddToDrawLayer("SellMenuCompanyNameTextObject");
     transaction_menu_pershare_textobject     = GetJSONObjectAndAddToDrawLayer("SellMenuPricePerTextObject");
@@ -167,7 +167,7 @@ void InitializeSellMenuText()
 
 }
 
-void PopulateStockStatsText(char *company_name)
+void StocksMenu_PopulateStockInfo(char *company_name)
 {
 
     SetTextContent(company_name_textobject, "%s", company_name);
@@ -176,7 +176,7 @@ void PopulateStockStatsText(char *company_name)
 }
 
 
-void DisplayGraph(char *company_name, TimeSpan time_span)
+void StocksMenu_DisplayGraph(char *company_name, TimeSpan time_span)
 {
 
     current_graph = GetGraphDrawObject(company_name, time_span, 961, 373);
@@ -190,7 +190,7 @@ void DisplayGraph(char *company_name, TimeSpan time_span)
 
 }
 
-char *GetCurrentCompanyFromGraph()
+char *StocksMenu_CurrentCompanyFromGraph()
 {
 
     DrawObjectCollection *current_draw_layer_graphs = GetObjectsByType(GRAPH);
@@ -198,35 +198,35 @@ char *GetCurrentCompanyFromGraph()
 
 }
 
-void LoadCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
+void StocksMenu_CompanyScrollboxClick(char *scroll_box_content, unsigned short int index)
 {
 
     char *company_name = GetCompanyName(index+1);
     SetCompanyIdViewing(GetCompanyId(company_name));
 
     RemoveDrawObject(current_graph);
-    DisplayGraph(company_name, GetStockMenuTimeSpanNum());
-    PopulateStockStatsText(company_name);
+    StocksMenu_DisplayGraph(company_name, GetStockMenuTimeSpanNum());
+    StocksMenu_PopulateStockInfo(company_name);
 
 }
 
-void InitializeCompanyScrollBox()
+void StocksMenu_InitCompanyScrollbox()
 {
 
-    AddObjectToDrawLayer(CreateCompaniesScrollbox(2, 230, &LoadCompanyScrollBoxClick));
+    AddObjectToDrawLayer(CreateCompaniesScrollbox(2, 230, &StocksMenu_CompanyScrollboxClick));
 
 }
 
-void ChangeGraphTimespan(TimeSpan time_span)
+void StocksMenu_ChangeGraphTimespan(TimeSpan time_span)
 {
     SetStockMenuTimeSpanNum(time_span);
     RemoveDrawObject(current_graph);
-    DisplayGraph(GetCompanyNameViewing(), time_span);
-    PopulateStockStatsText(GetCompanyNameViewing());
+    StocksMenu_DisplayGraph(GetCompanyNameViewing(), time_span);
+    StocksMenu_PopulateStockInfo(GetCompanyNameViewing());
 }
 
 
-void InitializeTransactionMenuTextBoxes()
+void StocksMenu_InitTransactionMenuText()
 {
     if(buy_menu)
     {
@@ -256,18 +256,18 @@ void InitializeTransactionMenuTextBoxes()
 }
 
 
-void SellMenu_BCB()
+void StocksMenu_SellMenu_BCB()
 {
     
     if (sell_menu == NULL) {
 
-        selected_company_name = GetCurrentCompanyFromGraph();
+        selected_company_name = StocksMenu_CurrentCompanyFromGraph();
 
         CreateNewDrawLayer();
 
         sell_menu = GetMenuWithChildsFromJsonLayer("SellMenu");
         AddMenuWithChildsToDrawLayer(sell_menu);
-        InitializeSellMenuText();
+        StocksMenu_SellMenu_InitText();
 
     } else {
 
@@ -278,18 +278,18 @@ void SellMenu_BCB()
 
 }
 
-void BuyMenu_BCB()
+void StocksMenu_BuyMenu_BCB()
 {
 
     if (buy_menu == NULL) {
 
-        selected_company_name = GetCurrentCompanyFromGraph();
+        selected_company_name = StocksMenu_CurrentCompanyFromGraph();
 
         CreateNewDrawLayer();
 
         buy_menu = GetMenuWithChildsFromJsonLayer("BuyMenu");
         AddMenuWithChildsToDrawLayer(buy_menu);
-        InitializeBuyMenuText();
+        StocksMenu_BuyMenu_InitText();
 
     } else {
 
@@ -300,7 +300,7 @@ void BuyMenu_BCB()
 
 }
 
-void Sell_BCB()
+void StocksMenu_BuyMenu_Sell_BCB()
 {
 
     int amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));
@@ -313,7 +313,7 @@ void Sell_BCB()
 
     if (successful) {
 
-        SellMenu_BCB();
+        StocksMenu_SellMenu_BCB();
         sprintf(str, "Sold %d of %s", amount_in_text_box, GetCompanyNameViewing());
         DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
         Account_AddMoney(amount_in_text_box * current_stock_price);
@@ -326,7 +326,7 @@ void Sell_BCB()
 
 }
 
-void Buy_BCB()
+void StocksMenu_BuyMenu_Buy_BCB()
 {
     
     int amount_in_text_box    = atoi(GetTextFromTextBox("BuyTextBox"));
@@ -339,7 +339,7 @@ void Buy_BCB()
     if (Account_CanMakeTransaction(amount_in_text_box * current_stock_price)) {
 
         AttemptToAddFromCurrentStock(Account_GetPlayerId(), GetCompanyNameViewing(), amount_in_text_box, current_stock_price);
-        BuyMenu_BCB();
+        StocksMenu_BuyMenu_BCB();
 
         sprintf(str, "Bought %d shares of %s", amount_in_text_box, GetCompanyNameViewing());
         DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
@@ -358,46 +358,39 @@ void Buy_BCB()
 void OneD_BCB()
 {
     
-    ChangeGraphTimespan(ONE_DAY);
+    StocksMenu_ChangeGraphTimespan(ONE_DAY);
 
 }
 
 void OneW_BCB()
 {
 
-    ChangeGraphTimespan(ONE_WEEK);
+    StocksMenu_ChangeGraphTimespan(ONE_WEEK);
 
 }
 
 void OneM_BCB()
 {
 
-    ChangeGraphTimespan(ONE_MONTH);
+    StocksMenu_ChangeGraphTimespan(ONE_MONTH);
 
 }
 
 void OneY_BCB()
 {
 
-    ChangeGraphTimespan(ONE_YEAR);
+    StocksMenu_ChangeGraphTimespan(ONE_YEAR);
     
 }
 
 void All_BCB()
 {
 
-    ChangeGraphTimespan(ALL_TIME);
+    StocksMenu_ChangeGraphTimespan(ALL_TIME);
 
 }
 
-void CleanUpStocksMenu() 
-{
-    
-
-    
-}
-
-void CleanStocksMenu()
+void StocksMenu_Clean()
 {
 
     selected_company_name    = NULL;
