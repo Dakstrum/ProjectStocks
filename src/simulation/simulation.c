@@ -194,24 +194,58 @@ float GetCurrentStockChange(char *company_name)
 
 }
 
-void Simulation_ModifyCompany(uint32_t company_id, float modifier, uint32_t days, char *event)
+void Simulation_ModifyCompany(uint32_t company_id, time_t play_time, float modifier, uint32_t days, char *event)
 {
 
+    PlayedModifiers temp = {company_id, play_time, modifier, days};
+    Vector_PushBack(modifiers, &temp);
 
+    if (event != NULL) {
+
+        // TODO: Push Event
+
+    }
 
 }
  
-void Simulation_ModifyCategory(uint32_t category_id, float modifier, uint32_t days, char *event)
+void Simulation_ModifyCategory(uint32_t category_id, time_t play_time, float modifier, uint32_t days, char *event)
 {
 
+    Company *companies_temp = companies->elements;
+    for (size_t i = 0; i < companies->num_elements;i++) {
 
+        if (companies_temp[i].category_id == category_id) {
+
+            PlayedModifiers temp = {companies_temp[i].company_id, play_time, modifier, days};
+            Vector_PushBack(modifiers, &temp);
+
+        }
+
+    }
+
+    if (event != NULL) {
+
+        // TODO: Push Event
+
+    }
 
 }
 
-void Simulation_ModifyGlobal(float modifier, uint32_t days, char *event)
+void Simulation_ModifyGlobal(float modifier, time_t play_time, uint32_t days, char *event)
 {
 
+    Company *companies_temp = companies->elements;
+    for (size_t i = 0; i < companies->num_elements;i++) {
 
+        PlayedModifiers temp = {companies_temp[i].company_id, play_time, modifier, days};
+        Vector_PushBack(modifiers, &temp);
+
+    }
+    if (event != NULL) {
+
+        // TODO: Push Event
+
+    }
 
 }
 
