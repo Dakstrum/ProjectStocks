@@ -1,6 +1,24 @@
 
+#include <string.h>
 
 #include "simulation_event.h"
+
+static Vector *events = NULL;
+
+void Simulation_Event_Init()
+{
+
+    if (events != NULL) {
+
+        Vector_Reset(events);
+
+    } else {
+
+        events = Vector_Create(sizeof(SimulationEvent), 128);
+
+    }
+
+}
 
 void Simulation_Event_Push(char *event, time_t t) 
 {
@@ -8,24 +26,65 @@ void Simulation_Event_Push(char *event, time_t t)
     if (event == NULL)
         return;
 
-}
+    SimulationEvent temp;
+    temp.timestamp = t;
+    strncpy(temp.event, event, 127);
+    temp.event[127] = '\0';
 
-void Simulation_Event_Clear() 
-{
-
+    Vector_PushBack(events, &temp);
 
 }
 
 Vector *Simulation_Event_GetEvents(time_t t) 
 {
 
-    return NULL;
+    Vector *time_events = Vector_Create(sizeof(SimulationEvent), 8);
+
+    SimulationEvent *temp_events = events->elements;
+    for (size_t i = 0; i < events->num_elements;i++) {
+
+
+        if (temp_events[i].timestamp == t)
+            Vector_PushBack(time_events, &temp_events[i]);
+
+    }
+
+    return time_events;
+
+}
+
+uint32_t Simulation_Event_GetLastEventsStartIndex(time_t t) 
+{
+
+    SimulationEvent *temp_events = events->elements;
+    for (size_t i = 0; i < events->num_elements;i++) {
+
+        if (temp_events[i].timestamp == t)
+            return i;
+        else if (temp_events[i].timestamp > t)
+            return i - 1;
+
+    }
+    return 0;
 
 }
 
 Vector *Simulation_Event_GetLastEvents(time_t t, uint32_t num_events)
 {
 
-    return NULL;
+    uint32_t start_idx = Simulation_Event_GetLastEventsStartIndex(t);
+
+    Vector *temp = Vector_Create(sizeof(SimulationEvent), 4);
+    SimulationEvent *temp_events = events->elements;
+
+    int32_t end_idx = (int32_t)start_idx - (int32_t)num_events;
+
+    if (end_idx < 0)
+        end_idx = 0;
+
+    for (size_t i = start_idx; i > (uint32_t)end_idx;i--)
+        Vector_PushBack(temp, &temp_events[i]);
+
+    return temp;
 
 }

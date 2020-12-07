@@ -59,6 +59,8 @@ uint32_t Simulation_CompanyIndex(char *company_name)
         }
 
     }
+    assert(0 == 1);
+    return 0;
 
 }
 
