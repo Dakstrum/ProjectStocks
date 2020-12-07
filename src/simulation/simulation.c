@@ -181,7 +181,7 @@ char *GetAnyEventAtTime(time_t event_time)
 
 }
 
-float GetCurrentStockChange(char *company_name)
+float Simulation_GetStockPriceDiff(char *company_name)
 {
 
     uint32_t company_idx  = Simulation_CompanyIndex(company_name);

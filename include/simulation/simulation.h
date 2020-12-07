@@ -19,7 +19,7 @@ void SetEndYear(time_t end_year);
 
 Vector *GetStockPricesFromNowUntil(char *company_name, time_t current_time, time_t span);
 float CurrentStockPrice(char *company_name);
-float GetCurrentStockChange(char *company_name);
+float Simulation_GetStockPriceDiff(char *company_name);
 
 char *GetAnyEventAtTime(time_t event_time);
 

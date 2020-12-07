@@ -91,12 +91,12 @@ void StocksMenusRenderLogic()
     if(stocks_menu)
     {
 
-        SetTextContent(stock_change_textobject, "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
+        SetTextContent(stock_change_textobject, "%.2f", Simulation_GetStockPriceDiff(GetCompanyNameViewing()));
         SetTextContent(player_money_textobject, "%.2f", Account_GetMoney());
         SetTextContent(player_date_textobject,  "%s",   Game_GetDate());
         SetTextContent(stock_price_textobject,  "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
 
-        if(GetCurrentStockChange(GetCompanyNameViewing()) > 0)
+        if(Simulation_GetStockPriceDiff(GetCompanyNameViewing()) > 0)
             SetTextColor(stock_change_textobject, 0, 79, 37, 255);
         else
             SetTextColor(stock_change_textobject, 204, 48, 56, 255);
@@ -135,7 +135,7 @@ void InitalizeStocksMenuText()
     stock_price_textobject   = GetJSONObjectAndAddToDrawLayer("StocksMenuStockPriceTextObject");
     stock_change_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuPriceChangeTextObject");
 
-    SetTextContent(stock_change_textobject,  "%.2f", GetCurrentStockChange(GetCompanyNameViewing()));
+    SetTextContent(stock_change_textobject,  "%.2f", Simulation_GetStockPriceDiff(GetCompanyNameViewing()));
     SetTextContent(player_money_textobject,  "%.2f", Account_GetMoney());
     SetTextContent(stock_price_textobject,   "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
 
