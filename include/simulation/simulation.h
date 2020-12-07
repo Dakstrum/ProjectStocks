@@ -17,8 +17,8 @@ bool IsSimulationDone();
 void *StockSimulationEntry(ALLEGRO_THREAD *thread, void *arg);
 void SetEndYear(time_t end_year);
 
-Vector *GetStockPricesFromNowUntil(char *company_name, time_t current_time, time_t span);
-float CurrentStockPrice(char *company_name);
+Vector *Simulation_GetStockPrices(char *company_name, time_t current_time, time_t span);
+float Simulation_GetLastStockPrice(char *company_name);
 float Simulation_GetStockPriceDiff(char *company_name);
 
 char *GetAnyEventAtTime(time_t event_time);

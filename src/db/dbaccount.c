@@ -366,7 +366,7 @@ float GetAccountNetWorth(uint32_t player_id)
     for(size_t i = 0; i < num_companies; i++) {
 
         char *company_name = GetCompanyName(i + 1);
-        float networth_of_specific_stock = GetOwnedStockAmountByCompanyId(player_id, i + 1) * CurrentStockPrice(company_name);
+        float networth_of_specific_stock = GetOwnedStockAmountByCompanyId(player_id, i + 1) * Simulation_GetLastStockPrice(company_name);
         networth = networth + networth_of_specific_stock;
 
     }

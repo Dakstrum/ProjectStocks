@@ -94,7 +94,7 @@ void StocksMenusRenderLogic()
         SetTextContent(stock_change_textobject, "%.2f", Simulation_GetStockPriceDiff(GetCompanyNameViewing()));
         SetTextContent(player_money_textobject, "%.2f", Account_GetMoney());
         SetTextContent(player_date_textobject,  "%s",   Game_GetDate());
-        SetTextContent(stock_price_textobject,  "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
+        SetTextContent(stock_price_textobject,  "%.2f", Simulation_GetLastStockPrice(GetCompanyNameViewing()));
 
         if(Simulation_GetStockPriceDiff(GetCompanyNameViewing()) > 0)
             SetTextColor(stock_change_textobject, 0, 79, 37, 255);
@@ -106,16 +106,16 @@ void StocksMenusRenderLogic()
     else if(buy_menu)
     {
 
-        SetTextContent(transaction_menu_pershare_textobject,  "%.2f", CurrentStockPrice(selected_company_name));
-        SetTextContent(transaction_menu_projected_textobject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("BuyTextBox")));
+        SetTextContent(transaction_menu_pershare_textobject,  "%.2f", Simulation_GetLastStockPrice(selected_company_name));
+        SetTextContent(transaction_menu_projected_textobject, "%.2f", Simulation_GetLastStockPrice(selected_company_name) * atoi(GetTextFromTextBox("BuyTextBox")));
 
     }
 
     else if(sell_menu)
     {
 
-        SetTextContent(transaction_menu_pershare_textobject,  "%.2f", CurrentStockPrice(selected_company_name));
-        SetTextContent(transaction_menu_projected_textobject, "%.2f", CurrentStockPrice(selected_company_name) * atoi(GetTextFromTextBox("SellTextBox")));
+        SetTextContent(transaction_menu_pershare_textobject,  "%.2f", Simulation_GetLastStockPrice(selected_company_name));
+        SetTextContent(transaction_menu_projected_textobject, "%.2f", Simulation_GetLastStockPrice(selected_company_name) * atoi(GetTextFromTextBox("SellTextBox")));
 
     }
     
@@ -137,7 +137,7 @@ void InitalizeStocksMenuText()
 
     SetTextContent(stock_change_textobject,  "%.2f", Simulation_GetStockPriceDiff(GetCompanyNameViewing()));
     SetTextContent(player_money_textobject,  "%.2f", Account_GetMoney());
-    SetTextContent(stock_price_textobject,   "%.2f", CurrentStockPrice(GetCompanyNameViewing()));
+    SetTextContent(stock_price_textobject,   "%.2f", Simulation_GetLastStockPrice(GetCompanyNameViewing()));
 
 }
 
@@ -308,8 +308,8 @@ void Sell_BCB()
         return;
 
     char str[50];
-    float current_stock_price = CurrentStockPrice(selected_company_name);
-    bool successful = AttemptToSubtractFromCurrentStock(Account_GetPlayerId(), GetCompanyNameViewing(), amount_in_text_box, CurrentStockPrice(selected_company_name));
+    float current_stock_price = Simulation_GetLastStockPrice(selected_company_name);
+    bool successful = AttemptToSubtractFromCurrentStock(Account_GetPlayerId(), GetCompanyNameViewing(), amount_in_text_box, Simulation_GetLastStockPrice(selected_company_name));
 
     if (successful) {
 
@@ -333,7 +333,7 @@ void Buy_BCB()
     if (amount_in_text_box <= 0)
         return;
 
-    float current_stock_price = CurrentStockPrice(selected_company_name);
+    float current_stock_price = Simulation_GetLastStockPrice(selected_company_name);
 
     char str[50];
     if (Account_CanMakeTransaction(amount_in_text_box * current_stock_price)) {

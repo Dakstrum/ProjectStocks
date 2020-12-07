@@ -108,7 +108,7 @@ void SetGraphPoints(DrawObject *object, Vector *stocks)
 DrawObject *GetConstructedGraphDrawObject(char *company_name, int timespan_index, int width, int height) 
 {
 
-    Vector *stocks = GetStockPricesFromNowUntil(company_name, Game_GetGameTime(), timespans[timespan_index].diff);
+    Vector *stocks = Simulation_GetStockPrices(company_name, Game_GetGameTime(), timespans[timespan_index].diff);
     if (stocks == NULL)
         return NULL;
 

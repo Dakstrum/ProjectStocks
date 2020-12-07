@@ -149,7 +149,7 @@ Vector *GetStockPricesBetween(Vector *sim_prices, time_t start_time, time_t end_
 
 }
 
-Vector *GetStockPricesFromNowUntil(char *company_name, time_t current_time, time_t span)
+Vector *Simulation_GetStockPrices(char *company_name, time_t current_time, time_t span)
 {
 
     time_t previous_time = current_time - span;
@@ -165,7 +165,7 @@ Vector *GetStockPricesFromNowUntil(char *company_name, time_t current_time, time
 
 }
 
-float CurrentStockPrice(char *company_name) 
+float Simulation_GetLastStockPrice(char *company_name) 
 {
 
     uint32_t company_idx = Simulation_CompanyIndex(company_name);
