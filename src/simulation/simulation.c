@@ -151,7 +151,6 @@ Vector *GetStockPricesBetween(Vector *sim_prices, time_t start_time, time_t end_
 Vector *GetStockPricesFromNowUntil(char *company_name, time_t current_time, time_t span)
 {
 
-    Company *companies_temp = companies->elements;
     time_t previous_time = current_time - span;
 
     if (span > current_time)
@@ -183,17 +182,16 @@ char *GetAnyEventAtTime(time_t event_time)
 
 float GetCurrentStockChange(char *company_name)
 {
-    static float last_price    = 0.0;
-    static float current_price = 0.0;
-    static float change        = 0.0;
 
-    if(current_price != CurrentStockPrice(company_name))
-        last_price = current_price;
+    uint32_t company_idx  = Simulation_CompanyIndex(company_name);
+    uint32_t num_elements = sim_data[company_idx]->num_elements;
 
-    current_price = CurrentStockPrice(company_name);
-    change        = current_price - last_price;
-    
-    return change;
+    if (num_elements < 2)
+        return 0.0;
+
+    StockPrice *prices = sim_data[company_idx]->elements;
+    return prices[num_elements - 1].price - prices[num_elements - 2].price;
+
 }
 
 void Simulation_ModifyCompany(uint32_t company_id, float modifier, uint32_t days, char *event)
