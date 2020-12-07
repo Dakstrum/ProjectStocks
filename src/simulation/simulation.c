@@ -16,6 +16,7 @@
 #include "dbevents.h"
 #include "dbcompany.h"
 #include "simulation.h"
+#include "simulation_event.h"
 
 static const int HOUR = 3600;
 static int end_year   = 0;
@@ -199,12 +200,7 @@ void Simulation_ModifyCompany(uint32_t company_id, time_t play_time, float modif
 
     PlayedModifiers temp = {company_id, play_time, modifier, days};
     Vector_PushBack(modifiers, &temp);
-
-    if (event != NULL) {
-
-        // TODO: Push Event
-
-    }
+    Simulation_Event_Push(event, play_time);
 
 }
  
@@ -222,12 +218,7 @@ void Simulation_ModifyCategory(uint32_t category_id, time_t play_time, float mod
         }
 
     }
-
-    if (event != NULL) {
-
-        // TODO: Push Event
-
-    }
+    Simulation_Event_Push(event, play_time);
 
 }
 
@@ -241,11 +232,7 @@ void Simulation_ModifyGlobal(float modifier, time_t play_time, uint32_t days, ch
         Vector_PushBack(modifiers, &temp);
 
     }
-    if (event != NULL) {
-
-        // TODO: Push Event
-
-    }
+    Simulation_Event_Push(event, play_time);
 
 }
 
