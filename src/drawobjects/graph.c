@@ -13,6 +13,7 @@
 #include "drawobject.h"
 #include "simulation.h"
 #include "game.h"
+#include "vector.h"
 
 typedef struct TimeSpanWithDiff 
 {
@@ -51,8 +52,7 @@ DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points)
     object->child_of             = NULL;
 
     object->graph.next_refresh = GetOffsetTime(75);
-    object->graph.num_points   = (unsigned int)num_points;
-    object->graph.points       = malloc(sizeof(Point) * num_points);
+    object->graph.points       = Vector_Create(sizeof(Point), 512);
 
     return object;
 
@@ -112,6 +112,7 @@ Vector *Graph_RDPAlgorithm(Vector *stocks, float epsilon)
 }
 */
 
+
 void Graph_SetGraphPoints(DrawObject *object, Vector *stocks) 
 {
 
@@ -120,10 +121,13 @@ void Graph_SetGraphPoints(DrawObject *object, Vector *stocks)
     float max_min_price_diff = Graph_GetMaxPrice(stocks) - min_price;
 
     StockPrice *prices = stocks->elements;
+
+    Point point;
     for (unsigned int i = 0; i < stocks->num_elements;i++) {
 
-        object->graph.points[i].x = point_width_diff*i;
-        object->graph.points[i].y = ((prices[i].price - min_price)/(max_min_price_diff))*object->height;
+        point.x = point_width_diff*i;
+        point.y = ((prices[i].price - min_price)/(max_min_price_diff))*object->height;
+        Vector_PushBack(object->graph.points, &point);
 
     }
 
@@ -168,7 +172,7 @@ DrawObject *Graph_PollForNewGraphObject(DrawObject *object)
 
     if (IsTimeSpecInPast(&object->graph.next_refresh)) {
 
-        free(object->graph.points);
+        Vector_Delete(object->graph.points);
         DrawObject *graph_object   = Graph_GetGraphDrawObject(object->graph.company, object->graph.timespan, object->width, object->height);
         object->graph              = graph_object->graph;
         object->graph.next_refresh = GetOffsetTime(75);
@@ -183,15 +187,16 @@ void DrawGraph(DrawObject *object)
 {
 
     object = Graph_PollForNewGraphObject(object);
-    Point *points = object->graph.points;
 
-    if (points == NULL || object->graph.num_points == 0)
+    if (object->graph.points->num_elements == 0)
         return;
 
     const float x             = object->x;
     const float y_start_point = object->y + object->height;
     ALLEGRO_COLOR color       = al_map_rgba(255, 255, 255, 255);
-    for (unsigned short int i = 0;i < object->graph.num_points - 1;i++)
+
+    Point *points = object->graph.points->elements;
+    for (size_t i = 0;i < object->graph.points->num_elements-1;i++)
         al_draw_line(x + points[i].x, y_start_point - points[i].y, x + points[i+1].x, y_start_point - points[i+1].y, color , 2);
 
 }
