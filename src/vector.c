@@ -75,7 +75,7 @@ Vector *Vector_GetCopy(Vector *vector)
 
     for (size_t i = 0;i < num_elements;i++)
         for (size_t j = 0;j < size_of_single_elem;j++)
-            new_vec[j + (i * size_of_single_elem)] = old_vec[j + (i + size_of_single_elem)];
+            *(new_vec + i * size_of_single_elem + j) = *(old_vec + i * size_of_single_elem + j);
 
     return vec;
 
@@ -101,7 +101,7 @@ Vector *Vector_GetSubVector(Vector *vector, size_t start_idx, size_t end_idx)
 
     for (size_t i = start_idx;i < end_idx;i++)
         for (size_t j = 0;j < size_of_single_elem;j++)
-            new_vec[j + ((i - start_idx) * size_of_single_elem)] = old_vec[j + (i + size_of_single_elem)];
+            *(new_vec + (i - start_idx) * size_of_single_elem + j) = *(old_vec + i * size_of_single_elem + j);
 
     return vec;
 

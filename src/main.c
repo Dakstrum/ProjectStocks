@@ -54,39 +54,11 @@ void CleanUp();
 void CleanUpThreads();
 void StartInputLoop();
 
-void vector_checks()
-{
-
-    Vector *vec = Vector_Create(sizeof(float), 128);
-    for (float i = 0.0; i < 10.0;i++)
-        Vector_PushBack(vec, &i);
-
-    Vector *vec_copy       = Vector_GetCopy(vec);
-    float *vec_floats      = vec->elements;
-    float *vec_floats_copy = vec_copy->elements;
-    LogF("%f, %f, %f, %f", vec_floats[0], vec_floats[1], vec_floats[2], vec_floats[3]);
-    LogF("%f, %f, %f, %f", vec_floats_copy[0], vec_floats_copy[1], vec_floats_copy[2], vec_floats_copy[3]);
-
-    Vector *sub_vec   = Vector_GetSubVector(vec, 0, 4);
-    Vector *sub_vec_2 = Vector_GetSubVector(vec, 4, 8);
-
-    float *sub_vec_floats   = sub_vec->elements;
-    float *sub_vec_floats_2 = sub_vec_2->elements;
-
-    LogF("%.7f, %.7f, %.7f, %.7f", sub_vec_floats[0], sub_vec_floats[1], sub_vec_floats[2], sub_vec_floats[3]);
-    LogF("%.7f, %.7f, %.7f, %.7f", sub_vec_floats_2[0], sub_vec_floats_2[1], sub_vec_floats_2[2], sub_vec_floats_2[3]);
-
-}
-
 int main(int argc, char **argv) 
 {
 
-    if (Initialize()) {
-
-        vector_checks();
+    if (Initialize())
         GameLoop();
-
-    }
 
     CleanUp();
 
