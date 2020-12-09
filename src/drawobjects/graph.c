@@ -88,6 +88,30 @@ float Graph_GetMaxPrice(Vector *stocks)
 
 }
 
+/*
+// Ramer–Douglas–Peucker
+Vector *Graph_RDPAlgorithm(Vector *stocks, float epsilon) 
+{
+
+    float dmax = 0.0;
+    size_t idx = 0;
+    size_t end = stocks->num_elements;
+
+    float d = 0.0;
+    for (size_t i = 1; i < end-1;i++) {
+
+        if (d > dmax) {
+
+            idx  = i;
+            dmax = d;
+
+        }
+
+    }
+
+}
+*/
+
 void Graph_SetGraphPoints(DrawObject *object, Vector *stocks) 
 {
 
@@ -111,6 +135,9 @@ DrawObject *Graph_ConstructGraphDrawObject(char *company_name, int timespan_inde
     Vector *stocks = Simulation_GetStockPrices(company_name, Game_GetGameTime(), timespans[timespan_index].diff);
     if (stocks == NULL)
         return NULL;
+
+    //if (stocks->num_elements > 500)
+    //    stocks = Graph_RDPAlgorithm(stocks, epsilon);
 
     DrawObject *object = GetBasicGraphDrawObject(width, height, stocks->num_elements);
     Graph_SetGraphPoints(object, stocks);
