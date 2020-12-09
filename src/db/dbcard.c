@@ -312,7 +312,7 @@ void DBCards_Init()
 
     char *played_cards_query =
     "SELECT PCP.CompanyId, PCP.PlayedTime, SC.PriceModifier, SC.ModifierLength "
-    "Player_CardsPlayed PCP "
+    "FROM Player_CardsPlayed PCP "
     "INNER JOIN System_Cards SC ON SC.CardId = PCP.CardId "
     "WHERE PCP.SaveId = %d";
 
