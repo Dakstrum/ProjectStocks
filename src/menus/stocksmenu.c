@@ -179,7 +179,7 @@ void PopulateStockStatsText(char *company_name)
 void DisplayGraph(char *company_name, TimeSpan time_span)
 {
 
-    current_graph = GetGraphDrawObject(company_name, time_span, 961, 373);
+    current_graph = Graph_GetGraphDrawObject(company_name, time_span, 961, 373);
     if (current_graph != NULL) {
 
         current_graph->x = 415;

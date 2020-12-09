@@ -4,7 +4,7 @@
 #include "drawobject.h"
 #include "shared.h"
 
-DrawObject *GetGraphDrawObject(char *company_name, TimeSpan timespan, int width, int height);
+DrawObject *Graph_GetGraphDrawObject(char *company_name, TimeSpan timespan, int width, int height);
 void DrawGraph(DrawObject *object);
 
 #endif

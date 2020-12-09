@@ -88,7 +88,7 @@ float Graph_GetMaxPrice(Vector *stocks)
 
 }
 
-void SetGraphPoints(DrawObject *object, Vector *stocks) 
+void Graph_SetGraphPoints(DrawObject *object, Vector *stocks) 
 {
 
     float point_width_diff   = (float)object->width / stocks->num_elements;
@@ -105,7 +105,7 @@ void SetGraphPoints(DrawObject *object, Vector *stocks)
 
 }
 
-DrawObject *GetConstructedGraphDrawObject(char *company_name, int timespan_index, int width, int height) 
+DrawObject *Graph_ConstructGraphDrawObject(char *company_name, int timespan_index, int width, int height) 
 {
 
     Vector *stocks = Simulation_GetStockPrices(company_name, Game_GetGameTime(), timespans[timespan_index].diff);
@@ -113,17 +113,17 @@ DrawObject *GetConstructedGraphDrawObject(char *company_name, int timespan_index
         return NULL;
 
     DrawObject *object = GetBasicGraphDrawObject(width, height, stocks->num_elements);
-    SetGraphPoints(object, stocks);
+    Graph_SetGraphPoints(object, stocks);
     Vector_Delete(stocks);
 
     return object;
 
 }
 
-DrawObject *GetGraphDrawObject(char *company_name, TimeSpan timespan, int width, int height) 
+DrawObject *Graph_GetGraphDrawObject(char *company_name, TimeSpan timespan, int width, int height) 
 {
 
-    DrawObject *graph_object = GetConstructedGraphDrawObject(company_name, (int)timespan, width, height);
+    DrawObject *graph_object = Graph_ConstructGraphDrawObject(company_name, (int)timespan, width, height);
 
     if (graph_object != NULL) {
 
@@ -136,13 +136,13 @@ DrawObject *GetGraphDrawObject(char *company_name, TimeSpan timespan, int width,
 
 }
 
-DrawObject *PollForNewGraphObject(DrawObject *object) 
+DrawObject *Graph_PollForNewGraphObject(DrawObject *object) 
 {
 
     if (IsTimeSpecInPast(&object->graph.next_refresh)) {
 
         free(object->graph.points);
-        DrawObject *graph_object   = GetGraphDrawObject(object->graph.company, object->graph.timespan, object->width, object->height);
+        DrawObject *graph_object   = Graph_GetGraphDrawObject(object->graph.company, object->graph.timespan, object->width, object->height);
         object->graph              = graph_object->graph;
         object->graph.next_refresh = GetOffsetTime(75);
         free(graph_object);
@@ -155,7 +155,7 @@ DrawObject *PollForNewGraphObject(DrawObject *object)
 void DrawGraph(DrawObject *object) 
 {
 
-    object = PollForNewGraphObject(object);
+    object = Graph_PollForNewGraphObject(object);
     Point *points = object->graph.points;
 
     if (points == NULL || object->graph.num_points == 0)

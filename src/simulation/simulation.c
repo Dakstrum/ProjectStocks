@@ -133,7 +133,7 @@ int GetYearFromBuff(char *buff)
 
 }
 
-Vector *GetStockPricesBetween(Vector *sim_prices, time_t start_time, time_t end_time)
+Vector *Simulation_GetStockPricesBetween(Vector *sim_prices, time_t start_time, time_t end_time)
 {
 
     Vector *prices = Vector_Create(sizeof(StockPrice), 128);
@@ -163,7 +163,7 @@ Vector *Simulation_GetStockPrices(char *company_name, time_t current_time, time_
         previous_time = 0;
 
     uint32_t company_idx = Simulation_CompanyIndex(company_name);
-    return GetStockPricesBetween(sim_data[company_idx], previous_time, current_time);
+    return Simulation_GetStockPricesBetween(sim_data[company_idx], previous_time, current_time);
 
 }
 
