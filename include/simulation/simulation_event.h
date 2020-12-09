@@ -1,6 +1,7 @@
 #ifndef SIMULATION_EVENT_H
 #define SIMULATION_EVENT_H
 
+#include <stdlib.h>
 #include <stdint.h>
 
 #include "vector.h"

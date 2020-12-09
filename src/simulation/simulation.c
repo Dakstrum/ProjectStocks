@@ -74,7 +74,7 @@ float GetRandomSign()
 float GetRandomFloat()
 {
 
-    return (float)shared_nrand48(current_seed)/2147483648;
+    return (float)shared_nrand48(current_seed)/(float)INT32_MAX;
 
 }
 
