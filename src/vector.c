@@ -81,6 +81,32 @@ Vector *Vector_GetCopy(Vector *vector)
 
 }
 
+Vector *Vector_GetSubVector(Vector *vector, size_t start_idx, size_t end_idx) 
+{
+
+    assert(end_idx > start_idx);
+    assert(end_idx <= vector->num_elements);
+
+    size_t size_of_single_elem = vector->size_of_single_elem;
+    Vector *vec = malloc(sizeof(Vector));
+
+    vec->size_of_single_elem = size_of_single_elem;
+    vec->num_elements        = end_idx - start_idx;
+    vec->initial_mem_size    = vector->initial_mem_size;
+    vec->mem_size            = end_idx - start_idx < vector->initial_mem_size ? vector->initial_mem_size : vector->mem_size;
+    vec->elements            = malloc(size_of_single_elem * vector->mem_size);
+
+    uint8_t *new_vec = vec->elements;
+    uint8_t *old_vec = vector->elements;
+
+    for (size_t i = start_idx;i < end_idx;i++)
+        for (size_t j = 0;j < size_of_single_elem;j++)
+            new_vec[j + ((i - start_idx) * size_of_single_elem)] = old_vec[j + (i + size_of_single_elem)];
+
+    return vec;
+
+}
+
 void Vector_Reset(Vector *vector)
 {
 
