@@ -41,7 +41,7 @@ void LoadSaveMenu_InitScrollbox();
 void LoadSaveMenu_InitText();
 void NewSaveMenu_InitTextBoxes();
 
-void SaveMenu_Init() 
+void LoadSaveMenu_Init() 
 {
 
     if (CreateNewDrawLayer() == -1) {

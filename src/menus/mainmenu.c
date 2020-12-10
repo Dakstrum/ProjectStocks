@@ -63,7 +63,7 @@ void MainMenu_Start_CB()
 {
     
     ClearDrawLayers();
-    SaveMenu_Init();
+    LoadSaveMenu_Init();
     main_menu = NULL;
     
 }

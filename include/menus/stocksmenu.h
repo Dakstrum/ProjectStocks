@@ -10,7 +10,7 @@ void StocksMenu_InitCompanyScrollbox();
 void StocksMenu_SellMenu_BCB();
 void StocksMenu_BuyMenu_BCB();
 
-void StocksMenu_BuyMenu_Sell_BCB();
+void StocksMenu_SellMenu_Sell_BCB();
 void StocksMenu_BuyMenu_Buy_BCB();
 
 void OneD_BCB();

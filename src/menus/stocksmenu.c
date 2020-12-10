@@ -51,13 +51,13 @@ static DrawObject *transaction_menu_amountowned_textobject  = NULL;
 void StocksMenu_DisplayGraph(char *company_name, TimeSpan time_span);
 void StocksMenu_InitCompanyScrollbox();
 void PopulateStocksScrollBox(DrawObject *object);
-char *StocksMenu_CurrentCompanyFromGraph();
 void StocksMenu_RenderLogic();
 void StocksMenu_PopulateStockInfo(char *company_name);
 void StocksMenu_InitText();
 void StocksMenu_InitTransactionMenuText();
 void StocksMenu_BuyMenu_InitText();
 void StocksMenu_SellMenu_InitText();
+char *StocksMenu_CurrentCompanyFromGraph();
 
 void StocksMenu_Init() 
 { 
@@ -300,7 +300,7 @@ void StocksMenu_BuyMenu_BCB()
 
 }
 
-void StocksMenu_BuyMenu_Sell_BCB()
+void StocksMenu_SellMenu_Sell_BCB()
 {
 
     int amount_in_text_box = atoi(GetTextFromTextBox("SellTextBox"));

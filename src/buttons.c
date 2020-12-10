@@ -17,7 +17,6 @@
 #include "optionsmenu.h"
 #include "pausemenus.h"
 
-
 typedef struct ButtonCallbacks 
 {
 
@@ -90,7 +89,7 @@ void StocksMenu_InitButtons()
     AddButton("BuyMenuBuyButtonObject",           &StocksMenu_BuyMenu_Buy_BCB);
 
     AddButton("SellMenuExitButtonObject",         &StocksMenu_SellMenu_BCB);
-    AddButton("SellMenuSellButtonObject",         &StocksMenu_BuyMenu_Sell_BCB);
+    AddButton("SellMenuSellButtonObject",         &StocksMenu_SellMenu_Sell_BCB);
 
     AddButton("StocksMenuSpeed1ButtonObject",   &GeneralPurposeMenus_SetSpeedOne_CB);
     AddButton("StocksMenuSpeed2ButtonObject",   &GeneralPurposeMenus_SetSpeedTwo_CB);
