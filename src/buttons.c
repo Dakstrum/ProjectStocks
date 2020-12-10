@@ -17,7 +17,6 @@
 #include "optionsmenu.h"
 #include "pausemenus.h"
 
-
 typedef struct ButtonCallbacks 
 {
 
@@ -56,29 +55,29 @@ void AddButton(char *button_name, void (*Callback)())
 
 }
 
-void InitializeMainMenuButtons() 
+void MainMenu_InitButtons() 
 {
 
-    AddButton("MainMenuStartButtonObject",   &Start_BCB);
-    AddButton("MainMenuOptionsButtonObject", &MainMenuOptions_BCB);
-    AddButton("MainMenuExitButtonObject",    &MainMenuExit_BCB);
-    AddButton("MainMenuGithubButtonObject",  &GitHub_BCB);
-    AddButton("MainMenuTwitterButtonObject", &Twitter_BCB);
-    AddButton("MainMenuYoutubeButtonObject", &Youtube_BCB);
-    AddButton("MainMenuWebsiteButtonObject", &Website_BCB);
+    AddButton("MainMenuStartButtonObject",   &MainMenu_Start_CB);
+    AddButton("MainMenuOptionsButtonObject", &MainMenu_Options_CB);
+    AddButton("MainMenuExitButtonObject",    &MainMenu_Exit_CB);
+    AddButton("MainMenuGithubButtonObject",  &MainMenu_GitHub_CB);
+    AddButton("MainMenuTwitterButtonObject", &MainMenu_Twitter_CB);
+    AddButton("MainMenuYoutubeButtonObject", &MainMenu_Youtube_CB);
+    AddButton("MainMenuWebsiteButtonObject", &MainMenu_Website_CB);
 
 }
 
-void InitializeStocksMenuButtons()
+void StocksMenu_InitButtons()
 {
 
-    AddButton("StocksMenuStocksTabButtonObject",  &Stocks_BCB);
-    AddButton("StocksMenuNewsTabButtonObject",    &News_BCB);
-    AddButton("StocksMenuAccountTabButtonObject", &Account_BCB);
-    AddButton("StocksMenuCardsTabButtonObject",   &Cards_BCB);
+    AddButton("StocksMenuStocksTabButtonObject",  &GeneralPurposeMenus_InitStocksMenu_CB);
+    AddButton("StocksMenuNewsTabButtonObject",    &GeneralPurposeMenus_InitNewsMenu_CB);
+    AddButton("StocksMenuAccountTabButtonObject", &GeneralPurposeMenus_InitAccountMenu_CB);
+    AddButton("StocksMenuCardsTabButtonObject",   &GeneralPurposeMenus_InitCardsMenu_CB);
 
-    AddButton("StocksMenuSellButtonObject",       &SellMenu_BCB);
-    AddButton("StocksMenuBuyButtonObject",        &BuyMenu_BCB);
+    AddButton("StocksMenuSellButtonObject",       &StocksMenu_SellMenu_BCB);
+    AddButton("StocksMenuBuyButtonObject",        &StocksMenu_BuyMenu_BCB);
 
     AddButton("StocksMenuDButtonObject",          &OneD_BCB);
     AddButton("StocksMenuWButtonObject",          &OneW_BCB);
@@ -86,95 +85,94 @@ void InitializeStocksMenuButtons()
     AddButton("StocksMenuYButtonObject",          &OneY_BCB);
     AddButton("StocksMenuAllButtonObject",        &All_BCB);
 
-    AddButton("BuyMenuExitButtonObject",          &BuyMenu_BCB);
-    AddButton("BuyMenuBuyButtonObject",           &Buy_BCB);
+    AddButton("BuyMenuExitButtonObject",          &StocksMenu_BuyMenu_BCB);
+    AddButton("BuyMenuBuyButtonObject",           &StocksMenu_BuyMenu_Buy_BCB);
 
-    AddButton("SellMenuExitButtonObject",         &SellMenu_BCB);
-    AddButton("SellMenuSellButtonObject",         &Sell_BCB);
+    AddButton("SellMenuExitButtonObject",         &StocksMenu_SellMenu_BCB);
+    AddButton("SellMenuSellButtonObject",         &StocksMenu_SellMenu_Sell_BCB);
 
-    AddButton("StocksMenuSpeed1ButtonObject",   &SpeedOne_BCB);
-    AddButton("StocksMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
-    AddButton("StocksMenuSpeed3ButtonObject",   &SpeedThree_BCB);
+    AddButton("StocksMenuSpeed1ButtonObject",   &GeneralPurposeMenus_SetSpeedOne_CB);
+    AddButton("StocksMenuSpeed2ButtonObject",   &GeneralPurposeMenus_SetSpeedTwo_CB);
+    AddButton("StocksMenuSpeed3ButtonObject",   &GeneralPurposeMenus_SetSpeedThree_CB);
     
 }
 
 void InitializeSaveMenuButtons()            
 {
 
-    AddButton("LoadSaveMenuNewButtonObject",        &NewSaveMenu_BCB);
-    AddButton("LoadSaveMenuLoadButtonObject",       &LoadSaveMenuLoad_BCB);
-    AddButton("LoadSaveMenuBackButtonObject",       &LoadSaveMenuBack_BCB);
-    AddButton("LoadSaveMenuDeleteSaveButtonObject", &DeleteSave_BCB);
+    AddButton("LoadSaveMenuNewButtonObject",        &LoadSaveMenu_NewSave_CB);
+    AddButton("LoadSaveMenuLoadButtonObject",       &LoadSaveMenu_LoadSave_CB);
+    AddButton("LoadSaveMenuBackButtonObject",       &LoadSaveMenu_Back_CB);
+    AddButton("LoadSaveMenuDeleteSaveButtonObject", &LoadSaveMenu_DeleteSave_CB);
 
-    AddButton("NewSaveMenuBackButtonObject",        &NewSaveMenuBack_BCB);
-    AddButton("NewSaveMenuCreateButtonObject",      &CreateSave_BCB);
+    AddButton("NewSaveMenuBackButtonObject",        &NewSaveMenu_Back_CB);
+    AddButton("NewSaveMenuCreateButtonObject",      &NewSaveMenu_CreateSave_CB);
 
 }
 
 void InitializeAccountButtons()
 {
 
-    AddButton("AccountMenuStocksTabButtonObject",  &Stocks_BCB);
-    AddButton("AccountMenuNewsTabButtonObject",    &News_BCB);
-    AddButton("AccountMenuAccountTabButtonObject", &Account_BCB);
-    AddButton("AccountMenuCardsTabButtonObject",   &Cards_BCB);
+    AddButton("AccountMenuStocksTabButtonObject",  &GeneralPurposeMenus_InitStocksMenu_CB);
+    AddButton("AccountMenuNewsTabButtonObject",    &GeneralPurposeMenus_InitNewsMenu_CB);
+    AddButton("AccountMenuAccountTabButtonObject", &GeneralPurposeMenus_InitAccountMenu_CB);
+    AddButton("AccountMenuCardsTabButtonObject",   &GeneralPurposeMenus_InitCardsMenu_CB);
 
-    AddButton("AccountMenuDownButtonObject", &AccountDown_BCB);
-    AddButton("AccountMenuUpButtonObject",   &AccountUp_BCB);
+    AddButton("AccountMenuDownButtonObject", &AccountMenu_Down_CB);
+    AddButton("AccountMenuUpButtonObject",   &AccountMenu_Up_CB);
 
-    AddButton("AccountMenuSpeed1ButtonObject",   &SpeedOne_BCB);
-    AddButton("AccountMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
-    AddButton("AccountMenuSpeed3ButtonObject",   &SpeedThree_BCB);
+    AddButton("AccountMenuSpeed1ButtonObject",   &GeneralPurposeMenus_SetSpeedOne_CB);
+    AddButton("AccountMenuSpeed2ButtonObject",   &GeneralPurposeMenus_SetSpeedTwo_CB);
+    AddButton("AccountMenuSpeed3ButtonObject",   &GeneralPurposeMenus_SetSpeedThree_CB);
 
 }
 
 void InitializeNewsButtons()
 {
 
-    AddButton("NewsMenuStocksTabButtonObject",  &Stocks_BCB);
-    AddButton("NewsMenuNewsTabButtonObject",    &News_BCB);
-    AddButton("NewsMenuAccountTabButtonObject", &Account_BCB);
-    AddButton("NewsMenuCardsTabButtonObject",   &Cards_BCB);
+    AddButton("NewsMenuStocksTabButtonObject",  &GeneralPurposeMenus_InitStocksMenu_CB);
+    AddButton("NewsMenuNewsTabButtonObject",    &GeneralPurposeMenus_InitNewsMenu_CB);
+    AddButton("NewsMenuAccountTabButtonObject", &GeneralPurposeMenus_InitAccountMenu_CB);
+    AddButton("NewsMenuCardsTabButtonObject",   &GeneralPurposeMenus_InitCardsMenu_CB);
 
-    AddButton("NewsMenuSpeed1ButtonObject",   &SpeedOne_BCB);
-    AddButton("NewsMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
-    AddButton("NewsMenuSpeed3ButtonObject",   &SpeedThree_BCB);
+    AddButton("NewsMenuSpeed1ButtonObject",   &GeneralPurposeMenus_SetSpeedOne_CB);
+    AddButton("NewsMenuSpeed2ButtonObject",   &GeneralPurposeMenus_SetSpeedTwo_CB);
+    AddButton("NewsMenuSpeed3ButtonObject",   &GeneralPurposeMenus_SetSpeedThree_CB);
 
-    AddButton("NewsMenuscrollbox_backButtonObject", &ScrollboxBack_BCB);
+    AddButton("NewsMenuscrollbox_backButtonObject", &NewsMenu_ScrollboxBack_CB);
 
 }
 
 void InitializeGeneralPurposeButtons()
 {
 
-    AddButton("StocksButton", &Stocks_BCB);
-    AddButton("NewsButton", &News_BCB);
-    AddButton("AccountButton", &Account_BCB);
-    AddButton("CardsButton", &Cards_BCB);
+    AddButton("StocksButton", &GeneralPurposeMenus_InitStocksMenu_CB);
+    AddButton("NewsButton", &GeneralPurposeMenus_InitNewsMenu_CB);
+    AddButton("AccountButton", &GeneralPurposeMenus_InitAccountMenu_CB);
+    AddButton("CardsButton", &GeneralPurposeMenus_InitCardsMenu_CB);
 
-    AddButton("PauseSpeedButton", &PauseSpeed_BCB);
-    AddButton("SpeedOneButton", &SpeedOne_BCB);
-    AddButton("SpeedTwoButton", &SpeedTwo_BCB);
-    AddButton("SpeedThreeButton", &SpeedThree_BCB);
+    AddButton("SpeedOneButton", &GeneralPurposeMenus_SetSpeedOne_CB);
+    AddButton("SpeedTwoButton", &GeneralPurposeMenus_SetSpeedTwo_CB);
+    AddButton("SpeedThreeButton", &GeneralPurposeMenus_SetSpeedThree_CB);
 
 }
 
-void InitializeCardsMenuButtons()
+void CardsMenu_InitButtons()
 {
 
-    AddButton("CardsMenuStocksTabButtonObject",  &Stocks_BCB);
-    AddButton("CardsMenuNewsTabButtonObject",    &News_BCB);
-    AddButton("CardsMenuAccountTabButtonObject", &Account_BCB);
-    AddButton("CardsMenuCardsTabButtonObject",   &Cards_BCB);
+    AddButton("CardsMenuStocksTabButtonObject",  &GeneralPurposeMenus_InitStocksMenu_CB);
+    AddButton("CardsMenuNewsTabButtonObject",    &GeneralPurposeMenus_InitNewsMenu_CB);
+    AddButton("CardsMenuAccountTabButtonObject", &GeneralPurposeMenus_InitAccountMenu_CB);
+    AddButton("CardsMenuCardsTabButtonObject",   &GeneralPurposeMenus_InitCardsMenu_CB);
 
-    AddButton("CardsMenuApplyButtonObject", &ApplyMenu_BCB);
+    AddButton("CardsMenuApplyButtonObject", &CardsMenu_PickCompanyMenu_CB);
 
 
-    AddButton("ApplyCardMenuExitButtonObject", &ApplyMenu_BCB);
+    AddButton("ApplyCardMenuExitButtonObject", &CardsMenu_PickCompanyMenu_CB);
 
-    AddButton("CardsMenuSpeed1ButtonObject",   &SpeedOne_BCB);
-    AddButton("CardsMenuSpeed2ButtonObject",   &SpeedTwo_BCB);
-    AddButton("CardsMenuSpeed3ButtonObject",   &SpeedThree_BCB);
+    AddButton("CardsMenuSpeed1ButtonObject",   &GeneralPurposeMenus_SetSpeedOne_CB);
+    AddButton("CardsMenuSpeed2ButtonObject",   &GeneralPurposeMenus_SetSpeedTwo_CB);
+    AddButton("CardsMenuSpeed3ButtonObject",   &GeneralPurposeMenus_SetSpeedThree_CB);
 
 }
 
@@ -182,28 +180,28 @@ void InitializeCardsMenuButtons()
 void InitializePauseMenusButtons()
 {
 
-    AddButton("PauseMenuMainMenuButtonObject", &PauseMenuMainMenu_BCB);
-    AddButton("PauseMenuOptionsButtonObject",  &PauseMenuOptions_BCB);
-    AddButton("PauseMenuSaveButtonObject",     &PauseMenuSave_BCB);
-    AddButton("PauseMenuExitButtonObject",     &PauseMenuExit_BCB);
-    AddButton("PauseMenuResumeButtonObject",   &ToggleInGamePauseMenu);
+    AddButton("PauseMenuMainMenuButtonObject", &PauseMenu_MainMenu_CB);
+    AddButton("PauseMenuOptionsButtonObject",  &PauseMenu_Options_CB);
+    AddButton("PauseMenuSaveButtonObject",     &PauseMenu_Save_CB);
+    AddButton("PauseMenuExitButtonObject",     &PauseMenu_Exit_CB);
+    AddButton("PauseMenuResumeButtonObject",   &PauseMenu_Toggle);
 
 }
 
 void InitializeOptionsButtons()
 {
 
-    AddButton("OptionsMenuOptionsBackButtonObject", &OptionsMenuExit_BCB);
-    AddButton("OptionsMenuDisplayButtonObject",     &ToggleDisplayMenu);
-    AddButton("OptionsMenuAudioButtonObject",       &ToggleAudioMenu);
+    AddButton("OptionsMenuOptionsBackButtonObject", &OptionsMenu_Exit_CB);
+    AddButton("OptionsMenuDisplayButtonObject",     &OptionsMenu_DisplayMenu_Toggle);
+    AddButton("OptionsMenuAudioButtonObject",       &OptionsMenu_AudioMenu_Toggle);
 
-    AddButton("DisplayMenuOptionsBackButtonObject", &DisplayMenuExit_BCB);
-    AddButton("DisplayMenuAudioButtonObject",       &ToggleAudioMenu);
-    AddButton("DisplayMenuFullScreenButtonObject",  &DisplayMenuFullScreen_BCB);
-    AddButton("DisplayMenuResolutionButtonObject",  &InitalizeResolutionScrollbox);
+    AddButton("DisplayMenuOptionsBackButtonObject", &OptionsMenu_DisplayMenu_Exit_CB);
+    AddButton("DisplayMenuAudioButtonObject",       &OptionsMenu_AudioMenu_Toggle);
+    AddButton("DisplayMenuFullScreenButtonObject",  &OptionsMenu_DisplayMenu_FullScreen_CB);
+    AddButton("DisplayMenuResolutionButtonObject",  &OptionsMenu_DisplayMenu_InitResolutionScrollbox);
 
-    AddButton("AudioMenuOptionsBackButtonObject",   &AudioMenuExit_BCB);
-    AddButton("AudioMenuDisplayButtonObject",       &ToggleDisplayMenu);
+    AddButton("AudioMenuOptionsBackButtonObject",   &OptionsMenu_AudioMenu_Exit_CB);
+    AddButton("AudioMenuDisplayButtonObject",       &OptionsMenu_DisplayMenu_Toggle);
 
 }
 
@@ -217,14 +215,14 @@ void InitializeButtons()
 
     AddButton("STUB", &StubCallBack);
 
-    InitializeMainMenuButtons();
-    InitializeStocksMenuButtons();
+    MainMenu_InitButtons();
+    StocksMenu_InitButtons();
     InitializeAccountButtons();
     InitializeGeneralPurposeButtons();
     InitializePauseMenusButtons();
     InitializeOptionsButtons();
     InitializeSaveMenuButtons();
-    InitializeCardsMenuButtons();
+    CardsMenu_InitButtons();
     InitializeNewsButtons();
 
 }

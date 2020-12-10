@@ -1,18 +1,17 @@
 #ifndef SAVEMENUS_H
 #define SAVEMENUS_H
 
-void InitializeLoadSaveMenu();
+void LoadSaveMenu_Init();
 
-void NewSaveMenu_BCB();
+void LoadSaveMenu_NewSave_CB();
+void LoadSaveMenu_Back_CB();
+void LoadSaveMenu_LoadSave_CB();
+void LoadSaveMenu_DeleteSave_CB();
 
 void NewSave_BCB();
-void NewSaveMenuBack_BCB();
-void CreateSave_BCB();
-void LoadSaveMenuLoad_BCB();
+void NewSaveMenu_Back_CB();
+void NewSaveMenu_CreateSave_CB();
 
-void LoadSaveMenuBack_BCB();
-void DeleteSave_BCB();
-
-void CleanSaveMenu();
+void SaveMenus_Clean();
 
 #endif

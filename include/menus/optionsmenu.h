@@ -1,20 +1,20 @@
 #ifndef OPTIONSMENU_H
 #define OPTIONSMENU_H
 
-void ToggleOptionsMenu();
-void ToggleAudioMenu();
-void ToggleDisplayMenu();
-void ToggleMainMenuOptionsMenu();
+void OptionsMenu_Toggle();
+void OptionsMenu_AudioMenu_Toggle();
+void OptionsMenu_DisplayMenu_Toggle();
+void OptionsMenu_MainMenuVersonToggle();
 
-void OptionsMenuExit_BCB();
-void OptionsMenuResolution_BCB();
-void InitalizeResolutionScrollbox();
+void OptionsMenu_Exit_CB();
+void OptionsMenu_DisplayMenu_Resolution_CB();
+void OptionsMenu_DisplayMenu_InitResolutionScrollbox();
 
-void DisplayMenuExit_BCB();
-void DisplayMenuFullScreen_BCB();
+void OptionsMenu_DisplayMenu_Exit_CB();
+void OptionsMenu_DisplayMenu_FullScreen_CB();
 
-void AudioMenuExit_BCB();
+void OptionsMenu_AudioMenu_Exit_CB();
 
-void CleanOptionsMenu();
+void OptionsMenu_Clean();
 
 #endif

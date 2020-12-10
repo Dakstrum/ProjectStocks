@@ -66,11 +66,8 @@ void SeedDB()
         return;
 
     }
-
-    ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/companies-seed.sql"));
-    ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/news-events-seed.sql"));
-    ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/ai.sql"));
-    ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/cards-seed.sql"));
+    
+    ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/seed.sql"));
     ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/settings-seed.sql"));
     ExecuteQueryF(NULL, NULL, "INSERT INTO DB_Events (Event) VALUES ('Seeded')");
 
