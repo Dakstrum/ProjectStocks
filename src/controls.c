@@ -384,6 +384,37 @@ void TintButtons()
 
 }
 
+int HoveringOverBitmap(DrawObject *bitmap)
+{
+
+    if(bitmap == NULL)
+    {
+        Log("NO BITMAP FOUND");
+        return 0;
+    }
+
+    static ALLEGRO_MOUSE_STATE state;
+    al_get_mouse_state(&state);
+
+    if (IsMouseCursorInAreaOfObject(bitmap, state.x, state.y))
+    {
+        bitmap->bit_flags |= BUTTON_MOUSE_HOVERING;
+        Log("Hovering!!!!!!");
+        return 1;
+
+    }
+    else if (bitmap->bit_flags & BUTTON_MOUSE_HOVERING)
+    {
+        bitmap->bit_flags ^= BUTTON_MOUSE_HOVERING;  
+        Log("NotHovering!!!!!!");
+        return 0;
+
+    }
+    return 0;
+
+
+}
+
 void TintScrollBox()
 {
 

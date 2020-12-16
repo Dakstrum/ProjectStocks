@@ -4,6 +4,8 @@
 #include "cache.h"
 #include "button.h"
 
+#include "log.h"
+
 void InitButton(DrawObject *object) 
 {
 

@@ -163,7 +163,7 @@ void NewsMenu_InitWeatherBitmaps() //This function is nasty. Will change when I 
 
     int week_bitmap_x[7] = {1292, 1374, 1470, 1561, 1660, 1740, 1813};
 
-    DrawObject *all_weather_bitmaps[7] = {sun_bitmap, mon_bitmap, tues_bitmap, wed_bitmap, thurs_bitmap, fri_bitmap, sat_bitmap};
+    DrawObject *all_weather_bitmaps[7]             = {sun_bitmap, mon_bitmap, tues_bitmap, wed_bitmap, thurs_bitmap, fri_bitmap, sat_bitmap};
     DrawObject *all_weather_temps_textobjects[7]   = {sun_temp_textobject, mon_temp_textobject , tues_temp_textobject, wed_temp_textobject, thurs_temp_textobject, fri_temp_textobject, sat_temp_textobject};
 
     for(int i = 0; i < 7; i++)
