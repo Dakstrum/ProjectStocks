@@ -83,7 +83,7 @@ void StocksMenu_Init()
     GeneralPurposeMenus_InitSpeedSelectObject("StocksMenu");
     DrawLayer_AddManager(NewsManager_Create(1400, 300));
 
-    //CardManager_InitCard();
+    CardManager_InitCard();
 
 
 }
@@ -96,11 +96,11 @@ void StocksMenu_RenderLogic()
 
     if(stocks_menu)
     {
-        //CardManager_HoveringAnimationController(0);
-        //CardManager_HoveringAnimationController(1);
-        //CardManager_HoveringAnimationController(2);
-        //CardManager_HoveringAnimationController(3);
-        //CardManager_HoveringAnimationController(4);
+        CardManager_HoveringAnimationController(1);
+        CardManager_HoveringAnimationController(2);
+        CardManager_HoveringAnimationController(3);
+        CardManager_HoveringAnimationController(4);
+        CardManager_HoveringAnimationController(5);
 
         SetTextContent(stock_change_textobject, "%.2f", Simulation_GetStockPriceDiff(GetCompanyNameViewing()));
         SetTextContent(player_money_textobject, "%.2f", Account_GetMoney());

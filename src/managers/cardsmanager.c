@@ -3,41 +3,44 @@
 #include "animations.h"
 #include "log.h"
 #include "controls.h"
+#include "dbcard.h"
 
-static DrawObject *cardone_bitmap   = NULL;
-static DrawObject *cardtwo_bitmap   = NULL;
-static DrawObject *cardthree_bitmap = NULL;
-static DrawObject *cardfour_bitmap  = NULL;
-static DrawObject *cardfive_bitmap  = NULL;
+static DrawObject *cardone_button   = NULL;
+static DrawObject *cardtwo_button   = NULL;
+static DrawObject *cardthree_button = NULL;
+static DrawObject *cardfour_button  = NULL;
+static DrawObject *cardfive_button  = NULL;
 
-DrawObject *card_bitmaps[5];
+DrawObject *card_buttons[5];
 
 void CardManager_AnimateCardUp(int card_num);
 
 void CardManager_InitCard()
 {
-	card_bitmaps[1] = cardone_bitmap;
-	card_bitmaps[2] = cardtwo_bitmap;
-	card_bitmaps[3] = cardthree_bitmap;
-	card_bitmaps[4] = cardfour_bitmap;
-	card_bitmaps[5] = cardfive_bitmap;
+	card_buttons[1] = cardone_button;
+	card_buttons[2] = cardtwo_button;
+	card_buttons[3] = cardthree_button;
+	card_buttons[4] = cardfour_button;
+	card_buttons[5] = cardfive_button;
 
-	static int card_bitmaps_x[5] = {414, 611, 814, 1011, 1215};
+	static int card_buttons_x[5] = {414, 611, 814, 1011, 1215};
 
-	for(int i = 0; i < 5; i++)
+	PlayerCard *player_cards  = GetAllPlayerCards();
+
+	for(int i = 1; i < GetNumOfPlayerCards() + 1; i++)
 	{
 		
-		card_bitmaps[i]    = CreateNewDrawObject();
+		card_buttons[i]    = CreateNewDrawObject();
 
-		card_bitmaps[i]->type   = MENU;
-        card_bitmaps[i]->x      = card_bitmaps_x[i];
-        card_bitmaps[i]->y      = 1009;
-        card_bitmaps[i]->width  = 165;
-        card_bitmaps[i]->height = 230;
+		card_buttons[i]->type   = BUTTON;
+        card_buttons[i]->x      = card_buttons_x[i - 1];
+        card_buttons[i]->y      = 1009;
+        card_buttons[i]->width  = 165;
+        card_buttons[i]->height = 230;
 
-		card_bitmaps[i]->asset_path = "assets/images/cards/deadlyproduct.png";
+		card_buttons[i]->asset_path = GetCardPath(player_cards[i - 1].card_id);
 
-		AddObjectToDrawLayer(card_bitmaps[i]);
+		AddObjectToDrawLayer(card_buttons[i]);
 	
 	}
 
@@ -46,24 +49,24 @@ void CardManager_InitCard()
 void CardManager_AnimateCardUp(int card_num)
 {
 
-	Animate_MoveDrawObject(card_bitmaps[card_num], card_bitmaps[card_num]->x, 800, 500);
+	Animate_MoveDrawObject(card_buttons[card_num], card_buttons[card_num]->x, 800, 500);
 
 }
 
 void CardManager_AnimateCardDown(int card_num)
 {
 
-	Animate_MoveDrawObject(card_bitmaps[card_num], card_bitmaps[card_num]->x, 1009, 500);
+	Animate_MoveDrawObject(card_buttons[card_num], card_buttons[card_num]->x, 1009, 500);
 
 }
 
 void CardManager_HoveringAnimationController(int card_num)
 {
 
-	if (HoveringOverBitmap(card_bitmaps[card_num]) == 1)
+	if (HoveringOverBitmap(card_buttons[card_num]) == 1)
 		CardManager_AnimateCardUp(card_num);
 
-	else if(HoveringOverBitmap(card_bitmaps[card_num]) == 0 && card_bitmaps[card_num]->y < 1009)
+	else if(HoveringOverBitmap(card_buttons[card_num]) == 0 && card_buttons[card_num]->y < 1009)
 		CardManager_AnimateCardDown(card_num);
 	
 	else
