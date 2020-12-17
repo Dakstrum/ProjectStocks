@@ -1,20 +1,19 @@
 #ifndef MAINMENU_H
 #define MAINMENU_H
 
-void InitializeMainMenu();
-void ShowStartMenu();
-void ToggleOptionsMenu();
-void MainMenuRenderLogic();
-int IsInMainMenu();
+void MainMenu_Init();
+void MainMenu_RenderLogic();
 
-void Start_BCB();
-void MainMenuOptions_BCB();
-void MainMenuExit_BCB();
+void MainMenu_Start_CB();
+void MainMenu_Options_CB();
+void MainMenu_Exit_CB();
 
-void GitHub_BCB();
-void Twitter_BCB();
-void Youtube_BCB();
-void Website_BCB();
+void MainMenu_GitHub_CB();
+void MainMenu_Twitter_CB();
+void MainMenu_Youtube_CB();
+void MainMenu_Website_CB();
+
+int MainMenu_Active();
 
 void CleanMainMenu();
 

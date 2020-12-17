@@ -47,15 +47,15 @@ static DrawObject *scroll_box_button   = NULL;
 DrawObject *category_scrollbox                    = NULL;
 DrawObject *category_specific_companies_scrollbox = NULL;
 
-void InitalizeNewsMenuTextAndButtons();
-void NewsMenuRenderLogic();
-void InitializeSearchTextBox();
+void NewsMenu_InitTextAndButtons();
+void NewsMenu_RenderLogic();
+void NewsMenu_InitSearchTextBox();
 
-void InitalizeWeatherBitMaps();
-void InitalizeNewsMenuCategoryScrollbox();
-void InitalizeNewsMenuCategorySpecificCompanyScrollbox(int cat_id);
+void NewsMenu_InitWeatherBitmaps();
+void NewsMenu_InitCategoryScrollbox();
+void NewsMenu_InitSpecificCategoryScrollbox(int cat_id);
 
-void InitializeNewsMenu() 
+void NewsMenu_Init() 
 { 
 
     if (CreateNewDrawLayer() == -1) {
@@ -67,17 +67,17 @@ void InitializeNewsMenu()
 
     news_menu = GetJSONMenuAndAddToDrawLayer("NewsMenu");
 
-    InitalizeNewsMenuTextAndButtons();
-    InitalizeNewsMenuCategoryScrollbox();
-    InitalizeWeatherBitMaps();
-    InitializeSpeedSelectObject("NewsMenu");
-    InitializeSearchTextBox();
+    NewsMenu_InitTextAndButtons();
+    NewsMenu_InitCategoryScrollbox();
+    NewsMenu_InitWeatherBitmaps();
+    GeneralPurposeMenus_InitSpeedSelectObject("NewsMenu");
+    NewsMenu_InitSearchTextBox();
 
-    NewsMenuRenderLogic();
+    NewsMenu_RenderLogic();
 
 }
 
-void InitalizeNewsMenuTextAndButtons()
+void NewsMenu_InitTextAndButtons()
 {
 
     scroll_box_button = GetDrawObjectByName("NewsMenuscrollbox_backButtonObject");
@@ -98,7 +98,7 @@ void InitalizeNewsMenuTextAndButtons()
 
 }
 
-void NewsMenuRenderLogic()
+void NewsMenu_RenderLogic()
 {
 
     if (player_money_textobject == NULL)
@@ -109,26 +109,26 @@ void NewsMenuRenderLogic()
 
 }
 
-void NewsMenuCategoryScrollBoxClick(char *scroll_box_content, unsigned short int index)
+void NewsMenu_CategoryScrollboxClick(char *scroll_box_content, unsigned short int index)
 {
 
     RemoveDrawObject(category_scrollbox);
     category_scrollbox = NULL;
-    InitalizeNewsMenuCategorySpecificCompanyScrollbox((unsigned)index + 1);
+    NewsMenu_InitSpecificCategoryScrollbox((unsigned)index + 1);
 
 }
 
-void InitalizeNewsMenuCategoryScrollbox() 
+void NewsMenu_InitCategoryScrollbox() 
 {
 
-    category_scrollbox = CreateCategoryScrollbox(2, 230, &NewsMenuCategoryScrollBoxClick);
+    category_scrollbox = CreateCategoryScrollbox(2, 230, &NewsMenu_CategoryScrollboxClick);
     AddObjectToDrawLayer(category_scrollbox);
     Log("SHOULD BE ROMOVING");
     RemoveDrawObject(scroll_box_button);
 
 }
 
-void NewsMenuCategorySpecificCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
+void NewsMenu_SpecificCategoryScrollboxClick(char *scroll_box_content, unsigned short int index)
 {
     
     LogF("Get News about %s", scroll_box_content);
@@ -136,19 +136,19 @@ void NewsMenuCategorySpecificCompanyScrollBoxClick(char *scroll_box_content, uns
 
 }
 
-void InitalizeNewsMenuCategorySpecificCompanyScrollbox(int cat_id) 
+void NewsMenu_InitSpecificCategoryScrollbox(int cat_id) 
 {
 
     SetTextContent(scrollbox_title_textobject, "%s", GetCompanyWithCategory(cat_id - 1));
 
-    category_specific_companies_scrollbox = CreateCategorySpecificCompaniesScrollbox(2, 230, cat_id, &NewsMenuCategorySpecificCompanyScrollBoxClick);
+    category_specific_companies_scrollbox = CreateCategorySpecificCompaniesScrollbox(2, 230, cat_id, &NewsMenu_SpecificCategoryScrollboxClick);
     AddObjectToDrawLayer(category_specific_companies_scrollbox);
 
     scroll_box_button = GetJSONObjectAndAddToDrawLayer("NewsMenuscrollbox_backButtonObject");
 
 }
 
-void InitalizeWeatherBitMaps() //This function is nasty. Will change when I can create bitmaps and not menus
+void NewsMenu_InitWeatherBitmaps() //This function is nasty. Will change when I can create bitmaps and not menus
 {
 
     sun_bitmap   = CreateNewDrawObject();    
@@ -206,7 +206,7 @@ void InitalizeWeatherBitMaps() //This function is nasty. Will change when I can 
 
 }
 
-void InitializeSearchTextBox()
+void NewsMenu_InitSearchTextBox()
 {
 
     DrawObject *savename_tb = CreateTextBoxObject("SearchTextBox", "", 38, TEXTBOX_ACCEPT_ALPHABET_CHARACTERS | TEXTBOX_ACCEPT_NUMBER_CHARACTERS);
@@ -219,7 +219,7 @@ void InitializeSearchTextBox()
 
 }
 
-void ScrollboxBack_BCB()
+void NewsMenu_ScrollboxBack_CB()
 {
     if(category_scrollbox)
         return;
@@ -228,14 +228,14 @@ void ScrollboxBack_BCB()
 
         RemoveDrawObject(category_specific_companies_scrollbox);
         category_specific_companies_scrollbox = NULL;
-        InitalizeNewsMenuCategoryScrollbox();
+        NewsMenu_InitCategoryScrollbox();
         SetTextContent(scrollbox_title_textobject, "%s", "Categories");
 
     }
 
 }
 
-void CleanNewsMenu()
+void NewsMenu_Clean()
 {
 
     player_money_textobject = NULL;

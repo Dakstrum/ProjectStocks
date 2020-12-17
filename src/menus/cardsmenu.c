@@ -38,22 +38,22 @@ static DrawObject *card_bitmap    = NULL;
 
 static int current_button_idx = -1;
 
-void CardsMenuRenderLogic();
+void CardsMenu_RenderLogic();
 
-void InitalizePositiveCardsScrollBox();
-void InitalizeNegativeCardsScrollBox();
+void CardsMenu_InitPositiveScrollbox();
+void CardsMenu_InitNegativeScrollBox();
 
-void InitializeCardMenuCompanyScrollBox();
+void CardsMenu_InitCompanyScrollbox();
 
-void InitializeCardsMenuTextAndButtons();
-void InitializeCardBitmapAndText(char* card_title);
-void ApplyMenu_BCB();
-void CleanCardsMenu();
+void CardsMenu_InitTextAndButtons();
+void CardsMenu_InitCardBitmapAndText(char* card_title);
+void CardsMenu_PickCompanyMenu_CB();
+void CardsMenu_Clean();
 
-void InitializeCardsMenu() 
+void CardsMenu_Init() 
 {
 
-    CleanCardsMenu();
+    CardsMenu_Clean();
     if (CreateNewDrawLayer() == -1) {
 
         Log("STUB: cards Menu could not create new draw layer");
@@ -62,16 +62,15 @@ void InitializeCardsMenu()
 
     cards_menu = GetJSONMenuAndAddToDrawLayer("CardsMenu");
 
-    InitalizePositiveCardsScrollBox();
-    InitalizeNegativeCardsScrollBox();
+    CardsMenu_InitPositiveScrollbox();
+    CardsMenu_InitNegativeScrollBox();
+    CardsMenu_InitTextAndButtons(); 
 
-    InitializeCardsMenuTextAndButtons(); 
-
-    InitializeSpeedSelectObject("CardsMenu");
+    GeneralPurposeMenus_InitSpeedSelectObject("CardsMenu");
 
 }
 
-void CardsMenuRenderLogic()
+void CardsMenu_RenderLogic()
 {
 
     if (player_money_textobject == NULL)
@@ -82,7 +81,7 @@ void CardsMenuRenderLogic()
 
 }
 
-void InitializeCardsMenuTextAndButtons()
+void CardsMenu_InitTextAndButtons()
 {
 
     player_money_textobject = GetJSONObjectAndAddToDrawLayer("CardsMenuAccountMoneyTextObject");
@@ -95,7 +94,7 @@ void InitializeCardsMenuTextAndButtons()
 
 }
 
-void PopulateCardMenuCompanyScrollBox(DrawObject *object)
+void CardsMenu_PopulateCompanyScrollbox(DrawObject *object)
 {
 
     for(int i = 0; i < GetNumCompanies(); i++)
@@ -103,17 +102,17 @@ void PopulateCardMenuCompanyScrollBox(DrawObject *object)
 
 }
 
-void CardMenuCompanyScrollBoxClick(char *scroll_box_content, unsigned short int index)
+void CardsMenu_CompanyScrollboxClick(char *scroll_box_content, unsigned short int index)
 {
 
     uint32_t company_id = GetCompanyId(scroll_box_content);
     DBCards_ApplyCard(GetPlayerCardId(GetCardId(card_title_textobject->text.content)), company_id);
-    ApplyMenu_BCB();
+    CardsMenu_PickCompanyMenu_CB();
     DisplayPopupOnDrawLayer("Added Card to Company", "assets/images/generalpurposemenus/popups/greenpopup.png");
 
 }
 
-void InitializeCardMenuCompanyScrollBox() 
+void CardsMenu_InitCompanyScrollbox() 
 {
 
     DrawObject *object = Scrollbox_Create();
@@ -125,15 +124,15 @@ void InitializeCardMenuCompanyScrollBox()
     object->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
 
     object->scrollbox.num_items    = GetNumCompanies();
-    object->scrollbox.box_click    = &CardMenuCompanyScrollBoxClick;
+    object->scrollbox.box_click    = &CardsMenu_CompanyScrollboxClick;
     object->scrollbox.text_content = malloc(sizeof(char *) * GetNumCompanies());
 
-    PopulateCardMenuCompanyScrollBox(object);
+    CardsMenu_PopulateCompanyScrollbox(object);
     AddObjectToDrawLayer(object);
 
 }
 
-void LoadCardClick(char *scroll_box_content, unsigned short int index)
+void CardsMenu_LoadCard(char *scroll_box_content, unsigned short int index)
 {
 
     if (card_title_textobject == NULL || card_desc_textobject == NULL)
@@ -141,21 +140,19 @@ void LoadCardClick(char *scroll_box_content, unsigned short int index)
 
     current_button_idx = index;
 
-    InitializeCardBitmapAndText(scroll_box_content);
+    CardsMenu_InitCardBitmapAndText(scroll_box_content);
 
 }
 
-void PopulatePositiveCardsScollBox(DrawObject *object)
+void CardsMenu_PopulatePositiveCardScrollbox(DrawObject *object)
 {
 
     PlayerCard *temp  = GetAllPlayerCards();
     int scrollbox_num = 0;
 
-    for(int i = 0; i < GetNumOfPlayerCards(); i++)
-    {
+    for(int i = 0; i < GetNumOfPlayerCards(); i++) {
 
-        if(GetCardType(temp[i].card_id) == 1)
-        {
+        if(GetCardType(temp[i].card_id) == 1) {
 
             object->scrollbox.text_content[scrollbox_num] = GetFormattedPointer(GetCardTitle(temp[i].card_id));
             scrollbox_num++;
@@ -166,7 +163,7 @@ void PopulatePositiveCardsScollBox(DrawObject *object)
 
 }
 
-void InitalizePositiveCardsScrollBox() 
+void CardsMenu_InitPositiveScrollbox() 
 {
 
     DrawObject *object = Scrollbox_Create();
@@ -178,15 +175,15 @@ void InitalizePositiveCardsScrollBox()
     object->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
 
     object->scrollbox.num_items        = GetNumOfPlayerPositiveCards();
-    object->scrollbox.box_click        = &LoadCardClick;
+    object->scrollbox.box_click        = &CardsMenu_LoadCard;
     object->scrollbox.text_content     = malloc(sizeof(char *) * GetNumOfPlayerPositiveCards());
     
-    PopulatePositiveCardsScollBox(object);
+    CardsMenu_PopulatePositiveCardScrollbox(object);
     AddObjectToDrawLayer(object);
 
 }
 
-void PopulateNegativeCardsScollBox(DrawObject *object)
+void CardsMenu_PopulateNegativeScrollbox(DrawObject *object)
 {
     
     PlayerCard *temp  = GetAllPlayerCards();
@@ -207,7 +204,7 @@ void PopulateNegativeCardsScollBox(DrawObject *object)
 
 }
 
-void InitalizeNegativeCardsScrollBox() 
+void CardsMenu_InitNegativeScrollBox() 
 {
 
     DrawObject *object = Scrollbox_Create();
@@ -219,18 +216,17 @@ void InitalizeNegativeCardsScrollBox()
     object->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
 
     object->scrollbox.num_items        = GetNumOfPlayerNegativeCards();
-    object->scrollbox.box_click        = &LoadCardClick;
+    object->scrollbox.box_click        = &CardsMenu_LoadCard;
     object->scrollbox.text_content     = malloc(sizeof(char *) * GetNumOfPlayerNegativeCards());
 
-    PopulateNegativeCardsScollBox(object);
+    CardsMenu_PopulateNegativeScrollbox(object);
     AddObjectToDrawLayer(object);
 
 }
 
-void ApplyMenu_BCB()
+void CardsMenu_PickCompanyMenu_CB()
 {
-    if (current_button_idx == -1)
-    {
+    if (current_button_idx == -1) {
 
         DisplayPopupOnDrawLayer("No Card Selected", "assets/images/generalpurposemenus/popups/redpopup.png");
         return;
@@ -242,7 +238,7 @@ void ApplyMenu_BCB()
         CreateNewDrawLayer();
         apply_card_menu = GetMenuWithChildsFromJsonLayer("ApplyCardMenu");
         AddMenuWithChildsToDrawLayer(apply_card_menu);
-        InitializeCardMenuCompanyScrollBox(); 
+        CardsMenu_InitCompanyScrollbox(); 
         
     } else {
 
@@ -250,14 +246,14 @@ void ApplyMenu_BCB()
         apply_card_menu = NULL;
         ClearCurrentDrawLayer();
         cards_menu      = NULL;
-        InitializeCardsMenu();
+        CardsMenu_Init();
         current_button_idx = -1;
         
     }
 
 }
 
-void InitializeCardBitmapAndText(char* card_title)
+void CardsMenu_InitCardBitmapAndText(char* card_title)
 {
     
 
@@ -282,7 +278,7 @@ void InitializeCardBitmapAndText(char* card_title)
 
 }
 
-void CleanCardsMenu()
+void CardsMenu_Clean()
 {
 
     player_money_textobject  = NULL;

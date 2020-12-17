@@ -85,8 +85,8 @@ void CleanUpAddons()
 void SwitchToRenderingMainMenu() 
 {
 
-    InitializeMainMenu();
-    RenderLogic = &MainMenuRenderLogic;
+    MainMenu_Init();
+    RenderLogic = &MainMenu_RenderLogic;
 
 }
 
@@ -100,31 +100,31 @@ void SwitchToLoadingScreen()
 void SwitchToRenderingStocksMenu()
 {
 
-    InitializeStocksMenu();
-    RenderLogic = &StocksMenusRenderLogic;
+    StocksMenu_Init();
+    RenderLogic = &StocksMenu_RenderLogic;
 
 }
 
 void SwitchToRenderingNewsMenu()
 {
 
-    InitializeNewsMenu();
-    RenderLogic = &NewsMenuRenderLogic;
+    NewsMenu_Init();
+    RenderLogic = &NewsMenu_RenderLogic;
 
 }
 
 void SwitchToRenderingAccountMenu()
 {
 
-    InitializeAccountMenu();
-    RenderLogic = &AccountMenuRenderLogic;
+    AccountMenu_Init();
+    RenderLogic = &AccountMenu_RenderLogic;
 
 }
 
 void SwitchToRenderingCardsMenu()
 {
 
-    InitializeCardsMenu();
-    RenderLogic = &CardsMenuRenderLogic;
+    CardsMenu_Init();
+    RenderLogic = &CardsMenu_RenderLogic;
 
 }

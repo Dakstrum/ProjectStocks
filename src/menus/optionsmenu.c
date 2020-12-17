@@ -36,22 +36,22 @@ static DrawObject *fx_textobject         = NULL;
 
 static DrawObject *display_scrollbox = NULL;
 
-char* GetFormatedResolutionForText();
-int RemoveDisplayScrollbox();
-void ToggleAudioMenu();
-void SetAudioMenuTextContent();
+char* OptionsMenu_GetFormatedResolutionForText();
+int OptionsMenu_DisplayMenu_RemoveResolutionScrollbox();
+void OptionsMenu_AudioMenu_Toggle();
+void OptionsMenu_AudioMenu_InitText();
 
-typedef struct Resolution 
+typedef struct Resolution_OptionItem 
 {
 
     char *resolution;
     int width;
     int height;
 
-} Resolution;
+} Resolution_OptionItem;
 
 #define NUM_RESOLUTIONS 6
-static Resolution resolutions[NUM_RESOLUTIONS] = 
+static Resolution_OptionItem resolutions[NUM_RESOLUTIONS] = 
 {
     {"1920x1080", 1920, 1080},
     {"1366x768",  1366, 768},
@@ -61,11 +61,11 @@ static Resolution resolutions[NUM_RESOLUTIONS] =
     {"1280x720",  1280, 720}
 };
 
-void ChangeResolutionClick(char *scroll_box_content, unsigned short int index);
-void InitalizeResolutionScrollbox();
-void UpdateFullScreenButton();
+void OptionsMenu_DisplayMenu_ResolutionClick(char *scroll_box_content, unsigned short int index);
+void OptionsMenu_DisplayMenu_InitResolutionScrollbox();
+void OptionsMenu_DisplayMenu_UpdateFullScreenButton();
 
-void ToggleOptionsMenu()
+void OptionsMenu_Toggle()
 {
 
     if (options_menu == NULL) {
@@ -76,14 +76,14 @@ void ToggleOptionsMenu()
     } else {
 
         ClearCurrentDrawLayer();
-        CreateInGamePauseMenu();
+        PauseMenu_Init();
         options_menu = NULL;
         
     }
 
 }
 
-void ToggleMainMenuOptionsMenu()
+void OptionsMenu_MainMenuVersonToggle()
 {
 
     if (options_menu == NULL) {
@@ -99,14 +99,14 @@ void ToggleMainMenuOptionsMenu()
     }
 }
 
-void ToggleDisplayMenu()
+void OptionsMenu_DisplayMenu_Toggle()
 {
 
     if(options_menu)
-        ToggleMainMenuOptionsMenu();
+        OptionsMenu_MainMenuVersonToggle();
 
     else if(audio_menu)
-        ToggleAudioMenu();
+        OptionsMenu_AudioMenu_Toggle();
 
     if (display_menu == NULL) {
 
@@ -114,7 +114,7 @@ void ToggleDisplayMenu()
         display_menu = GetJSONMenuAndAddToDrawLayer("DisplayMenu");
 
         resolution_textobject = GetJSONObjectAndAddToDrawLayer("DisplayMenuresolutionTextObject");
-        SetTextContent(resolution_textobject, "%s", GetFormatedResolutionForText());
+        SetTextContent(resolution_textobject, "%s", OptionsMenu_GetFormatedResolutionForText());
             
     } else {
 
@@ -125,24 +125,24 @@ void ToggleDisplayMenu()
     }
 
     fullscreen_button = GetDrawObjectByName("DisplayMenuFullScreenButtonObject");
-    UpdateFullScreenButton();
+    OptionsMenu_DisplayMenu_UpdateFullScreenButton();
 
 }
 
-void ToggleAudioMenu()
+void OptionsMenu_AudioMenu_Toggle()
 {
 
     if(options_menu)
-        ToggleMainMenuOptionsMenu();
+        OptionsMenu_MainMenuVersonToggle();
 
     else if(display_menu)
-        ToggleDisplayMenu();
+        OptionsMenu_DisplayMenu_Toggle();
 
     if (audio_menu == NULL) {
 
         CreateNewDrawLayer();
         audio_menu = GetJSONMenuAndAddToDrawLayer("AudioMenu");
-        SetAudioMenuTextContent();
+        OptionsMenu_AudioMenu_InitText();
 
             
     } else {
@@ -154,7 +154,7 @@ void ToggleAudioMenu()
 
 }
 
-void SetAudioMenuTextContent()
+void OptionsMenu_AudioMenu_InitText()
 {
 
     master_textobject = GetJSONObjectAndAddToDrawLayer("AudioMenumaTextObject");
@@ -167,7 +167,7 @@ void SetAudioMenuTextContent()
 
 }
 
-int RemoveDisplayScrollbox()
+int OptionsMenu_DisplayMenu_RemoveResolutionScrollbox()
 {
 
     if(display_scrollbox)
@@ -182,7 +182,7 @@ int RemoveDisplayScrollbox()
 
 }
 
-char* GetFormatedResolutionForText()
+char* OptionsMenu_GetFormatedResolutionForText()
 {
 
     for(int i = 0; i < NUM_RESOLUTIONS; i++)
@@ -192,7 +192,7 @@ char* GetFormatedResolutionForText()
     return NULL;
 }
 
-void ChangeResolutionClick(char *scroll_box_content, unsigned short int index)
+void OptionsMenu_DisplayMenu_ResolutionClick(char *scroll_box_content, unsigned short int index)
 {
 
     for (size_t i = 0; i < NUM_RESOLUTIONS;i++) {
@@ -206,15 +206,15 @@ void ChangeResolutionClick(char *scroll_box_content, unsigned short int index)
 
     }
 
-    SetTextContent(resolution_textobject, "%s", GetFormatedResolutionForText());
-    RemoveDisplayScrollbox();
-    UpdateFullScreenButton();
+    SetTextContent(resolution_textobject, "%s", OptionsMenu_GetFormatedResolutionForText());
+    OptionsMenu_DisplayMenu_RemoveResolutionScrollbox();
+    OptionsMenu_DisplayMenu_UpdateFullScreenButton();
 
 }
 
-void InitalizeResolutionScrollbox()
+void OptionsMenu_DisplayMenu_InitResolutionScrollbox()
 {
-    if(RemoveDisplayScrollbox())
+    if(OptionsMenu_DisplayMenu_RemoveResolutionScrollbox())
         return;
         
     display_scrollbox = Scrollbox_Create();
@@ -227,7 +227,7 @@ void InitalizeResolutionScrollbox()
     display_scrollbox->asset_path = "assets/images/generalpurposemenus/optionsmenu/selectoptionresolutionbox.png";
 
     display_scrollbox->scrollbox.num_items = NUM_RESOLUTIONS;
-    display_scrollbox->scrollbox.box_click = &ChangeResolutionClick;
+    display_scrollbox->scrollbox.box_click = &OptionsMenu_DisplayMenu_ResolutionClick;
 
     InitScrollboxVectors(display_scrollbox);
 
@@ -242,7 +242,7 @@ void InitalizeResolutionScrollbox()
 
 }
 
-void UpdateFullScreenButton()
+void OptionsMenu_DisplayMenu_UpdateFullScreenButton()
 {
 
     WindowSettings window_settings = GetWindowSettings();
@@ -255,107 +255,107 @@ void UpdateFullScreenButton()
 
 }
 
-void OptionsMenuExit_BCB()
+void OptionsMenu_Exit_CB()
 {
-    if(IsInMainMenu())
-        ToggleMainMenuOptionsMenu();
+    if(MainMenu_Active())
+        OptionsMenu_MainMenuVersonToggle();
     else
-        ToggleOptionsMenu();
+        OptionsMenu_Toggle();
 
 }
 
-void DisplayMenuExit_BCB()
+void OptionsMenu_DisplayMenu_Exit_CB()
 {
 
-    if(IsInMainMenu()) {
+    if(MainMenu_Active()) {
 
-        ToggleDisplayMenu();
+        OptionsMenu_DisplayMenu_Toggle();
 
     } else {
 
-        ToggleDisplayMenu();
-        CreateInGamePauseMenu();
+        OptionsMenu_DisplayMenu_Toggle();
+        PauseMenu_Init();
 
     }
 
 }
 
-void AudioMenuExit_BCB()
+void OptionsMenu_AudioMenu_Exit_CB()
 {
 
-    if(IsInMainMenu()) {
+    if(MainMenu_Active()) {
 
-        ToggleAudioMenu();
+        OptionsMenu_AudioMenu_Toggle();
 
     } else {
 
-        ToggleAudioMenu();
-        CreateInGamePauseMenu();
+        OptionsMenu_AudioMenu_Toggle();
+        PauseMenu_Init();
 
     }
 
 }
 
-void DisplayMenuFullScreen_BCB()
+void OptionsMenu_DisplayMenu_FullScreen_CB()
 {
 
     Window_FullScreen();
-    UpdateFullScreenButton();
-    SetTextContent(resolution_textobject, "%s", GetFormatedResolutionForText());
+    OptionsMenu_DisplayMenu_UpdateFullScreenButton();
+    SetTextContent(resolution_textobject, "%s", OptionsMenu_GetFormatedResolutionForText());
 
 }
 
-void OptionsMenuResolution_BCB()
+void OptionsMenu_DisplayMenu_Resolution_CB()
 {
 
-    ToggleMainMenuOptionsMenu();
-    ToggleDisplayMenu();
+    OptionsMenu_MainMenuVersonToggle();
+    OptionsMenu_DisplayMenu_Toggle();
 
 }
 
-void AudioMenuMasterDecrease()
-{
-
-
-
-}
-
-void AudioMenuMasterIncrease()
+void OptionsMenu_AudioMenu_MasterDecrease()
 {
 
 
 
 }
 
-void AudioMenuMusicDecrease()
+void OptionsMenu_AudioMenu_MasterIncrease()
 {
 
 
 
 }
 
-void AudioMenuMusicIncrease()
+void OptionsMenu_AudioMenu_MusicDecrease()
 {
 
 
 
 }
 
-void AudioMenuFxDecrease()
+void OptionsMenu_AudioMenu_MusicIncrease()
 {
 
 
 
 }
 
-void AudioMenuFxIncrease()
+void OptionsMenu_AudioMenu_FxDecrease()
 {
 
 
 
 }
 
-void CleanOptionsMenu()
+void OptionsMenu_AudioMenu_FxIncrease()
+{
+
+
+
+}
+
+void OptionsMenu_Clean()
 {
 
     options_menu = NULL;

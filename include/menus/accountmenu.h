@@ -1,13 +1,12 @@
 #ifndef ACCOUNTMENU_H
 #define ACCOUNTMENU_H
 
-void InitializeAccountMenu();
-void ToggleAccountMenu();
-void AccountMenuRenderLogic();
+void AccountMenu_Init();
+void AccountMenu_RenderLogic();
 
-void AccountDown_BCB();
-void AccountUp_BCB();
+void AccountMenu_Down_CB();
+void AccountMenu_Up_CB();
 
-void CleanAccountMenu();
+void AccountMenu_Clear();
 
 #endif

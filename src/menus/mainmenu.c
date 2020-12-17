@@ -7,15 +7,7 @@
 #include <allegro5/allegro.h>
 
 #include "jsonlayer.h"
-
-#include "text.h"
-#include "drawobject.h"
-#include "button.h"
-#include "scrollbox.h"
-#include "drawlayers.h"
-
 #include "log.h"
-#include "shared.h"
 
 #include "accountmenu.h"
 #include "cardsmenu.h"
@@ -25,11 +17,7 @@
 #include "pausemenus.h"
 #include "savemenus.h"
 #include "stocksmenu.h"
-
-#include "simulation.h"
 #include "linkopener.h"
-#include "rendering.h"
-#include "dbaccess.h"
 #include "account.h"
 #include "drawlayerutils.h"
 
@@ -37,28 +25,12 @@
 
 static MenuWithChilds *main_menu = NULL;
 
-void CleanMenus();
-
-void Test_Animations() 
-{
-
-    DrawObject *object = CreateNewDrawObject();
-    object->type       = MENU;
-    object->asset_path = "assets/images/all_buttons/button2.png";
-    object->x          = 100;
-    object->y          = 0;
-    AddObjectToDrawLayer(object);
-    unsigned int id = Animate_MoveDrawObject(object, 0, 0, 100);
-    assert(Animate_FinishedMoveAnimation(id) == false);
-
-}
-
-void MainMenuRenderLogic()
+void MainMenu_RenderLogic()
 {
 
 }
 
-void InitializeMainMenu() 
+void MainMenu_Init() 
 {
 
     if (CreateNewDrawLayer() == -1) {
@@ -71,14 +43,14 @@ void InitializeMainMenu()
     Account_SetInGameStatus(0);
     
     main_menu = GetJSONMenuAndAddToDrawLayer("MainMenu");
+    MainMenu_RenderLogic();
     
-    MainMenuRenderLogic();
-    CleanMenus();
+    GeneralPurposeMenus_CleanAllMenus();
 
 }
 
 
-int IsInMainMenu()
+int MainMenu_Active()
 {
     if(main_menu)
         return 1;
@@ -87,53 +59,53 @@ int IsInMainMenu()
 
 }
 
-void Start_BCB()
+void MainMenu_Start_CB()
 {
     
     ClearDrawLayers();
-    InitializeLoadSaveMenu();
+    LoadSaveMenu_Init();
     main_menu = NULL;
     
 }
 
 
-void MainMenuOptions_BCB()
+void MainMenu_Options_CB()
 {
     
-    ToggleMainMenuOptionsMenu();
+    OptionsMenu_MainMenuVersonToggle();
     
 
 }
 
-void MainMenuExit_BCB()
+void MainMenu_Exit_CB()
 {
 
     SetCleanUpToTrue();
 
 }
 
-void GitHub_BCB()
+void MainMenu_GitHub_CB()
 {
 
     OpenLink("https://www.github.com");
 
 }
 
-void Twitter_BCB()
+void MainMenu_Twitter_CB()
 {
 
     OpenLink("https://twitter.com/Dakstrum");
 
 }
 
-void Youtube_BCB()
+void MainMenu_Youtube_CB()
 {
 
     OpenLink("https://www.youtube.com/channel/UCIW4bSzn44v08ttyRMT5z2w");
 
 }
 
-void Website_BCB()
+void MainMenu_Website_CB()
 {
 
     OpenLink("https://www.dakstrum.com");
@@ -141,25 +113,12 @@ void Website_BCB()
 }
 
 
-void CleanUpMainMenu() 
+void MainMenu_Clean() 
 {
 
     if (main_menu != NULL)
         free(main_menu);
     
     main_menu = NULL;
-
-}
-
-void CleanMenus() 
-{
-
-    CleanAccountMenu();
-    CleanSaveMenu();
-    CleanCardsMenu();
-    CleanGeneralPurposeMenu();
-    CleanOptionsMenu();
-    CleanPauseMenu();
-    CleanStocksMenu();
 
 }
