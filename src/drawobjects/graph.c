@@ -114,8 +114,10 @@ Vector *Graph_RDPAlgorithm(Vector *points, float epsilon)
         Vector *result_list_1 = Graph_RDPAlgorithm(Vector_GetSubVectorRef(points, 0, idx), epsilon);
         Vector *result_list_2 = Graph_RDPAlgorithm(Vector_GetSubVectorRef(points, idx, end), epsilon);
 
-        free(result_list_1);
-        free(result_list_2);
+        results = Vector_Concat(Vector_GetSubVectorRef(result_list_1, 0, result_list_1->num_elements - 1), result_list_2);
+
+        Vector_Delete(result_list_1);
+        Vector_Delete(result_list_2);
 
     } else {
 
