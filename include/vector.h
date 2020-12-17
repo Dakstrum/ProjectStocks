@@ -22,6 +22,7 @@ void Vector_PushBackPtr(Vector * vector, void *element);
 void Vector_Remove(Vector *vector, unsigned int element_idx);
 void Vector_RemovePrt(Vector *vector, unsigned int element_idx);
 
+Vector *Vector_Concat(Vector *vec_1, Vector *vec_2);
 Vector *Vector_GetCopy(Vector *vector);
 Vector *Vector_GetSubVector(Vector *vector, size_t start_idx, size_t end_idx);
 Vector *Vector_GetSubVectorRef(Vector *vector, size_t start_idx, size_t end_idx);
