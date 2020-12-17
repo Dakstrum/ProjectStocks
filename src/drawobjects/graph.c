@@ -1,5 +1,6 @@
 
 #include <time.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdatomic.h>
 
@@ -88,6 +89,19 @@ float Graph_GetMaxPrice(Vector *stocks)
 
 }
 
+float Graph_PointLineDistance(Point point, Point p_1, Point p_2) 
+{
+
+    float dy = p_2.y - p_1.y;
+    float dx = p_2.x - p_1.x;
+
+    float num = fabs(dy * point.x + dx * point.y);
+    float dom = sqrt(dy * dy + dx * dx);
+
+    return num/dom;
+
+}
+
 // Ramer–Douglas–Peucker
 Vector *Graph_RDPAlgorithm(Vector *points, float epsilon) 
 {
@@ -96,9 +110,12 @@ Vector *Graph_RDPAlgorithm(Vector *points, float epsilon)
     size_t idx = 0;
     size_t end = points->num_elements;
 
+    Point *points_elem = points->elements;
+
     float d = 0.0;
     for (size_t i = 1; i < end - 1;i++) {
 
+        d = Graph_PointLineDistance(points_elem[i], points_elem[0], points_elem[points->num_elements-1]);
         if (d > dmax) {
 
             idx  = i;
@@ -114,7 +131,10 @@ Vector *Graph_RDPAlgorithm(Vector *points, float epsilon)
         Vector *result_list_1 = Graph_RDPAlgorithm(Vector_GetSubVectorRef(points, 0, idx), epsilon);
         Vector *result_list_2 = Graph_RDPAlgorithm(Vector_GetSubVectorRef(points, idx, end), epsilon);
 
-        results = Vector_Concat(Vector_GetSubVectorRef(result_list_1, 0, result_list_1->num_elements - 1), result_list_2);
+        if (result_list_1->num_elements - 1 == 0)
+            results = result_list_2;
+        else 
+            results = Vector_Concat(Vector_GetSubVectorRef(result_list_1, 0, result_list_1->num_elements - 1), result_list_2);
 
         Vector_Delete(result_list_1);
         Vector_Delete(result_list_2);
