@@ -24,6 +24,7 @@ void Vector_RemovePrt(Vector *vector, unsigned int element_idx);
 
 Vector *Vector_GetCopy(Vector *vector);
 Vector *Vector_GetSubVector(Vector *vector, size_t start_idx, size_t end_idx);
+Vector *Vector_GetSubVectorRef(Vector *vector, size_t start_idx, size_t end_idx);
 
 void Vector_Reset(Vector *vector);
 void Vector_Delete(Vector *vector);
