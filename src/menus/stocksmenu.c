@@ -85,7 +85,6 @@ void StocksMenu_Init()
 
     CardManager_InitCard();
 
-
 }
 
 void StocksMenu_RenderLogic()
@@ -96,11 +95,7 @@ void StocksMenu_RenderLogic()
 
     if(stocks_menu)
     {
-        CardManager_HoveringAnimationController(1);
-        CardManager_HoveringAnimationController(2);
-        CardManager_HoveringAnimationController(3);
-        CardManager_HoveringAnimationController(4);
-        CardManager_HoveringAnimationController(5);
+        CardManager_CardAnimationCheck();
 
         SetTextContent(stock_change_textobject, "%.2f", Simulation_GetStockPriceDiff(GetCompanyNameViewing()));
         SetTextContent(player_money_textobject, "%.2f", Account_GetMoney());

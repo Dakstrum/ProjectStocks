@@ -399,14 +399,12 @@ int HoveringOverBitmap(DrawObject *bitmap)
     if (IsMouseCursorInAreaOfObject(bitmap, state.x, state.y))
     {
         bitmap->bit_flags |= BUTTON_MOUSE_HOVERING;
-        Log("Hovering!!!!!!");
         return 1;
 
     }
     else if (bitmap->bit_flags & BUTTON_MOUSE_HOVERING)
     {
         bitmap->bit_flags ^= BUTTON_MOUSE_HOVERING;  
-        Log("NotHovering!!!!!!");
         return 0;
 
     }

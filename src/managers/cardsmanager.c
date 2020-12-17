@@ -13,7 +13,10 @@ static DrawObject *cardfive_button  = NULL;
 
 DrawObject *card_buttons[5];
 
+static int number_of_cards = 0;
+
 void CardManager_AnimateCardUp(int card_num);
+int GetCenteredPoint(int i);
 
 void CardManager_InitCard()
 {
@@ -26,14 +29,15 @@ void CardManager_InitCard()
 	static int card_buttons_x[5] = {414, 611, 814, 1011, 1215};
 
 	PlayerCard *player_cards  = GetAllPlayerCards();
+	number_of_cards           = GetNumOfPlayerCards();
 
-	for(int i = 1; i < GetNumOfPlayerCards() + 1; i++)
+	for(int i = 1; i < number_of_cards + 1; i++)
 	{
 		
 		card_buttons[i]    = CreateNewDrawObject();
-
+		LogF(" i = %d||||point: %d", i, GetCenteredPoint(i));
 		card_buttons[i]->type   = BUTTON;
-        card_buttons[i]->x      = card_buttons_x[i - 1];
+        card_buttons[i]->x      = GetCenteredPoint(i);
         card_buttons[i]->y      = 1009;
         card_buttons[i]->width  = 165;
         card_buttons[i]->height = 230;
@@ -46,10 +50,47 @@ void CardManager_InitCard()
 
 }
 
+int GetCenteredPoint(int i)
+{
+	int centered_card_x = 770;
+
+	switch(i) {
+
+		case 1 :
+			return centered_card_x;
+
+		case 2 :
+			card_buttons[1]->x = card_buttons[1]->x + 68;
+			return (centered_card_x - 82) + 45;
+
+		case 3 :
+			card_buttons[1]->x = card_buttons[1]->x + 45;
+			card_buttons[2]->x = card_buttons[2]->x + 45;
+			return (centered_card_x - (82 * 2)) + 45;
+
+		case 4 :
+			card_buttons[1]->x = card_buttons[1]->x + 45;
+			card_buttons[2]->x = card_buttons[2]->x + 45;
+			card_buttons[3]->x = card_buttons[3]->x + 45;
+			return (centered_card_x - (82 * 3)) + 45;
+
+		case 5 :
+			card_buttons[1]->x = card_buttons[1]->x + 45;
+			card_buttons[2]->x = card_buttons[2]->x + 45;
+			card_buttons[3]->x = card_buttons[3]->x + 45;
+			card_buttons[4]->x = card_buttons[4]->x + 45;
+			return (centered_card_x - (82 * 4)) + 45;
+
+	}
+	
+	return 0;
+
+}
+
 void CardManager_AnimateCardUp(int card_num)
 {
 
-	Animate_MoveDrawObject(card_buttons[card_num], card_buttons[card_num]->x, 800, 500);
+	Animate_MoveDrawObject(card_buttons[card_num], card_buttons[card_num]->x, 850, 500);
 
 }
 
@@ -73,5 +114,19 @@ void CardManager_HoveringAnimationController(int card_num)
 		return;
 
 }
+
+void CardManager_CardAnimationCheck()
+{
+	for(int i = 1; i <= number_of_cards; i++)
+	{
+
+		CardManager_HoveringAnimationController(i);
+
+	}
+
+}
+
+
+
 
 
