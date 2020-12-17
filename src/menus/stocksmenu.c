@@ -27,7 +27,7 @@
 
 #include "manager.h"
 #include "newsmanager.h"
-#include "cardsmanager.h"
+#include "cardcontroller.h"
 
 #include "controls.h"
 
@@ -83,7 +83,7 @@ void StocksMenu_Init()
     GeneralPurposeMenus_InitSpeedSelectObject("StocksMenu");
     DrawLayer_AddManager(NewsManager_Create(1400, 300));
 
-    CardManager_InitCard();
+    CardController_InitCard();
 
 }
 
@@ -95,7 +95,7 @@ void StocksMenu_RenderLogic()
 
     if(stocks_menu)
     {
-        CardManager_CardAnimationCheck();
+        CardController_CardAnimationCheck();
 
         SetTextContent(stock_change_textobject, "%.2f", Simulation_GetStockPriceDiff(GetCompanyNameViewing()));
         SetTextContent(player_money_textobject, "%.2f", Account_GetMoney());
