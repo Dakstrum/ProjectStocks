@@ -88,17 +88,16 @@ float Graph_GetMaxPrice(Vector *stocks)
 
 }
 
-/*
 // Ramer–Douglas–Peucker
-Vector *Graph_RDPAlgorithm(Vector *stocks, float epsilon) 
+Vector *Graph_RDPAlgorithm(Vector *points, float epsilon) 
 {
 
     float dmax = 0.0;
     size_t idx = 0;
-    size_t end = stocks->num_elements;
+    size_t end = points->num_elements;
 
     float d = 0.0;
-    for (size_t i = 1; i < end-1;i++) {
+    for (size_t i = 1; i < end - 1;i++) {
 
         if (d > dmax) {
 
@@ -109,8 +108,36 @@ Vector *Graph_RDPAlgorithm(Vector *stocks, float epsilon)
 
     }
 
+    Vector *results = NULL;
+    if (dmax > epsilon) {
+
+        Vector *result_list_1 = Graph_RDPAlgorithm(Vector_GetSubVectorRef(points, 0, idx), epsilon);
+        Vector *result_list_2 = Graph_RDPAlgorithm(Vector_GetSubVectorRef(points, idx, end), epsilon);
+
+        free(result_list_1);
+        free(result_list_2);
+
+    } else {
+
+        results = Vector_GetCopy(points);
+
+    }
+
+    return results;
+
 }
-*/
+
+void Graph_ReducePoints(DrawObject *object) 
+{
+
+    if (object->graph.points->num_elements < 500)
+        return;
+
+    Vector *new_points = Graph_RDPAlgorithm(object->graph.points, .5);
+    Vector_Delete(object->graph.points);
+    object->graph.points = new_points;
+
+}
 
 
 void Graph_SetGraphPoints(DrawObject *object, Vector *stocks) 
@@ -140,11 +167,9 @@ DrawObject *Graph_ConstructGraphDrawObject(char *company_name, int timespan_inde
     if (stocks == NULL)
         return NULL;
 
-    //if (stocks->num_elements > 500)
-    //    stocks = Graph_RDPAlgorithm(stocks, epsilon);
-
     DrawObject *object = GetBasicGraphDrawObject(width, height, stocks->num_elements);
     Graph_SetGraphPoints(object, stocks);
+    Graph_ReducePoints(object);
     Vector_Delete(stocks);
 
     return object;
