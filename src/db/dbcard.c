@@ -186,7 +186,7 @@ void AddCardToPlayer(uint32_t player_id, uint32_t card_id)
     Vector_PushBack(player_cards, &temp);
 }
 
-void DBCards_ApplyCard(uint32_t player_card_id, uint32_t company_id)
+void DBCards_ApplyCard(uint32_t card_id, uint32_t company_id)
 {
 
     char *delete_query = "DELETE FROM Player_Cards WHERE PlayerCardId = (SELECT PC.PlayerCardId FROM PlayerCards PC WHERE PC.PlayerId = %d AND PC.CardId = %d LIMIT 1);";
@@ -195,15 +195,34 @@ void DBCards_ApplyCard(uint32_t player_card_id, uint32_t company_id)
     PlayerCard *temp = player_cards->elements;
 
     for (size_t i = 0; i < player_cards->num_elements; i++) {
+        Log("INLOOP");
 
-        if (temp[i].player_card_id == player_card_id) {
+        Queue_PushMessage(card_queue, GetFormattedPointer(delete_query, temp[i].player_id, temp[i].card_id));
+        Queue_PushMessage(card_queue, GetFormattedPointer(insert_query, temp[i].card_id, Game_GetSaveId(), company_id, Game_GetGameTime()));
 
-            Queue_PushMessage(card_queue, GetFormattedPointer(delete_query, temp[i].player_id, temp[i].card_id));
-            Queue_PushMessage(card_queue, GetFormattedPointer(insert_query, temp[i].card_id, Game_GetSaveId(), company_id, Game_GetGameTime()));
+        if(temp[i].card_id == card_id)
+        {
+            LogF("Delete: %s", GetFormattedPointer(delete_query, temp[i].player_id, temp[i].card_id));
+            LogF("dbcards i: %d", i);
             Vector_Remove(player_cards, i);
             break;
-
         }
+
+
+
+
+        //LogF("temp[i].player_card_id == %d|player_card_id = %d", temp[i].player_card_id, player_card_id);
+        //if (temp[i].player_card_id == player_card_id) {
+
+        //    Queue_PushMessage(card_queue, GetFormattedPointer(delete_query, temp[i].player_id, temp[i].card_id));
+        //    Queue_PushMessage(card_queue, GetFormattedPointer(insert_query, temp[i].card_id, Game_GetSaveId(), company_id, Game_GetGameTime()));
+
+        //    LogF("Delete: %s", GetFormattedPointer(delete_query, temp[i].player_id, temp[i].card_id));
+        //    LogF("dbcards i: %d", i);
+        //    Vector_Remove(player_cards, i);
+         //   break;
+
+        //}
 
     }
 

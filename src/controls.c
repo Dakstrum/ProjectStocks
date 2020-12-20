@@ -387,8 +387,6 @@ void TintButtons()
 int HoveringOverBitmap(DrawObject *bitmap)
 {
 
-    LogF("%s", bitmap->asset_path);
-
     static ALLEGRO_MOUSE_STATE state;
     al_get_mouse_state(&state);
 
