@@ -15,9 +15,8 @@ DrawObject *cardfive_button  = NULL;
 DrawObject *card_buttons[5];
 PlayerCard *player_cards;
 
-
-int number_of_cards = 0;
-int played_card = -1;
+int played_card     = -1;
+int card_animating  = 0;
 
 void CardController_AnimateCardUp(int card_num);
 int GetCenteredPoint(int i);
@@ -38,9 +37,8 @@ void CardController_InitCard()
 
 	void *card_CBs[5] = {CardController_CardOne_CB, CardController_CardTwo_CB, CardController_CardThree_CB, CardController_CardFour_CB, CardController_CardFive_CB};
 	player_cards      = GetAllPlayerCards();
-	number_of_cards   = GetNumOfPlayerCards();
 	
-	for(int i = 0; i < number_of_cards; i++)
+	for(int i = 0; i < GetNumOfPlayerCards(); i++)
 	{
 
 		card_buttons[i]         = CreateNewDrawObject();
@@ -117,6 +115,8 @@ void CardController_AnimateCardToCenterOfGraph(int card_num)
 
 }
 
+
+
 void CardController_HoveringAnimationController(int card_num)
 {
 
@@ -125,6 +125,7 @@ void CardController_HoveringAnimationController(int card_num)
 
 	if(played_card == card_num)
 	{
+		card_animating = 1;
 		Animate_MoveDrawObject(card_buttons[card_num], 800, 300, 500);
 
 		if(card_buttons[card_num]->x == 800)
@@ -135,14 +136,16 @@ void CardController_HoveringAnimationController(int card_num)
 					RemoveDrawObject(card_buttons[i]);
 
 			CardController_InitCard();
-			played_card = -1;
+			played_card    = -1;
+			card_animating = 0;
 
 		}
 	}
+
 	
 	else
 	{
-
+		
 		if (HoveringOverBitmap(card_buttons[card_num]) == 1)
 			CardController_AnimateCardUp(card_num);
 
@@ -156,7 +159,7 @@ void CardController_HoveringAnimationController(int card_num)
 
 void CardController_CardAnimationCheck()
 {
-	
+
 	for(int i = 0; i < 5; i++)
 		CardController_HoveringAnimationController(i);
 
@@ -165,6 +168,9 @@ void CardController_CardAnimationCheck()
 void CardController_CardOne_CB()
 {
 
+	if(card_animating)
+		return;
+
 	DBCards_ApplyCard(player_cards[0].card_id, GetCompanyIdViewing());
 	played_card = 0;
 
@@ -172,6 +178,10 @@ void CardController_CardOne_CB()
 
 void CardController_CardTwo_CB()
 {
+
+	if(card_animating)
+		return;
+
 	DBCards_ApplyCard(player_cards[1].card_id, GetCompanyIdViewing());
 	played_card = 1;
 
@@ -180,6 +190,9 @@ void CardController_CardTwo_CB()
 
 void CardController_CardThree_CB()
 {
+	if(card_animating)
+		return;
+
 	DBCards_ApplyCard(player_cards[2].card_id, GetCompanyIdViewing());
 	played_card = 2;
 
@@ -187,6 +200,10 @@ void CardController_CardThree_CB()
 
 void CardController_CardFour_CB()
 {
+
+	if(card_animating)
+		return;
+
 	DBCards_ApplyCard(player_cards[3].card_id, GetCompanyIdViewing());
 	played_card = 3;
 
@@ -194,6 +211,9 @@ void CardController_CardFour_CB()
 
 void CardController_CardFive_CB()
 {
+
+	if(card_animating)
+		return;
 	DBCards_ApplyCard(player_cards[4].card_id, GetCompanyIdViewing());
 	played_card = 4;
 

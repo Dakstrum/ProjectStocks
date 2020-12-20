@@ -61,7 +61,6 @@ void CardsMenu_Init()
     }
 
     cards_menu = GetJSONMenuAndAddToDrawLayer("CardsMenu");
-    AddCardToPlayer(1,1);
     //CardsMenu_InitPositiveScrollbox();
     //CardsMenu_InitNegativeScrollBox();
     //CardsMenu_InitTextAndButtons(); 
