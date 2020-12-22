@@ -93,7 +93,7 @@ Vector *Vector_GetSubVector(Vector *vector, size_t start_idx, size_t end_idx)
     vec->size_of_single_elem = size_of_single_elem;
     vec->num_elements        = end_idx - start_idx;
     vec->initial_mem_size    = vector->initial_mem_size;
-    vec->mem_size            = end_idx - start_idx < vector->initial_mem_size ? vector->initial_mem_size : vector->mem_size;
+    vec->mem_size            = end_idx - start_idx;
     vec->elements            = malloc(size_of_single_elem * vector->mem_size);
 
     uint8_t *new_vec = vec->elements;
@@ -104,6 +104,54 @@ Vector *Vector_GetSubVector(Vector *vector, size_t start_idx, size_t end_idx)
             *(new_vec + (i - start_idx) * size_of_single_elem + j) = *(old_vec + i * size_of_single_elem + j);
 
     return vec;
+
+}
+
+Vector *Vector_GetSubVectorRef(Vector *vector, size_t start_idx, size_t end_idx) 
+{
+
+    assert(end_idx > start_idx);
+    assert(end_idx <= vector->num_elements);
+
+    size_t size_of_single_elem = vector->size_of_single_elem;
+    Vector *vec = malloc(sizeof(Vector));
+
+    vec->size_of_single_elem = size_of_single_elem;
+    vec->num_elements        = end_idx - start_idx;
+    vec->initial_mem_size    = vector->initial_mem_size;
+    vec->mem_size            = end_idx - start_idx;
+    vec->elements            = vector->elements;
+
+    vec->elements += start_idx * size_of_single_elem;
+
+    return vec;
+
+}
+
+Vector *Vector_Concat(Vector *vec_1, Vector *vec_2) 
+{
+
+    assert(vec_1->size_of_single_elem == vec_2->size_of_single_elem);
+
+    uint32_t vec_1_num_elem    = vec_1->num_elements;
+    uint32_t vec_2_num_elem    = vec_2->num_elements;
+    size_t size_of_single_elem = vec_1->size_of_single_elem;;
+
+    Vector *vector = Vector_Create(size_of_single_elem, vec_1_num_elem + vec_2_num_elem + 1);
+
+    uint8_t *vector_elem = vector->elements;
+    uint8_t *vec_1_elem  = vec_1->elements;
+    uint8_t *vec_2_elem  = vec_2->elements;
+
+    for (size_t i = 0; i < vec_1_num_elem;i++)
+        for (size_t j = 0;j < size_of_single_elem;j++)
+            *(vector_elem + i * size_of_single_elem + j) = *(vec_1_elem + i * size_of_single_elem + j);
+
+    for (size_t i = vec_1_num_elem;i < vec_1_num_elem + vec_2_num_elem;i++)
+        for (size_t j = 0;j < size_of_single_elem;j++)
+            *(vector_elem + i * size_of_single_elem + j) = *(vec_2_elem + (i - vec_1_num_elem) * size_of_single_elem + j);
+
+    return vector;
 
 }
 
