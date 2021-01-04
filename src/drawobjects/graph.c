@@ -102,50 +102,35 @@ float Graph_PointLineDistance(Point point, Point p_1, Point p_2)
 
 }
 
-// Ramer–Douglas–Peucker
-Vector *Graph_RDPAlgorithm(Vector *points, float epsilon) 
+Vector *Graph_DistanceReduction(Vector *points) 
 {
 
-    float dmax = 0.0;
-    size_t idx = 0;
-    size_t end = points->num_elements;
+    Vector *temp = Vector_Create(sizeof(Point), 512);
+    Point *temp_points = temp->elements;
 
-    Point *points_elem = points->elements;
+    Point *vector_points = points->elements; 
+    Vector_PushBack(temp, &vector_points[0]);
 
-    float d = 0.0;
-    for (size_t i = 1; i < end - 1;i++) {
 
-        d = Graph_PointLineDistance(points_elem[i], points_elem[0], points_elem[points->num_elements-1]);
-        if (d > dmax) {
+    float dx = 0.0;
+    float dy = 0.0;
+    float d  = 0.0;
+    for (size_t i = 1; i < points->num_elements;i++) {
 
-            idx  = i;
-            dmax = d;
+        dx = temp_points[temp->num_elements - 1].x - vector_points[i].x;
+        dy = temp_points[temp->num_elements - 1].y - vector_points[i].y;
+
+        d = sqrt(dx * dx + dy * dy);
+
+        if (d > 7.5) {
+
+            Vector_PushBack(temp, &vector_points[i]);
 
         }
 
     }
 
-    Vector *results = NULL;
-    if (dmax > epsilon) {
-
-        Vector *result_list_1 = Graph_RDPAlgorithm(Vector_GetSubVectorRef(points, 0, idx), epsilon);
-        Vector *result_list_2 = Graph_RDPAlgorithm(Vector_GetSubVectorRef(points, idx, end), epsilon);
-
-        if (result_list_1->num_elements - 1 == 0)
-            results = result_list_2;
-        else 
-            results = Vector_Concat(Vector_GetSubVectorRef(result_list_1, 0, result_list_1->num_elements - 1), result_list_2);
-
-        Vector_Delete(result_list_1);
-        Vector_Delete(result_list_2);
-
-    } else {
-
-        results = Vector_GetCopy(points);
-
-    }
-
-    return results;
+    return temp;
 
 }
 
@@ -155,7 +140,12 @@ void Graph_ReducePoints(DrawObject *object)
     if (object->graph.points->num_elements < 500)
         return;
 
-    Vector *new_points = Graph_RDPAlgorithm(object->graph.points, .5);
+    Vector *new_points = Graph_DistanceReduction(object->graph.points);
+    if (new_points->num_elements != object->graph.points->num_elements) {
+
+        LogF("point differences = %u, %u", object->graph.points->num_elements, new_points->num_elements);
+
+    }
     Vector_Delete(object->graph.points);
     object->graph.points = new_points;
 
