@@ -141,11 +141,6 @@ void Graph_ReducePoints(DrawObject *object)
         return;
 
     Vector *new_points = Graph_DistanceReduction(object->graph.points);
-    if (new_points->num_elements != object->graph.points->num_elements) {
-
-        LogF("point differences = %u, %u", object->graph.points->num_elements, new_points->num_elements);
-
-    }
     Vector_Delete(object->graph.points);
     object->graph.points = new_points;
 
