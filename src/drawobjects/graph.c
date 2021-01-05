@@ -221,7 +221,13 @@ DrawObject *Graph_PollForNewGraphObject(DrawObject *object)
 void DrawGraph(DrawObject *object) 
 {
 
+    float m_x = object->graph.m_x;
+    float m_y = object->graph.m_y;
+
     object = Graph_PollForNewGraphObject(object);
+
+    object->graph.m_x = m_x;
+    object->graph.m_y = m_y;
 
     if (object->graph.points->num_elements == 0)
         return;
