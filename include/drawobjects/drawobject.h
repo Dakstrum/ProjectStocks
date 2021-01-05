@@ -88,6 +88,9 @@ typedef struct Graph {
 
     struct timespec next_refresh;
 
+    float m_x;
+    float m_y;
+
 } Graph;
 
 typedef struct Button 

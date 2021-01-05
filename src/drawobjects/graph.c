@@ -15,6 +15,7 @@
 #include "simulation.h"
 #include "game.h"
 #include "vector.h"
+#include "cache.h"
 
 typedef struct TimeSpanWithDiff 
 {
@@ -54,6 +55,8 @@ DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points)
 
     object->graph.next_refresh = GetOffsetTime(75);
     object->graph.points       = Vector_Create(sizeof(Point), 512);
+    object->graph.m_x          = -1.0;
+    object->graph.m_y          = -1.0;
 
     return object;
 
@@ -223,12 +226,19 @@ void DrawGraph(DrawObject *object)
     if (object->graph.points->num_elements == 0)
         return;
 
-    const float x             = object->x;
-    const float y_start_point = object->y + object->height;
-    ALLEGRO_COLOR color       = al_map_rgba(255, 255, 255, 255);
+    const float x              = object->x;
+    const float y_start_point  = object->y + object->height;
+    ALLEGRO_COLOR color = al_map_rgba(255, 255, 255, 255);
 
     Point *points = object->graph.points->elements;
     for (size_t i = 0;i < object->graph.points->num_elements-1;i++)
         al_draw_line(x + points[i].x, y_start_point - points[i].y, x + points[i+1].x, y_start_point - points[i+1].y, color , 2);
+
+    if (object->graph.m_x != -1.0) {
+
+        ALLEGRO_FONT *font  = GetFontFromCache("assets/font/DanielLinssenM5/m5x7.ttf", 40);
+        al_draw_text(font, color, object->graph.m_x, object->graph.m_y, 0, "Text here");
+
+    }
 
 }

@@ -151,9 +151,16 @@ bool HandledMouseClickInScrollBox(int x, int y)
     if (collection == NULL)
         return false;
 
-    for (int i = 0; i < collection->num_objects; i++)
-        if (CheckForScrollboxClick(collection->objects[i], x, y))
+    for (int i = 0; i < collection->num_objects; i++) {
+
+        if (CheckForScrollboxClick(collection->objects[i], x, y)) {
+
+            DisposeDrawObjectTypeCollection(collection);
             return true;
+
+        }
+
+    }
 
     return false;
     
@@ -203,6 +210,35 @@ void HandleScrollWheelEvent(ALLEGRO_EVENT event)
     for (int i = 0; i < collection->num_objects; i++)
         if (HandleScrollEventInArea(collection->objects[i], event))
             break;
+
+    DisposeDrawObjectTypeCollection(collection);
+
+}
+
+void Control_GraphOverhead(ALLEGRO_EVENT event) 
+{
+
+    DrawObjectCollection *collection = GetObjectsByType(GRAPH);
+    if (collection == NULL)
+        return;
+
+    for (int i = 0;i < collection->num_objects; i++) {
+
+        if (IsMouseCursorInAreaOfObject(collection->objects[i], event.mouse.x, event.mouse.y)) {
+
+            collection->objects[i]->graph.m_x = event.mouse.x;
+            collection->objects[i]->graph.m_y = event.mouse.y;
+
+        } else {
+
+            collection->objects[i]->graph.m_x = -1.0;
+            collection->objects[i]->graph.m_y = -1.0;
+
+        }
+
+    }
+
+    DisposeDrawObjectTypeCollection(collection);
 
 }
 
@@ -358,6 +394,7 @@ void HandleInput(ALLEGRO_EVENT event)
     scale = GetWindowScale();
     HandleMouseInput(event);
     HandleKeyboard(event);
+    Control_GraphOverhead(event);
     
 }
 
