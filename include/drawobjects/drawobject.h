@@ -68,8 +68,8 @@ typedef struct TextStyle {
 
 typedef struct Point {
 
-    unsigned short int x;
-    unsigned short int y;
+    float x;
+    float y;
 
 } Point;
 

@@ -1,4 +1,5 @@
 
+#include <stdio.h>
 #include <time.h>
 #include <math.h>
 #include <stdbool.h>
@@ -41,6 +42,15 @@ static const TimeSpanWithDiff timespans[] =
     {ALL_TIME    , 0}
 };
 
+typedef struct GraphPoint {
+
+    float x;
+    float y;
+    time_t timestamp;
+    float price;
+
+} GraphPoint;
+
 DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points) 
 {
 
@@ -54,7 +64,7 @@ DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points)
     object->child_of             = NULL;
 
     object->graph.next_refresh = GetOffsetTime(75);
-    object->graph.points       = Vector_Create(sizeof(Point), 512);
+    object->graph.points       = Vector_Create(sizeof(GraphPoint), 512);
     object->graph.m_x          = -1.0;
     object->graph.m_y          = -1.0;
 
@@ -92,26 +102,13 @@ float Graph_GetMaxPrice(Vector *stocks)
 
 }
 
-float Graph_PointLineDistance(Point point, Point p_1, Point p_2) 
-{
-
-    float dy = p_2.y - p_1.y;
-    float dx = p_2.x - p_1.x;
-
-    float num = fabs(dy * point.x + dx * point.y);
-    float dom = sqrt(dy * dy + dx * dx);
-
-    return num/dom;
-
-}
-
 Vector *Graph_DistanceReduction(Vector *points) 
 {
 
-    Vector *temp = Vector_Create(sizeof(Point), 512);
-    Point *temp_points = temp->elements;
+    Vector *temp = Vector_Create(sizeof(GraphPoint), 512);
+    GraphPoint *temp_points = temp->elements;
 
-    Point *vector_points = points->elements; 
+    GraphPoint *vector_points = points->elements; 
     Vector_PushBack(temp, &vector_points[0]);
 
 
@@ -159,11 +156,13 @@ void Graph_SetGraphPoints(DrawObject *object, Vector *stocks)
 
     StockPrice *prices = stocks->elements;
 
-    Point point;
+    GraphPoint point;
     for (unsigned int i = 0; i < stocks->num_elements;i++) {
 
         point.x = point_width_diff*i;
         point.y = ((prices[i].price - min_price)/(max_min_price_diff))*object->height;
+        point.timestamp = prices[i].date;
+        point.price = prices[i].price;
         Vector_PushBack(object->graph.points, &point);
 
     }
@@ -218,6 +217,41 @@ DrawObject *Graph_PollForNewGraphObject(DrawObject *object)
 
 }
 
+void Graph_DrawTextOverlay(DrawObject *object)
+{
+
+    const float x = object->x;
+    const float y_start_point  = object->y + object->height;
+    GraphPoint *points = object->graph.points->elements;
+
+    size_t selected_idx = 0;
+    float dx = fabs(x + points[0].x - object->graph.m_x);
+    for (size_t i = 1; i < object->graph.points->num_elements;i++) {
+
+        float temp = fabs(x + points[i].x - object->graph.m_x);
+        if (temp < dx) {
+
+            dx = temp;
+            selected_idx = i;
+
+        }
+
+    }
+
+    if (dx > 10.0)
+        return;
+
+    char time_buff[32];
+    char buff[64];
+    strftime(time_buff, 32, "%HH %x", localtime(&points[selected_idx].timestamp));
+    sprintf(buff, "$%.2f, %s", points[selected_idx].price, time_buff);
+
+    ALLEGRO_FONT *font = GetFontFromCache("assets/font/DanielLinssenM5/m5x7.ttf", 40);
+    al_draw_text(font, al_map_rgba(255, 255, 255, 255), object->graph.m_x, object->graph.m_y, 0, buff);
+    al_draw_line(object->graph.m_x, y_start_point - points[selected_idx].y, object->graph.m_x, object->graph.m_y, al_map_rgba(255, 255, 255, 255), 2);  
+
+}
+
 void DrawGraph(DrawObject *object) 
 {
 
@@ -236,15 +270,11 @@ void DrawGraph(DrawObject *object)
     const float y_start_point  = object->y + object->height;
     ALLEGRO_COLOR color = al_map_rgba(255, 255, 255, 255);
 
-    Point *points = object->graph.points->elements;
+    GraphPoint *points = object->graph.points->elements;
     for (size_t i = 0;i < object->graph.points->num_elements-1;i++)
         al_draw_line(x + points[i].x, y_start_point - points[i].y, x + points[i+1].x, y_start_point - points[i+1].y, color , 2);
 
-    if (object->graph.m_x != -1.0) {
-
-        ALLEGRO_FONT *font  = GetFontFromCache("assets/font/DanielLinssenM5/m5x7.ttf", 40);
-        al_draw_text(font, color, object->graph.m_x, object->graph.m_y, 0, "Text here");
-
-    }
+    if (object->graph.m_x != -1.0)
+        Graph_DrawTextOverlay(object);
 
 }
