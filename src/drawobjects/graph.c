@@ -239,7 +239,7 @@ void Graph_DrawTextOverlay(DrawObject *object)
 
     }
 
-    if (dx > 7.0)
+    if (dx > 10.0)
         return;
 
     char time_buff[32];
@@ -249,8 +249,8 @@ void Graph_DrawTextOverlay(DrawObject *object)
 
     ALLEGRO_FONT *font = GetFontFromCache("assets/font/DanielLinssenM5/m5x7.ttf", 40);
     ALLEGRO_COLOR color = al_map_rgba(255, 255, 255, 255);
-    al_draw_text(font, color, object->graph.m_x, object->graph.m_y, 0, buff);
-    al_draw_line(object->graph.m_x, y_start_point - points[selected_idx].y, object->graph.m_x, object->graph.m_y, color, 2);  
+    al_draw_text(font, color, object->graph.m_x + 15, object->graph.m_y, 0, buff);
+    al_draw_line(x + points[selected_idx].x, y_start_point - points[selected_idx].y, x + points[selected_idx].x, object->graph.m_y, color, 2);  
 
 }
 
