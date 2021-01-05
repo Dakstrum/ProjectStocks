@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include <stdatomic.h>
 
@@ -44,8 +45,8 @@ static const TimeSpanWithDiff timespans[] =
 
 typedef struct GraphPoint {
 
-    float x;
-    float y;
+    uint16_t x;
+    uint16_t y;
     time_t timestamp;
     float price;
 
@@ -238,7 +239,7 @@ void Graph_DrawTextOverlay(DrawObject *object)
 
     }
 
-    if (dx > 10.0)
+    if (dx > 7.0)
         return;
 
     char time_buff[32];
@@ -247,8 +248,9 @@ void Graph_DrawTextOverlay(DrawObject *object)
     sprintf(buff, "$%.2f, %s", points[selected_idx].price, time_buff);
 
     ALLEGRO_FONT *font = GetFontFromCache("assets/font/DanielLinssenM5/m5x7.ttf", 40);
-    al_draw_text(font, al_map_rgba(255, 255, 255, 255), object->graph.m_x, object->graph.m_y, 0, buff);
-    al_draw_line(object->graph.m_x, y_start_point - points[selected_idx].y, object->graph.m_x, object->graph.m_y, al_map_rgba(255, 255, 255, 255), 2);  
+    ALLEGRO_COLOR color = al_map_rgba(255, 255, 255, 255);
+    al_draw_text(font, color, object->graph.m_x, object->graph.m_y, 0, buff);
+    al_draw_line(object->graph.m_x, y_start_point - points[selected_idx].y, object->graph.m_x, object->graph.m_y, color, 2);  
 
 }
 
