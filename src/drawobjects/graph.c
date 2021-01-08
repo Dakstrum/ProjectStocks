@@ -43,15 +43,6 @@ static const TimeSpanWithDiff timespans[] =
     {ALL_TIME    , 0}
 };
 
-typedef struct GraphPoint {
-
-    uint16_t x;
-    uint16_t y;
-    time_t timestamp;
-    float price;
-
-} GraphPoint;
-
 DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points) 
 {
 
@@ -65,7 +56,8 @@ DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points)
     object->child_of             = NULL;
 
     object->graph.next_refresh = GetOffsetTime(75);
-    object->graph.points       = Vector_Create(sizeof(GraphPoint), 512);
+    object->graph.points       = Vector_Create(sizeof(Point), 512);
+    object->graph.stock_prices = Vector_Create(sizeof(StockPrice), 512);
     object->graph.m_x          = -1.0;
     object->graph.m_y          = -1.0;
 
@@ -103,14 +95,18 @@ float Graph_GetMaxPrice(Vector *stocks)
 
 }
 
-Vector *Graph_DistanceReduction(Vector *points) 
+void Graph_DistanceReduction(DrawObject *object) 
 {
 
-    Vector *temp = Vector_Create(sizeof(GraphPoint), 512);
-    GraphPoint *temp_points = temp->elements;
+    Vector *points               = object->graph.points;
+    Vector *new_point_vec        = Vector_Create(sizeof(Point), 512);
+    Vector *new_stock_price_vec  = Vector_Create(sizeof(StockPrice), 512);
+    Point *temp_points           = new_point_vec->elements;
+    StockPrice *stock_prices_arr = ((Vector *)object->graph.stock_prices)->elements;
 
-    GraphPoint *vector_points = points->elements; 
-    Vector_PushBack(temp, &vector_points[0]);
+    Point *vector_points = points->elements; 
+    Vector_PushBack(new_point_vec, &vector_points[0]);
+    Vector_PushBack(new_stock_price_vec, &stock_prices_arr[0]);
 
 
     float dx = 0.0;
@@ -118,20 +114,23 @@ Vector *Graph_DistanceReduction(Vector *points)
     float d  = 0.0;
     for (size_t i = 1; i < points->num_elements;i++) {
 
-        dx = temp_points[temp->num_elements - 1].x - vector_points[i].x;
-        dy = temp_points[temp->num_elements - 1].y - vector_points[i].y;
-
-        d = sqrt(dx * dx + dy * dy);
+        dx = temp_points[new_point_vec->num_elements - 1].x - vector_points[i].x;
+        dy = temp_points[new_point_vec->num_elements - 1].y - vector_points[i].y;
+        d  = sqrt(dx * dx + dy * dy);
 
         if (d > 7.5) {
 
-            Vector_PushBack(temp, &vector_points[i]);
+            Vector_PushBack(new_point_vec, &vector_points[i]);
+            Vector_PushBack(new_stock_price_vec, &stock_prices_arr[i]);
 
         }
 
     }
 
-    return temp;
+    Vector_Delete(object->graph.points);
+    Vector_Delete(object->graph.stock_prices);
+    object->graph.points       = new_point_vec;
+    object->graph.stock_prices = new_stock_price_vec;
 
 }
 
@@ -141,9 +140,7 @@ void Graph_ReducePoints(DrawObject *object)
     if (object->graph.points->num_elements < 500)
         return;
 
-    Vector *new_points = Graph_DistanceReduction(object->graph.points);
-    Vector_Delete(object->graph.points);
-    object->graph.points = new_points;
+    Graph_DistanceReduction(object);
 
 }
 
@@ -157,14 +154,16 @@ void Graph_SetGraphPoints(DrawObject *object, Vector *stocks)
 
     StockPrice *prices = stocks->elements;
 
-    GraphPoint point;
+    Point point;
+    StockPrice stock_price;
     for (unsigned int i = 0; i < stocks->num_elements;i++) {
 
         point.x = point_width_diff*i;
         point.y = ((prices[i].price - min_price)/(max_min_price_diff))*object->height;
-        point.timestamp = prices[i].date;
-        point.price = prices[i].price;
+        stock_price.price = prices[i].price;
+        stock_price.date  = prices[i].date;
         Vector_PushBack(object->graph.points, &point);
+        Vector_PushBack(object->graph.stock_prices, &stock_price);
 
     }
 
@@ -208,6 +207,7 @@ DrawObject *Graph_PollForNewGraphObject(DrawObject *object)
     if (IsTimeSpecInPast(&object->graph.next_refresh)) {
 
         Vector_Delete(object->graph.points);
+        Vector_Delete(object->graph.stock_prices);
         DrawObject *graph_object   = Graph_GetGraphDrawObject(object->graph.company, object->graph.timespan, object->width, object->height);
         object->graph              = graph_object->graph;
         object->graph.next_refresh = GetOffsetTime(75);
@@ -218,12 +218,11 @@ DrawObject *Graph_PollForNewGraphObject(DrawObject *object)
 
 }
 
-void Graph_DrawTextOverlay(DrawObject *object)
+uint16_t Graph_GetClosestPointByDx(DrawObject *object) 
 {
 
     const float x = object->x;
-    const float y_start_point  = object->y + object->height;
-    GraphPoint *points = object->graph.points->elements;
+    Point *points = object->graph.points->elements;
 
     size_t selected_idx = 0;
     float dx = fabs(x + points[0].x - object->graph.m_x);
@@ -239,13 +238,27 @@ void Graph_DrawTextOverlay(DrawObject *object)
 
     }
 
-    if (dx > 10.0)
+    return selected_idx;
+
+}
+
+void Graph_DrawTextOverlay(DrawObject *object)
+{
+
+    const float x = object->x;
+    const float y_start_point = object->y + object->height;
+    uint16_t selected_idx = Graph_GetClosestPointByDx(object);
+
+    Point *points            = object->graph.points->elements;
+    StockPrice *stock_prices = ((Vector *)object->graph.stock_prices)->elements;
+
+    if (fabs(x + points[selected_idx].x - object->graph.m_x) > 10.0)
         return;
 
     char time_buff[32];
     char buff[64];
-    strftime(time_buff, 32, "%HH %x", localtime(&points[selected_idx].timestamp));
-    sprintf(buff, "$%.2f, %s", points[selected_idx].price, time_buff);
+    strftime(time_buff, 32, "%HH %x", localtime(&stock_prices[selected_idx].date));
+    sprintf(buff, "$%.2f, %s", stock_prices[selected_idx].price, time_buff);
 
     ALLEGRO_FONT *font = GetFontFromCache("assets/font/DanielLinssenM5/m5x7.ttf", 40);
     ALLEGRO_COLOR color = al_map_rgba(255, 255, 255, 255);
@@ -272,11 +285,19 @@ void DrawGraph(DrawObject *object)
     const float y_start_point  = object->y + object->height;
     ALLEGRO_COLOR color = al_map_rgba(255, 255, 255, 255);
 
-    GraphPoint *points = object->graph.points->elements;
+    Point *points = object->graph.points->elements;
     for (size_t i = 0;i < object->graph.points->num_elements-1;i++)
         al_draw_line(x + points[i].x, y_start_point - points[i].y, x + points[i+1].x, y_start_point - points[i+1].y, color , 2);
 
     if (object->graph.m_x != -1.0)
         Graph_DrawTextOverlay(object);
+
+}
+
+void Graph_Clean(DrawObject *object) 
+{
+
+    Vector_Delete(object->graph.points);
+    Vector_Delete(object->graph.stock_prices);
 
 }

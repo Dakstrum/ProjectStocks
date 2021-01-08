@@ -276,6 +276,7 @@ void ClearUpGeneric(DrawObject *object)
         case TEXT     : CleanUpText(object);     break;
         case TEXTBOX  : CleanUpTextBox(object);  break;
         case SCROLLBOX: Scrollbox_Clean(object); break;
+        case GRAPH    : Graph_Clean(object);     break;
 
     }
 
