@@ -43,7 +43,7 @@ static const TimeSpanWithDiff timespans[] =
     {ALL_TIME    , 0}
 };
 
-DrawObject *GetBasicGraphDrawObject(int width, int height, int num_points) 
+DrawObject *Graph_GetDrawObject(int width, int height, int num_points) 
 {
 
     DrawObject *object           = CreateNewDrawObject();
@@ -176,7 +176,7 @@ DrawObject *Graph_ConstructGraphDrawObject(char *company_name, int timespan_inde
     if (stocks == NULL)
         return NULL;
 
-    DrawObject *object = GetBasicGraphDrawObject(width, height, stocks->num_elements);
+    DrawObject *object = Graph_GetDrawObject(width, height, stocks->num_elements);
     Graph_SetGraphPoints(object, stocks);
     Graph_ReducePoints(object);
     Vector_Delete(stocks);
@@ -206,12 +206,18 @@ DrawObject *Graph_PollForNewGraphObject(DrawObject *object)
 
     if (IsTimeSpecInPast(&object->graph.next_refresh)) {
 
+        float m_x = object->graph.m_x;
+        float m_y = object->graph.m_y;
+
         Vector_Delete(object->graph.points);
         Vector_Delete(object->graph.stock_prices);
         DrawObject *graph_object   = Graph_GetGraphDrawObject(object->graph.company, object->graph.timespan, object->width, object->height);
         object->graph              = graph_object->graph;
         object->graph.next_refresh = GetOffsetTime(75);
         free(graph_object);
+
+        object->graph.m_x = m_x;
+        object->graph.m_y = m_y;
 
     }
     return object;
@@ -267,16 +273,10 @@ void Graph_DrawTextOverlay(DrawObject *object)
 
 }
 
-void DrawGraph(DrawObject *object) 
+void Graph_Draw(DrawObject *object) 
 {
 
-    float m_x = object->graph.m_x;
-    float m_y = object->graph.m_y;
-
     object = Graph_PollForNewGraphObject(object);
-
-    object->graph.m_x = m_x;
-    object->graph.m_y = m_y;
 
     if (object->graph.points->num_elements == 0)
         return;
