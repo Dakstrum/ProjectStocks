@@ -109,7 +109,7 @@ void StocksMenu_RenderLogic()
 
     }
 
-    else if(buy_menu)
+    if(buy_menu)
     {
 
         SetTextContent(transaction_menu_pershare_textobject,  "%.2f", Simulation_GetLastStockPrice(selected_company_name));
@@ -117,7 +117,7 @@ void StocksMenu_RenderLogic()
 
     }
 
-    else if(sell_menu)
+    if(sell_menu)
     {
 
         SetTextContent(transaction_menu_pershare_textobject,  "%.2f", Simulation_GetLastStockPrice(selected_company_name));
