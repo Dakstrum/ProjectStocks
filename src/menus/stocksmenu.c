@@ -214,6 +214,8 @@ void StocksMenu_CompanyScrollboxClick(char *scroll_box_content, unsigned short i
     StocksMenu_DisplayGraph(company_name, GetStockMenuTimeSpanNum());
     StocksMenu_PopulateStockInfo(company_name);
 
+    selected_company_name = StocksMenu_CurrentCompanyFromGraph();
+
 }
 
 void StocksMenu_InitCompanyScrollbox()
