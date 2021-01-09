@@ -276,6 +276,7 @@ void ClearUpGeneric(DrawObject *object)
         case TEXT     : CleanUpText(object);     break;
         case TEXTBOX  : CleanUpTextBox(object);  break;
         case SCROLLBOX: Scrollbox_Clean(object); break;
+        case GRAPH    : Graph_Clean(object);     break;
 
     }
 
@@ -515,7 +516,7 @@ void DrawObjectOfTypeGen(DrawObject *object)
         case VIDEO:     DrawVideo(object);     break;
         case TEXT:      DrawText(object);      break;
         case TEXTBOX:   DrawTextBox(object);   break;
-        case GRAPH:     DrawGraph(object);     break;
+        case GRAPH:     Graph_Draw(object);     break;
         case SCROLLBOX: Scrollbox_Draw(object); break;
 
     }

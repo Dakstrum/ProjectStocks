@@ -1,6 +1,7 @@
 #ifndef DRAWOBJECT_H
 #define DRAWOBJECT_H
 
+#include <stdint.h>
 #include <time.h>
 
 #include <allegro5/allegro_video.h>
@@ -79,6 +80,7 @@ typedef struct Graph {
     TimeSpan timespan;
 
     Vector *points;
+    void *stock_prices;
 
     ALLEGRO_COLOR color;
     unsigned char r;
