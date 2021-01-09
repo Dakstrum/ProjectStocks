@@ -53,6 +53,7 @@ int GetOwnedStockAmountByCompanyId(uint32_t player_id, uint32_t company_id)
     uint32_t *owned_stock_amounts = owned_stocks->elements;
     for (size_t i = 0; i < owned_stocks->num_elements;i++) {
 
+        LogF("%d == %d && %d == %d ||| i = %d", company_ids[i], company_id, player_ids[i], player_id, i);
         if (company_ids[i] == company_id && player_ids[i] == player_id) {
 
             return owned_stock_amounts[i];
@@ -261,7 +262,7 @@ void InitOwnedStocks()
 
         for (size_t j = 0; j < num_companies;j++) {
 
-            Vector_PushBack(owned_company_ids, &companies[i].company_id);
+            Vector_PushBack(owned_company_ids, &companies[j].company_id);
             Vector_PushBack(owned_stocks, &default_owned);
             Vector_PushBack(owned_player_ids, &player_ids[i]);
 
