@@ -207,23 +207,7 @@ void DBCards_ApplyCard(uint32_t card_id, uint32_t company_id)
             Vector_Remove(player_cards, i);
             break;
         }
-
-
-
-
-        //LogF("temp[i].player_card_id == %d|player_card_id = %d", temp[i].player_card_id, player_card_id);
-        //if (temp[i].player_card_id == player_card_id) {
-
-        //    Queue_PushMessage(card_queue, GetFormattedPointer(delete_query, temp[i].player_id, temp[i].card_id));
-        //    Queue_PushMessage(card_queue, GetFormattedPointer(insert_query, temp[i].card_id, Game_GetSaveId(), company_id, Game_GetGameTime()));
-
-        //    LogF("Delete: %s", GetFormattedPointer(delete_query, temp[i].player_id, temp[i].card_id));
-        //    LogF("dbcards i: %d", i);
-        //    Vector_Remove(player_cards, i);
-         //   break;
-
-        //}
-
+        
     }
 
 }

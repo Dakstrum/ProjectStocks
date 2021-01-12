@@ -238,19 +238,37 @@ void Simulation_ModifyGlobal(float modifier, time_t play_time, uint32_t days, ch
 
 }
 
+float Simulation_GetNextValue(time_t t, size_t idx) 
+{
+
+    StockPrice *prices = sim_data[idx]->elements;
+    float value = prices[sim_data[idx]->num_elements-1].price;
+    float price_fluctuation = GenerateRandomPriceFluctuation(value);
+
+    PlayedModifiers *modifiers_temp = modifiers->elements;
+    Company *companies_temp = companies->elements;
+    for (size_t i = 0; i < modifiers->num_elements;i++) {
+
+        if (companies_temp[idx].company_id != modifiers_temp[i].company_id)
+            continue;
+
+        if (t < modifiers_temp[i].played_time || t > modifiers_temp[i].played_time + modifiers_temp[i].modifier_length * 86400)
+            continue;
+
+        value = value + value * modifiers_temp[i].price_modifier / ((float)modifiers_temp[i].modifier_length * 24.0f);
+
+    }
+
+    return value + price_fluctuation;
+
+}
 
 void Simulation_SimulateStep(time_t t)
 {
 
-    float value = 0.0;
-    StockPrice *prices = NULL;
     for (size_t i = 0; i < companies->num_elements;i++) {
 
-        prices = sim_data[i]->elements;
-        value  = prices[sim_data[i]->num_elements-1].price;
-        value  = value + GenerateRandomPriceFluctuation(value);
-
-        StockPrice price = {value, t};
+        StockPrice price = {Simulation_GetNextValue(t, i), t};
         Vector_PushBack(sim_data[i], &price);
 
     }
