@@ -1,12 +1,14 @@
 
 #include <string.h>
 
+#include "log.h"
 #include "shared.h"
+#include "dbcompany.h"
 #include "dbevents.h"
 #include "simulation_event.h"
 
 static Vector *events = NULL;
-static const float EVENT_CHANCE = 1.0/(24.0*30);
+static const float EVENT_CHANCE = 4.0/(24.0 * 30.0);
 
 void Simulation_Event_Init()
 {
@@ -90,30 +92,19 @@ Vector *Simulation_Event_GetLastEvents(time_t t, uint32_t num_events)
 bool Simulation_Event_EventChanceCheck(uint16_t seed[3])
 {
 
-    return (EVENT_CHANCE >= shared_get_random_float(seed));
+    return EVENT_CHANCE >= shared_get_random_float(seed);
 
 }
 
-Event Simulation_Event_GetRandomEvent(uint16_t seed[3])
+Event *Simulation_Event_GetRandomEvent(uint16_t seed[3])
 {
 
-    Event event;
     float event_type_prob = shared_get_random_float(seed);
-
-    if (event_type_prob <= 0.33) {
-
-
-
-    } else if (event_type_prob <= 0.66) {
-
-
-
-    } else {
-
-
-
-    }
-
-    return event;
+    if (event_type_prob <= 0.33)
+        return GetRandomCompanyEvent(1 + shared_nrand48(seed) % (GetNumCompanies()), seed);
+    else if (event_type_prob <= 0.66)
+        return GetRandomCategoryEvent(1 + shared_nrand48(seed) % (GetNumCompanyCategories()), seed);
+    else 
+        return GetRandomGlobalEvent(seed);
 
 }

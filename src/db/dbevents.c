@@ -1,5 +1,6 @@
 
 #include <string.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <assert.h>
 
@@ -47,6 +48,12 @@ int Events_Callback(void *events, int argc, char **argv, char **col_name)
 			temp.price_modifier  = atof(argv[2]);
 			temp.modifier_length = atoi(argv[3]);
 			temp.event[127]      = '\0';
+			temp.id              = id;
+
+			if (events_temp == &company_events)
+				temp.event_type = COMPANY;
+			else
+				temp.event_type = CATEGORY;
 
 			Vector_PushBack(events_temp->events[i], &temp);
 			break;
@@ -73,6 +80,7 @@ int GlobalEvents_Callback(void *events, int argc, char **argv, char **col_name)
 	temp.price_modifier  = atof(argv[1]);
 	temp.modifier_length = atoi(argv[2]);
 	temp.event[127]      = '\0';
+	temp.event_type      = GLOBAL;
 
 	Vector_PushBack(global_events, &temp);
 
@@ -174,38 +182,38 @@ void InitializeEvents()
 
 }
 
-Event *GetRandomGlobalEvent()
+Event *GetRandomGlobalEvent(uint16_t seed[3])
 {
 
 	assert(global_events != NULL && global_events->num_elements > 0);
 
 	Event *temp = (Event *)global_events->elements;
-	return &temp[rand() % global_events->num_elements];
+	return &temp[shared_nrand48(seed) % global_events->num_elements];
 
 }
 
-Event *GetRandomEvent(Vector *events)
+Event *GetRandomEvent(Vector *events, uint16_t seed[3])
 {
 
 	Event *temp = (Event *)events->elements;
 	if (events->num_elements == 0)
 		return NULL;
 
-	return &temp[rand() % events->num_elements];
+	return &temp[shared_nrand48(seed) % events->num_elements];
 
 }
 
-Event *GetRandomCategoryEvent(int category_id)
+Event *GetRandomCategoryEvent(int category_id, uint16_t seed[3])
 {
 
-	return GetRandomEvent(category_events.events[category_id - 1]);
+	return GetRandomEvent(category_events.events[category_id - 1], seed);
 
 }
 
-Event *GetRandomCompanyEvent(int company_id)
+Event *GetRandomCompanyEvent(int company_id, uint16_t seed[3])
 {
 
-	return GetRandomEvent(company_events.events[company_id - 1]);
+	return GetRandomEvent(company_events.events[company_id - 1], seed);
 
 }
 
@@ -223,8 +231,6 @@ char* GetCompanyWithCategory(unsigned int category_id)
 	return temp[category_id].category_name;
 
 }
-
-
 
 int *GetCompanyCategoryIds()
 {

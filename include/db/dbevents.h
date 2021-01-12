@@ -3,12 +3,22 @@
 
 #include "vector.h"
 
+typedef enum EventType {
+
+    GLOBAL,
+    CATEGORY,
+    COMPANY
+
+} EventType;
+
 typedef struct Event
 {
 
 	char *event;
+    int id;
 	int modifier_length;
 	float price_modifier;
+    EventType event_type;
 
 } Event;
 
@@ -22,9 +32,9 @@ typedef struct System_Category
 
 
 void InitializeEvents();
-Event *GetRandomGlobalEvent();
-Event *GetRandomCategoryEvent(int category_id);
-Event *GetRandomCompanyEvent(int company_id);
+Event *GetRandomGlobalEvent(uint16_t seed[3]);
+Event *GetRandomCategoryEvent(int category_id, uint16_t seed[3]);
+Event *GetRandomCompanyEvent(int company_id, uint16_t seed[3]);
 
 int GetNumCompanyCategories();
 Vector *GetCompanyCategories();

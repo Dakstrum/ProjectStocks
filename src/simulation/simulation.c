@@ -235,14 +235,32 @@ float Simulation_GetNextValue(time_t t, size_t idx)
 
 }
 
-void Simulation_SimulateStep(time_t t)
+void Simulation_EventStep(time_t t)
 {
 
-    if (Simulation_Event_EventChanceCheck(current_seed)) {
+    if (!Simulation_Event_EventChanceCheck(current_seed))
+        return;
 
-        
-        
+    Event *event = Simulation_Event_GetRandomEvent(current_seed);
+    LogF("%s", event->event);
+    switch (event->event_type) {
+
+        case GLOBAL:
+            Simulation_ModifyGlobal(event->price_modifier, t, event->modifier_length, event->event);
+            break;
+        case CATEGORY: 
+            Simulation_ModifyCategory(event->id, t, event->price_modifier, event->modifier_length, event->event);
+            break;
+        case COMPANY:
+            Simulation_ModifyCompany(event->id, t, event->price_modifier, event->modifier_length, event->event);
+            break;
+
     }
+
+}
+
+void Simulation_SimulateStep(time_t t)
+{
 
     for (size_t i = 0; i < companies->num_elements;i++) {
 
@@ -259,6 +277,7 @@ void Simulation_SimulateUntil(time_t t)
     time_t temp = 0;
     while (temp < t) {
 
+        Simulation_EventStep(temp);
         Simulation_SimulateStep(temp);
         temp += HOUR;
 
@@ -307,6 +326,7 @@ void Simulation_Init(uint32_t new_game_seed)
 {
 
     Simulation_InitRandom(new_game_seed);
+    Simulation_Event_Init();
     Simulation_LoadCompanies();
     Simulation_LoadModifiers();
 
