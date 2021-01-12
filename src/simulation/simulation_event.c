@@ -1,22 +1,20 @@
 
 #include <string.h>
 
+#include "shared.h"
+#include "dbevents.h"
 #include "simulation_event.h"
 
 static Vector *events = NULL;
+static const float EVENT_CHANCE = 1.0/(24.0*30);
 
 void Simulation_Event_Init()
 {
 
-    if (events != NULL) {
-
+    if (events != NULL)
         Vector_Reset(events);
-
-    } else {
-
+    else
         events = Vector_Create(sizeof(SimulationEvent), 128);
-
-    }
 
 }
 
@@ -86,5 +84,36 @@ Vector *Simulation_Event_GetLastEvents(time_t t, uint32_t num_events)
         Vector_PushBack(temp, &temp_events[i]);
 
     return temp;
+
+}
+
+bool Simulation_Event_EventChanceCheck(uint16_t seed[3])
+{
+
+    return (EVENT_CHANCE >= shared_get_random_float(seed));
+
+}
+
+Event Simulation_Event_GetRandomEvent(uint16_t seed[3])
+{
+
+    Event event;
+    float event_type_prob = shared_get_random_float(seed);
+
+    if (event_type_prob <= 0.33) {
+
+
+
+    } else if (event_type_prob <= 0.66) {
+
+
+
+    } else {
+
+
+
+    }
+
+    return event;
 
 }

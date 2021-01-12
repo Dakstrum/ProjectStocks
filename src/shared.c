@@ -278,3 +278,17 @@ uint16_t *shared_seed48(uint16_t xseed[3])
     _rand48_add = RAND48_ADD;
     return sseed;
 }
+
+float shared_get_random_float(uint16_t seed[3])
+{
+
+    return shared_nrand48(seed) % 2 == 0 ? -1.0 : 1.0;
+
+}
+
+float shared_get_random_sign(uint16_t seed[3]) 
+{
+
+    return (float)shared_nrand48(seed)/(float)INT32_MAX;
+
+}

@@ -46,5 +46,7 @@ float GetSeconds(struct timespec *t);
 
 long shared_nrand48(uint16_t xseed[3]);
 uint16_t *shared_seed48(uint16_t xseed[3]);
+float shared_get_random_float(uint16_t seed[3]);
+float shared_get_random_sign(uint16_t seed[3]);
 
 #endif

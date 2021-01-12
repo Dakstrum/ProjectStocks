@@ -64,38 +64,10 @@ uint32_t Simulation_CompanyIndex(char *company_name)
 
 }
 
-float GetRandomSign()
-{
-
-    return shared_nrand48(current_seed) % 2 == 0 ? -1.0 : 1.0;
-
-}
-
-float GetRandomFloat()
-{
-
-    return (float)shared_nrand48(current_seed)/(float)INT32_MAX;
-
-}
-
-float GetRandomEventMagnitude()
-{
-
-    float random = GetRandomFloat();
-
-    if (random >= .2)
-        return .25;
-    else if (random >= 0.05)
-        return .5;
-    else
-        return .75;
-
-}
-
 float GenerateRandomPriceFluctuation(float last_price) 
 {
 
-    return GetRandomSign() * GetRandomFloat() * last_price * .0075;
+    return shared_get_random_sign(current_seed) * shared_get_random_float(current_seed) * last_price * .0075;
 
 }
 
@@ -265,6 +237,12 @@ float Simulation_GetNextValue(time_t t, size_t idx)
 
 void Simulation_SimulateStep(time_t t)
 {
+
+    if (Simulation_Event_EventChanceCheck(current_seed)) {
+
+        
+        
+    }
 
     for (size_t i = 0; i < companies->num_elements;i++) {
 
