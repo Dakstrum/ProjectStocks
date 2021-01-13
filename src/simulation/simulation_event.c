@@ -9,13 +9,21 @@
 static Vector *events = NULL;
 static const float EVENT_CHANCE = 4.0/(24.0 * 30.0);
 
+static uint32_t uid = 1;
+
 void Simulation_Event_Init()
 {
 
-    if (events != NULL)
+    if (events != NULL) {
+
+        uid = 1;
         Vector_Reset(events);
-    else
+
+    } else {
+
         events = Vector_Create(sizeof(SimulationEvent), 128);
+
+    }
 
 }
 
@@ -29,6 +37,9 @@ void Simulation_Event_Push(char *event, time_t t)
     temp.timestamp = t;
     strncpy(temp.event, event, 127);
     temp.event[127] = '\0';
+    temp.uid = uid;
+
+    uid++;
 
     Vector_PushBack(events, &temp);
 
@@ -101,7 +112,7 @@ Vector *Simulation_Event_GetLastEvents(uint32_t num_events)
 
     for (size_t i = events->num_elements;i > end_idx; i--)
         Vector_PushBack(temp, &temp_events[i-1]);
-    
+
     return temp;
 
 }

@@ -11,6 +11,7 @@ typedef struct SimulationEvent {
 
     time_t timestamp;
     char event[128];
+    uint32_t uid;
 
 } SimulationEvent;
 
