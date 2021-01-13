@@ -172,7 +172,7 @@ void InitializeGlobalEvents()
 
 }
 
-void InitializeEvents()
+void dbevents_init()
 {
 
 	InitializeCompanyEvents();
@@ -182,7 +182,7 @@ void InitializeEvents()
 
 }
 
-Event *GetRandomGlobalEvent(uint16_t seed[3])
+Event *dbevents_get_global_event(uint16_t seed[3])
 {
 
 	assert(global_events != NULL && global_events->num_elements > 0);
@@ -203,28 +203,28 @@ Event *GetRandomEvent(Vector *events, uint16_t seed[3])
 
 }
 
-Event *GetRandomCategoryEvent(int category_id, uint16_t seed[3])
+Event *dbevents_get_category_event(int category_id, uint16_t seed[3])
 {
 
 	return GetRandomEvent(category_events.events[category_id - 1], seed);
 
 }
 
-Event *GetRandomCompanyEvent(int company_id, uint16_t seed[3])
+Event *dbevents_get_company_event(int company_id, uint16_t seed[3])
 {
 
 	return GetRandomEvent(company_events.events[company_id - 1], seed);
 
 }
 
-int GetNumCompanyCategories()
+int dbevents_get_num_categories()
 {
 
 	return num_categories;
 
 }
 
-char* GetCompanyWithCategory(unsigned int category_id)
+char* dbevents_get_company_with_category(unsigned int category_id)
 {
 
 	System_Category *temp = (System_Category *)company_categories->elements;
@@ -232,7 +232,7 @@ char* GetCompanyWithCategory(unsigned int category_id)
 
 }
 
-int *GetCompanyCategoryIds()
+int *dbevents_get_categories_ids()
 {
 
 	return category_events.id;

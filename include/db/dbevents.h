@@ -31,15 +31,15 @@ typedef struct System_Category
 } System_Category;
 
 
-void InitializeEvents();
-Event *GetRandomGlobalEvent(uint16_t seed[3]);
-Event *GetRandomCategoryEvent(int category_id, uint16_t seed[3]);
-Event *GetRandomCompanyEvent(int company_id, uint16_t seed[3]);
+void dbevents_init();
+Event *dbevents_get_global_event(uint16_t seed[3]);
+Event *dbevents_get_category_event(int category_id, uint16_t seed[3]);
+Event *dbevents_get_company_event(int company_id, uint16_t seed[3]);
 
-int GetNumCompanyCategories();
-Vector *GetCompanyCategories();
-int *GetCompanyCategoryIds();
-char* GetCompanyCatergoryName(int category_id);
-char* GetCompanyWithCategory(unsigned int category_id);
+int dbevents_get_num_categories();
+Vector *dbevents_get_categories();
+int *dbevents_get_categories_ids();
+char* dbevents_get_category_name(int category_id);
+char* dbevents_get_company_with_category(unsigned int category_id);
 
 #endif

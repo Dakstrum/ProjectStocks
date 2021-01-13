@@ -139,7 +139,7 @@ void NewsMenu_SpecificCategoryScrollboxClick(char *scroll_box_content, unsigned 
 void NewsMenu_InitSpecificCategoryScrollbox(int cat_id) 
 {
 
-    SetTextContent(scrollbox_title_textobject, "%s", GetCompanyWithCategory(cat_id - 1));
+    SetTextContent(scrollbox_title_textobject, "%s", dbevents_get_company_with_category(cat_id - 1));
 
     category_specific_companies_scrollbox = CreateCategorySpecificCompaniesScrollbox(2, 230, cat_id, &NewsMenu_SpecificCategoryScrollboxClick);
     AddObjectToDrawLayer(category_specific_companies_scrollbox);

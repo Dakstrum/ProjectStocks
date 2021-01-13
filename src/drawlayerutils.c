@@ -90,12 +90,12 @@ void SetScrollboxIconsForCompanies(DrawObject *object)
 void SetScrollboxTextContentForCategories(DrawObject *object) 
 {
 
-    size_t num_categorys = GetNumCompanyCategories();
+    size_t num_categorys = dbevents_get_num_categories();
     for (size_t i = 0; i < num_categorys; i++) {
 
         Vector *text = object->scrollbox.text_content[i];
 
-        ScrollboxText category_text = {100, 5, NULL, 40, GetCompanyWithCategory(i)};
+        ScrollboxText category_text = {100, 5, NULL, 40, dbevents_get_company_with_category(i)};
         Vector_PushBack(text, &category_text);
 
     }
@@ -164,7 +164,7 @@ DrawObject *CreateCategoryScrollbox(int x, int y, void (*click)(char *scroll_box
     category_scrollbox->height     = 803;
     category_scrollbox->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
 
-    unsigned int num_categorys = GetNumCompanyCategories();
+    unsigned int num_categorys = dbevents_get_num_categories();
 
     category_scrollbox->scrollbox.num_items = num_categorys;
     category_scrollbox->scrollbox.box_click = click;

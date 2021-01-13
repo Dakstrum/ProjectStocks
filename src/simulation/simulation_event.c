@@ -101,10 +101,10 @@ Event *Simulation_Event_GetRandomEvent(uint16_t seed[3])
 
     float event_type_prob = shared_get_random_float(seed);
     if (event_type_prob <= 0.33)
-        return GetRandomCompanyEvent(1 + shared_nrand48(seed) % (GetNumCompanies()), seed);
+        return dbevents_get_company_event(1 + shared_nrand48(seed) % (GetNumCompanies()), seed);
     else if (event_type_prob <= 0.66)
-        return GetRandomCategoryEvent(1 + shared_nrand48(seed) % (GetNumCompanyCategories()), seed);
+        return dbevents_get_category_event(1 + shared_nrand48(seed) % (dbevents_get_num_categories()), seed);
     else 
-        return GetRandomGlobalEvent(seed);
+        return dbevents_get_global_event(seed);
 
 }

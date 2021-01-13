@@ -173,7 +173,7 @@ enum InitializeSuccess Initialize()
     InitializeShared();
     InitializeDatabases();
     InitializeCompanies();
-    InitializeEvents();
+    dbevents_init();
     InitializeControls();
 
     InitializeRendering();
