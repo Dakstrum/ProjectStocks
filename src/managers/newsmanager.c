@@ -150,7 +150,7 @@ void NewsManager_CheckForNews(NewsManager *manager)
 		if (!found_match) {
 
 			Vector_PushBack(manager->active_events, &events_temp[0]);
-			NewsManager_PushNews(manager, active_events_temp[manager->active_events->num_elements - 1].event);
+			NewsManager_PushNews(manager, ((SimulationEvent*)Vector_GetLast(manager->active_events))->event);
 
 		}
 

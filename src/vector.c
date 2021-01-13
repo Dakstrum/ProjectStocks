@@ -81,6 +81,14 @@ Vector *Vector_GetCopy(Vector *vector)
 
 }
 
+void *Vector_GetLast(Vector *vector)
+{
+
+    uint8_t *elements = vector->elements;
+    return (elements + (vector->size_of_single_elem * (vector->num_elements - 1)));
+
+}
+
 Vector *Vector_GetSubVector(Vector *vector, size_t start_idx, size_t end_idx) 
 {
 
