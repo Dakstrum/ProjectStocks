@@ -226,8 +226,8 @@ void Control_GraphOverhead(ALLEGRO_EVENT event)
 
         if (IsMouseCursorInAreaOfObject(collection->objects[i], event.mouse.x, event.mouse.y)) {
 
-            collection->objects[i]->graph.m_x = event.mouse.x;
-            collection->objects[i]->graph.m_y = event.mouse.y;
+            collection->objects[i]->graph.m_x = event.mouse.x / scale.x_scale;
+            collection->objects[i]->graph.m_y = event.mouse.y / scale.y_scale;
 
         } else {
 
