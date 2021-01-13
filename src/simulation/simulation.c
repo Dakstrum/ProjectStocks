@@ -242,7 +242,6 @@ void Simulation_EventStep(time_t t)
         return;
 
     Event *event = Simulation_Event_GetRandomEvent(current_seed);
-    LogF("%s", event->event);
     switch (event->event_type) {
 
         case GLOBAL:
@@ -262,6 +261,7 @@ void Simulation_EventStep(time_t t)
 void Simulation_SimulateStep(time_t t)
 {
 
+    Simulation_EventStep(t);
     for (size_t i = 0; i < companies->num_elements;i++) {
 
         StockPrice price = {Simulation_GetNextValue(t, i), t};
@@ -277,7 +277,6 @@ void Simulation_SimulateUntil(time_t t)
     time_t temp = 0;
     while (temp < t) {
 
-        Simulation_EventStep(temp);
         Simulation_SimulateStep(temp);
         temp += HOUR;
 

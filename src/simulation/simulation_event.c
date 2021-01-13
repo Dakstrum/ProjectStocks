@@ -16,7 +16,6 @@ void Simulation_Event_Init()
 
     if (events != NULL) {
 
-        uid = 1;
         Vector_Reset(events);
 
     } else {
@@ -38,7 +37,6 @@ void Simulation_Event_Push(char *event, time_t t)
     strncpy(temp.event, event, 127);
     temp.event[127] = '\0';
     temp.uid = uid;
-
     uid++;
 
     Vector_PushBack(events, &temp);

@@ -24,12 +24,13 @@ typedef enum NewsManagerStates {
 typedef struct NewsManager {
 
 	DrawObject **objects;
-	unsigned char news_state;
+	NewsManagerStates news_state;
 	unsigned int group_id;
 	float x_i;
 	float y_i;
 	unsigned char active_boxes;
 	unsigned char num_boxes;
+	Vector *active_events;
 
 } NewsManager;
 
@@ -129,11 +130,32 @@ void NewsManager_PushNews(NewsManager *manager, char *content)
 void NewsManager_CheckForNews(NewsManager *manager)
 {
 
-	char *event = NULL;//GetAnyEventAtTime(Game_GetGameTime());
-	if (event == NULL)
-		return;
-	
-	NewsManager_PushNews(manager, event);
+	Vector *events = Simulation_Event_GetLastEvents(1);
+	SimulationEvent *events_temp = events->elements;
+	SimulationEvent *active_events_temp = manager->active_events->elements;
+
+	if (events->num_elements != 0) {
+
+		bool found_match = false;
+		for (size_t i = 0; i < manager->active_events->num_elements;i++) {
+
+			if (active_events_temp[i].uid == events_temp[0].uid) {
+
+				found_match = true;
+				break;
+
+			}
+
+		}
+		if (!found_match) {
+
+			Vector_PushBack(manager->active_events, &events_temp[0]);
+			NewsManager_PushNews(manager, active_events_temp[manager->active_events->num_elements - 1].event);
+
+		}
+
+	}
+	Vector_Delete(events);
 
 }
 
@@ -231,20 +253,22 @@ Manager *NewsManager_Create(float x, float y)
 	state->y_i          = y;
 	state->active_boxes = 0;
 
-	Vector *events = Simulation_Event_GetLastEvents(3);
-	SimulationEvent *sim_events = events->elements;
-	state->active_boxes = events->num_elements;
+	Vector *active_events = Simulation_Event_GetLastEvents(4);
+	SimulationEvent *active_events_temp = active_events->elements;
+	state->active_boxes = active_events->num_elements;
+	state->active_events = active_events;
 
 	for (size_t i = 0; i < state->num_boxes; i++) {
 
 		state->objects[i]                   = Text_Create();
+		state->objects[i]->width            = 350;
 		state->objects[i]->x                = x;
 		state->objects[i]->y                = y + 140 * i;
 		state->objects[i]->text.bitmap_path = "assets/images/newsmenu/newsmenuassets/newsbox.png";
 
 		if (state->active_boxes > i) {
 
-			SetTextContent(state->objects[i], sim_events[i].event);
+			SetTextContent(state->objects[i], active_events_temp[i].event);
 			state->objects[i]->bit_flags |= SHOULD_BE_DRAWN;
 
 		} else {
