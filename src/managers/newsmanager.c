@@ -5,7 +5,7 @@
 #include "animations.h"
 #include "text.h"
 #include "log.h"
-#include "simulation.h"
+#include "simulation_event.h"
 #include "game.h"
 
 #include "drawobject.h"
@@ -129,7 +129,7 @@ void NewsManager_PushNews(NewsManager *manager, char *content)
 void NewsManager_CheckForNews(NewsManager *manager)
 {
 
-	char *event = GetAnyEventAtTime(Game_GetGameTime());
+	char *event = NULL;//GetAnyEventAtTime(Game_GetGameTime());
 	if (event == NULL)
 		return;
 	
@@ -231,13 +231,27 @@ Manager *NewsManager_Create(float x, float y)
 	state->y_i          = y;
 	state->active_boxes = 0;
 
+	Vector *events = Simulation_Event_GetLastEvents(3);
+	SimulationEvent *sim_events = events->elements;
+	state->active_boxes = events->num_elements;
+
 	for (size_t i = 0; i < state->num_boxes; i++) {
 
 		state->objects[i]                   = Text_Create();
 		state->objects[i]->x                = x;
 		state->objects[i]->y                = y + 140 * i;
 		state->objects[i]->text.bitmap_path = "assets/images/newsmenu/newsmenuassets/newsbox.png";
-		state->objects[i]->bit_flags       ^= SHOULD_BE_DRAWN;
+
+		if (state->active_boxes > i) {
+
+			SetTextContent(state->objects[i], sim_events[i].event);
+			state->objects[i]->bit_flags |= SHOULD_BE_DRAWN;
+
+		} else {
+
+			state->objects[i]->bit_flags ^= SHOULD_BE_DRAWN;
+
+		}
 
 	}
 

@@ -4,7 +4,6 @@
 #include "log.h"
 #include "shared.h"
 #include "dbcompany.h"
-#include "dbevents.h"
 #include "simulation_event.h"
 
 static Vector *events = NULL;
@@ -69,7 +68,7 @@ uint32_t Simulation_Event_GetLastEventsStartIndex(time_t t)
 
 }
 
-Vector *Simulation_Event_GetLastEvents(time_t t, uint32_t num_events)
+Vector *Simulation_Event_GetLastEventsT(time_t t, uint32_t num_events)
 {
 
     uint32_t start_idx = Simulation_Event_GetLastEventsStartIndex(t);
@@ -85,6 +84,24 @@ Vector *Simulation_Event_GetLastEvents(time_t t, uint32_t num_events)
     for (size_t i = start_idx; i > (uint32_t)end_idx;i--)
         Vector_PushBack(temp, &temp_events[i]);
 
+    return temp;
+
+}
+
+Vector *Simulation_Event_GetLastEvents(uint32_t num_events)
+{
+
+    Vector *temp = Vector_Create(sizeof(SimulationEvent), 4);
+    SimulationEvent *temp_events = events->elements;
+
+    uint32_t end_idx = events->num_elements - num_events;
+
+    if (events->num_elements < num_events)
+        end_idx = 0;
+
+    for (size_t i = events->num_elements;i > end_idx; i--)
+        Vector_PushBack(temp, &temp_events[i-1]);
+    
     return temp;
 
 }
