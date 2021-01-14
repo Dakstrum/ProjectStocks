@@ -203,7 +203,7 @@ void DBCards_ApplyCard(uint32_t card_id, uint32_t company_id)
 
             Vector_Remove(player_cards, i);
             break;
-            
+
         }
         
     }
@@ -225,6 +225,20 @@ PlayerCard *GetAllPlayerCards()
 
     assert(player_cards != NULL);
     return (PlayerCard *)player_cards->elements;
+
+}
+
+Vector *dbcard_get_player_cards(uint32_t player_id)
+{
+
+    Vector *specific_player_cards = Vector_Create(sizeof(PlayerCard), 5);
+
+    PlayerCard *player_cards_temp = player_cards->elements;
+    for (size_t i = 0; i < player_cards->num_elements;i++)
+        if (player_cards_temp[i].player_id == player_id)
+            Vector_PushBack(specific_player_cards, &player_cards_temp[i]);
+
+    return specific_player_cards;
 
 }
 

@@ -50,6 +50,8 @@ int GetNumOfPlayerCards();
 int GetPlayerCardId(int temp_card_id);
 void SaveCards();
 
+Vector *dbcard_get_player_cards(uint32_t player_id);
+
 void DBCards_ApplyCard(uint32_t card_id, uint32_t company_id);
 void DBCards_Init();
 
