@@ -4,16 +4,12 @@
 #include "log.h"
 #include "controls.h"
 #include "dbcard.h"
+#include "account.h"
+#include "vector.h"
 #include "menupersistence.h"
 
-static DrawObject *cardone_button   = NULL;
-static DrawObject *cardtwo_button   = NULL;
-static DrawObject *cardthree_button = NULL;
-static DrawObject *cardfour_button  = NULL;
-static DrawObject *cardfive_button  = NULL;
-
 static DrawObject *card_buttons[5];
-static PlayerCard *player_cards = NULL;
+static Vector *player_cards = NULL;
 
 static int played_card    = -1;
 static int card_animating = 0;
@@ -39,15 +35,17 @@ static const void *card_CBs[5] =
 
 void CardController_InitCard()
 {
-	card_buttons[0] = cardone_button;
-	card_buttons[1] = cardtwo_button;
-	card_buttons[2] = cardthree_button;
-	card_buttons[3] = cardfour_button;
-	card_buttons[4] = cardfive_button;
 
-	player_cards = GetAllPlayerCards();
+	if (player_cards != NULL)
+		Vector_Delete(player_cards);
 
-	for (int i = 0; i < GetNumOfPlayerCards(); i++) {
+	for (size_t i = 0;i < 5;i++)
+		card_buttons[i] = NULL;
+
+	player_cards = dbcard_get_player_cards(Account_GetPlayerId());
+	PlayerCard *player_cards_temp = player_cards->elements;
+
+	for (size_t i = 0; i < player_cards->num_elements; i++) {
 
 		card_buttons[i]         = CreateNewDrawObject();
 		card_buttons[i]->type   = BUTTON;
@@ -57,7 +55,7 @@ void CardController_InitCard()
         card_buttons[i]->height = 230;
         card_buttons[i]->button.Callback = card_CBs[i];
 
-		card_buttons[i]->asset_path = GetCardPath(player_cards[i].card_id);
+		card_buttons[i]->asset_path = GetCardPath(player_cards_temp[i].card_id);
 
 		AddObjectToDrawLayer(card_buttons[i]);
 	
@@ -166,57 +164,49 @@ void CardController_CardAnimationCheck()
 
 }
 
-void CardController_CardOne_CB()
+void cardcontroller_card_cb(uint32_t idx)
 {
 
 	if(card_animating)
 		return;
 
-	DBCards_ApplyCard(player_cards[0].card_id, GetCompanyIdViewing());
-	played_card = 0;
+	PlayerCard *player_cards_temp = player_cards->elements;
+	DBCards_ApplyCard(player_cards_temp[idx].card_id, GetCompanyIdViewing());
+	played_card = idx;
+
+}
+
+void CardController_CardOne_CB()
+{
+
+	cardcontroller_card_cb(0);
 
 }
 
 void CardController_CardTwo_CB()
 {
 
-	if(card_animating)
-		return;
-
-	DBCards_ApplyCard(player_cards[1].card_id, GetCompanyIdViewing());
-	played_card = 1;
-
+	cardcontroller_card_cb(1);
 
 }
 
 void CardController_CardThree_CB()
 {
-	if(card_animating)
-		return;
 
-	DBCards_ApplyCard(player_cards[2].card_id, GetCompanyIdViewing());
-	played_card = 2;
+	cardcontroller_card_cb(2);
 
 }
 
 void CardController_CardFour_CB()
 {
 
-	if(card_animating)
-		return;
-
-	DBCards_ApplyCard(player_cards[3].card_id, GetCompanyIdViewing());
-	played_card = 3;
+	cardcontroller_card_cb(3);
 
 }
 
 void CardController_CardFive_CB()
 {
 
-	if(card_animating)
-		return;
-
-	DBCards_ApplyCard(player_cards[4].card_id, GetCompanyIdViewing());
-	played_card = 4;
+	cardcontroller_card_cb(4);
 
 }
