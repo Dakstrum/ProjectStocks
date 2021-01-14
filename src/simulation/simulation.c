@@ -259,6 +259,22 @@ void Simulation_EventStep(time_t t)
 
 }
 
+void Simulation_RemoveOldModifiers(time_t t)
+{
+
+    PlayedModifiers *modifiers_temp = modifiers->elements;
+    for (size_t i = 0; i < modifiers->num_elements;i++) {
+
+        if (t < modifiers_temp[i].played_time)
+            continue;
+
+        Vector_Remove(modifiers, i);
+        i--;
+
+    }
+
+}
+
 void Simulation_SimulateStep(time_t t)
 {
 
@@ -269,6 +285,7 @@ void Simulation_SimulateStep(time_t t)
         Vector_PushBack(sim_data[i], &price);
 
     }
+    Simulation_RemoveOldModifiers(t);
 
 }
 

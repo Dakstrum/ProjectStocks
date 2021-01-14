@@ -45,6 +45,7 @@ void CardController_InitCard()
 	player_cards = dbcard_get_player_cards(Account_GetPlayerId());
 	PlayerCard *player_cards_temp = player_cards->elements;
 
+	assert(player_cards->num_elements < 6);
 	for (size_t i = 0; i < player_cards->num_elements; i++) {
 
 		card_buttons[i]         = CreateNewDrawObject();
@@ -132,7 +133,7 @@ void CardController_HoveringAnimationController(int card_num)
 		card_animating = 1;
 		Animate_MoveDrawObject(card_buttons[card_num], 800, 300, 500);
 
-		if(card_buttons[card_num]->x == 800) {
+		if (card_buttons[card_num]->x == 800) {
 
 			for (int i = 0; i < 5; i++)
 				if (card_buttons[i])
