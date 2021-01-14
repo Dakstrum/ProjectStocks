@@ -101,7 +101,7 @@ void Graph_DistanceReduction(DrawObject *object)
     Vector *points               = object->graph.points;
     Vector *new_point_vec        = Vector_Create(sizeof(Point), 512);
     Vector *new_stock_price_vec  = Vector_Create(sizeof(StockPrice), 512);
-    Point *temp_points           = new_point_vec->elements;
+    Point *new_point_vec_temp    = new_point_vec->elements;
     StockPrice *stock_prices_arr = ((Vector *)object->graph.stock_prices)->elements;
 
     Point *vector_points = points->elements; 
@@ -114,8 +114,8 @@ void Graph_DistanceReduction(DrawObject *object)
     float d  = 0.0;
     for (size_t i = 1; i < points->num_elements;i++) {
 
-        dx = temp_points[new_point_vec->num_elements - 1].x - vector_points[i].x;
-        dy = temp_points[new_point_vec->num_elements - 1].y - vector_points[i].y;
+        dx = (float)new_point_vec_temp[new_point_vec->num_elements - 1].x - (float)vector_points[i].x;
+        dy = (float)new_point_vec_temp[new_point_vec->num_elements - 1].y - (float)vector_points[i].y;
         d  = sqrt(dx * dx + dy * dy);
 
         if (d > 7.5) {

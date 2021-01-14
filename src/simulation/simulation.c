@@ -226,7 +226,7 @@ float Simulation_GetNextValue(time_t t, size_t idx)
 
         if (t < modifiers_temp[i].played_time || t > modifiers_temp[i].played_time + modifiers_temp[i].modifier_length * 86400)
             continue;
-
+        
         value = value + value * modifiers_temp[i].price_modifier / ((float)modifiers_temp[i].modifier_length * 24.0f);
 
     }

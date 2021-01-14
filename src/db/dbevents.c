@@ -55,6 +55,9 @@ int Events_Callback(void *events, int argc, char **argv, char **col_name)
 			else
 				temp.event_type = CATEGORY;
 
+			assert(temp.modifier_length != 0.0);
+			assert(temp.price_modifier != 0.0);
+
 			Vector_PushBack(events_temp->events[i], &temp);
 			break;
 
@@ -81,6 +84,9 @@ int GlobalEvents_Callback(void *events, int argc, char **argv, char **col_name)
 	temp.modifier_length = atoi(argv[2]);
 	temp.event[127]      = '\0';
 	temp.event_type      = GLOBAL;
+
+	assert(temp.modifier_length != 0.0);
+	assert(temp.price_modifier != 0.0);
 
 	Vector_PushBack(global_events, &temp);
 
