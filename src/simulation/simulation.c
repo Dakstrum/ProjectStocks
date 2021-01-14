@@ -259,6 +259,13 @@ void Simulation_EventStep(time_t t)
 
 }
 
+void Simulation_CardStep(time_t t) 
+{
+
+    
+
+}
+
 void Simulation_RemoveOldModifiers(time_t t)
 {
 
@@ -279,6 +286,7 @@ void Simulation_SimulateStep(time_t t)
 {
 
     Simulation_EventStep(t);
+    Simulation_CardStep(t);
     for (size_t i = 0; i < companies->num_elements;i++) {
 
         StockPrice price = {Simulation_GetNextValue(t, i), t};
