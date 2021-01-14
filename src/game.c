@@ -19,6 +19,7 @@ static ALLEGRO_THREAD *game_thread = NULL;
 
 static float sleep_time = 1.0;
 static const long ONE_HOUR = 3600;
+static const long SIX_HOURS = ONE_HOUR * 6;
 
 static char current_time_buf[128];
 
@@ -28,8 +29,8 @@ bool Game_TryIncrement(long int dt)
 
     if (dt == 2) {
 
-        Simulation_SimulateStep(atomic_load(&game_time) + ONE_HOUR);
-        atomic_store(&game_time, atomic_load(&game_time) + ONE_HOUR);
+        Simulation_SimulateStep(atomic_load(&game_time) + SIX_HOURS);
+        atomic_store(&game_time, atomic_load(&game_time) + SIX_HOURS);
         return true;
 
     }

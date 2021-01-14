@@ -19,6 +19,7 @@
 #include "simulation_event.h"
 
 static const int HOUR = 3600;
+static const int SIX_HOURS = HOUR * 6;
 static int end_year   = 0;
 
 static atomic_bool simulation_finished;
@@ -227,7 +228,7 @@ float Simulation_GetNextValue(time_t t, size_t idx)
         if (t < modifiers_temp[i].played_time || t > modifiers_temp[i].played_time + modifiers_temp[i].modifier_length * 86400)
             continue;
         
-        value = value + value * modifiers_temp[i].price_modifier / ((float)modifiers_temp[i].modifier_length * 24.0f);
+        value = value + value * modifiers_temp[i].price_modifier / ((float)modifiers_temp[i].modifier_length * 4.0f);
 
     }
 
@@ -278,7 +279,7 @@ void Simulation_SimulateUntil(time_t t)
     while (temp < t) {
 
         Simulation_SimulateStep(temp);
-        temp += HOUR;
+        temp += SIX_HOURS;
 
     }
 
