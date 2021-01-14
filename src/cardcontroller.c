@@ -161,7 +161,7 @@ void CardController_HoveringAnimationController(int card_num)
 void CardController_CardAnimationCheck()
 {
 
-	for(int i = 0; i < 5; i++)
+	for (int i = 0; i < 5; i++)
 		CardController_HoveringAnimationController(i);
 
 }
@@ -215,6 +215,7 @@ void CardController_CardFive_CB()
 
 	if(card_animating)
 		return;
+
 	DBCards_ApplyCard(player_cards[4].card_id, GetCompanyIdViewing());
 	played_card = 4;
 
