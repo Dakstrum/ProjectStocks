@@ -189,7 +189,7 @@ void AddCardToPlayer(uint32_t player_id, uint32_t card_id)
 void DBCards_ApplyCard(uint32_t card_id, uint32_t company_id)
 {
 
-    char *delete_query = "DELETE FROM Player_Cards WHERE PlayerCardId = (SELECT PC.PlayerCardId FROM PlayerCards PC WHERE PC.PlayerId = %d AND PC.CardId = %d LIMIT 1);";
+    char *delete_query = "UPDATE Player_Cards SET Played = 1 WHERE PlayerCardId = (SELECT PC.PlayerCardId FROM Player_Cards PC WHERE PC.PlayerId = %d AND PC.CardId = %d LIMIT 1);";
     char *insert_query = "INSERT INTO Player_CardsPlayed (CardId, SaveId, CompanyId, PlayedTime) VALUES (%d, %d, %d, %d)";
 
     PlayerCard *temp = player_cards->elements;
@@ -199,12 +199,11 @@ void DBCards_ApplyCard(uint32_t card_id, uint32_t company_id)
         Queue_PushMessage(card_queue, GetFormattedPointer(delete_query, temp[i].player_id, temp[i].card_id));
         Queue_PushMessage(card_queue, GetFormattedPointer(insert_query, temp[i].card_id, Game_GetSaveId(), company_id, Game_GetGameTime()));
 
-        if(temp[i].card_id == card_id)
-        {
-            LogF("Delete: %s", GetFormattedPointer(delete_query, temp[i].player_id, temp[i].card_id));
-            LogF("dbcards i: %d", i);
+        if(temp[i].card_id == card_id) {
+
             Vector_Remove(player_cards, i);
             break;
+            
         }
         
     }
@@ -320,7 +319,7 @@ void DBCards_Init()
 
     DBCards_InitVectors();
     ExecuteQueryF(&Card_Callback, NULL, "SELECT C.CardId, C.CardName, C.CardDesc, C.CardPath, C.PriceModifier, C.ModifierLength FROM System_Cards C");
-    ExecuteQueryF(&PlayerCard_Callback, NULL, "SELECT C.PlayerCardId, C.PlayerId, C.CardId FROM Player_Cards C WHERE SaveId = %d", Game_GetSaveId());
+    ExecuteQueryF(&PlayerCard_Callback, NULL, "SELECT C.PlayerCardId, C.PlayerId, C.CardId FROM Player_Cards C WHERE SaveId = %d AND Played = 0", Game_GetSaveId());
     ExecuteQueryF(&DBCards_PlayedCardsCallback, NULL, played_cards_query, Game_GetSaveId());
 
 }
