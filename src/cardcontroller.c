@@ -6,17 +6,17 @@
 #include "dbcard.h"
 #include "menupersistence.h"
 
-DrawObject *cardone_button   = NULL;
-DrawObject *cardtwo_button   = NULL;
-DrawObject *cardthree_button = NULL;
-DrawObject *cardfour_button  = NULL;
-DrawObject *cardfive_button  = NULL;
+static DrawObject *cardone_button   = NULL;
+static DrawObject *cardtwo_button   = NULL;
+static DrawObject *cardthree_button = NULL;
+static DrawObject *cardfour_button  = NULL;
+static DrawObject *cardfive_button  = NULL;
 
-DrawObject *card_buttons[5];
-PlayerCard *player_cards;
+static DrawObject *card_buttons[5];
+static PlayerCard *player_cards = NULL;
 
-int played_card     = -1;
-int card_animating  = 0;
+static int played_card    = -1;
+static int card_animating = 0;
 
 void CardController_AnimateCardUp(int card_num);
 int GetCenteredPoint(int i);
@@ -27,6 +27,16 @@ void CardController_CardThree_CB();
 void CardController_CardFour_CB();
 void CardController_CardFive_CB();
 
+static const void *card_CBs[5] = 
+{
+	CardController_CardOne_CB, 
+	CardController_CardTwo_CB, 
+	CardController_CardThree_CB, 
+	CardController_CardFour_CB, 
+	CardController_CardFive_CB
+};
+
+
 void CardController_InitCard()
 {
 	card_buttons[0] = cardone_button;
@@ -35,11 +45,9 @@ void CardController_InitCard()
 	card_buttons[3] = cardfour_button;
 	card_buttons[4] = cardfive_button;
 
-	void *card_CBs[5] = {CardController_CardOne_CB, CardController_CardTwo_CB, CardController_CardThree_CB, CardController_CardFour_CB, CardController_CardFive_CB};
-	player_cards      = GetAllPlayerCards();
-	
-	for(int i = 0; i < GetNumOfPlayerCards(); i++)
-	{
+	player_cards = GetAllPlayerCards();
+
+	for (int i = 0; i < GetNumOfPlayerCards(); i++) {
 
 		card_buttons[i]         = CreateNewDrawObject();
 		card_buttons[i]->type   = BUTTON;
@@ -115,24 +123,21 @@ void CardController_AnimateCardToCenterOfGraph(int card_num)
 
 }
 
-
-
 void CardController_HoveringAnimationController(int card_num)
 {
 
-	if(card_buttons[card_num] == NULL)
+	if (card_buttons[card_num] == NULL)
 		return;
 
-	if(played_card == card_num)
-	{
+	if (played_card == card_num) {
+
 		card_animating = 1;
 		Animate_MoveDrawObject(card_buttons[card_num], 800, 300, 500);
 
-		if(card_buttons[card_num]->x == 800)
-		{
+		if(card_buttons[card_num]->x == 800) {
 
-			for(int i = 0; i < 5; i++)
-				if(card_buttons[i])
+			for (int i = 0; i < 5; i++)
+				if (card_buttons[i])
 					RemoveDrawObject(card_buttons[i]);
 
 			CardController_InitCard();
@@ -140,20 +145,16 @@ void CardController_HoveringAnimationController(int card_num)
 			card_animating = 0;
 
 		}
-	}
 
-	
-	else
-	{
+	} else {
 		
 		if (HoveringOverBitmap(card_buttons[card_num]) == 1)
 			CardController_AnimateCardUp(card_num);
 
-		else if(HoveringOverBitmap(card_buttons[card_num]) == 0 && card_buttons[card_num]->y < 1009)
+		else if (HoveringOverBitmap(card_buttons[card_num]) == 0 && card_buttons[card_num]->y < 1009)
 			CardController_AnimateCardDown(card_num);
+
 	}
-
-
 
 }
 
