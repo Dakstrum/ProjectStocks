@@ -105,7 +105,7 @@ void LoadSaveMenu_LoadSave_CB()
     }
 
     PlayerSave *temp = (PlayerSave *)saves->elements;
-    LoadSave(temp[current_button_idx].save_id, temp[current_button_idx].save_player_id);
+    LoadSave(temp[current_button_idx].save_id);
     SaveMenu_StartGame();
 
 }
@@ -155,7 +155,7 @@ void NewSaveMenu_CreateSave_CB()
         DisplayPopupOnDrawLayer("Plyaer Name is Necessary", "assets/images/generalpurposemenus/popups/yellowpopup.png");
         return;
     }
-    CreateNewSave(save_name_in_text_box, player_name_in_text_box);
+    Account_CreateSave(save_name_in_text_box, player_name_in_text_box);
     SaveMenu_StartGame();
     
 

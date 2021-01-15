@@ -349,7 +349,6 @@ void InitVectors()
 void InitializeAccountInformation()
 {
 
-
     InitVectors();
     InitPlayerIds();
     InitOwnedStocks();

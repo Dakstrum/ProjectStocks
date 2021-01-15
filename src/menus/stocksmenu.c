@@ -98,7 +98,7 @@ void StocksMenu_RenderLogic()
         CardController_CardAnimationCheck();
 
         SetTextContent(stock_change_textobject, "%.2f", Simulation_GetStockPriceDiff(GetCompanyNameViewing()));
-        SetTextContent(player_money_textobject, "%.2f", Account_GetMoney());
+        SetTextContent(player_money_textobject, "%.2f", Account_GetMoney(Account_GetPlayerId()));
         SetTextContent(player_date_textobject,  "%s",   Game_GetDate());
         SetTextContent(stock_price_textobject,  "%.2f", Simulation_GetLastStockPrice(GetCompanyNameViewing()));
 
@@ -142,7 +142,7 @@ void StocksMenu_InitText()
     stock_change_textobject  = GetJSONObjectAndAddToDrawLayer("StocksMenuPriceChangeTextObject");
 
     SetTextContent(stock_change_textobject,  "%.2f", Simulation_GetStockPriceDiff(GetCompanyNameViewing()));
-    SetTextContent(player_money_textobject,  "%.2f", Account_GetMoney());
+    SetTextContent(player_money_textobject,  "%.2f", Account_GetMoney(Account_GetPlayerId()));
     SetTextContent(stock_price_textobject,   "%.2f", Simulation_GetLastStockPrice(GetCompanyNameViewing()));
 
 }
@@ -324,7 +324,7 @@ void StocksMenu_SellMenu_Sell_BCB()
         StocksMenu_SellMenu_BCB();
         sprintf(str, "Sold %d of %s", amount_in_text_box, GetCompanyNameViewing());
         DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
-        Account_AddMoney(amount_in_text_box * current_stock_price);
+        Account_AddMoney(Account_GetPlayerId(), amount_in_text_box * current_stock_price);
 
     } else {
 
@@ -344,7 +344,7 @@ void StocksMenu_BuyMenu_Buy_BCB()
     float current_stock_price = Simulation_GetLastStockPrice(selected_company_name);
 
     char str[50];
-    if (Account_CanMakeTransaction(amount_in_text_box * current_stock_price)) {
+    if (Account_CanMakeTransaction(Account_GetPlayerId(), amount_in_text_box * current_stock_price)) {
 
         AttemptToAddFromCurrentStock(Account_GetPlayerId(), GetCompanyNameViewing(), amount_in_text_box, current_stock_price);
         StocksMenu_BuyMenu_BCB();
@@ -352,7 +352,7 @@ void StocksMenu_BuyMenu_Buy_BCB()
         sprintf(str, "Bought %d shares of %s", amount_in_text_box, GetCompanyNameViewing());
         DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
 
-        Account_SubtractMoney(amount_in_text_box * current_stock_price);
+        Account_SubtractMoney(Account_GetPlayerId(), amount_in_text_box * current_stock_price);
 
     } 
     else {

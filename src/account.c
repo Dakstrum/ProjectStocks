@@ -18,13 +18,8 @@
 #include "timer.h"
 #include "game.h"
 
-static atomic_int  player_id;
-
-static float account_money = 0;
 static int in_game = 0;
-
-static char current_player_name[64];
-static char current_save_name[64];
+static Save current_save;
 
 
 void Account_SetInGameStatus(int status)
@@ -41,136 +36,134 @@ int Account_GetInGameStatus()
 
 }
 
-bool Account_CanMakeTransaction(float amount) 
+Player *Account_GetPlayer(uint32_t player_id)
 {
 
-    return account_money - amount >= 0.0;
+    Player *players = current_save.players->elements;
+    for (size_t i = 0; i < current_save.players->num_elements;i++)
+        if (players[i].id == player_id)
+            return &players[i];
 
 }
 
-void Account_AddMoney(float amount)
+bool Account_CanMakeTransaction(uint32_t player_id, float amount) 
 {
 
-    account_money += amount;
+    Player *player = Account_GetPlayer(player_id);
+    return player->money - amount >= 0.0;
 
 }
 
-void Account_SubtractMoney(float amount)
+void Account_AddMoney(uint32_t player_id, float amount)
 {
 
-    account_money -= amount;
+    Player *player = Account_GetPlayer(player_id);
+    player->money += amount;
 
 }
 
-void Account_SetMoney(float amount)
+void Account_SubtractMoney(uint32_t player_id, float amount)
 {
 
-    account_money = amount;
+    Player *player = Account_GetPlayer(player_id);
+    player->money -= amount;
 
 }
 
-float Account_GetMoney()
+void Account_SetMoney(uint32_t player_id, float amount)
 {
 
-    return account_money;
+    Player *player = Account_GetPlayer(player_id);
+    player->money  = amount;
 
 }
 
-int Account_GetPlayerId()
+float Account_GetMoney(uint32_t player_id)
 {
 
-    return atomic_load(&player_id);
+    Player *player = Account_GetPlayer(player_id);
+    return player->money;
+
+}
+
+char *Account_GetPlayerName(uint32_t player_id)
+{
+
+    Player *player = Account_GetPlayer(player_id);
+    return player->name;
+    
+}
+
+uint32_t Account_GetPlayerId()
+{
+
+    Player *players = current_save.players->elements;
+    for (size_t i = 0; i < current_save.players->num_elements;i++)
+        if (players[i].save_owner)
+            return players[i].id;
+
 
 }
 
 void Account_Init() 
 {
 
+    current_save.players = NULL;
 
 }
 
-void CreateNewSaveEntries(char *save_name, char *player_name) 
+int Account_CreateSaveEntries(char *save_name, char *player_name) 
 {
-    int new_save_id = InsertSaveEntry(save_name, Game_GetSeed());
-    
-    if (new_save_id == -1) {
 
-        Log("Unable to create save");
-        return;
+    static const float STARTING_MONEY = 15000.0;
 
-    }
-    Game_SetSaveId(new_save_id);
+    int save_id = InsertSaveEntry(save_name, Game_GetSeed());
 
-    atomic_store(&player_id, InsertPlayerEntry(new_save_id, player_name, account_money, 1));
-
-    if (atomic_load(&player_id) == -1)
-        Log("Unable to create player");
+    InsertPlayerEntry(save_id, player_name, STARTING_MONEY, 1);
 
     for (size_t i = 0; i < 3;i++)
-        InsertAIPlayerEntry(new_save_id);
+        InsertAIPlayerEntry(save_id);
+
+    return save_id;
 
 }
 
-
-void CreateNewSave(char *save_name, char *player_name)
-{
-
-    Game_Reset();
-
-    account_money = 15000.0;
-    strncpy(current_save_name, save_name, 32);
-    strncpy(current_player_name, player_name, 32);
-
-    current_save_name[31]   = '\0';
-    current_player_name[31] = '\0';
-
-    Game_SetSeed(time(NULL));
-    Game_SetGameTime(0);
-    CreateNewSaveEntries(save_name, player_name);
-
-    InitializeAccountInformation();
-    DBCards_Init();
-
-    Game_Init();
-
-}
-
-void LoadSave(int load_save_id, int save_player_id)
+void LoadSave(int load_save_id)
 {
 
     Game_Reset();
     Game_SetSaveId(load_save_id);
-    atomic_store(&player_id, save_player_id);
 
-    PlayerSave save = GetSaveData(load_save_id);
+    if (current_save.players != NULL)
+        Vector_Delete(current_save.players);
 
-    strncpy(current_save_name, save.save_name, 32);
-    strncpy(current_player_name, save.save_player_name, 32);
+    current_save = GetSaveData(load_save_id);
 
-    Game_SetSeed(save.game_seed);
-    Game_SetGameTime(save.time_spent_in_game);
-    account_money = save.save_player_money;
+    Game_SetSeed(current_save.game_seed);
+    Game_SetGameTime(current_save.time_spent_in_game);
 
     InitializeAccountInformation();
     DBCards_Init();
-
     Game_Init();
+
+}
+
+void Account_CreateSave(char *save_name, char *player_name)
+{
+
+    Game_Reset();
+    Game_SetSeed(time(NULL));
+    Game_SetGameTime(0);
+    LoadSave(Account_CreateSaveEntries(save_name, player_name));
 
 }
 
 void Account_StorePlayerData() 
 {
 
-    PlayerSave save;
-    save.save_name          = current_save_name;
-    save.save_player_name   = current_player_name;
-    save.time_spent_in_game = Game_GetGameTime();
-    save.game_seed          = Game_GetSeed();
-    save.save_player_id     = player_id;
-    save.save_id            = Game_GetSaveId();
-    save.save_player_money  = account_money;
+    current_save.time_spent_in_game = Game_GetGameTime();
 
-    SavePlayerData(save);
+    SavePlayerData(current_save);
     SaveTransactions();
 
 }
@@ -178,13 +171,6 @@ void Account_StorePlayerData()
 char *Account_GetSaveName() 
 {
 
-    return current_save_name;
+    return current_save.save_name;
 
-}
-
-char *Account_GetPlayerName()
-{
-
-    return current_player_name;
-    
 }

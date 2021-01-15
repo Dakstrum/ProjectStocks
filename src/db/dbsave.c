@@ -14,7 +14,7 @@ int GetSaveIdCallback(void *save_id, int argc, char **argv, char **col_name)
 {
 
     if (argc > 0)
-        *((int *)save_id) = (unsigned int)atoi(argv[0]);
+        *((int *)save_id) = atoi(argv[0]);
 
     return 0;
 
@@ -73,7 +73,7 @@ int GetSaveSeedCallback(void *seed, int argc, char **argv, char **col_name)
 {
 
     if (argc > 0)
-        *((unsigned int *)seed) = (unsigned int)atoi(argv[0]);
+        *((uint32_t *)seed) = (uint32_t)atoi(argv[0]);
 
     return 0;
 
@@ -155,8 +155,6 @@ int GetAllSaves_Callback(void *saves, int argc, char **argv, char **col_name)
     save.game_seed          = atoi(argv[3]);
     save.save_player_id     = atoi(argv[4]);
     save.save_player_money  = atof(argv[6]);
-    save.save_name          = malloc(32);
-    save.save_player_name   = malloc(32);
 
     strncpy(save.save_name, argv[1], 32);
     strncpy(save.save_player_name, argv[5], 32);
@@ -189,43 +187,63 @@ int GetSaveData_Callback(void *save, int argc, char **argv, char **col_name)
 
     PlayerSave *temp = (PlayerSave *)save;
 
+    strncpy(temp->save_name, argv[1], 32);
+    temp->save_name[31] = '\0';
+
     temp->save_id            = atoi(argv[0]);
     temp->time_spent_in_game = atoi(argv[2]);
     temp->game_seed          = atoi(argv[3]);
-    temp->save_player_id     = atoi(argv[4]);
-    temp->save_player_money  = atof(argv[6]);
-    temp->save_name          = malloc(32);
-    temp->save_player_name   = malloc(32);
 
-    strncpy(temp->save_name, argv[1], 32);
-    strncpy(temp->save_player_name, argv[5], 32);
+    return 0;
 
-    temp->save_name[31]        = '\0';
-    temp->save_player_name[31] = '\0';
+}
+
+int GetPlayerSaveData_Callback(void *player, int argc, char **argv, char **col_name) 
+{
+
+    if (argc == 0)
+        return 0;
+
+    Player temp;
+    temp.id = atoi(argv[0]);
+
+    strncpy(temp.name, argv[1], 32);
+    temp.name[31] = '\0';
+
+    temp.money = atof(argv[2]);
+    temp.save_owner = atoi(argv[3]) == 1;
+
+    Vector_PushBack(player, &temp);
 
     return 0;
 
 }
 
 
-PlayerSave GetSaveData(int save_id)
+Save GetSaveData(int save_id)
 {
 
-    PlayerSave save;
-    char *query = "SELECT S.SaveId, S.SaveName, S.TimeSpentInGame, S.RandomSeed, P.PlayerId, P.PlayerName, P.Money FROM Game_Saves S "
-                  "INNER JOIN Game_Players P ON P.SaveId = S.SaveId "
-                  "WHERE P.SaveOwner = 1 AND S.SaveId = %d";
-    ExecuteQueryF(&GetSaveData_Callback, &save, query, save_id);
+    Save save;
+    save.players = Vector_Create(sizeof(Player), 4);
+
+    char *save_query = "SELECT S.SaveId, S.SaveName, S.TimeSpentInGame, S.RandomSeed FROM Game_Saves S WHERE S.SaveId = %d";
+    ExecuteQueryF(&GetSaveData_Callback, &save, save_query, save_id);
+
+    char *player_query = "SELECT P.PlayerId, P.PlayerName, P.Money, P.SaveOwner FROM Game_Players P WHERE P.SaveId = %d";
+    ExecuteQueryF(&GetPlayerSaveData_Callback, save.players, player_query, save_id);
+
     return save;
 
 }
 
-void SavePlayerData(PlayerSave save)
+void SavePlayerData(Save save)
 {
 
-    char *query = "UPDATE Game_Saves SET TimeSpentInGame = %d WHERE SaveId = %d;"
-                  "UPDATE Game_Players SET Money = %f WHERE PlayerId = %d;";
+    ExecuteQueryF(NULL, NULL, "UPDATE Game_Saves SET TimeSpentInGame = %d WHERE SaveId = %d;", save.time_spent_in_game, save.save_id);
 
-    ExecuteQueryF(NULL, NULL, query, save.time_spent_in_game, save.save_id, save.save_player_money, save.save_player_id);
+    Player *players = save.players->elements;
+    for (size_t i = 0; i < save.players->num_elements;i++)
+        ExecuteQueryF(NULL, NULL, "UPDATE Game_Players SET Money = %f WHERE PlayerId = %d;", players[i].money, players[i].id);
+
 
 }
