@@ -185,7 +185,7 @@ int GetSaveData_Callback(void *save, int argc, char **argv, char **col_name)
     if (argc == 0)
         return 0;
 
-    PlayerSave *temp = (PlayerSave *)save;
+    Save *temp = (Save *)save;
 
     strncpy(temp->save_name, argv[1], 32);
     temp->save_name[31] = '\0';
