@@ -18,7 +18,7 @@
 #include "stocksmenu.h"
 #include "newsmenu.h"
 #include "accountmenu.h"
-#include "cardsmenu.h"
+#include "playersmenu.h"
 #include "window.h"
 #include "draw.h"
 
@@ -121,10 +121,10 @@ void SwitchToRenderingAccountMenu()
 
 }
 
-void SwitchToRenderingCardsMenu()
+void SwitchToRenderingPlayersMenu()
 {
 
-    CardsMenu_Init();
-    RenderLogic = &CardsMenu_RenderLogic;
+    PlayersMenu_Init();
+    RenderLogic = &PlayersMenu_RenderLogic;
 
 }

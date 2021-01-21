@@ -16,7 +16,7 @@ void SwitchToLoadingScreen();
 void SwitchToRenderingStocksMenu();
 void SwitchToRenderingNewsMenu();
 void SwitchToRenderingAccountMenu();
-void SwitchToRenderingCardsMenu();
+void SwitchToRenderingPlayersMenu();
 
 void HandleRendering(double dt);
 void HandleWindowEvents(ALLEGRO_EVENT event);

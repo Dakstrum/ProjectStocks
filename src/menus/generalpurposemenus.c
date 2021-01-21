@@ -13,7 +13,7 @@
 #include "stocksmenu.h"
 #include "newsmenu.h"
 #include "accountmenu.h"
-#include "cardsmenu.h"
+#include "playersmenu.h"
 #include "mainmenu.h"
 #include "optionsmenu.h"
 #include "savemenus.h"
@@ -87,11 +87,11 @@ void GeneralPurposeMenus_InitAccountMenu_CB()
     
 }
 
-void GeneralPurposeMenus_InitCardsMenu_CB()
+void GeneralPurposeMenus_InitPlayersMenu_CB()
 {
     
     ClearCurrentDrawLayer();
-    SwitchToRenderingCardsMenu();
+    SwitchToRenderingPlayersMenu();
     
 }
 
@@ -140,7 +140,7 @@ void GeneralPurposeMenus_CleanAllMenus()
 
     AccountMenu_Clear();
     SaveMenus_Clean();
-    CardsMenu_Clean();
+    PlayersMenu_Clean();
     GeneralPurposeMenus_CleanSpeedButtons();
     OptionsMenu_Clean();
     PauseMenu_Clean();

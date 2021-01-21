@@ -19,7 +19,7 @@ int played_card     = -1;
 int card_animating  = 0;
 
 void CardController_AnimateCardUp(int card_num);
-int GetCenteredPoint(int i);
+int GetCenteredPointForCard(int i);
 
 void CardController_CardOne_CB();
 void CardController_CardTwo_CB();
@@ -43,7 +43,7 @@ void CardController_InitCard()
 
 		card_buttons[i]         = CreateNewDrawObject();
 		card_buttons[i]->type   = BUTTON;
-        card_buttons[i]->x      = GetCenteredPoint(i);
+        card_buttons[i]->x      = GetCenteredPointForCard(i);
         card_buttons[i]->y      = 1009;
         card_buttons[i]->width  = 165;
         card_buttons[i]->height = 230;
@@ -57,7 +57,7 @@ void CardController_InitCard()
 	
 }
 
-int GetCenteredPoint(int i)
+int GetCenteredPointForCard(int i)
 {
 	int centered_card_x = 770;
 
