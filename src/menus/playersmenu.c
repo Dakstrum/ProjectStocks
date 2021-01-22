@@ -37,9 +37,9 @@ static DrawObject *player_bitmap    = NULL;
 
 static int current_button_idx = -1;
 
+int num_of_players = 3; // TEMP//This will be replaced with a get function when AI is figured out.
 
 
-DrawObject *player_boxes[3];
 DrawObject *player_names[3];
 
 void PlayersMenu_RenderLogic();
@@ -51,6 +51,10 @@ void PlayersMenu_InitPlayerBoxes();
 void PlayersMenu_InitPlayerNames();
 int GetCenteredPointForPlayerBox(int i);
 int GetCenteredPointForPlayerNameText(int i);
+int PlayerMenu_GetCenteredPointForPlayerBoxObject(int i, int centered_point, DrawObject *drawobject_array[]);
+
+void PlayersMenu_InitPlayerNetworthLabel();
+void PlayersMenu_InitPlayerAvailableCardsLabel();
 
 
 void PlayersMenu_Init() 
@@ -68,6 +72,8 @@ void PlayersMenu_Init()
     PlayersMenu_InitTextAndButtons();
     PlayersMenu_InitPlayerBoxes();
     PlayersMenu_InitPlayerNames();
+    PlayersMenu_InitPlayerNetworthLabel();
+    PlayersMenu_InitPlayerAvailableCardsLabel();
 
 }
 
@@ -89,24 +95,18 @@ void PlayersMenu_InitTextAndButtons()
 }
 
 void PlayersMenu_InitPlayerBoxes()
-{
+{ 
+    
 
-    int num_of_players = 1; //This will be replaced with a get function when AI is figured out.
-
-    DrawObject *playerone_box   = NULL;
-    DrawObject *playertwo_box   = NULL;
-    DrawObject *playerthree_box = NULL;
-
-    player_boxes[0] = playerone_box;
-    player_boxes[1] = playertwo_box;
-    player_boxes[2] = playerthree_box;
+    DrawObject *playerone_box = NULL, *playertwo_box = NULL, *playerthree_box = NULL;
+    DrawObject *player_boxes[3] = {playerone_box, playertwo_box, playerthree_box};
 
     for(int i = 0; i < num_of_players; i++)
     {
 
         player_boxes[i]         = CreateNewDrawObject();
         player_boxes[i]->type   = MENU;
-        player_boxes[i]->x      = GetCenteredPointForPlayerBox(i);
+        player_boxes[i]->x      = PlayerMenu_GetCenteredPointForPlayerBoxObject(i, 710, player_boxes);
         player_boxes[i]->y      = 362;
         player_boxes[i]->width  = 564;
         player_boxes[i]->height = 357;
@@ -119,54 +119,23 @@ void PlayersMenu_InitPlayerBoxes()
 
 }
 
-int GetCenteredPointForPlayerBox(int i)
-{
-    int centered_box_x = 710;
-
-    switch(i) {
-
-        case 0 :
-            return centered_box_x;
-
-        case 1 :
-            player_boxes[0]->x = player_boxes[0]->x + 300;
-            return (centered_box_x - 330);
-
-        case 2 :
-            player_boxes[0]->x = player_boxes[0]->x + 300;
-            player_boxes[1]->x = player_boxes[1]->x + 300;
-            return (centered_box_x - (330 * 2));
-
-
-    }
-    
-    return 0;
-
-}
 
 void PlayersMenu_InitPlayerNames()
 {
 
-    int num_of_players = 1; //This will be replaced with a get function when AI is figured out.
-
-    DrawObject *playerone_name_text   = NULL;
-    DrawObject *playertwo_name_text   = NULL;
-    DrawObject *playerthree_name_text = NULL;
-
-    player_names[0] = playerone_name_text;
-    player_names[1] = playertwo_name_text;
-    player_names[2] = playerthree_name_text;
+    DrawObject *playerone_name_text = NULL, *playertwo_name_text = NULL, *playerthree_name_text = NULL;
+    DrawObject *player_names[3] = {playerone_name_text, playertwo_name_text, playerthree_name_text};
 
     for(int i = 0; i < num_of_players; i++)
     {
 
         player_names[i]                   = Text_Create();
         player_names[i]->width            = 564;
-        player_names[i]->x                = GetCenteredPointForPlayerNameText(i);
+        player_names[i]->x                = PlayerMenu_GetCenteredPointForPlayerBoxObject(i, 738, player_names);
         player_names[i]->y                = 362;
-        //player_names[i]->text.bitmap_path = "assets/images/playersmenu/player-box.png";
         
         player_names[i]->text.content   = "Kevin Shmider";
+        player_names[i]->text.font_size = 45;
 
         AddObjectToDrawLayer(player_names[i]);
     
@@ -174,23 +143,68 @@ void PlayersMenu_InitPlayerNames()
 
 }
 
-int GetCenteredPointForPlayerNameText(int i)
+void PlayersMenu_InitPlayerNetworthLabel()
 {
-    int centered_text_x = 738;
+
+    DrawObject *playerone_networth_label_text = NULL, *playertwo_networth_label_text = NULL, *playerthree_networth_label_text = NULL;
+    DrawObject *player_networth_label[3] = {playerone_networth_label_text, playertwo_networth_label_text, playerthree_networth_label_text};
+
+    for(int i = 0; i < num_of_players; i++)
+    {
+
+        player_networth_label[i]                   = Text_Create();
+        player_networth_label[i]->width            = 564;
+        player_networth_label[i]->x                = PlayerMenu_GetCenteredPointForPlayerBoxObject(i, 738, player_networth_label);
+        player_networth_label[i]->y                = 490;
+        
+        player_networth_label[i]->text.content   = "Net Worth:";
+        player_networth_label[i]->text.font_size = 40;
+
+        AddObjectToDrawLayer(player_networth_label[i]);
+    
+    }
+
+}
+
+void PlayersMenu_InitPlayerAvailableCardsLabel()
+{
+
+    DrawObject *playerone_available_cards_label_text = NULL, *playertwo_available_cards_label_text = NULL, *playerthree_available_cards_label_text = NULL;
+    DrawObject *player_available_cards_label[3] = {playerone_available_cards_label_text, playertwo_available_cards_label_text, playerthree_available_cards_label_text};
+
+    for(int i = 0; i < num_of_players; i++)
+    {
+
+        player_available_cards_label[i]                   = Text_Create();
+        player_available_cards_label[i]->width            = 564;
+        player_available_cards_label[i]->x                = PlayerMenu_GetCenteredPointForPlayerBoxObject(i, 738, player_available_cards_label);
+        player_available_cards_label[i]->y                = 534;
+        
+        player_available_cards_label[i]->text.content   = "Available Cards:";
+        player_available_cards_label[i]->text.font_size = 40;
+
+        AddObjectToDrawLayer(player_available_cards_label[i]);
+    
+    }
+
+}
+
+int PlayerMenu_GetCenteredPointForPlayerBoxObject(int i, int centered_point, DrawObject *drawobject_array[])
+{
 
     switch(i) {
 
         case 0 :
-            return centered_text_x;
+            return centered_point;
 
         case 1 :
-            player_names[0]->x = player_names[0]->x + 300;
-            return (centered_text_x - 330);
+            drawobject_array[0]->x = drawobject_array[0]->x + 300;
+            return (centered_point - 330);
 
         case 2 :
-            player_names[0]->x = player_names[0]->x + 300;
-            player_names[1]->x = player_names[1]->x + 300;
-            return (centered_text_x - (330 * 2));
+            drawobject_array[0]->x = drawobject_array[0]->x + 300;
+            drawobject_array[1]->x = drawobject_array[1]->x + 300;
+            return (centered_point - (330 * 2));
 
 
     }
