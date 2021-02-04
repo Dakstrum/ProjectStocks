@@ -144,8 +144,6 @@ int PlayerCard_Callback(void *card, int argc, char **argv, char **col_name)
     temp.player_id      = atoi(argv[1]);
     temp.card_id        = atoi(argv[2]);
 
-    LogF("card_player_id = %u", temp.player_id);
-
     Vector_PushBack(player_cards, &temp);
 
     return 0;
