@@ -44,7 +44,6 @@ void CardController_Reset()
 		}	
 	}
 
-
 	if (player_cards != NULL)
 		Vector_Delete(player_cards);
 
