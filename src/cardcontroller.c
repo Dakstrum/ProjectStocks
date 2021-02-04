@@ -32,19 +32,30 @@ static const void *card_CBs[5] =
 	CardController_CardFive_CB
 };
 
-
-void CardController_InitCard()
+void CardController_Reset()
 {
+	for (size_t i = 0; i < 5; i++) {
+
+		if (card_buttons[i]) {
+
+			RemoveDrawObject(card_buttons[i]);
+			card_buttons[i] = NULL;
+
+		}	
+	}
+
 
 	if (player_cards != NULL)
 		Vector_Delete(player_cards);
 
-	for (size_t i = 0;i < 5;i++)
-		card_buttons[i] = NULL;
+}
+
+void CardController_Set()
+{
 
 	player_cards = dbcard_get_player_cards(Account_GetPlayerId());
+	LogF("PlayerId = %u", Account_GetPlayerId());
 	PlayerCard *player_cards_temp = player_cards->elements;
-
 	assert(player_cards->num_elements < 6);
 	for (size_t i = 0; i < player_cards->num_elements; i++) {
 
@@ -61,6 +72,14 @@ void CardController_InitCard()
 		AddObjectToDrawLayer(card_buttons[i]);
 	
 	}
+	
+}
+
+void CardController_InitCard()
+{
+
+	CardController_Reset();
+	CardController_Set();
 	
 }
 
@@ -134,10 +153,6 @@ void CardController_HoveringAnimationController(int card_num)
 		Animate_MoveDrawObject(card_buttons[card_num], 800, 300, 500);
 
 		if (card_buttons[card_num]->x == 800) {
-
-			for (int i = 0; i < 5; i++)
-				if (card_buttons[i])
-					RemoveDrawObject(card_buttons[i]);
 
 			CardController_InitCard();
 			played_card    = -1;

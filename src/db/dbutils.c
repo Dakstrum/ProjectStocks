@@ -52,7 +52,7 @@ char *LoadSqlFile(const char *file)
 
     if (!DoesFileExist(file)) {
 
-        LogF("%s file does not exist", file);
+        LogFNoQueue("%s file does not exist", file);
         return NULL;
 
     }
