@@ -1,6 +1,8 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
 
+#include "vector.h"
+
 void Account_Init();
 void Account_CreateSave(char *save_name, char *player_name);
 void LoadSave(int load_save_id);
@@ -18,5 +20,6 @@ float Account_GetMoney(uint32_t player_id);
 
 char *Account_GetSaveName();
 char *Account_GetPlayerName(uint32_t player_id);
+Vector *Account_GetPlayers();
 
 #endif

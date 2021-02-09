@@ -40,7 +40,7 @@ void SetUpDB()
 
     if (error != NULL)
         LogF("SQL ERROR %s when creating database/tables", error);
-
+ 
     sqlite3_close(db);
 
 }

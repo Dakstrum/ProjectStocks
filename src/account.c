@@ -94,6 +94,13 @@ char *Account_GetPlayerName(uint32_t player_id)
     
 }
 
+Vector *Account_GetPlayers()
+{
+
+    return current_save.players;
+
+}
+
 uint32_t Account_GetPlayerId()
 {
 
