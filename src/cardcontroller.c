@@ -4,9 +4,11 @@
 #include "log.h"
 #include "controls.h"
 #include "dbcard.h"
+#include "game.h"
 #include "account.h"
 #include "vector.h"
 #include "menupersistence.h"
+#include "simulation.h"
 
 static DrawObject *card_buttons[5];
 static Vector *player_cards = NULL;
@@ -208,7 +210,12 @@ void cardcontroller_card_cb(uint32_t idx)
 		return;
 
 	PlayerCard *player_cards_temp = player_cards->elements;
-	dbcard_apply_card(player_cards_temp[idx].card_id, GetCompanyIdViewing());
+	uint32_t company_id  = GetCompanyIdViewing();
+	float price_modifier = GetCardPriceModifier(player_cards_temp[idx].card_id);
+	uint32_t modifier_length = GetCardModifierLength(player_cards_temp[idx].card_id);
+
+	dbcard_apply_card(player_cards_temp[idx].card_id, company_id);
+	Simulation_ModifyCompany(company_id, Game_GetGameTime(), price_modifier, modifier_length, NULL);
 	played_card = idx;
 
 }
