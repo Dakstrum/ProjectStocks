@@ -14,6 +14,7 @@
 static atomic_long game_time;
 static atomic_uint game_seed;
 static atomic_int  save_id;
+static atomic_bool reset = false;
 
 static ALLEGRO_THREAD *game_thread = NULL;
 
@@ -22,7 +23,6 @@ static const long ONE_HOUR = 3600;
 static const long SIX_HOURS = ONE_HOUR * 6;
 
 static char current_time_buf[128];
-
 
 bool Game_TryIncrement(long int dt) 
 {
@@ -52,7 +52,7 @@ void *Game_Entry(ALLEGRO_THREAD *thread, void *arg)
     Game_InitSimulation();
 
     long int dt = 0;
-    while (!ShouldICleanUp()) {
+    while (!ShouldICleanUp() && !atomic_load(&reset)) {
 
         al_rest(sleep_time);
         if (Timer_IsPaused())
@@ -82,9 +82,13 @@ void Game_Reset()
     if (game_thread == NULL)
         return;
 
+    atomic_store(&reset, true);
+
     al_join_thread(game_thread, NULL);
     al_destroy_thread(game_thread);
     game_thread = NULL;
+
+    atomic_store(&reset, false);
 
 }
 

@@ -363,6 +363,10 @@ void Simulation_Reset()
 
 
     atomic_store(&simulation_finished, false);
+
+    if (modifiers == NULL)
+        return;
+
     Vector_Delete(modifiers);
 
     for (size_t i = 0; i < companies->num_elements;i++) {

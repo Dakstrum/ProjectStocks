@@ -89,13 +89,11 @@ void CardController_Set()
         card_buttons[i]->width  = 165;
         card_buttons[i]->height = 230;
         card_buttons[i]->button.Callback = card_CBs[i];
-
 		card_buttons[i]->asset_path = GetCardPath(player_cards_temp[i].card_id);
-
 		AddObjectToDrawLayer(card_buttons[i]);
 	
 	}
-	
+
 }
 
 void CardController_InitCard()

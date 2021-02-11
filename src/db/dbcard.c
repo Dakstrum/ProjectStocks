@@ -64,7 +64,7 @@ char* GetCardPath(unsigned int card_id)
         if (temp[i].card_id == (unsigned int)card_id)
             return temp[i].card_path;
 
-    return 0;
+    return NULL;
 
 }
 
@@ -330,6 +330,9 @@ void dbcard_init_vectors()
 
 void dbcard_init()
 {
+
+    if (card_queue != NULL)
+        Queue_Delete(card_queue);
 
     card_queue = Queue_Create();
 

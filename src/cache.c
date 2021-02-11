@@ -49,7 +49,7 @@ ALLEGRO_BITMAP *GetBitmapFromCache(char *asset_path)
     if (asset_path == NULL || strlen(asset_path) == 0)
         return NULL;
 
-    BitmapCache *cache = (BitmapCache *)bitmap_vector->elements;
+    BitmapCache *cache = bitmap_vector->elements;
 
     for (size_t i = 0; i < bitmap_vector->num_elements; i++)
         if (strcmp(asset_path, cache[i].asset_path) == 0)

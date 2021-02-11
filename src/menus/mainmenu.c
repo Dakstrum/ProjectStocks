@@ -19,6 +19,8 @@
 #include "stocksmenu.h"
 #include "linkopener.h"
 #include "account.h"
+#include "game.h"
+#include "simulation.h"
 #include "drawlayerutils.h"
 
 #include "animations.h"
@@ -46,6 +48,8 @@ void MainMenu_Init()
     MainMenu_RenderLogic();
     
     GeneralPurposeMenus_CleanAllMenus();
+    Game_Reset();
+    Simulation_Reset();
 
 }
 
