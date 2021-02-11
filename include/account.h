@@ -1,6 +1,8 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
 
+#include <stdbool.h>
+
 #include "vector.h"
 
 void Account_Init();

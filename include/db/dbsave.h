@@ -1,6 +1,8 @@
 #ifndef DBSAVE_H
 #define DBSAVE_H
 
+#include <time.h>
+#include <stdbool.h>
 #include <stdint.h>
 
 #include "vector.h"

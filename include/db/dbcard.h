@@ -1,6 +1,7 @@
 #ifndef DBCARDS_H
 #define DBCARDS_H
 
+#include <time.h>
 #include <stdint.h>
 
 #include "vector.h"
