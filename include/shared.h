@@ -49,4 +49,7 @@ uint16_t *shared_seed48(uint16_t xseed[3]);
 float shared_nrand48_random_float(uint16_t seed[3]);
 float shared_nrand48_random_sign(uint16_t seed[3]);
 
+float shared_random_float();
+float shared_random_sign();
+
 #endif

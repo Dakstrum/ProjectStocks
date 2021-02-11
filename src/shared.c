@@ -292,3 +292,17 @@ float shared_nrand48_random_sign(uint16_t seed[3])
     return shared_nrand48(seed) % 2 == 0 ? -1.0 : 1.0;
 
 }
+
+float shared_random_float()
+{
+
+    return (float)rand() / (float)INT32_MAX;
+
+}
+
+float shared_random_sign()
+{
+
+    return rand() % 2 == 0 ? -1.0 : 1.0;
+
+}
