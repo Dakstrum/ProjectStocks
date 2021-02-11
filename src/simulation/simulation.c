@@ -283,17 +283,33 @@ void Simulation_RemoveOldModifiers(time_t t)
 
 }
 
-void Simulation_SimulateStep(time_t t)
+void Simulation_PriceStep(time_t t) 
 {
 
-    Simulation_EventStep(t);
-    Simulation_CardStep(t);
     for (size_t i = 0; i < companies->num_elements;i++) {
 
         StockPrice price = {Simulation_GetNextValue(t, i), t};
         Vector_PushBack(sim_data[i], &price);
 
     }
+
+}
+
+void Simulation_SimulateStep(time_t t)
+{
+
+    Simulation_EventStep(t);
+    Simulation_CardStep(t);
+    Simulation_PriceStep(t);
+    Simulation_RemoveOldModifiers(t);
+
+}
+
+void Simulation_SimulateStep_Alt(time_t t)
+{
+
+    Simulation_EventStep(t);
+    Simulation_PriceStep(t);
     Simulation_RemoveOldModifiers(t);
 
 }
@@ -304,7 +320,7 @@ void Simulation_SimulateUntil(time_t t)
     time_t temp = 0;
     while (temp < t) {
 
-        Simulation_SimulateStep(temp);
+        Simulation_SimulateStep_Alt(temp);
         temp += SIX_HOURS;
 
     }
