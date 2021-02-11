@@ -118,14 +118,14 @@ Vector *Simulation_Event_GetLastEvents(uint32_t num_events)
 bool Simulation_Event_EventChanceCheck(uint16_t seed[3])
 {
 
-    return EVENT_CHANCE >= shared_get_random_float(seed);
+    return EVENT_CHANCE >= shared_nrand48_random_float(seed);
 
 }
 
 Event *Simulation_Event_GetRandomEvent(uint16_t seed[3])
 {
 
-    float event_type_prob = shared_get_random_float(seed);
+    float event_type_prob = shared_nrand48_random_float(seed);
     if (event_type_prob <= 0.33)
         return dbevents_get_company_event(1 + shared_nrand48(seed) % (GetNumCompanies()), seed);
     else if (event_type_prob <= 0.66)

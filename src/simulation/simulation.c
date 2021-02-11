@@ -68,7 +68,7 @@ uint32_t Simulation_CompanyIndex(char *company_name)
 float GenerateRandomPriceFluctuation(float last_price) 
 {
 
-    return shared_get_random_sign(current_seed) * shared_get_random_float(current_seed) * last_price * .0075;
+    return shared_nrand48_random_sign(current_seed) * shared_nrand48_random_float(current_seed) * last_price * .0075;
 
 }
 
