@@ -3,6 +3,6 @@
 
 #include <stdint.h>
 
-void simulation_card_step(uint16_t seed[3]);
+void simulation_card_step();
 
 #endif

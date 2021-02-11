@@ -175,7 +175,7 @@ int GetPlayerCardId(int temp_card_id)
 
 }
 
-void AddCardToPlayer(uint32_t player_id, uint32_t card_id)
+void dbcard_add_card_to_player(uint32_t player_id, uint32_t card_id)
 {
 
     static uint32_t fake_unique_id = 1000000000;

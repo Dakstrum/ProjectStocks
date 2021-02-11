@@ -4,6 +4,7 @@
 #include "manager.h"
 
 void CardController_InitCard();
+void CardController_Clean();
 
 void CardController_HoveringAnimationController(int card_num);
 void CardController_CardAnimationCheck();

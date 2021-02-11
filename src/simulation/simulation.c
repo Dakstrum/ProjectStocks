@@ -17,6 +17,7 @@
 #include "dbcompany.h"
 #include "simulation.h"
 #include "simulation_event.h"
+#include "simulation_card.h"
 
 static const int HOUR = 3600;
 static const int SIX_HOURS = HOUR * 6;
@@ -262,7 +263,7 @@ void Simulation_EventStep(time_t t)
 void Simulation_CardStep(time_t t) 
 {
 
-    
+    simulation_card_step();
 
 }
 

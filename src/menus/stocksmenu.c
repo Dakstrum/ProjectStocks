@@ -84,6 +84,7 @@ void StocksMenu_Init()
     DrawLayer_AddManager(NewsManager_Create(1400, 300));
 
     CardController_InitCard();
+    persistence_set_current_menu(STOCKS);
 
 }
 
@@ -93,8 +94,8 @@ void StocksMenu_RenderLogic()
     if (player_money_textobject == NULL)
         return;
 
-    if(stocks_menu)
-    {
+    if (stocks_menu) {
+
         CardController_CardAnimationCheck();
 
         SetTextContent(stock_change_textobject, "%.2f", Simulation_GetStockPriceDiff(GetCompanyNameViewing()));
@@ -109,16 +110,14 @@ void StocksMenu_RenderLogic()
 
     }
 
-    if(buy_menu)
-    {
+    if (buy_menu) {
 
         SetTextContent(transaction_menu_pershare_textobject,  "%.2f", Simulation_GetLastStockPrice(selected_company_name));
         SetTextContent(transaction_menu_projected_textobject, "%.2f", Simulation_GetLastStockPrice(selected_company_name) * atoi(GetTextFromTextBox("BuyTextBox")));
 
     }
 
-    if(sell_menu)
-    {
+    if (sell_menu) {
 
         SetTextContent(transaction_menu_pershare_textobject,  "%.2f", Simulation_GetLastStockPrice(selected_company_name));
         SetTextContent(transaction_menu_projected_textobject, "%.2f", Simulation_GetLastStockPrice(selected_company_name) * atoi(GetTextFromTextBox("SellTextBox")));
@@ -236,8 +235,7 @@ void StocksMenu_ChangeGraphTimespan(TimeSpan time_span)
 
 void StocksMenu_InitTransactionMenuText()
 {
-    if(buy_menu)
-    {
+    if(buy_menu) {
 
         DrawObject *buy_tb = CreateTextBoxObject("BuyTextBox", "", 10, TEXTBOX_ACCEPT_NUMBER_CHARACTERS);
         buy_tb->x          = 955;
@@ -249,8 +247,7 @@ void StocksMenu_InitTransactionMenuText()
 
     }
 
-    if(sell_menu)
-    {
+    if(sell_menu) {
 
         DrawObject *sell_tb = CreateTextBoxObject("SellTextBox", "", 10, TEXTBOX_ACCEPT_NUMBER_CHARACTERS);
         sell_tb->x          = 955;
@@ -400,6 +397,9 @@ void All_BCB()
 
 void StocksMenu_Clean()
 {
+
+    CardController_Clean();
+    persistence_set_current_menu(MAIN);
 
     selected_company_name    = NULL;
     current_graph            = NULL;

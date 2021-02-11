@@ -553,7 +553,20 @@ int RemoveDrawObject(DrawObject *object)
 {
 
     assert(object != NULL);
-    object->bit_flags ^= 0x01;
+    for (int i = 0; i < MAX_DRAW_LAYERS;i++) {
+
+        for (int j = 0;j < MAX_OBJECTS_PER_LAYER; j++) {
+
+            if (draw_layers[i].objects[j] == object) {
+
+                object->bit_flags ^= 0x01;
+                break;
+
+            }
+
+        }
+
+    }
     
     return 0;
 

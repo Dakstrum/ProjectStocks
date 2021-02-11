@@ -40,7 +40,6 @@ char* GetCardPath(unsigned int card_id);
 int GetCardPriceModifier(unsigned int card_id);
 float GetCardModifierLength(unsigned int card_id);
 char* GetCardDescription(unsigned int card_id);
-void AddCardToPlayer(uint32_t player_id, uint32_t card_id);
 int GetNumOfPlayerPositiveCards();
 int GetNumOfPlayerNegativeCards();
 PlayerCard *GetAllPlayerCards();
@@ -52,6 +51,7 @@ void SaveCards();
 
 Vector *dbcard_get_player_cards(uint32_t player_id);
 
+void dbcard_add_card_to_player(uint32_t player_id, uint32_t card_id);
 void dbcard_apply_card(uint32_t card_id, uint32_t company_id);
 void dbcard_init();
 

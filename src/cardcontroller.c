@@ -32,20 +32,43 @@ static const void *card_CBs[5] =
 	CardController_CardFive_CB
 };
 
+
+void CardController_Clean()
+{
+
+	for (size_t i = 0; i < 5; i++)
+		card_buttons[i] = NULL;
+
+	if (player_cards != NULL) {
+
+		Vector_Delete(player_cards);
+		player_cards = NULL;
+
+	}
+
+}
+
+
 void CardController_Reset()
 {
+
 	for (size_t i = 0; i < 5; i++) {
 
-		if (card_buttons[i]) {
+		if (card_buttons[i] != NULL) {
 
 			RemoveDrawObject(card_buttons[i]);
 			card_buttons[i] = NULL;
 
-		}	
+		}
+
 	}
 
-	if (player_cards != NULL)
+	if (player_cards != NULL) {
+
 		Vector_Delete(player_cards);
+		player_cards = NULL;
+		
+	}
 
 }
 
@@ -53,7 +76,6 @@ void CardController_Set()
 {
 
 	player_cards = dbcard_get_player_cards(Account_GetPlayerId());
-	LogF("PlayerId = %u", Account_GetPlayerId());
 	PlayerCard *player_cards_temp = player_cards->elements;
 	assert(player_cards->num_elements < 6);
 	for (size_t i = 0; i < player_cards->num_elements; i++) {
