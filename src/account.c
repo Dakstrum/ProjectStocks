@@ -115,6 +115,9 @@ uint32_t Account_GetPlayerId()
 void Account_Init() 
 {
 
+    if (current_save.players != NULL)
+        Vector_Delete(current_save.players);
+
     current_save.players = NULL;
 
 }

@@ -84,7 +84,6 @@ void StocksMenu_Init()
     DrawLayer_AddManager(NewsManager_Create(1400, 300));
 
     CardController_InitCard();
-    persistence_set_current_menu(STOCKS);
 
 }
 
@@ -399,7 +398,6 @@ void StocksMenu_Clean()
 {
 
     CardController_Clean();
-    persistence_set_current_menu(MAIN);
 
     selected_company_name    = NULL;
     current_graph            = NULL;
