@@ -43,7 +43,6 @@ char* GetCardDescription(unsigned int card_id);
 void AddCardToPlayer(uint32_t player_id, uint32_t card_id);
 int GetNumOfPlayerPositiveCards();
 int GetNumOfPlayerNegativeCards();
-void InitializePlayerCards();
 PlayerCard *GetAllPlayerCards();
 char* GetCardTitle(unsigned int card_id);
 int GetCardType(unsigned int card_id);
@@ -53,10 +52,11 @@ void SaveCards();
 
 Vector *dbcard_get_player_cards(uint32_t player_id);
 
-void DBCards_ApplyCard(uint32_t card_id, uint32_t company_id);
-void DBCards_Init();
+void dbcard_apply_card(uint32_t card_id, uint32_t company_id);
+void dbcard_init();
 
-Vector *DBCards_GetPlayedModifiersCopy();
+Vector *dbcard_get_played_modifiers_copy();
+Vector *dbcard_get_all_cards();
 
 
 #endif

@@ -67,7 +67,7 @@ void CardsMenu_Init()
 
     GeneralPurposeMenus_InitSpeedSelectObject("CardsMenu");
 
-    //DBCards_ApplyCard(1,1);
+    //dbcard_apply_card(1,1);
 
 }
 
@@ -107,7 +107,7 @@ void CardsMenu_CompanyScrollboxClick(char *scroll_box_content, unsigned short in
 {
 
     uint32_t company_id = GetCompanyId(scroll_box_content);
-    DBCards_ApplyCard(GetPlayerCardId(GetCardId(card_title_textobject->text.content)), company_id);
+    dbcard_apply_card(GetPlayerCardId(GetCardId(card_title_textobject->text.content)), company_id);
     CardsMenu_PickCompanyMenu_CB();
     DisplayPopupOnDrawLayer("Added Card to Company", "assets/images/generalpurposemenus/popups/greenpopup.png");
 

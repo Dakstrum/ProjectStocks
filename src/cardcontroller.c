@@ -186,7 +186,7 @@ void cardcontroller_card_cb(uint32_t idx)
 		return;
 
 	PlayerCard *player_cards_temp = player_cards->elements;
-	DBCards_ApplyCard(player_cards_temp[idx].card_id, GetCompanyIdViewing());
+	dbcard_apply_card(player_cards_temp[idx].card_id, GetCompanyIdViewing());
 	played_card = idx;
 
 }

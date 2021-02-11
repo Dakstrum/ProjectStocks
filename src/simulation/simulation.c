@@ -315,7 +315,7 @@ void Simulation_SimulateUntil(time_t t)
 void Simulation_LoadModifiers() 
 {
 
-    modifiers = DBCards_GetPlayedModifiersCopy();
+    modifiers = dbcard_get_played_modifiers_copy();
 
 }
 

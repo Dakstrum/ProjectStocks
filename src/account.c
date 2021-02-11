@@ -150,7 +150,7 @@ void LoadSave(int load_save_id)
     Game_SetGameTime(current_save.time_spent_in_game);
 
     InitializeAccountInformation();
-    DBCards_Init();
+    dbcard_init();
     Game_Init();
 
 }

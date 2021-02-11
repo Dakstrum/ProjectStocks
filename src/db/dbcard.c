@@ -92,7 +92,15 @@ float GetCardModifierLength(unsigned int card_id)
 
 }
 
-Vector *DBCards_GetPlayedModifiersCopy() 
+Vector *dbcard_get_all_cards()
+{
+
+    assert(cards != NULL);
+    return cards;
+
+}
+
+Vector *dbcard_get_played_modifiers_copy() 
 {
 
     return Vector_GetCopy(played_cards);
@@ -186,7 +194,7 @@ void AddCardToPlayer(uint32_t player_id, uint32_t card_id)
     Vector_PushBack(player_cards, &temp);
 }
 
-void DBCards_ApplyCard(uint32_t card_id, uint32_t company_id)
+void dbcard_apply_card(uint32_t card_id, uint32_t company_id)
 {
 
     char *delete_query = "UPDATE Player_Cards SET Played = 1 WHERE PlayerCardId = (SELECT PC.PlayerCardId FROM Player_Cards PC WHERE PC.PlayerId = %d AND PC.CardId = %d LIMIT 1);";
@@ -284,7 +292,7 @@ void SaveCards()
 
 }
 
-int DBCards_PlayedCardsCallback(void *played_card, int argc, char **argv, char **col_name)
+int dbcard_played_cards_callback(void *played_card, int argc, char **argv, char **col_name)
 {
 
     if (argc == 0)
@@ -302,7 +310,7 @@ int DBCards_PlayedCardsCallback(void *played_card, int argc, char **argv, char *
 
 }
 
-void DBCards_InitVectors()
+void dbcard_init_vectors()
 {
 
     if (player_cards != NULL) {
@@ -320,7 +328,7 @@ void DBCards_InitVectors()
 
 }
 
-void DBCards_Init()
+void dbcard_init()
 {
 
     card_queue = Queue_Create();
@@ -331,9 +339,9 @@ void DBCards_Init()
     "INNER JOIN System_Cards SC ON SC.CardId = PCP.CardId "
     "WHERE PCP.SaveId = %d";
 
-    DBCards_InitVectors();
+    dbcard_init_vectors();
     ExecuteQueryF(&Card_Callback, NULL, "SELECT C.CardId, C.CardName, C.CardDesc, C.CardPath, C.PriceModifier, C.ModifierLength FROM System_Cards C");
     ExecuteQueryF(&PlayerCard_Callback, NULL, "SELECT C.PlayerCardId, C.PlayerId, C.CardId FROM Player_Cards C WHERE SaveId = %d AND Played = 0", Game_GetSaveId());
-    ExecuteQueryF(&DBCards_PlayedCardsCallback, NULL, played_cards_query, Game_GetSaveId());
+    ExecuteQueryF(&dbcard_played_cards_callback, NULL, played_cards_query, Game_GetSaveId());
 
 }
