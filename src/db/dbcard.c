@@ -180,7 +180,7 @@ void dbcard_add_card_to_player(uint32_t player_id, uint32_t card_id)
 
     static uint32_t fake_unique_id = 1000000000;
 
-    static char *query = "INSERT INTO Player_Cards (PlayerId CardId) VALUES (%d, %d);";
+    static char *query = "INSERT INTO Player_Cards (PlayerId, CardId) VALUES (%d, %d);";
     Queue_PushMessage(card_queue, GetFormattedPointer(query, player_id, Game_GetSaveId(), card_id));
 
     PlayerCard temp;
@@ -342,9 +342,16 @@ void dbcard_init()
     "INNER JOIN System_Cards SC ON SC.CardId = PCP.CardId "
     "WHERE PCP.SaveId = %d";
 
+    char *player_cards_query =
+    "SELECT PC.PlayerCardId, PC.PlayerId, PC.CardId " 
+    "FROM Player_Cards PC "
+    "INNER JOIN Game_Players GP ON GP.PlayerId = PC.PlayerId "
+    "WHERE "
+    "    GP.SaveId = %d AND PC.Played = 0";
+
     dbcard_init_vectors();
     ExecuteQueryF(&Card_Callback, NULL, "SELECT C.CardId, C.CardName, C.CardDesc, C.CardPath, C.PriceModifier, C.ModifierLength FROM System_Cards C");
-    ExecuteQueryF(&PlayerCard_Callback, NULL, "SELECT C.PlayerCardId, C.PlayerId, C.CardId FROM Player_Cards C WHERE SaveId = %d AND Played = 0", Game_GetSaveId());
+    ExecuteQueryF(&PlayerCard_Callback, NULL, player_cards_query, Game_GetSaveId());
     ExecuteQueryF(&dbcard_played_cards_callback, NULL, played_cards_query, Game_GetSaveId());
 
 }
