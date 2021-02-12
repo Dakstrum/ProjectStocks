@@ -175,6 +175,7 @@ void Account_StorePlayerData()
 
     SavePlayerData(current_save);
     SaveTransactions();
+    SaveCards();
 
 }
 

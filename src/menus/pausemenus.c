@@ -62,7 +62,6 @@ void PauseMenu_Save_CB()
 {
 
     Account_StorePlayerData();
-    SaveCards();
     
 }
 

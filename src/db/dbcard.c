@@ -181,7 +181,7 @@ void dbcard_add_card_to_player(uint32_t player_id, uint32_t card_id)
     static uint32_t fake_unique_id = 1000000000;
 
     static char *query = "INSERT INTO Player_Cards (PlayerId, CardId) VALUES (%d, %d);";
-    Queue_PushMessage(card_queue, GetFormattedPointer(query, player_id, Game_GetSaveId(), card_id));
+    Queue_PushMessage(card_queue, GetFormattedPointer(query, player_id, card_id));
 
     PlayerCard temp;
 
@@ -194,25 +194,28 @@ void dbcard_add_card_to_player(uint32_t player_id, uint32_t card_id)
     Vector_PushBack(player_cards, &temp);
 }
 
-void dbcard_apply_card(uint32_t card_id, uint32_t company_id)
+void dbcard_apply_card(uint32_t player_id, uint32_t card_id, uint32_t company_id)
 {
 
-    char *delete_query = "UPDATE Player_Cards SET Played = 1 WHERE PlayerCardId = (SELECT PC.PlayerCardId FROM Player_Cards PC WHERE PC.PlayerId = %d AND PC.CardId = %d LIMIT 1);";
+    char *update_query = "UPDATE Player_Cards SET Played = 1 WHERE PlayerCardId = (SELECT PC.PlayerCardId FROM Player_Cards PC WHERE PC.PlayerId = %d AND PC.CardId = %d AND PC.Played=0 LIMIT 1);";
     char *insert_query = "INSERT INTO Player_CardsPlayed (CardId, SaveId, CompanyId, PlayedTime) VALUES (%d, %d, %d, %d)";
 
     PlayerCard *temp = player_cards->elements;
 
     for (size_t i = 0; i < player_cards->num_elements; i++) {
 
-        Queue_PushMessage(card_queue, GetFormattedPointer(delete_query, temp[i].player_id, temp[i].card_id));
-        Queue_PushMessage(card_queue, GetFormattedPointer(insert_query, temp[i].card_id, Game_GetSaveId(), company_id, Game_GetGameTime()));
+        if (player_id != temp[i].player_id)
+            continue;
 
-        if(temp[i].card_id == card_id) {
+        if (card_id != temp[i].card_id)
+            continue;
 
-            Vector_Remove(player_cards, i);
-            break;
+        LogF("%s", update_query);
+        Queue_PushMessage(card_queue, GetFormattedPointer(update_query, player_id, card_id));
+        Queue_PushMessage(card_queue, GetFormattedPointer(insert_query, card_id, Game_GetSaveId(), company_id, Game_GetGameTime()));
 
-        }
+        Vector_Remove(player_cards, i);
+        break;
         
     }
 

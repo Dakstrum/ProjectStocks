@@ -52,7 +52,7 @@ void SaveCards();
 Vector *dbcard_get_player_cards(uint32_t player_id);
 
 void dbcard_add_card_to_player(uint32_t player_id, uint32_t card_id);
-void dbcard_apply_card(uint32_t card_id, uint32_t company_id);
+void dbcard_apply_card(uint32_t player_id, uint32_t card_id, uint32_t company_id);
 void dbcard_init();
 
 Vector *dbcard_get_played_modifiers_copy();
