@@ -34,10 +34,11 @@ typedef struct AudioSamples {
 static const unsigned char MAX_SAMPLES = 4;
 static unsigned char num_samples       = 0;
 
-static const unsigned char sample_paths_defined = 1;
-static AudioSamples sample_paths[1] = 
+static const unsigned char sample_paths_defined = 2;
+static AudioSamples sample_paths[2] = 
 {
-    {BUTTON_CLICK, "assets/music/click/click.ogg", .05, 0.0, 1.0, NULL}
+    {BUTTON_CLICK, "assets/music/click/click.ogg", .05, 0.0, 1.0, NULL},
+    {FLIPCARD, "assets/music/cards/flipcard.ogg",  .05, 0.0, 1.0, NULL}
 };
 
 void LoadSample(int idx) 

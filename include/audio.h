@@ -5,7 +5,8 @@
 
 typedef enum AudioSample {
 
-    BUTTON_CLICK
+    BUTTON_CLICK,
+    FLIPCARD
 
 } AudioSample;
 

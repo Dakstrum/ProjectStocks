@@ -6,6 +6,7 @@
 #include "dbcard.h"
 #include "game.h"
 #include "account.h"
+#include "audio.h"
 #include "vector.h"
 #include "menupersistence.h"
 #include "simulation.h"
@@ -79,6 +80,13 @@ void CardController_Set()
 	player_cards = dbcard_get_player_cards(Account_GetPlayerId());
 	PlayerCard *player_cards_temp = player_cards->elements;
 	assert(player_cards->num_elements < 6);
+
+	if (player_cards->num_elements > 0) {
+
+		PlaySample(FLIPCARD);
+
+	}
+
 	for (size_t i = 0; i < player_cards->num_elements; i++) {
 
 		card_buttons[i]         = CreateNewDrawObject();
@@ -101,6 +109,13 @@ void CardController_SetCurrentCards()
 	player_cards = dbcard_get_player_cards(Account_GetPlayerId());
 	PlayerCard *player_cards_temp = player_cards->elements;
 	assert(player_cards->num_elements < 6);
+
+	if (player_cards->num_elements > 0) {
+
+		PlaySample(FLIPCARD);
+
+	}
+
 	for (size_t i = 0; i < player_cards->num_elements; i++) {
 
 		if (card_buttons[i] == NULL) {
