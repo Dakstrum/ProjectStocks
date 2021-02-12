@@ -96,6 +96,7 @@ void StocksMenu_RenderLogic()
     if (stocks_menu) {
 
         CardController_CardAnimationCheck();
+        CardController_CheckForNewCards();
 
         SetTextContent(stock_change_textobject, "%.2f", Simulation_GetStockPriceDiff(GetCompanyNameViewing()));
         SetTextContent(player_money_textobject, "%.2f", Account_GetMoney(Account_GetPlayerId()));

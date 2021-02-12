@@ -11,7 +11,7 @@
 #include "simulation.h"
 
 static DrawObject *card_buttons[5];
-static Vector *player_cards = NULL;
+static Vector *player_cards  = NULL;
 
 static int played_card    = -1;
 static int card_animating = 0;
@@ -33,7 +33,6 @@ static const void *card_CBs[5] =
 	CardController_CardFour_CB, 
 	CardController_CardFive_CB
 };
-
 
 void CardController_Clean()
 {
@@ -84,14 +83,59 @@ void CardController_Set()
 
 		card_buttons[i]         = CreateNewDrawObject();
 		card_buttons[i]->type   = BUTTON;
-        card_buttons[i]->x      = GetCenteredPoint(i);
-        card_buttons[i]->y      = 1009;
-        card_buttons[i]->width  = 165;
-        card_buttons[i]->height = 230;
-        card_buttons[i]->button.Callback = card_CBs[i];
+		card_buttons[i]->x      = GetCenteredPoint(i);
+		card_buttons[i]->y      = 1009;
+		card_buttons[i]->width  = 165;
+		card_buttons[i]->height = 230;
+		card_buttons[i]->button.Callback = card_CBs[i];
 		card_buttons[i]->asset_path = GetCardPath(player_cards_temp[i].card_id);
 		AddObjectToDrawLayer(card_buttons[i]);
 	
+	}
+
+}
+
+void CardController_SetCurrentCards()
+{
+
+	player_cards = dbcard_get_player_cards(Account_GetPlayerId());
+	PlayerCard *player_cards_temp = player_cards->elements;
+	assert(player_cards->num_elements < 6);
+	for (size_t i = 0; i < player_cards->num_elements; i++) {
+
+		if (card_buttons[i] == NULL) {
+
+			card_buttons[i]         = CreateNewDrawObject();
+			card_buttons[i]->type   = BUTTON;
+			card_buttons[i]->width  = 165;
+			card_buttons[i]->height = 230;
+			card_buttons[i]->asset_path = GetCardPath(player_cards_temp[i].card_id);
+			card_buttons[i]->button.Callback = card_CBs[i];
+			card_buttons[i]->y = 1009;
+			AddObjectToDrawLayer(card_buttons[i]);
+
+		}
+		card_buttons[i]->x = GetCenteredPoint(i);
+	
+	}
+
+}
+
+void CardController_CheckForNewCards()
+{
+
+	player_cards = dbcard_get_player_cards(Account_GetPlayerId());
+	for (size_t i = 0; i < player_cards->num_elements; i++) {
+
+		if (card_buttons[i] != NULL)
+			continue;
+
+		if (i != player_cards->num_elements - 1)
+			break;
+
+		CardController_SetCurrentCards();
+		break;
+
 	}
 
 }
@@ -162,6 +206,7 @@ void CardController_AnimateCardToCenterOfGraph(int card_num)
 
 }
 
+
 void CardController_HoveringAnimationController(int card_num)
 {
 
@@ -183,11 +228,15 @@ void CardController_HoveringAnimationController(int card_num)
 
 	} else {
 		
-		if (HoveringOverBitmap(card_buttons[card_num]) == 1)
+		if (HoveringOverBitmap(card_buttons[card_num]) == 1 && card_buttons[card_num]->y != 850) {
+
 			CardController_AnimateCardUp(card_num);
 
-		else if (HoveringOverBitmap(card_buttons[card_num]) == 0 && card_buttons[card_num]->y < 1009)
+		} else if (HoveringOverBitmap(card_buttons[card_num]) == 0 && card_buttons[card_num]->y < 1009) {
+
 			CardController_AnimateCardDown(card_num);
+
+		}
 
 	}
 

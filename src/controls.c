@@ -427,20 +427,18 @@ int HoveringOverBitmap(DrawObject *bitmap)
     static ALLEGRO_MOUSE_STATE state;
     al_get_mouse_state(&state);
 
-    if (IsMouseCursorInAreaOfObject(bitmap, state.x, state.y))
-    {
+    if (IsMouseCursorInAreaOfObject(bitmap, state.x, state.y)) {
+
         bitmap->bit_flags |= BUTTON_MOUSE_HOVERING;
         return 1;
 
-    }
-    else if (bitmap->bit_flags & BUTTON_MOUSE_HOVERING)
-    {
+    } else if (bitmap->bit_flags & BUTTON_MOUSE_HOVERING) {
+
         bitmap->bit_flags ^= BUTTON_MOUSE_HOVERING;  
         return 0;
 
     }
     return 0;
-
 
 }
 
