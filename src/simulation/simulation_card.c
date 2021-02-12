@@ -51,7 +51,7 @@ void simulation_card_step()
 
     	if (shared_random_float() <= CARD_CHANCE) {
 
-    		simulation_card_add_random(players_temp[i].id);
+    		simulation_card_add_random(players_temp[i].player_id);
 
     	}
 

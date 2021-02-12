@@ -9,7 +9,7 @@
 
 typedef struct Player {
 
-	uint32_t id;
+	uint32_t player_id;
 	float money;
 	char name[32];
 	bool save_owner;

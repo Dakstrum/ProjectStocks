@@ -205,7 +205,7 @@ int GetPlayerSaveData_Callback(void *player, int argc, char **argv, char **col_n
         return 0;
 
     Player temp;
-    temp.id = atoi(argv[0]);
+    temp.player_id = atoi(argv[0]);
 
     strncpy(temp.name, argv[1], 32);
     temp.name[31] = '\0';
@@ -243,7 +243,7 @@ void SavePlayerData(Save save)
 
     Player *players = save.players->elements;
     for (size_t i = 0; i < save.players->num_elements;i++)
-        ExecuteQueryF(NULL, NULL, "UPDATE Game_Players SET Money = %f WHERE PlayerId = %d;", players[i].money, players[i].id);
+        ExecuteQueryF(NULL, NULL, "UPDATE Game_Players SET Money = %f WHERE PlayerId = %d;", players[i].money, players[i].player_id);
 
 
 }

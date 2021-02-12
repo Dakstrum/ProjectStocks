@@ -41,7 +41,7 @@ Player *Account_GetPlayer(uint32_t player_id)
 
     Player *players = current_save.players->elements;
     for (size_t i = 0; i < current_save.players->num_elements;i++)
-        if (players[i].id == player_id)
+        if (players[i].player_id == player_id)
             return &players[i];
 
 }
@@ -107,7 +107,7 @@ uint32_t Account_GetPlayerId()
     Player *players = current_save.players->elements;
     for (size_t i = 0; i < current_save.players->num_elements;i++)
         if (players[i].save_owner)
-            return players[i].id;
+            return players[i].player_id;
 
 
 }
