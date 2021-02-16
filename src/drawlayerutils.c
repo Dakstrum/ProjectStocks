@@ -231,3 +231,27 @@ DrawObject *CreateCompaniesScrollbox(int x, int y, void (*click)(char *scroll_bo
     return object;
 
 }
+
+DrawObject *CreateAIPlayerOwnedCompaniesScrollbox(int x, int y, void (*click)(char *scroll_box_content, unsigned short int index))
+{
+
+    DrawObject *object = Scrollbox_Create();
+
+    object->x          = x;
+    object->y          = y;
+    object->width      = 288;
+    object->height     = 403;
+    object->asset_path = "assets/images/stocksmenu/stocksmenuassets/StocksBox.png";
+
+    unsigned int num_companies = GetNumCompanies();
+
+    object->scrollbox.num_items = num_companies;
+    object->scrollbox.box_click = click;
+    
+    InitScrollboxVectors(object);
+    SetScrollboxTextContentForCompanies(object);
+    SetScrollboxIconsForCompanies(object);
+
+    return object;
+
+}

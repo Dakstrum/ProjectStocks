@@ -227,10 +227,12 @@ void StocksMenu_InitCompanyScrollbox()
 
 void StocksMenu_ChangeGraphTimespan(TimeSpan time_span)
 {
+
     SetStockMenuTimeSpanNum(time_span);
     RemoveDrawObject(current_graph);
     StocksMenu_DisplayGraph(GetCompanyNameViewing(), time_span);
     StocksMenu_PopulateStockInfo(GetCompanyNameViewing());
+    
 }
 
 
