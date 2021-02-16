@@ -81,12 +81,6 @@ void CardController_Set()
 	PlayerCard *player_cards_temp = player_cards->elements;
 	assert(player_cards->num_elements < 6);
 
-	if (player_cards->num_elements > 0) {
-
-		PlaySample(FLIPCARD);
-
-	}
-
 	for (size_t i = 0; i < player_cards->num_elements; i++) {
 
 		card_buttons[i]         = CreateNewDrawObject();
@@ -110,12 +104,7 @@ void CardController_SetCurrentCards()
 	PlayerCard *player_cards_temp = player_cards->elements;
 	assert(player_cards->num_elements < 6);
 
-	if (player_cards->num_elements > 0) {
-
-		PlaySample(FLIPCARD);
-
-	}
-
+	PlaySample(FLIPCARD);
 	for (size_t i = 0; i < player_cards->num_elements; i++) {
 
 		if (card_buttons[i] == NULL) {
