@@ -18,6 +18,7 @@
 #include "simulation.h"
 #include "simulation_event.h"
 #include "simulation_card.h"
+#include "simulation_transaction.h"
 
 static const int HOUR = 3600;
 static const int SIX_HOURS = HOUR * 6;
@@ -297,10 +298,11 @@ void Simulation_PriceStep(time_t t)
 void Simulation_TransactionStep(time_t t)
 {
 
+    Company *companies_temp = companies->elements;
     for (size_t i = 0; i < companies->num_elements;i++) {
 
-        StockPrice price = {Simulation_GetNextValue(t, i), t};
-        Vector_PushBack(sim_data[i], &price);
+        StockPrice *price = Vector_Last(sim_data[i]);
+        price->price = simulation_transaction_step(t, price->price, companies_temp[i].company_id);
 
     }
 
