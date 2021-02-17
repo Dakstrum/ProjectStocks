@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS System_Cards
     ModifierLength INT NOT NULL
 );
 
-CREATE TABLE System_Audio_Samples
+CREATE TABLE IF NOT EXISTS System_Audio_Samples
 (
     SampleId INTEGER PRIMARY KEY,
     SampleName VARCHAR(32) NOT NULL,
