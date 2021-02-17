@@ -215,8 +215,7 @@ void Simulation_ModifyGlobal(float modifier, time_t play_time, uint32_t days, ch
 float Simulation_GetNextValue(time_t t, size_t idx) 
 {
 
-    StockPrice *prices = sim_data[idx]->elements;
-    float value = prices[sim_data[idx]->num_elements-1].price;
+    float value = ((StockPrice *)Vector_Last(sim_data[idx]))->price;
     float price_fluctuation = GenerateRandomPriceFluctuation(value);
 
     PlayedModifiers *modifiers_temp = modifiers->elements;
@@ -260,7 +259,7 @@ void Simulation_EventStep(time_t t)
 
 }
 
-void Simulation_CardStep(time_t t) 
+void Simulation_CardStep() 
 {
 
     simulation_card_step();
@@ -295,22 +294,40 @@ void Simulation_PriceStep(time_t t)
 
 }
 
-void Simulation_SimulateStep(time_t t)
+void Simulation_TransactionStep(time_t t)
+{
+
+    for (size_t i = 0; i < companies->num_elements;i++) {
+
+        StockPrice price = {Simulation_GetNextValue(t, i), t};
+        Vector_PushBack(sim_data[i], &price);
+
+    }
+
+}
+
+void Simulation_SimulateStepGeneric(time_t t)
 {
 
     Simulation_EventStep(t);
-    Simulation_CardStep(t);
     Simulation_PriceStep(t);
+    Simulation_TransactionStep(t);
     Simulation_RemoveOldModifiers(t);
+
+}
+
+void Simulation_SimulateStep(time_t t)
+{
+
+    Simulation_SimulateStepGeneric(t);
+    Simulation_CardStep();
 
 }
 
 void Simulation_SimulateStep_Alt(time_t t)
 {
 
-    Simulation_EventStep(t);
-    Simulation_PriceStep(t);
-    Simulation_RemoveOldModifiers(t);
+    Simulation_SimulateStepGeneric(t);
 
 }
 
