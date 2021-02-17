@@ -210,7 +210,6 @@ void dbcard_apply_card(uint32_t player_id, uint32_t card_id, uint32_t company_id
         if (card_id != temp[i].card_id)
             continue;
 
-        LogF("%s", update_query);
         Queue_PushMessage(card_queue, GetFormattedPointer(update_query, player_id, card_id));
         Queue_PushMessage(card_queue, GetFormattedPointer(insert_query, card_id, player_id, company_id, Game_GetGameTime()));
 
