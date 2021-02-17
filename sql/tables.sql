@@ -147,3 +147,13 @@ CREATE TABLE IF NOT EXISTS System_Cards
     PriceModifier DOUBLE NOT NULL,
     ModifierLength INT NOT NULL
 );
+
+CREATE TABLE System_Sound_Samples
+(
+    SampleId INTEGER PRIMARY KEY,
+    SampleName VARCHAR(32) NOT NULL,
+    SamplePath VARCHAR(64) NOT NULL,
+    SampleGain DOUBLE NOT NULL DEFAULT(0.5),
+    SamplePan DOUBLE NOT NULL DEFAULT(0.0),
+    SampleSpeed DOUBLE NOT NULL DEFAULT(1.0)
+);
