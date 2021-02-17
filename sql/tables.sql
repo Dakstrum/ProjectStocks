@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS Player_CardsPlayed
 (
     PlayerCardsPlayedId INTEGER PRIMARY KEY,
     CardId INTEGER NOT NULL,
-    SaveId INTEGER NOT NULL,
+    PlayerId INTEGER NOT NULL,
     CompanyId INTEGER NOT NULL,
     PlayedTime DATETIME NOT NULL
 );

@@ -198,7 +198,7 @@ void dbcard_apply_card(uint32_t player_id, uint32_t card_id, uint32_t company_id
 {
 
     char *update_query = "UPDATE Player_Cards SET Played = 1 WHERE PlayerCardId = (SELECT PC.PlayerCardId FROM Player_Cards PC WHERE PC.PlayerId = %d AND PC.CardId = %d AND PC.Played=0 LIMIT 1);";
-    char *insert_query = "INSERT INTO Player_CardsPlayed (CardId, SaveId, CompanyId, PlayedTime) VALUES (%d, %d, %d, %d)";
+    char *insert_query = "INSERT INTO Player_CardsPlayed (CardId, PlayerId, CompanyId, PlayedTime) VALUES (%d, %d, %d, %d)";
 
     PlayerCard *temp = player_cards->elements;
 
@@ -212,7 +212,7 @@ void dbcard_apply_card(uint32_t player_id, uint32_t card_id, uint32_t company_id
 
         LogF("%s", update_query);
         Queue_PushMessage(card_queue, GetFormattedPointer(update_query, player_id, card_id));
-        Queue_PushMessage(card_queue, GetFormattedPointer(insert_query, card_id, Game_GetSaveId(), company_id, Game_GetGameTime()));
+        Queue_PushMessage(card_queue, GetFormattedPointer(insert_query, card_id, player_id, company_id, Game_GetGameTime()));
 
         Vector_Remove(player_cards, i);
         break;
@@ -342,8 +342,9 @@ void dbcard_init()
     char *played_cards_query =
     "SELECT PCP.CompanyId, PCP.PlayedTime, SC.PriceModifier, SC.ModifierLength "
     "FROM Player_CardsPlayed PCP "
+    "INNER JOIN Game_Players GP ON GP.PlayerId = PCP.PlayerId "
     "INNER JOIN System_Cards SC ON SC.CardId = PCP.CardId "
-    "WHERE PCP.SaveId = %d";
+    "WHERE GP.SaveId = %d";
 
     char *player_cards_query =
     "SELECT PC.PlayerCardId, PC.PlayerId, PC.CardId " 
