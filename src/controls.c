@@ -39,7 +39,7 @@ bool HandleMouseClick(DrawObject *object, int x, int y)
 
         if (object->button.Callback != NULL) {
 
-            PlaySample(BUTTON_CLICK);
+            audio_play_sample(audio_get_sample_id("button_click"));
             object->button.Callback();
             return true;
 
@@ -132,7 +132,7 @@ bool CheckForScrollboxClick(DrawObject *object, const int x, const int y)
 
         if (MouseInScrollBoxArea(object, x, y, i)) {
 
-            PlaySample(BUTTON_CLICK);
+            audio_play_sample(audio_get_sample_id("button_click"));
             ScrollboxText *text = object->scrollbox.text_content[i]->elements;
             object->scrollbox.box_click(text[0].text, i);
             break;

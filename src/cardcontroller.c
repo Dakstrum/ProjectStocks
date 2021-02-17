@@ -104,7 +104,7 @@ void CardController_SetCurrentCards()
 	PlayerCard *player_cards_temp = player_cards->elements;
 	assert(player_cards->num_elements < 6);
 
-	PlaySample(FLIPCARD);
+	audio_play_sample(audio_get_sample_id("flipcard"));
 	for (size_t i = 0; i < player_cards->num_elements; i++) {
 
 		if (card_buttons[i] == NULL) {

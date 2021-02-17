@@ -1,18 +1,19 @@
 
+#include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 
 #include "dbutils.h"
 #include "dbaudio.h"
 
 
-Vector *audio_samples = NULL;
-
+Vector *db_audio_samples = NULL;
 
 Vector *dbaudio_get_samples()
 {
 
-	assert(audio_samples != NULL);
-	return audio_samples;
+	assert(db_audio_samples != NULL);
+	return db_audio_samples;
 
 }
 
@@ -34,7 +35,7 @@ int dbaudio_audio_sample_callback(void *nil, int argc, char **argv, char **col_n
 	sample.sample_pan   = atof(argv[4]);
 	sample.sample_speed = atof(argv[5]);
 
-	Vector_PushBack(audio_samples, &sample);
+	Vector_PushBack(db_audio_samples, &sample);
 
     return 0;
 
@@ -44,7 +45,7 @@ int dbaudio_audio_sample_callback(void *nil, int argc, char **argv, char **col_n
 void dbaudio_init()
 {
 
-	audio_samples = Vector_Create(sizeof(AudioSample), 8);
+	db_audio_samples = Vector_Create(sizeof(AudioSample), 8);
 
 	char *audio_sample_query = "SELECT * FROM System_Audio_Samples";
 	ExecuteQueryF(dbaudio_audio_sample_callback, NULL, audio_sample_query);
