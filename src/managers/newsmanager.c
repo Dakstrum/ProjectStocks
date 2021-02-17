@@ -1,4 +1,6 @@
 
+#include <stdlib.h>
+#include <stdint.h>
 #include <assert.h>
 
 #include "newsmanager.h"
@@ -11,6 +13,8 @@
 #include "drawobject.h"
 #include "drawlayers.h"
 #include "window.h"
+
+#include "audio.h"
 
 typedef enum NewsManagerStates {
 
@@ -36,8 +40,25 @@ typedef struct NewsManager {
 
 static char *news_to_push = NULL;
 
+uint32_t NewsManager_GetRandomSampleId()
+{
+
+	static char *sample_ids[5] = 
+	{
+		"female_uh_ha", 
+		"female_hmm", 
+		"male_hmm", 
+		"male_hmm_2", 
+		"male_hmm_3"
+	};
+	return audio_get_sample_id(sample_ids[rand()%5]);
+
+}
+
 void NewsManager_SetupPushLeft(NewsManager *manager)
 {
+
+	audio_play_sample(NewsManager_GetRandomSampleId());
 
 	assert(news_to_push != NULL);
 	DrawObject **objects = manager->objects;
