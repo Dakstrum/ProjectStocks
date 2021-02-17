@@ -24,9 +24,7 @@ void audio_load_sample(AudioSample sample)
 
     ALLEGRO_SAMPLE *temp_sample = al_load_sample(sample.sample_path);
     Vector_PushBackPtr(audio_sample_instances, al_create_sample_instance(temp_sample));
-
-    ALLEGRO_SAMPLE_INSTANCE **instances = audio_sample_instances->elements;
-    ALLEGRO_SAMPLE_INSTANCE *current_instance = instances[audio_sample_instances->num_elements - 1];
+    ALLEGRO_SAMPLE_INSTANCE *current_instance = Vector_LastPtr(audio_sample_instances);
 
     if (current_instance != NULL) {
 
