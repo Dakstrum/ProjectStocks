@@ -69,6 +69,7 @@ void SeedDB()
     
     ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/seed.sql"));
     ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/settings-seed.sql"));
+    ExecuteQueryF(NULL, NULL, LoadSqlFile("assets/sql/audio_seed.sql"));
     ExecuteQueryF(NULL, NULL, "INSERT INTO DB_Events (Event) VALUES ('Seeded')");
 
 }
