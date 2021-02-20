@@ -77,7 +77,8 @@ CREATE TABLE IF NOT EXISTS System_Company
     Ipo DOUBLE NOT NULL, 
     CompanyName VARCHAR(50) NOT NULL,
     CompanyDescription VARCHAR(128) NOT NULL,
-    CompanyAbbreviation VARCHAR(5) NOT NULL
+    CompanyAbbreviation VARCHAR(5) NOT NULL,
+    CompanyStartTime  INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS System_CompanyIcons
