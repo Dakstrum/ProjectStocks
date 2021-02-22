@@ -66,18 +66,15 @@ int GetOwnedStockAmountByCompanyId(uint32_t player_id, uint32_t company_id)
 
 }
 
-int GetOwnedStockAmount(uint32_t player_id, char *company_name) 
+int GetOwnedStockAmount(uint32_t player_id, uint32_t company_id) 
 {
 
-    const uint32_t company_id = GetCompanyId(company_name);
     return GetOwnedStockAmountByCompanyId(player_id, company_id);
 
 }
 
-void ModifyOwnedStockAmount(uint32_t player_id, char *company_name, int amount) 
+void ModifyOwnedStockAmount(uint32_t player_id, uint32_t company_id, int amount) 
 {
-
-    const uint32_t company_id = GetCompanyId(company_name);
 
     uint32_t *company_ids = owned_company_ids->elements;
     uint32_t *player_ids  = owned_player_ids->elements;
@@ -95,12 +92,11 @@ void ModifyOwnedStockAmount(uint32_t player_id, char *company_name, int amount)
 
 }
 
-void InsertStockTransaction(unsigned int player_id, char *company_name, float transaction_amount, int stocks_exchanged) 
+void InsertStockTransaction(unsigned int player_id, uint32_t company_id, float transaction_amount, int stocks_exchanged) 
 {
 
-    uint32_t company_id = GetCompanyId(company_name);
-    time_t game_time    = Game_GetGameTime();
-    static char *query  = "INSERT INTO Player_Transactions (PlayerId, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, %d, %.2f, %d, %d);";
+    time_t game_time   = Game_GetGameTime();
+    static char *query = "INSERT INTO Player_Transactions (PlayerId, CompanyId, TransactionAmount, StocksExchanged, TransactionTime) VALUES (%d, %d, %.2f, %d, %d);";
     Queue_PushMessage(transaction_queue, GetFormattedPointer(query, player_id, company_id, transaction_amount, stocks_exchanged, game_time));
 
     Vector_PushBack(transaction_player_ids, &player_id);
@@ -113,22 +109,22 @@ void InsertStockTransaction(unsigned int player_id, char *company_name, float tr
 }
 
 
-void AttemptToAddFromCurrentStock(uint32_t player_id, char *company_name, int amount_to_add, float price_per_stock)
+void AttemptToAddFromCurrentStock(uint32_t player_id, uint32_t company_id, int amount_to_add, float price_per_stock)
 {
 
-    ModifyOwnedStockAmount(player_id, company_name, amount_to_add);
-    InsertStockTransaction(player_id, company_name, -amount_to_add * price_per_stock, amount_to_add);
+    ModifyOwnedStockAmount(player_id, company_id, amount_to_add);
+    InsertStockTransaction(player_id, company_id, -amount_to_add * price_per_stock, amount_to_add);
 
 }
 
-bool AttemptToSubtractFromCurrentStock(uint32_t player_id, char *company_name, int amount_to_subtract, float price_per_stock)
+bool AttemptToSubtractFromCurrentStock(uint32_t player_id, uint32_t company_id, int amount_to_subtract, float price_per_stock)
 {
 
-    if (GetOwnedStockAmount(player_id, company_name) < amount_to_subtract)
+    if (GetOwnedStockAmount(player_id, company_id) < amount_to_subtract)
         return false;
 
-    ModifyOwnedStockAmount(player_id, company_name, -amount_to_subtract);
-    InsertStockTransaction(player_id, company_name, amount_to_subtract * price_per_stock, -amount_to_subtract);
+    ModifyOwnedStockAmount(player_id, company_id, -amount_to_subtract);
+    InsertStockTransaction(player_id, company_id, amount_to_subtract * price_per_stock, -amount_to_subtract);
     return true;
 
 }

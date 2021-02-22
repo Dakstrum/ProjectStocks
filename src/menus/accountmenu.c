@@ -95,11 +95,12 @@ void AccountMenu_RenderLogic()
         return;
 
     char *company_viewing = GetCompanyNameViewing();
+    uint32_t company_id   = GetCompanyId(company_viewing);
     
     SetTextContent(player_money_textobject,       "%.2f", Account_GetMoney(Account_GetPlayerId()));
     SetTextContent(player_date_textobject,        "%s",   Game_GetDate());
     SetTextContent(stock_price_textobject,        "%.2f", Simulation_GetLastStockPrice(company_viewing));
-    SetTextContent(owned_stock_amount_textobject, "%d",   GetOwnedStockAmount(Account_GetPlayerId(), company_viewing));
+    SetTextContent(owned_stock_amount_textobject, "%d",   GetOwnedStockAmount(Account_GetPlayerId(), company_id));
     SetTextContent(networth_textobject,           "%.2f", GetAccountNetWorth(Account_GetPlayerId()));
 
 }

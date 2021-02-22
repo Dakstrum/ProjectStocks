@@ -62,7 +62,7 @@ uint32_t Simulation_CompanyIndex(char *company_name)
         }
 
     }
-    assert(0 == 1);
+    assert(0);
     return 0;
 
 }
@@ -203,6 +203,14 @@ void Simulation_ModifyGlobal(float modifier, time_t play_time, uint32_t days, ch
 
     }
     Simulation_Event_Push(event, play_time);
+
+}
+
+void Simulation_ApplyTransaction(int transaction_amount, uint32_t company_id, time_t transaction_time)
+{
+
+    float modifier = transaction_amount/10000.0;
+    Simulation_ModifyCompany(company_id, transaction_time, modifier, 7, NULL);
 
 }
 
