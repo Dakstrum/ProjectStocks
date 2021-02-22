@@ -151,13 +151,6 @@ float Simulation_GetLastStockPrice(char *company_name)
 
 }
 
-char *GetAnyEventAtTime(time_t event_time)
-{
-
-    return NULL;
-
-}
-
 float Simulation_GetStockPriceDiff(char *company_name)
 {
 
