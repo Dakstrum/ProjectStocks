@@ -61,19 +61,7 @@ uint32_t Simulation_CompanyIndex(char *company_name)
     return 0;
 
 }
-/*
-typedef struct Company {
 
-    unsigned int company_id;
-    unsigned int category_id;
-    float ipo;
-    char company_name[64];
-    char company_description[256];
-    char company_abbreviation[6];
-
-} Company;
-
-*/
 uint32_t Simulation_CompanyIndexByCompanyId(uint32_t company_id)
 {
 
