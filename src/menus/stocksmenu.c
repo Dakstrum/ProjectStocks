@@ -316,14 +316,13 @@ void StocksMenu_SellMenu_Sell_BCB()
     char *company_viewing = GetCompanyNameViewing();
     uint32_t company_id   = GetCompanyId(company_viewing);
     uint32_t player_id    = Account_GetPlayerId();
-
-    float current_stock_price = Simulation_GetLastStockPrice(selected_company_name);
-    bool successful = AttemptToSubtractFromCurrentStock(player_id, company_id, amount_in_text_box, current_stock_price);
-
-    if (successful) {
+    float current_stock_price = Simulation_GetLastStockPrice(company_viewing);
+    
+    if (dbaccount_can_sell_stock(player_id, company_id, amount_in_text_box)) {
 
         char str[50];
         StocksMenu_SellMenu_BCB();
+        dbaccount_sell_stocks(player_id, company_id, amount_in_text_box, current_stock_price);
         sprintf(str, "Sold %d of %s", amount_in_text_box, company_viewing);
         DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
         Account_AddMoney(player_id, amount_in_text_box * current_stock_price);
@@ -351,7 +350,7 @@ void StocksMenu_BuyMenu_Buy_BCB()
 
         char *company_viewing = GetCompanyNameViewing();
         uint32_t company_id   = GetCompanyId(company_viewing);
-        AttemptToAddFromCurrentStock(player_id, company_id, amount_in_text_box, current_stock_price);
+        dbaccount_buy_stocks(player_id, company_id, amount_in_text_box, current_stock_price);
         StocksMenu_BuyMenu_BCB();
 
         sprintf(str, "Bought %d shares of %s", amount_in_text_box, company_viewing);

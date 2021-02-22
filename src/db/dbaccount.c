@@ -92,7 +92,7 @@ void ModifyOwnedStockAmount(uint32_t player_id, uint32_t company_id, int amount)
 
 }
 
-void InsertStockTransaction(unsigned int player_id, uint32_t company_id, float transaction_amount, int stocks_exchanged) 
+void dbaccount_insert_transaction(unsigned int player_id, uint32_t company_id, float transaction_amount, int stocks_exchanged) 
 {
 
     time_t game_time   = Game_GetGameTime();
@@ -109,22 +109,26 @@ void InsertStockTransaction(unsigned int player_id, uint32_t company_id, float t
 }
 
 
-void AttemptToAddFromCurrentStock(uint32_t player_id, uint32_t company_id, int amount_to_add, float price_per_stock)
+void dbaccount_buy_stocks(uint32_t player_id, uint32_t company_id, int amount_to_add, float price_per_stock)
 {
 
     ModifyOwnedStockAmount(player_id, company_id, amount_to_add);
-    InsertStockTransaction(player_id, company_id, -amount_to_add * price_per_stock, amount_to_add);
+    dbaccount_insert_transaction(player_id, company_id, -amount_to_add * price_per_stock, amount_to_add);
 
 }
 
-bool AttemptToSubtractFromCurrentStock(uint32_t player_id, uint32_t company_id, int amount_to_subtract, float price_per_stock)
+bool dbaccount_can_sell_stock(uint32_t player_id, uint32_t company_id, int amount_to_subtract)
 {
 
-    if (GetOwnedStockAmount(player_id, company_id) < amount_to_subtract)
-        return false;
+    return GetOwnedStockAmount(player_id, company_id) >= amount_to_subtract;
+
+}
+
+bool dbaccount_sell_stocks(uint32_t player_id, uint32_t company_id, int amount_to_subtract, float price_per_stock)
+{
 
     ModifyOwnedStockAmount(player_id, company_id, -amount_to_subtract);
-    InsertStockTransaction(player_id, company_id, amount_to_subtract * price_per_stock, -amount_to_subtract);
+    dbaccount_insert_transaction(player_id, company_id, amount_to_subtract * price_per_stock, -amount_to_subtract);
     return true;
 
 }

@@ -199,6 +199,7 @@ DrawObject *CreateNewPopup()
 
 void DisplayPopupOnDrawLayer(char str[50], char *path) 
 {
+    
     DrawObject *object = CreateNewPopup();
     object->asset_path = path;
     SetPopupText(object, str);

@@ -30,8 +30,8 @@ typedef struct Transaction
 
 } Transaction;
 
-bool AttemptToSubtractFromCurrentStock(uint32_t player_id, uint32_t company_id, int amount_to_subtract, float price_per_stock);
-void AttemptToAddFromCurrentStock(uint32_t player_id, uint32_t company_id, int amount_to_add, float price_per_stock);
+bool dbaccount_sell_stocks(uint32_t player_id, uint32_t company_id, int amount_to_subtract, float price_per_stock);
+void dbaccount_buy_stocks(uint32_t player_id, uint32_t company_id, int amount_to_add, float price_per_stock);
 
 char *GetSaveNameFromSaveId(int save_id);
 char *GetPlayerNameFromSaveName(char *save_name);
@@ -43,5 +43,7 @@ void SaveTransactions();
 int GetOwnedStockAmount(uint32_t player_id, uint32_t company_id);
 void InitializeAccountInformation();
 float GetAccountNetWorth(uint32_t player_id);
+
+bool dbaccount_can_sell_stock(uint32_t player_id, uint32_t company_id, int amount_to_subtract);
 
 #endif
