@@ -174,7 +174,7 @@ void Account_StorePlayerData()
     current_save.time_spent_in_game = Game_GetGameTime();
 
     SavePlayerData(current_save);
-    SaveTransactions();
+    dbaccount_save_transactions();
     SaveCards();
 
 }

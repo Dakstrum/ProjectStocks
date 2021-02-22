@@ -15,6 +15,7 @@
 #include "dbaccess.h"
 #include "dbevents.h"
 #include "dbcompany.h"
+#include "dbaccount.h"
 #include "simulation.h"
 #include "simulation_event.h"
 #include "simulation_card.h"
@@ -338,6 +339,11 @@ void Simulation_LoadModifiers()
 {
 
     modifiers = dbcard_get_played_modifiers_copy();
+    Vector *transactions = dbaccount_get_all_transactions();
+
+    Transaction *temp = transactions->elements;
+    for (size_t i = 0; i < transactions->num_elements;i++)
+        Simulation_ApplyTransaction(temp[i].shares_exchanged, temp[i].company_id, temp[i].transaction_date);
 
 }
 

@@ -148,7 +148,7 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
     temp.transaction_id     = atoi(argv[0]);
     temp.company_id         = company_id;
     temp.transaction_amount = atof(argv[3]);
-    temp.shares_exchanged    = atoi(argv[4]);
+    temp.shares_exchanged   = atoi(argv[4]);
     temp.transaction_date   = atoi(argv[5]);
     temp.price_per_share    = temp.transaction_amount / temp.shares_exchanged;
     temp.type = temp.transaction_amount < 0 ? BUY : SELL;
@@ -184,7 +184,7 @@ Vector *GetCompanyTransactions(uint32_t player_id, char *company)
 
 }
 
-Vector *GetAllTransactions(uint32_t player_id)
+Vector *dbaccount_get_player_transactions(uint32_t player_id)
 {
 
     uint32_t *player_ids = transaction_player_ids->elements;
@@ -206,12 +206,20 @@ Vector *GetAllTransactions(uint32_t player_id)
 
 }
 
+Vector *dbaccount_get_all_transactions()
+{
+
+    return transactions;
+
+}
+
 void InitSavedTransactions()
 {
 
-    char *query =   "SELECT PT.* FROM Player_Transactions PT "
-                    "INNER JOIN Game_Players GP ON GP.PlayerId = PT.PlayerId "
-                    "WHERE GP.SaveId = %d";
+    char *query = 
+    "SELECT PT.* FROM Player_Transactions PT "
+    "INNER JOIN Game_Players GP ON GP.PlayerId = PT.PlayerId "
+    "WHERE GP.SaveId = %d";
 
     ExecuteQueryF(&SetTransactionCallback, NULL, query, Game_GetSaveId());
 
@@ -300,7 +308,7 @@ void InitPlayerIds()
 
 }
 
-void SaveTransactions()
+void dbaccount_save_transactions()
 {
 
     Vector *vector = Queue_GetLockFreeVector(transaction_queue);

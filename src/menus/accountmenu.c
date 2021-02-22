@@ -213,7 +213,7 @@ void AccountMenu_InitAllStocksHistoryDisplay()
 void AccountMenu_PopulateAllStocksHistoryDisplay()
 {
     
-    Vector *transactions = GetAllTransactions(Account_GetPlayerId());
+    Vector *transactions = dbaccount_get_player_transactions(Account_GetPlayerId());
     char transaction_time[128];
 
     Transaction *temp = transactions->elements;

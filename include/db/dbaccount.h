@@ -37,8 +37,9 @@ char *GetSaveNameFromSaveId(int save_id);
 char *GetPlayerNameFromSaveName(char *save_name);
 
 Vector *GetCompanyTransactions(uint32_t player_id, char *company);
-Vector *GetAllTransactions(uint32_t player_id);
-void SaveTransactions();
+Vector *dbaccount_get_player_transactions(uint32_t player_id);
+Vector *dbaccount_get_all_transactions();
+void dbaccount_save_transactions();
 
 int GetOwnedStockAmount(uint32_t player_id, uint32_t company_id);
 void InitializeAccountInformation();
