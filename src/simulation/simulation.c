@@ -53,15 +53,35 @@ uint32_t Simulation_CompanyIndex(char *company_name)
 {
 
     Company *companies_temp = companies->elements;
-    for (size_t i = 0; i < companies->num_elements;i++) {
-
-        if (strcmp(company_name, companies_temp[i].company_name) == 0) {
-
+    for (size_t i = 0; i < companies->num_elements;i++)
+        if (strcmp(company_name, companies_temp[i].company_name) == 0)
             return i;
 
-        }
+    assert(0);
+    return 0;
 
-    }
+}
+/*
+typedef struct Company {
+
+    unsigned int company_id;
+    unsigned int category_id;
+    float ipo;
+    char company_name[64];
+    char company_description[256];
+    char company_abbreviation[6];
+
+} Company;
+
+*/
+uint32_t Simulation_CompanyIndexByCompanyId(uint32_t company_id)
+{
+
+    Company *companies_temp = companies->elements;
+    for (size_t i = 0; i < companies->num_elements;i++)
+        if (companies_temp[i].company_id == company_id)
+            return i;
+
     assert(0);
     return 0;
 
@@ -146,6 +166,15 @@ float Simulation_GetLastStockPrice(char *company_name)
 {
 
     uint32_t company_idx = Simulation_CompanyIndex(company_name);
+    StockPrice *prices   = sim_data[company_idx]->elements;
+    return prices[sim_data[company_idx]->num_elements - 1].price;
+
+}
+
+float Simulation_GetLastStockPriceByCompanyId(uint32_t company_id)
+{
+
+    uint32_t company_idx = Simulation_CompanyIndexByCompanyId(company_id);
     StockPrice *prices   = sim_data[company_idx]->elements;
     return prices[sim_data[company_idx]->num_elements - 1].price;
 

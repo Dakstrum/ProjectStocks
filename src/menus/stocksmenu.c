@@ -24,6 +24,7 @@
 #include "drawlayerutils.h"
 #include "textbox.h"
 #include "menupersistence.h"
+#include "transaction.h"
 
 #include "manager.h"
 #include "newsmanager.h"
@@ -316,18 +317,14 @@ void StocksMenu_SellMenu_Sell_BCB()
     char *company_viewing = GetCompanyNameViewing();
     uint32_t company_id   = GetCompanyId(company_viewing);
     uint32_t player_id    = Account_GetPlayerId();
-    float current_stock_price = Simulation_GetLastStockPrice(company_viewing);
-    
-    if (dbaccount_can_sell_stock(player_id, company_id, amount_in_text_box)) {
+
+    if (transaction_sell_stocks(player_id, company_id, amount_in_text_box)) {
+
+        StocksMenu_SellMenu_BCB();
 
         char str[50];
-        StocksMenu_SellMenu_BCB();
-        dbaccount_sell_stocks(player_id, company_id, amount_in_text_box, current_stock_price);
         sprintf(str, "Sold %d of %s", amount_in_text_box, company_viewing);
         DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
-        Account_AddMoney(player_id, amount_in_text_box * current_stock_price);
-
-        Simulation_ApplyTransaction(-amount_in_text_box, company_id, Game_GetGameTime());
 
     } else {
 
@@ -344,25 +341,18 @@ void StocksMenu_BuyMenu_Buy_BCB()
     if (amount_in_text_box <= 0)
         return;
 
-    float current_stock_price = Simulation_GetLastStockPrice(selected_company_name);
-    uint32_t player_id = Account_GetPlayerId();
+    uint32_t player_id    = Account_GetPlayerId();
+    char *company_viewing = GetCompanyNameViewing();
+    uint32_t company_id   = GetCompanyId(company_viewing);
 
-    if (Account_CanMakeTransaction(player_id, amount_in_text_box * current_stock_price)) {
+    if (transaction_purchase_stocks(player_id, company_id, amount_in_text_box)) {
 
-        char *company_viewing = GetCompanyNameViewing();
-        uint32_t company_id   = GetCompanyId(company_viewing);
-        dbaccount_buy_stocks(player_id, company_id, amount_in_text_box, current_stock_price);
         StocksMenu_BuyMenu_BCB();
-        Simulation_ApplyTransaction(amount_in_text_box, company_id, Game_GetGameTime());
-
         char str[50];
         sprintf(str, "Bought %d shares of %s", amount_in_text_box, company_viewing);
         DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
 
-        Account_SubtractMoney(player_id, amount_in_text_box * current_stock_price);
-
-    } 
-    else {
+    } else {
 
         DisplayPopupOnDrawLayer("Unable to purchase stock", "assets/images/generalpurposemenus/popups/redpopup.png");
 

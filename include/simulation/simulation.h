@@ -20,6 +20,7 @@ void SetEndYear(time_t end_year);
 Vector *Simulation_GetStockPrices(char *company_name, time_t current_time, time_t span);
 float Simulation_GetLastStockPrice(char *company_name);
 float Simulation_GetStockPriceDiff(char *company_name);
+float Simulation_GetLastStockPriceByCompanyId(uint32_t company_id);
 
 void Simulation_Init(uint32_t new_game_seed);
 void Simulation_SimulateUntil(time_t t);
