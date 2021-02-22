@@ -61,7 +61,7 @@ int dbsave_insert_save(char *save_name, unsigned int game_seed)
 
 }
 
-void DeleteSave(int save_id)
+void dbsave_delete_save(int save_id)
 {
 
     ExecuteQueryF(NULL, NULL, "DELETE FROM Game_Players WHERE SaveId = %d; DELETE FROM Saves WHERE SaveId = %d;", save_id, save_id);

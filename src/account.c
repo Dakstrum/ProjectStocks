@@ -44,6 +44,9 @@ Player *Account_GetPlayer(uint32_t player_id)
         if (players[i].player_id == player_id)
             return &players[i];
 
+    assert(0);
+    return NULL;
+    
 }
 
 bool Account_CanMakeTransaction(uint32_t player_id, float amount) 
@@ -109,7 +112,8 @@ uint32_t Account_GetPlayerId()
         if (players[i].save_owner)
             return players[i].player_id;
 
-
+    assert(0);
+    return 0;
 }
 
 void Account_Init() 

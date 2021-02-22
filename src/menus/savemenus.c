@@ -125,7 +125,7 @@ void LoadSaveMenu_DeleteSave_CB()
         return;
 
     PlayerSave *temp = (PlayerSave *)saves->elements;
-    DeleteSave(temp[current_button_idx].save_id);
+    dbsave_delete_save(temp[current_button_idx].save_id);
     RemoveDrawObject(saves_scrollbox);
 
     LoadSaveMenu_SetSaveText("", "");
