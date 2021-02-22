@@ -127,12 +127,12 @@ int Account_CreateSaveEntries(char *save_name, char *player_name)
 
     static const float STARTING_MONEY = 15000.0;
 
-    int save_id = InsertSaveEntry(save_name, Game_GetSeed());
+    int save_id = dbsave_insert_save(save_name, Game_GetSeed());
 
-    InsertPlayerEntry(save_id, player_name, STARTING_MONEY, 1);
+    dbsave_insert_player(save_id, player_name, STARTING_MONEY, 1);
 
     for (size_t i = 0; i < 3;i++)
-        InsertAIPlayerEntry(save_id);
+        dbsave_insert_ai_player(save_id);
 
     return save_id;
 

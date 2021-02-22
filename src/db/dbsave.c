@@ -20,7 +20,7 @@ int GetSaveIdCallback(void *save_id, int argc, char **argv, char **col_name)
 
 }
 
-void InsertAIPlayerEntry(int save_id) 
+void dbsave_insert_ai_player(int save_id) 
 {
 
     char *query =   "INSERT INTO Game_Players (SaveId, PlayerName, Money, SaveOwner) "
@@ -34,7 +34,7 @@ void InsertAIPlayerEntry(int save_id)
 
 }
 
-int InsertPlayerEntry(int save_id, char *player_name, double money, int save_owner)
+int dbsave_insert_player(int save_id, char *player_name, double money, int save_owner)
 {
 
     sqlite3 *db = GetOpenConnection(DefaultConnection());
@@ -47,7 +47,7 @@ int InsertPlayerEntry(int save_id, char *player_name, double money, int save_own
     return player_id;
 }
 
-int InsertSaveEntry(char *save_name, unsigned int game_seed)
+int dbsave_insert_save(char *save_name, unsigned int game_seed)
 {
 
     sqlite3 *db = GetOpenConnection(DefaultConnection());

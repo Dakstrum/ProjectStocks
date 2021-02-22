@@ -42,9 +42,9 @@ typedef struct PlayerSave {
 uint32_t GetSaveSeedWithSaveId(int save_id);
 void DeleteSave(int save_id);
 
-int InsertSaveEntry(char *save_name, uint32_t game_seed);
-int InsertPlayerEntry(int save_id, char *player_name, double money, int save_owner);
-void InsertAIPlayerEntry(int save_id);
+int dbsave_insert_save(char *save_name, uint32_t game_seed);
+int dbsave_insert_player(int save_id, char *player_name, double money, int save_owner);
+void dbsave_insert_ai_player(int save_id);
 
 void dbsave_save_player_data(Save save);
 Vector *GetAllSaves();
