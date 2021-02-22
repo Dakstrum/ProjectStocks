@@ -46,7 +46,7 @@ int InsertSaveEntry(char *save_name, uint32_t game_seed);
 int InsertPlayerEntry(int save_id, char *player_name, double money, int save_owner);
 void InsertAIPlayerEntry(int save_id);
 
-void SavePlayerData(Save save);
+void dbsave_save_player_data(Save save);
 Vector *GetAllSaves();
 Save GetSaveData(int save_id);
 

@@ -236,7 +236,7 @@ Save GetSaveData(int save_id)
 
 }
 
-void SavePlayerData(Save save)
+void dbsave_save_player_data(Save save)
 {
 
     ExecuteQueryF(NULL, NULL, "UPDATE Game_Saves SET TimeSpentInGame = %d WHERE SaveId = %d;", save.time_spent_in_game, save.save_id);

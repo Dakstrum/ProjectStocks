@@ -47,7 +47,7 @@ char* GetCardTitle(unsigned int card_id);
 int GetCardType(unsigned int card_id);
 int GetNumOfPlayerCards();
 int GetPlayerCardId(int temp_card_id);
-void SaveCards();
+void dbcard_save_cards();
 
 Vector *dbcard_get_player_cards(uint32_t player_id);
 

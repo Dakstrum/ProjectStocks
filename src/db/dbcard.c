@@ -280,7 +280,7 @@ int GetNumOfPlayerNegativeCards()
  
 }
 
-void SaveCards()
+void dbcard_save_cards()
 {
 
     Vector *vector = Queue_GetLockFreeVector(card_queue);
