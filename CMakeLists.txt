@@ -30,6 +30,8 @@ include_directories(${PROJECT_SOURCE_DIR}/include/db)
 include_directories(${PROJECT_SOURCE_DIR}/include/drawobjects)
 include_directories(${PROJECT_SOURCE_DIR}/include/managers)
 include_directories(${PROJECT_SOURCE_DIR}/include/simulation)
+include_directories(${PROJECT_SOURCE_DIR}/include/account)
+
 
 
 file(GLOB_RECURSE sources ${PROJECT_SOURCE_DIR}/src/*.c)
