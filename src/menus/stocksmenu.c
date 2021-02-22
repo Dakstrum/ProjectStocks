@@ -327,6 +327,8 @@ void StocksMenu_SellMenu_Sell_BCB()
         DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
         Account_AddMoney(player_id, amount_in_text_box * current_stock_price);
 
+        Simulation_ApplyTransaction(-amount_in_text_box, company_id, Game_GetGameTime());
+
     } else {
 
         DisplayPopupOnDrawLayer("Unable to sell stock", "assets/images/generalpurposemenus/popups/redpopup.png");
@@ -345,14 +347,15 @@ void StocksMenu_BuyMenu_Buy_BCB()
     float current_stock_price = Simulation_GetLastStockPrice(selected_company_name);
     uint32_t player_id = Account_GetPlayerId();
 
-    char str[50];
     if (Account_CanMakeTransaction(player_id, amount_in_text_box * current_stock_price)) {
 
         char *company_viewing = GetCompanyNameViewing();
         uint32_t company_id   = GetCompanyId(company_viewing);
         dbaccount_buy_stocks(player_id, company_id, amount_in_text_box, current_stock_price);
         StocksMenu_BuyMenu_BCB();
+        Simulation_ApplyTransaction(amount_in_text_box, company_id, Game_GetGameTime());
 
+        char str[50];
         sprintf(str, "Bought %d shares of %s", amount_in_text_box, company_viewing);
         DisplayPopupOnDrawLayer(str, "assets/images/generalpurposemenus/popups/greenpopup.png");
 
