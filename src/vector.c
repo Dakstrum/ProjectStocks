@@ -30,8 +30,8 @@ void Vector_PushBack(Vector *vector, void *element)
 
     }
 
-    unsigned char *temp        = vector->elements;
-    unsigned char *new_element = element;
+    uint8_t *temp        = vector->elements;
+    uint8_t *new_element = element;
 
     for (size_t i = 0; i < vector->size_of_single_elem;i++)
         *(temp + vector->num_elements * vector->size_of_single_elem + i) = *(new_element + i);
