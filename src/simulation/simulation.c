@@ -17,6 +17,7 @@
 #include "dbcompany.h"
 #include "dbaccount.h"
 #include "simulation.h"
+#include "simulation_modifier.h"
 #include "simulation_event.h"
 #include "simulation_card.h"
 
@@ -182,61 +183,13 @@ float Simulation_GetStockPriceDiff(char *company_name)
 
 }
 
-void Simulation_ModifyCompany(uint32_t company_id, time_t play_time, float modifier, uint32_t days, char *event)
-{
-
-    PlayedModifiers temp = {company_id, play_time, modifier, days};
-    Vector_PushBack(modifiers, &temp);
-    Simulation_Event_Push(event, play_time);
-
-}
- 
-void Simulation_ModifyCategory(uint32_t category_id, time_t play_time, float modifier, uint32_t days, char *event)
-{
-
-    Company *companies_temp = companies->elements;
-    for (size_t i = 0; i < companies->num_elements;i++) {
-
-        if (companies_temp[i].category_id == category_id) {
-
-            PlayedModifiers temp = {companies_temp[i].company_id, play_time, modifier, days};
-            Vector_PushBack(modifiers, &temp);
-
-        }
-
-    }
-    Simulation_Event_Push(event, play_time);
-
-}
-
-void Simulation_ModifyGlobal(float modifier, time_t play_time, uint32_t days, char *event)
-{
-
-    Company *companies_temp = companies->elements;
-    for (size_t i = 0; i < companies->num_elements;i++) {
-
-        PlayedModifiers temp = {companies_temp[i].company_id, play_time, modifier, days};
-        Vector_PushBack(modifiers, &temp);
-
-    }
-    Simulation_Event_Push(event, play_time);
-
-}
-
-void Simulation_ApplyTransaction(int transaction_amount, uint32_t company_id, time_t transaction_time)
-{
-
-    float modifier = transaction_amount/10000.0;
-    Simulation_ModifyCompany(company_id, transaction_time, modifier, 7, NULL);
-
-}
-
 float Simulation_GetNextValue(time_t t, size_t idx) 
 {
 
     float value = ((StockPrice *)Vector_Last(sim_data[idx]))->price;
     float price_fluctuation = GenerateRandomPriceFluctuation(value);
 
+    Vector *modifiers = simulation_get_modifiers();
     PlayedModifiers *modifiers_temp = modifiers->elements;
     Company *companies_temp = companies->elements;
     for (size_t i = 0; i < modifiers->num_elements;i++) {
@@ -265,13 +218,13 @@ void Simulation_EventStep(time_t t)
     switch (event->event_type) {
 
         case GLOBAL:
-            Simulation_ModifyGlobal(event->price_modifier, t, event->modifier_length, event->event);
+            simulation_modify_global(event->price_modifier, t, event->modifier_length, event->event);
             break;
         case CATEGORY: 
-            Simulation_ModifyCategory(event->id, t, event->price_modifier, event->modifier_length, event->event);
+            simulation_modify_category(event->id, t, event->price_modifier, event->modifier_length, event->event);
             break;
         case COMPANY:
-            Simulation_ModifyCompany(event->id, t, event->price_modifier, event->modifier_length, event->event);
+            simulation_modify_company(event->id, t, event->price_modifier, event->modifier_length, event->event);
             break;
 
     }
@@ -282,22 +235,6 @@ void Simulation_CardStep()
 {
 
     simulation_card_step();
-
-}
-
-void Simulation_RemoveOldModifiers(time_t t)
-{
-
-    PlayedModifiers *modifiers_temp = modifiers->elements;
-    for (size_t i = 0; i < modifiers->num_elements;i++) {
-
-        if (t < modifiers_temp[i].played_time)
-            continue;
-
-        Vector_Remove(modifiers, i);
-        i--;
-
-    }
 
 }
 
@@ -318,7 +255,7 @@ void Simulation_SimulateStepGeneric(time_t t)
 
     Simulation_EventStep(t);
     Simulation_PriceStep(t);
-    Simulation_RemoveOldModifiers(t);
+    simuation_remove_old_modifiers(t);
 
 }
 
@@ -349,18 +286,6 @@ void Simulation_SimulateUntil(time_t t)
     }
 
     atomic_store(&simulation_finished, true);
-
-}
-
-void Simulation_LoadModifiers() 
-{
-
-    modifiers = dbcard_get_played_modifiers_copy();
-    Vector *transactions = dbaccount_get_all_transactions();
-
-    Transaction *temp = transactions->elements;
-    for (size_t i = 0; i < transactions->num_elements;i++)
-        Simulation_ApplyTransaction(temp[i].shares_exchanged, temp[i].company_id, temp[i].transaction_date);
 
 }
 
@@ -398,7 +323,7 @@ void Simulation_Init(uint32_t new_game_seed)
     Simulation_InitRandom(new_game_seed);
     Simulation_Event_Init();
     Simulation_LoadCompanies();
-    Simulation_LoadModifiers();
+    simulation_modifiers_init(companies);
 
 }
 
