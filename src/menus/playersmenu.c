@@ -36,6 +36,14 @@ static DrawObject *player_bitmap    = NULL;
 
 static int current_button_idx = -1;
 
+static DrawObject *playerone_networth_text   = NULL;
+static DrawObject *playertwo_networth_text   = NULL;
+static DrawObject *playerthree_networth_text = NULL;
+
+static DrawObject *playerone_name_text   = NULL;
+static DrawObject *playertwo_name_text   = NULL;
+static DrawObject *playerthree_name_text = NULL;
+
 void PlayersMenu_RenderLogic();
 
 void PlayersMenu_InitTextAndButtons();
@@ -60,9 +68,9 @@ void PlayersMenu_Init()
 
     GeneralPurposeMenus_InitSpeedSelectObject("PlayersMenu");
     PlayersMenu_InitTextAndButtons();
-    //PlayersMenu_InitPlayerNames();
-    //PlayersMenu_InitPlayerScrollBox();
-    //PlayersMenu_InitPlayerNetworth();
+    PlayersMenu_InitPlayerNames();
+    PlayersMenu_InitPlayerScrollBox();
+    PlayersMenu_InitPlayerNetworth();
 
 }
 
@@ -96,13 +104,13 @@ void PlayersMenu_InitPlayerScrollBox()
     DrawObject *playerone_scrollbox = NULL, *playertwo_scrollbox = NULL, *playerthree_scrollbox = NULL;
     DrawObject *player_scrollboxes[3] = {playerone_scrollbox, playertwo_scrollbox, playerthree_scrollbox};
 
+    int player_scrollboxes_x[3] = {176, 761, 1340};
+
     for(int i = 0; i < 3; i++)
     {
         player_scrollboxes[i] = Scrollbox_Create();
 
-       // int x = PlayerMenu_GetCenteredPointForPlayerBoxScrollbox(i, 1400, player_scrollboxes);
-       // AddObjectToDrawLayer(CreateAIPlayerOwnedCompaniesScrollbox(x, 560, &PlayerMenu_ScrollBoxClick));
-    
+        AddObjectToDrawLayer(CreateAIPlayerOwnedCompaniesScrollbox(player_scrollboxes_x[i], 420, &PlayerMenu_ScrollBoxClick));
     }
 
 }
@@ -111,9 +119,9 @@ void PlayersMenu_InitPlayerScrollBox()
 void PlayersMenu_InitPlayerNames()
 {
 
-    DrawObject *playerone_name_text   = GetJSONObjectAndAddToDrawLayer("PlayersMenuname1TextObject");
-    DrawObject *playertwo_name_text   = GetJSONObjectAndAddToDrawLayer("PlayersMenuname2TextObject");
-    DrawObject *playerthree_name_text = GetJSONObjectAndAddToDrawLayer("PlayersMenuname3TextObject");
+    DrawObject *playerone_name_text   = GetDrawObjectFromJsonLayer("PlayersMenuname1TextObject");
+    DrawObject *playertwo_name_text   = GetDrawObjectFromJsonLayer("PlayersMenuname2TextObject");
+    DrawObject *playerthree_name_text = GetDrawObjectFromJsonLayer("PlayersMenuname3TextObject");
 
     DrawObject *player_names[3] = {playerone_name_text, playertwo_name_text, playerthree_name_text};
 
@@ -125,6 +133,7 @@ void PlayersMenu_InitPlayerNames()
     
     }
 
+
 }
 
 
@@ -133,9 +142,9 @@ void PlayersMenu_InitPlayerNetworth()
 {
 
 
-    DrawObject *playerone_networth_text   = GetJSONObjectAndAddToDrawLayer("PlayersMenunetworth1TextObject");
-    DrawObject *playertwo_networth_text   = GetJSONObjectAndAddToDrawLayer("PlayersMenunetworth2TextObject");
-    DrawObject *playerthree_networth_text = GetJSONObjectAndAddToDrawLayer("PlayersMenunetworth3TextObject");
+    playerone_networth_text   = GetDrawObjectFromJsonLayer("PlayersMenunetworth1TextObject");
+    playertwo_networth_text   = GetDrawObjectFromJsonLayer("PlayersMenunetworth2TextObject");
+    playerthree_networth_text = GetDrawObjectFromJsonLayer("PlayersMenunetworth3TextObject");
 
     DrawObject *player_networth[3] = {playerone_networth_text, playertwo_networth_text, playerthree_networth_text};
 
@@ -158,6 +167,14 @@ void PlayersMenu_Clean()
     player_desc_textobject     = NULL;
 
     player_bitmap    = NULL;
+
+    playerone_networth_text   = NULL;
+    playertwo_networth_text   = NULL;
+    playerthree_networth_text = NULL;
+
+    playerone_name_text   = NULL;
+    playertwo_name_text   = NULL;
+    playerthree_name_text = NULL;
 
     players_menu      = NULL;
 
