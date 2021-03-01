@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS DB_Events
     DBEventId INTEGER PRIMARY KEY,
     Event VARCHAR(128) NOT NULL
 );
+<<<<<<< HEAD
 
 CREATE TABLE IF NOT EXISTS System_Company
 (
@@ -158,3 +159,5 @@ CREATE TABLE IF NOT EXISTS System_Audio_Samples
     SamplePan DOUBLE NOT NULL DEFAULT(0.0),
     SampleSpeed DOUBLE NOT NULL DEFAULT(1.0)
 );
+=======
+>>>>>>> feature-companyinit

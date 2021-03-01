@@ -5,7 +5,7 @@ void GeneralPurposeMenus_InitSpeedSelectObject();
 void GeneralPurposeMenus_InitStocksMenu_CB();
 void GeneralPurposeMenus_InitNewsMenu_CB();
 void GeneralPurposeMenus_InitAccountMenu_CB();
-void GeneralPurposeMenus_InitCardsMenu_CB();
+void GeneralPurposeMenus_InitPlayersMenu_CB();
 
 void GeneralPurposeMenus_SetSpeedOne_CB();
 void GeneralPurposeMenus_SetSpeedTwo_CB();

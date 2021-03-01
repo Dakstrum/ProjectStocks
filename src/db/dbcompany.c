@@ -92,6 +92,15 @@ char *GetCompanyDescriptionRef(unsigned int company_id)
 
 }
 
+unsigned int GetCompanyStartTime(unsigned int company_id)
+{
+
+    Company *temp = GetCompany(company_id);
+    assert(temp != NULL);
+    return temp->company_start_time;
+
+}
+
 unsigned int GetCompanyId(const char *company_name)
 {
 
@@ -138,8 +147,9 @@ int Company_Callback(void *company, int argc, char **argv, char **col_name)
     strncpy(temp.company_name,         argv[1], 64);
     strncpy(temp.company_description,  argv[2], 256);
     strncpy(temp.company_abbreviation, argv[3], 6);
-    temp.ipo         = atof(argv[4]);
-    temp.category_id = atoi(argv[5]);
+    temp.ipo                = atof(argv[4]);
+    temp.category_id        = atoi(argv[5]);
+    temp.company_start_time = atoi(argv[6]);
 
     Vector_PushBack(companies, &temp);
 
@@ -169,6 +179,6 @@ void InitializeCompanies()
     companies = Vector_Create(sizeof(Company), 4);
     company_icons = Vector_Create(sizeof(CompanyIconPath), 4);
     ExecuteQueryF(&Company_Icon_Callback, NULL, "SELECT CompanyId, IconPath FROM System_CompanyIcons");
-    ExecuteQueryF(&Company_Callback, NULL, "SELECT C.CompanyId, C.CompanyName, C.CompanyDescription, C.CompanyAbbreviation, C.IPO, C.CategoryId FROM System_Company C");
+    ExecuteQueryF(&Company_Callback, NULL, "SELECT C.CompanyId, C.CompanyName, C.CompanyDescription, C.CompanyAbbreviation, C.IPO, C.CategoryId, C.CompanyStartTime FROM System_Company C");
 
 }

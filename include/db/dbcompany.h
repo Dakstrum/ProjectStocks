@@ -11,6 +11,7 @@ typedef struct Company {
     char company_name[64];
     char company_description[256];
     char company_abbreviation[6];
+    unsigned int company_start_time;
 
 } Company;
 
@@ -24,6 +25,7 @@ char *GetCompanyAbbreviationRef(unsigned int company_id);
 char *GetCompanyDescriptionRef(unsigned int company_id);
 char *GetCompanyIconPath(unsigned int company_id);
 
+unsigned int GetCompanyStartTime(unsigned int company_id);
 unsigned int GetCompanyId(const char *company_name);
 int GetNumCompanies();
 

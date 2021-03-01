@@ -10,7 +10,7 @@
 #include "log.h"
 
 #include "accountmenu.h"
-#include "cardsmenu.h"
+#include "playersmenu.h"
 #include "generalpurposemenus.h"
 #include "newsmenu.h"
 #include "optionsmenu.h"

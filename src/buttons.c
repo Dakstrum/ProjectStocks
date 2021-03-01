@@ -12,7 +12,7 @@
 #include "accountmenu.h"
 #include "generalpurposemenus.h"
 #include "savemenus.h"
-#include "cardsmenu.h"
+#include "playersmenu.h"
 #include "vector.h"
 #include "optionsmenu.h"
 #include "pausemenus.h"
@@ -71,10 +71,10 @@ void MainMenu_InitButtons()
 void StocksMenu_InitButtons()
 {
 
-    AddButton("StocksMenuStocksTabButtonObject",  &GeneralPurposeMenus_InitStocksMenu_CB);
-    AddButton("StocksMenuNewsTabButtonObject",    &GeneralPurposeMenus_InitNewsMenu_CB);
-    AddButton("StocksMenuAccountTabButtonObject", &GeneralPurposeMenus_InitAccountMenu_CB);
-    AddButton("StocksMenuCardsTabButtonObject",   &GeneralPurposeMenus_InitCardsMenu_CB);
+    AddButton("StocksMenuStocksTabButtonObject",    &GeneralPurposeMenus_InitStocksMenu_CB);
+    AddButton("StocksMenuNewsTabButtonObject",      &GeneralPurposeMenus_InitNewsMenu_CB);
+    AddButton("StocksMenuAccountTabButtonObject",   &GeneralPurposeMenus_InitAccountMenu_CB);
+    AddButton("StocksMenuPlayersTabButtonObject",   &GeneralPurposeMenus_InitPlayersMenu_CB);
 
     AddButton("StocksMenuSellButtonObject",       &StocksMenu_SellMenu_BCB);
     AddButton("StocksMenuBuyButtonObject",        &StocksMenu_BuyMenu_BCB);
@@ -113,10 +113,10 @@ void InitializeSaveMenuButtons()
 void InitializeAccountButtons()
 {
 
-    AddButton("AccountMenuStocksTabButtonObject",  &GeneralPurposeMenus_InitStocksMenu_CB);
-    AddButton("AccountMenuNewsTabButtonObject",    &GeneralPurposeMenus_InitNewsMenu_CB);
-    AddButton("AccountMenuAccountTabButtonObject", &GeneralPurposeMenus_InitAccountMenu_CB);
-    AddButton("AccountMenuCardsTabButtonObject",   &GeneralPurposeMenus_InitCardsMenu_CB);
+    AddButton("AccountMenuStocksTabButtonObject",    &GeneralPurposeMenus_InitStocksMenu_CB);
+    AddButton("AccountMenuNewsTabButtonObject",      &GeneralPurposeMenus_InitNewsMenu_CB);
+    AddButton("AccountMenuAccountTabButtonObject",   &GeneralPurposeMenus_InitAccountMenu_CB);
+    AddButton("AccountMenuPlayersTabButtonObject",   &GeneralPurposeMenus_InitPlayersMenu_CB);
 
     AddButton("AccountMenuDownButtonObject", &AccountMenu_Down_CB);
     AddButton("AccountMenuUpButtonObject",   &AccountMenu_Up_CB);
@@ -133,7 +133,7 @@ void InitializeNewsButtons()
     AddButton("NewsMenuStocksTabButtonObject",  &GeneralPurposeMenus_InitStocksMenu_CB);
     AddButton("NewsMenuNewsTabButtonObject",    &GeneralPurposeMenus_InitNewsMenu_CB);
     AddButton("NewsMenuAccountTabButtonObject", &GeneralPurposeMenus_InitAccountMenu_CB);
-    AddButton("NewsMenuCardsTabButtonObject",   &GeneralPurposeMenus_InitCardsMenu_CB);
+    AddButton("NewsMenuPlayersTabButtonObject",   &GeneralPurposeMenus_InitPlayersMenu_CB);
 
     AddButton("NewsMenuSpeed1ButtonObject",   &GeneralPurposeMenus_SetSpeedOne_CB);
     AddButton("NewsMenuSpeed2ButtonObject",   &GeneralPurposeMenus_SetSpeedTwo_CB);
@@ -149,7 +149,7 @@ void InitializeGeneralPurposeButtons()
     AddButton("StocksButton", &GeneralPurposeMenus_InitStocksMenu_CB);
     AddButton("NewsButton", &GeneralPurposeMenus_InitNewsMenu_CB);
     AddButton("AccountButton", &GeneralPurposeMenus_InitAccountMenu_CB);
-    AddButton("CardsButton", &GeneralPurposeMenus_InitCardsMenu_CB);
+    AddButton("PlayersButton", &GeneralPurposeMenus_InitPlayersMenu_CB);
 
     AddButton("SpeedOneButton", &GeneralPurposeMenus_SetSpeedOne_CB);
     AddButton("SpeedTwoButton", &GeneralPurposeMenus_SetSpeedTwo_CB);
@@ -157,22 +157,17 @@ void InitializeGeneralPurposeButtons()
 
 }
 
-void CardsMenu_InitButtons()
+void PlayersMenu_InitButtons()
 {
 
-    AddButton("CardsMenuStocksTabButtonObject",  &GeneralPurposeMenus_InitStocksMenu_CB);
-    AddButton("CardsMenuNewsTabButtonObject",    &GeneralPurposeMenus_InitNewsMenu_CB);
-    AddButton("CardsMenuAccountTabButtonObject", &GeneralPurposeMenus_InitAccountMenu_CB);
-    AddButton("CardsMenuCardsTabButtonObject",   &GeneralPurposeMenus_InitCardsMenu_CB);
+    AddButton("PlayersMenuStocksTabButtonObject",  &GeneralPurposeMenus_InitStocksMenu_CB);
+    AddButton("PlayersMenuNewsTabButtonObject",    &GeneralPurposeMenus_InitNewsMenu_CB);
+    AddButton("PlayersMenuAccountTabButtonObject", &GeneralPurposeMenus_InitAccountMenu_CB);
+    AddButton("PlayersMenuPlayersTabButtonObject",   &GeneralPurposeMenus_InitPlayersMenu_CB);
 
-    AddButton("CardsMenuApplyButtonObject", &CardsMenu_PickCompanyMenu_CB);
-
-
-    AddButton("ApplyCardMenuExitButtonObject", &CardsMenu_PickCompanyMenu_CB);
-
-    AddButton("CardsMenuSpeed1ButtonObject",   &GeneralPurposeMenus_SetSpeedOne_CB);
-    AddButton("CardsMenuSpeed2ButtonObject",   &GeneralPurposeMenus_SetSpeedTwo_CB);
-    AddButton("CardsMenuSpeed3ButtonObject",   &GeneralPurposeMenus_SetSpeedThree_CB);
+    AddButton("PlayersMenuSpeed1ButtonObject",   &GeneralPurposeMenus_SetSpeedOne_CB);
+    AddButton("PlayersMenuSpeed2ButtonObject",   &GeneralPurposeMenus_SetSpeedTwo_CB);
+    AddButton("PlayersMenuSpeed3ButtonObject",   &GeneralPurposeMenus_SetSpeedThree_CB);
 
 }
 
@@ -222,7 +217,7 @@ void InitializeButtons()
     InitializePauseMenusButtons();
     InitializeOptionsButtons();
     InitializeSaveMenuButtons();
-    CardsMenu_InitButtons();
+    PlayersMenu_InitButtons();
     InitializeNewsButtons();
 
 }
