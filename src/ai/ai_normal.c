@@ -5,6 +5,7 @@
 #include "dbcard.h"
 #include "dbcompany.h"
 #include "account.h"
+#include "portfolio.h"
 #include "transaction.h"
 #include "vector.h"
 
@@ -31,7 +32,36 @@ typedef struct Company {
 
 } Company;
 
+typedef struct Player {
+
+    uint32_t player_id;
+    float money;
+    char name[32];
+    bool save_owner;
+
+} Player;
+
 */
+
+bool ai_normal_does_other_own_at_least_percent(uint32_t player_id, uint32_t company_id, float percent)
+{
+
+    Vector *players = Account_GetPlayers();
+    Player *players_temp = players->elements;
+
+    for (size_t i = 0; i < players->num_elements;i++) {
+
+        if (players_temp[i].player_id == player_id)
+            continue;
+
+        if (portfolio_get_percentage(player_id, company_id) >= percent)
+            return true;
+
+    }
+
+    return false;
+
+}
 
 void ai_normal_attempt_negative_card_play(uint32_t player_id, uint32_t card_id)
 {
@@ -41,7 +71,9 @@ void ai_normal_attempt_negative_card_play(uint32_t player_id, uint32_t card_id)
 
     for (size_t i = 0; i < companies->num_elements;i++) {
 
-
+        float chance = 0.0f;
+        float owned_percentage = portfolio_get_percentage(player_id, companies_temp[i].company_id);
+        bool ai_owns_70_perc   = ai_normal_does_other_own_at_least_percent(player_id, companies_temp[i].company_id, 70.0f);
 
     }
 
@@ -64,7 +96,7 @@ void ai_normal_attempt_positive_card_play(uint32_t player_id, uint32_t card_id)
 void ai_normal_play_cards(uint32_t player_id, time_t t) 
 {
 
-	Vector *cards = dbcard_get_player_cards(player_id);
+    Vector *cards = dbcard_get_player_cards(player_id);
     if (cards->num_elements == 0)
         return;
 
