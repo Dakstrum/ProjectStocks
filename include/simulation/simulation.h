@@ -4,6 +4,8 @@
 #include "shared.h"
 #include "vector.h"
 
+#include <allegro5/allegro.h>
+
 typedef struct StockPrice
 {
 

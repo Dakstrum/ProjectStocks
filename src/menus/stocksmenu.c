@@ -170,7 +170,7 @@ void StocksMenu_SellMenu_InitText()
 
     uint32_t company_id = GetCompanyId(selected_company_name);
     SetTextContent(transaction_menu_company_name_textobject, "%s", GetCompanyAbbreviationRef(company_id));
-    SetTextContent(transaction_menu_amountowned_textobject, "%d", GetOwnedStockAmount(Account_GetPlayerId(), company_id));
+    SetTextContent(transaction_menu_amountowned_textobject, "%d", dbaccount_get_owned_stock_amount(Account_GetPlayerId(), company_id));
 
 }
 

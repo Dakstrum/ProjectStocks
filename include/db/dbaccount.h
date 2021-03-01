@@ -41,7 +41,7 @@ Vector *dbaccount_get_player_transactions(uint32_t player_id);
 Vector *dbaccount_get_all_transactions();
 void dbaccount_save_transactions();
 
-int GetOwnedStockAmount(uint32_t player_id, uint32_t company_id);
+int dbaccount_get_owned_stock_amount(uint32_t player_id, uint32_t company_id);
 void InitializeAccountInformation();
 float GetAccountNetWorth(uint32_t player_id);
 
