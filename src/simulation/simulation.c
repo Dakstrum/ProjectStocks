@@ -346,8 +346,7 @@ void Simulation_Reset()
 
     atomic_store(&simulation_finished, false);
     simulation_reset_modifiers();
-
-
+    Simulation_Reset_Companies();
 
     sim_data  = NULL;
     companies = NULL;
