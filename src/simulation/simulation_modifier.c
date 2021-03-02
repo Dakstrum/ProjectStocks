@@ -64,6 +64,19 @@ void simulation_apply_transaction(int transaction_amount, uint32_t company_id, t
 
 }
 
+void simulation_apply_card(uint32_t player_id, uint32_t card_id, uint32_t company_id, time_t play_time)
+{
+
+    float price_modifier  = GetCardPriceModifier(card_id);
+    float modifier_length = GetCardModifierLength(card_id);
+
+    char buffer[128];
+    sprintf(buffer, "%s played card %s against company %s", Account_GetPlayerName(player_id), GetCardTitle(card_id), GetCompanyNameRef(company_id));
+    buffer[127] = '\0';
+    simulation_modify_company(company_id, play_time, price_modifier, modifier_length, buffer);
+
+}
+
 void simulation_modifiers_init(Vector *current_companies) 
 {
 
@@ -85,15 +98,9 @@ void simulation_modifiers_init(Vector *current_companies)
     for (size_t i = 0; i < transactions->num_elements;i++)
         simulation_apply_transaction(temp[i].shares_exchanged, temp[i].company_id, temp[i].transaction_date);
 
-    char buffer[128];
     PlayedCard *played_cards_temp = played_cards->elements;
-    for (size_t i = 0; i < played_cards->num_elements;i++) {
-
-        sprintf(buffer, "%s played card %s against company %s", Account_GetPlayerName(played_cards_temp[i].player_id), GetCardTitle(played_cards_temp[i].card_id), GetCompanyNameRef(played_cards_temp[i].company_id));
-        buffer[127] = '\0';
-        simulation_modify_company(played_cards_temp[i].company_id, played_cards_temp[i].played_time, played_cards_temp[i].price_modifier, played_cards_temp[i].modifier_length, buffer);
-
-    }
+    for (size_t i = 0; i < played_cards->num_elements;i++)
+        simulation_apply_card(played_cards_temp[i].player_id, played_cards_temp[i].card_id, played_cards_temp[i].company_id, played_cards_temp[i].played_time);
 
 }
 

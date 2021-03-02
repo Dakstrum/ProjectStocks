@@ -263,11 +263,9 @@ void cardcontroller_card_cb(uint32_t idx)
 
 	PlayerCard *player_cards_temp = player_cards->elements;
 	uint32_t company_id  = GetCompanyIdViewing();
-	float price_modifier = GetCardPriceModifier(player_cards_temp[idx].card_id);
-	uint32_t modifier_length = GetCardModifierLength(player_cards_temp[idx].card_id);
 
 	dbcard_apply_card(Account_GetPlayerId(), player_cards_temp[idx].card_id, company_id);
-	simulation_modify_company(company_id, Game_GetGameTime(), price_modifier, modifier_length, NULL);
+	simulation_apply_card(Account_GetPlayerId(), player_cards_temp[idx].card_id, company_id, Game_GetGameTime());
 	played_card = idx;
 
 }

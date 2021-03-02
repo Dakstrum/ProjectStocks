@@ -10,6 +10,8 @@
 #include "transaction.h"
 #include "vector.h"
 
+#include "simulation_modifier.h"
+
 bool ai_normal_does_other_own_at_least_percent(uint32_t player_id, uint32_t company_id, float percent)
 {
 
@@ -30,7 +32,7 @@ bool ai_normal_does_other_own_at_least_percent(uint32_t player_id, uint32_t comp
 
 }
 
-void ai_normal_attempt_negative_card_play(uint32_t player_id, uint32_t card_id)
+void ai_normal_attempt_negative_card_play(uint32_t player_id, uint32_t card_id, time_t t)
 {
 
     Vector *companies = GetAllCompaniesVector();
@@ -45,7 +47,7 @@ void ai_normal_attempt_negative_card_play(uint32_t player_id, uint32_t card_id)
 
 }
 
-void ai_normal_attempt_positive_card_play(uint32_t player_id, uint32_t card_id)
+void ai_normal_attempt_positive_card_play(uint32_t player_id, uint32_t card_id, time_t t)
 {
 
     Vector *companies = GetAllCompaniesVector();
@@ -60,6 +62,7 @@ void ai_normal_attempt_positive_card_play(uint32_t player_id, uint32_t card_id)
 
         if (chance > random_chance) {
 
+            simulation_apply_card(player_id, card_id, companies_temp[i].company_id, t);
             dbcard_apply_card(player_id, card_id, companies_temp[i].company_id);
             break;
 
@@ -80,9 +83,9 @@ void ai_normal_play_cards(uint32_t player_id, time_t t)
     for (size_t i = 0; i < cards->num_elements;i++) {
 
         if (GetCardPriceModifier(cards_temp[i].card_id) < 0)
-            ai_normal_attempt_negative_card_play(player_id, cards_temp[i].card_id);
+            ai_normal_attempt_negative_card_play(player_id, cards_temp[i].card_id, t);
         else
-            ai_normal_attempt_positive_card_play(player_id, cards_temp[i].card_id);
+            ai_normal_attempt_positive_card_play(player_id, cards_temp[i].card_id, t);
 
     }
 
