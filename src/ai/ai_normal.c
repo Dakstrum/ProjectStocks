@@ -38,7 +38,8 @@ void ai_normal_attempt_negative_card_play(uint32_t player_id, uint32_t card_id)
 
     for (size_t i = 0; i < companies->num_elements;i++) {
 
-
+        float owned_percentage = portfolio_get_percentage(player_id, companies_temp[i].company_id);
+        bool ai_owns_30_perc   = ai_normal_does_other_own_at_least_percent(player_id, companies_temp[i].company_id, 30.0f);
 
     }
 
@@ -55,7 +56,7 @@ void ai_normal_attempt_positive_card_play(uint32_t player_id, uint32_t card_id)
         float owned_percentage = portfolio_get_percentage(player_id, companies_temp[i].company_id);
         bool ai_owns_70_perc   = ai_normal_does_other_own_at_least_percent(player_id, companies_temp[i].company_id, 70.0f);
         float random_chance    = shared_random_float();
-        float chance           = owned_percentage/30.0f - ai_owns_70_perc == true ? 1.0f : 0.0f;
+        float chance           = owned_percentage/30.0f - 0.4f - ai_owns_70_perc == true ? 1.0f : 0.0f;
 
         if (chance > random_chance) {
 
