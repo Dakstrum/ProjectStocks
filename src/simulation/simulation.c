@@ -190,7 +190,7 @@ float Simulation_GetNextValue(time_t t, size_t idx)
     float price_fluctuation = GenerateRandomPriceFluctuation(value);
 
     Vector *modifiers = simulation_get_modifiers();
-    PlayedModifiers *modifiers_temp = modifiers->elements;
+    PlayedCard *modifiers_temp = modifiers->elements;
     Company *companies_temp = companies->elements;
     for (size_t i = 0; i < modifiers->num_elements;i++) {
 

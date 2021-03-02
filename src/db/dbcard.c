@@ -100,7 +100,14 @@ Vector *dbcard_get_all_cards()
 
 }
 
-Vector *dbcard_get_played_modifiers_copy() 
+Vector *dbcard_get_played_cards()
+{
+
+    return played_cards;
+
+}
+
+Vector *dbcard_get_played_cards_copy() 
 {
 
     return Vector_GetCopy(played_cards);
@@ -300,11 +307,13 @@ int dbcard_played_cards_callback(void *played_card, int argc, char **argv, char 
     if (argc == 0)
         return 0;
 
-    PlayedModifiers card;
+    PlayedCard card;
     card.company_id      = atoi(argv[0]);
     card.played_time     = atol(argv[1]);
     card.price_modifier  = atof(argv[2]);
     card.modifier_length = atoi(argv[3]);
+    card.player_id       = atoi(argv[4]);
+    card.card_id         = atoi(argv[5]);
 
     Vector_PushBack(played_cards, &card);
 
@@ -324,7 +333,7 @@ void dbcard_init_vectors()
 
         cards        = Vector_Create(sizeof(Card), 4);
         player_cards = Vector_Create(sizeof(PlayerCard), 4);
-        played_cards = Vector_Create(sizeof(PlayedModifiers), 4); 
+        played_cards = Vector_Create(sizeof(PlayedCard), 4); 
 
     }
 
@@ -339,7 +348,7 @@ void dbcard_init()
     card_queue = Queue_Create();
 
     char *played_cards_query =
-    "SELECT PCP.CompanyId, PCP.PlayedTime, SC.PriceModifier, SC.ModifierLength "
+    "SELECT PCP.CompanyId, PCP.PlayedTime, SC.PriceModifier, SC.ModifierLength, PCP.PlayerId, PCP.CardId "
     "FROM Player_CardsPlayed PCP "
     "INNER JOIN Game_Players GP ON GP.PlayerId = PCP.PlayerId "
     "INNER JOIN System_Cards SC ON SC.CardId = PCP.CardId "

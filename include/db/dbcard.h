@@ -25,14 +25,16 @@ typedef struct PlayerCard {
 
 } PlayerCard;
 
-typedef struct PlayedModifiers {
+typedef struct PlayedCard {
 
 	uint32_t company_id;
 	time_t played_time;
 	float price_modifier;
 	uint32_t modifier_length;
+    uint32_t player_id;
+    uint32_t card_id;
 
-} PlayedModifiers;
+} PlayedCard;
 
 
 int GetCardId(char* card_title);
@@ -55,7 +57,8 @@ void dbcard_add_card_to_player(uint32_t player_id, uint32_t card_id);
 void dbcard_apply_card(uint32_t player_id, uint32_t card_id, uint32_t company_id);
 void dbcard_init();
 
-Vector *dbcard_get_played_modifiers_copy();
+Vector *dbcard_get_played_cards();
+Vector *dbcard_get_played_cards_copy();
 Vector *dbcard_get_all_cards();
 
 

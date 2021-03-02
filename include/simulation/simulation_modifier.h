@@ -1,6 +1,15 @@
 #ifndef SIMULATION_MODIFIER_H
 #define SIMULATION_MODIFIER_H
 
+typedef struct SimulationModifier {
+
+    uint32_t company_id;
+    time_t played_time;
+    float price_modifier;
+    uint32_t modifier_length;
+
+} SimulationModifier;
+
 
 void simulation_modifiers_init(Vector *current_companies);
 Vector *simulation_get_modifiers();
