@@ -127,3 +127,15 @@ Vector *simulation_get_modifiers()
 	return modifiers;
 
 }
+
+void simulation_reset_modifiers()
+{
+
+    if (modifiers != NULL) {
+
+        Vector_Delete(modifiers);
+        modifiers = NULL;
+
+    }
+
+}

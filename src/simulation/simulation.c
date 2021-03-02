@@ -29,7 +29,6 @@ static atomic_bool simulation_finished;
 
 static Vector *companies;
 static Vector **sim_data;
-static Vector *modifiers;
 
 static uint16_t current_seed[3];
 
@@ -327,16 +326,10 @@ void Simulation_Init(uint32_t new_game_seed)
 
 }
 
-void Simulation_Reset()
+void Simulation_Reset_Companies()
 {
-
-
-    atomic_store(&simulation_finished, false);
-
-    if (modifiers == NULL)
+    if (companies == NULL)
         return;
-
-    Vector_Delete(modifiers);
 
     for (size_t i = 0; i < companies->num_elements;i++) {
 
@@ -346,16 +339,17 @@ void Simulation_Reset()
 
     free(sim_data);
 
-    sim_data  = NULL;
-    modifiers = NULL;
-    companies = NULL;
-
 }
 
-void StopSimulation()
+void Simulation_Reset()
 {
 
     atomic_store(&simulation_finished, false);
-    //CleanSimulation();
+    simulation_reset_modifiers();
+
+
+
+    sim_data  = NULL;
+    companies = NULL;
 
 }
