@@ -38,12 +38,10 @@ typedef struct PlayedCard {
 
 
 int dbcard_get_card_id(char* card_title);
-char* GetCardPath(unsigned int card_id);
-float GetCardPriceModifier(unsigned int card_id);
-unsigned int GetCardModifierLength(unsigned int card_id);
-char* GetCardDescription(unsigned int card_id);
-int GetNumOfPlayerPositiveCards();
-int GetNumOfPlayerNegativeCards();
+char* dbcard_get_card_path(unsigned int card_id);
+float dbcard_get_card_modifier(unsigned int card_id);
+unsigned int dbcard_get_card_modifier_length(unsigned int card_id);
+char* dbcard_get_card_desc(unsigned int card_id);
 PlayerCard *GetAllPlayerCards();
 char* dbcard_get_card_name(unsigned int card_id);
 int GetCardType(unsigned int card_id);

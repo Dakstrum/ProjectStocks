@@ -99,7 +99,7 @@ void ai_normal_play_cards(uint32_t player_id, time_t t)
     PlayerCard *cards_temp = cards->elements;
     for (size_t i = 0; i < cards->num_elements;i++) {
 
-        if (GetCardPriceModifier(cards_temp[i].card_id) < 0)
+        if (dbcard_get_card_modifier(cards_temp[i].card_id) < 0)
             ai_normal_attempt_negative_card_play(player_id, cards_temp[i].card_id, t);
         else
             ai_normal_attempt_positive_card_play(player_id, cards_temp[i].card_id, t);

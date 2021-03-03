@@ -68,8 +68,8 @@ void simulation_apply_transaction(int transaction_amount, uint32_t company_id, t
 void simulation_apply_card(uint32_t player_id, uint32_t card_id, uint32_t company_id, time_t play_time)
 {
 
-    float price_modifier     = GetCardPriceModifier(card_id);
-    uint32_t modifier_length = GetCardModifierLength(card_id);
+    float price_modifier     = dbcard_get_card_modifier(card_id);
+    uint32_t modifier_length = dbcard_get_card_modifier_length(card_id);
 
     char buffer[128];
     sprintf(buffer, "%s played card %s against company %s", Account_GetPlayerName(player_id), dbcard_get_card_name(card_id), GetCompanyNameRef(company_id));

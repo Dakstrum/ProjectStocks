@@ -42,7 +42,7 @@ char *dbcard_get_card_name(unsigned int card_id)
 
 }
 
-char* GetCardDescription(unsigned int card_id)
+char* dbcard_get_card_desc(unsigned int card_id)
 {
 
     Card *temp = cards->elements;
@@ -54,7 +54,7 @@ char* GetCardDescription(unsigned int card_id)
 
 }
 
-char* GetCardPath(unsigned int card_id)
+char* dbcard_get_card_path(unsigned int card_id)
 {
 
     Card *temp = cards->elements;
@@ -66,7 +66,7 @@ char* GetCardPath(unsigned int card_id)
 
 }
 
-float GetCardPriceModifier(unsigned int card_id)
+float dbcard_get_card_modifier(unsigned int card_id)
 {
 
     Card *temp = cards->elements;
@@ -78,7 +78,7 @@ float GetCardPriceModifier(unsigned int card_id)
 
 }
 
-unsigned int GetCardModifierLength(unsigned int card_id)
+unsigned int dbcard_get_card_modifier_length(unsigned int card_id)
 {
 
     Card *temp = (Card *)cards->elements;
@@ -109,17 +109,6 @@ Vector *dbcard_get_played_cards_copy()
 {
 
     return Vector_GetCopy(played_cards);
-
-}
-
-
-int GetCardType(unsigned int card_id)
-{
-
-    if(GetCardPriceModifier(card_id) > 0)
-        return 1;
-    else
-        return 0;
 
 }
 
@@ -255,34 +244,6 @@ Vector *dbcard_get_player_cards(uint32_t player_id)
 
     return specific_player_cards;
 
-}
-
-int GetNumOfPlayerPositiveCards()
-{
-    int amount = 0;
-
-    PlayerCard *temp = (PlayerCard *)player_cards->elements;
-
-    for(size_t i = 0; i < player_cards->num_elements; i++)  
-        if(GetCardType(temp[i].card_id))
-            amount++;
-
-    return amount;
-
-}
-
-int GetNumOfPlayerNegativeCards()
-{
-
-    int amount = 0;
-    PlayerCard *temp = (PlayerCard *)player_cards->elements;
-    
-    for(size_t i = 0; i < player_cards->num_elements; i++)  
-        if(GetCardType(temp[i].card_id) == 0)
-            amount++;
-
-    return amount;
- 
 }
 
 void dbcard_save_cards()
