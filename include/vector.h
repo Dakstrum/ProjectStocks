@@ -35,5 +35,8 @@ void Vector_Reset(Vector *vector);
 void Vector_Delete(Vector *vector);
 void Vector_DeletePtrs(Vector *vector);
 
-void Vector_ForEach(Vector *vector, void *(callback)(void *, uint32_t i));
+#define Vector_ForEach(idx, element, vector_list) \
+    size_t idx = 0; \
+    for (void *(element) = vector_list->elements; idx < vector_list->num_elements; element += vector_list->size_of_single_elem, idx++)
+
 #endif

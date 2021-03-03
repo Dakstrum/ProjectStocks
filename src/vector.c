@@ -223,12 +223,3 @@ void Vector_Delete(Vector *vector)
     free(vector);
 
 }
-
-void Vector_ForEach(Vector *vector, void *(callback)(void *, uint32_t i)) 
-{
-
-    assert(vector != NULL);
-    for (size_t i = 0; i < vector->num_elements;i++)
-        callback(vector->elements + i * vector->size_of_single_elem, i);
-
-}
