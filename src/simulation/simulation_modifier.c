@@ -6,6 +6,7 @@
 
 #include "account.h"
 
+#include "log.h"
 #include "vector.h"
 
 #include "simulation_modifier.h"
@@ -67,8 +68,8 @@ void simulation_apply_transaction(int transaction_amount, uint32_t company_id, t
 void simulation_apply_card(uint32_t player_id, uint32_t card_id, uint32_t company_id, time_t play_time)
 {
 
-    float price_modifier  = GetCardPriceModifier(card_id);
-    float modifier_length = GetCardModifierLength(card_id);
+    float price_modifier     = GetCardPriceModifier(card_id);
+    uint32_t modifier_length = GetCardModifierLength(card_id);
 
     char buffer[128];
     sprintf(buffer, "%s played card %s against company %s", Account_GetPlayerName(player_id), GetCardTitle(card_id), GetCompanyNameRef(company_id));
@@ -87,7 +88,7 @@ void simulation_modifiers_init(Vector *current_companies)
     } else {
 
         modifiers = Vector_Create(sizeof(SimulationModifier), 32);
-        
+
     }
 
 	companies = current_companies;
