@@ -326,6 +326,7 @@ void dbcard_init_vectors()
 
     if (player_cards != NULL) {
 
+        Vector_Reset(cards);
         Vector_Reset(player_cards);
         Vector_Reset(played_cards);
 
