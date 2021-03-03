@@ -68,7 +68,7 @@ char* GetCardPath(unsigned int card_id)
 
 }
 
-int GetCardPriceModifier(unsigned int card_id)
+float GetCardPriceModifier(unsigned int card_id)
 {
 
     Card *temp = (Card *)cards->elements;

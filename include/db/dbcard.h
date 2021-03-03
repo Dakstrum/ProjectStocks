@@ -39,7 +39,7 @@ typedef struct PlayedCard {
 
 int GetCardId(char* card_title);
 char* GetCardPath(unsigned int card_id);
-int GetCardPriceModifier(unsigned int card_id);
+float GetCardPriceModifier(unsigned int card_id);
 unsigned int GetCardModifierLength(unsigned int card_id);
 char* GetCardDescription(unsigned int card_id);
 int GetNumOfPlayerPositiveCards();
