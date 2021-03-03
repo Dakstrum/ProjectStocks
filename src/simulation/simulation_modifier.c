@@ -60,7 +60,7 @@ void simulation_modify_global(float modifier, time_t play_time, uint32_t days, c
 void simulation_apply_transaction(int transaction_amount, uint32_t company_id, time_t transaction_time)
 {
 
-    float modifier = transaction_amount/10000.0;
+    float modifier = transaction_amount/100000.0;
     simulation_modify_company(company_id, transaction_time, modifier, 7, NULL);
 
 }
