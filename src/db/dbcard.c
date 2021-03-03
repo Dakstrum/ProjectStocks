@@ -17,15 +17,14 @@ static Vector *played_cards = NULL;
 static Queue *card_queue   = NULL;
 
 //Cards
-int GetCardId(char* card_title)
+int GetCardId(char *card_title)
 {
 
 	assert(card_title != NULL);
 
-    Card *temp = (Card *)cards->elements;
-    for (size_t i = 0; i < cards->num_elements; i++)
-    	if (strcmp(temp[i].card_name, card_title) == 0)
-            return temp[i].card_id;
+    Vector_ForEach(i, temp, cards, Card *)
+        if (strcmp(temp->card_name, card_title) == 0)
+            return temp->card_id;
 
     return 0;
 
@@ -34,10 +33,9 @@ int GetCardId(char* card_title)
 char* GetCardTitle(unsigned int card_id)
 {
 
-
-    Card *temp = (Card *)cards->elements;
+    Card *temp = cards->elements;
     for (size_t i = 0; i < cards->num_elements; i++)
-        if (temp[i].card_id == (unsigned int)card_id)
+        if (temp[i].card_id == card_id)
             return temp[i].card_name;
 
     return 0;
@@ -47,9 +45,9 @@ char* GetCardTitle(unsigned int card_id)
 char* GetCardDescription(unsigned int card_id)
 {
 
-    Card *temp = (Card *)cards->elements;
+    Card *temp = cards->elements;
     for (size_t i = 0; i < cards->num_elements;i++)
-        if (temp[i].card_id == (unsigned int)card_id)
+        if (temp[i].card_id == card_id)
             return temp[i].card_desc;
 
     return 0;
@@ -59,9 +57,9 @@ char* GetCardDescription(unsigned int card_id)
 char* GetCardPath(unsigned int card_id)
 {
 
-    Card *temp = (Card *)cards->elements;
+    Card *temp = cards->elements;
     for (size_t i = 0; i < cards->num_elements;i++)
-        if (temp[i].card_id == (unsigned int)card_id)
+        if (temp[i].card_id == card_id)
             return temp[i].card_path;
 
     return NULL;
@@ -71,9 +69,9 @@ char* GetCardPath(unsigned int card_id)
 float GetCardPriceModifier(unsigned int card_id)
 {
 
-    Card *temp = (Card *)cards->elements;
+    Card *temp = cards->elements;
     for (size_t i = 0; i < cards->num_elements; i++)
-        if (temp[i].card_id == (unsigned int)card_id)
+        if (temp[i].card_id == card_id)
             return temp[i].price_modifier;
 
     return 0;
