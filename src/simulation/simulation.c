@@ -199,7 +199,7 @@ float Simulation_GetNextValue(time_t t, size_t idx)
         if (t < modifiers_temp[i].played_time || t > modifiers_temp[i].played_time + modifiers_temp[i].modifier_length * 86400)
             continue;
         
-        value = value + value * modifiers_temp[i].price_modifier / ((float)modifiers_temp[i].modifier_length * 4.0f);
+        value += value * modifiers_temp[i].price_modifier / ((float)modifiers_temp[i].modifier_length * 4.0f);
 
     }
 
@@ -230,13 +230,6 @@ void Simulation_EventStep(time_t t)
 
 }
 
-void Simulation_CardStep() 
-{
-
-    simulation_card_step();
-
-}
-
 void Simulation_PriceStep(time_t t) 
 {
 
@@ -262,9 +255,8 @@ void Simulation_SimulateStep(time_t t)
 {
 
     Simulation_SimulateStepGeneric(t);
-    Simulation_CardStep();
+    simulation_card_step();
     simulation_ai_step(t);
-
 
 }
 

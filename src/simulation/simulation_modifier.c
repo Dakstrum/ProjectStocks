@@ -109,7 +109,7 @@ void simuation_remove_old_modifiers(time_t t)
     PlayedCard *modifiers_temp = modifiers->elements;
     for (size_t i = 0; i < modifiers->num_elements;i++) {
 
-        if (t < modifiers_temp[i].played_time)
+        if (t < modifiers_temp[i].played_time + modifiers_temp[i].modifier_length * 86400)
             continue;
 
         Vector_Remove(modifiers, i);
