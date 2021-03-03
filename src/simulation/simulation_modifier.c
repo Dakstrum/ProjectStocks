@@ -80,10 +80,15 @@ void simulation_apply_card(uint32_t player_id, uint32_t card_id, uint32_t compan
 void simulation_modifiers_init(Vector *current_companies) 
 {
 
-    if (modifiers != NULL)
+    if (modifiers != NULL){
+
         Vector_Reset(modifiers);
-    else
+
+    } else {
+
         modifiers = Vector_Create(sizeof(SimulationModifier), 32);
+        
+    }
 
 	companies = current_companies;
     Vector *played_cards = dbcard_get_played_cards();

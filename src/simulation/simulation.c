@@ -292,7 +292,7 @@ void Simulation_LoadCompanies()
 
     assert(sim_data == NULL);
 
-    companies = GetAllCompaniesVector();
+    companies = dbcompany_get_companies_vector();
     sim_data  = malloc(sizeof(Vector *) * companies->num_elements);
 
     Vector_ForEach(idx, element, companies, Company *) {

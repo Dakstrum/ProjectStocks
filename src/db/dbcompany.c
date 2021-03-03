@@ -26,7 +26,7 @@ Company *GetAllCompanies()
 
 }
 
-Vector *GetAllCompaniesVector()
+Vector *dbcompany_get_companies_vector()
 {
 
     assert(companies != NULL);

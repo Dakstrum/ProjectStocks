@@ -12,7 +12,7 @@
 float portfolio_get_asset_worth(uint32_t player_id)
 {
 
-	Vector *companies = GetAllCompaniesVector();
+	Vector *companies = dbcompany_get_companies_vector();
 	Company *companies_temp = companies->elements;
 
 	float worth = 0.0f;
@@ -39,7 +39,7 @@ float portfolio_get_networth(uint32_t player_id)
 float portfolio_get_percentage(uint32_t player_id, uint32_t company_id)
 {
 
-	Vector *companies = GetAllCompaniesVector();
+	Vector *companies = dbcompany_get_companies_vector();
 	Company *companies_temp = companies->elements;
 
 	int specific_amount_owned  = 0;

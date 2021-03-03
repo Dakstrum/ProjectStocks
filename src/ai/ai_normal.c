@@ -23,7 +23,7 @@ bool ai_normal_does_other_own_at_least_percent(uint32_t player_id, uint32_t comp
         if (players_temp[i].player_id == player_id)
             continue;
 
-        if (portfolio_get_percentage(player_id, company_id) >= percent)
+        if (portfolio_get_percentage(players_temp[i].player_id, company_id) >= percent)
             return true;
 
     }
@@ -35,13 +35,12 @@ bool ai_normal_does_other_own_at_least_percent(uint32_t player_id, uint32_t comp
 void ai_normal_attempt_negative_card_play(uint32_t player_id, uint32_t card_id, time_t t)
 {
 
-    Vector *companies = GetAllCompaniesVector();
-    Company *companies_temp = companies->elements;
+    Vector *companies = dbcompany_get_companies_vector();
 
-    for (size_t i = 0; i < companies->num_elements;i++) {
+    Vector_ForEach(i, company, companies, Company *) {
 
-        float owned_percentage = portfolio_get_percentage(player_id, companies_temp[i].company_id);
-        bool ai_owns_30_perc   = ai_normal_does_other_own_at_least_percent(player_id, companies_temp[i].company_id, 30.0f);
+        float owned_percentage = portfolio_get_percentage(player_id, company->company_id);
+        bool ai_owns_30_perc   = ai_normal_does_other_own_at_least_percent(player_id, company->company_id, 30.0f);
 
     }
 
@@ -50,7 +49,7 @@ void ai_normal_attempt_negative_card_play(uint32_t player_id, uint32_t card_id, 
 void ai_normal_attempt_positive_card_play(uint32_t player_id, uint32_t card_id, time_t t)
 {
 
-    Vector *companies = GetAllCompaniesVector();
+    Vector *companies = dbcompany_get_companies_vector();
     Company *companies_temp = companies->elements;
 
     for (size_t i = 0; i < companies->num_elements;i++) {
