@@ -26,6 +26,7 @@ void Vector_PushBack(Vector *vector, void *element)
 
         vector->mem_size += vector->initial_mem_size;
         vector->elements  = realloc(vector->elements, vector->size_of_single_elem * vector->mem_size);
+        assert(vector->elements != NULL);
 
     }
 
@@ -46,6 +47,7 @@ void Vector_PushBackPtr(Vector *vector, void *element)
 
         vector->mem_size += vector->initial_mem_size;
         vector->elements  = realloc(vector->elements, vector->size_of_single_elem * vector->mem_size);
+        assert(vector->elements != NULL);
 
     }
 

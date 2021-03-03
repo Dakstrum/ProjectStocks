@@ -17,6 +17,7 @@
 #include "dbcompany.h"
 #include "dbaccount.h"
 #include "simulation.h"
+#include "simulation_ai.h"
 #include "simulation_modifier.h"
 #include "simulation_event.h"
 #include "simulation_card.h"
@@ -262,6 +263,8 @@ void Simulation_SimulateStep(time_t t)
 
     Simulation_SimulateStepGeneric(t);
     Simulation_CardStep();
+    simulation_ai_step(t);
+
 
 }
 

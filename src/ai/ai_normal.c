@@ -3,12 +3,16 @@
 
 #include "dbsave.h"
 #include "dbcard.h"
-#include "shared.h"
 #include "dbcompany.h"
+
 #include "account.h"
 #include "portfolio.h"
 #include "transaction.h"
+
+#include "log.h"
 #include "vector.h"
+#include "shared.h"
+
 
 #include "simulation_modifier.h"
 
@@ -42,6 +46,15 @@ void ai_normal_attempt_negative_card_play(uint32_t player_id, uint32_t card_id, 
         float owned_percentage = portfolio_get_percentage(player_id, company->company_id);
         bool ai_owns_30_perc   = ai_normal_does_other_own_at_least_percent(player_id, company->company_id, 30.0f);
 
+        float chance = (ai_owns_30_perc == true ? 1.0f : 0.0f) - owned_percentage/10.0f + 0.25f;
+        if (chance >= shared_random_float()) {
+
+            simulation_apply_card(player_id, card_id, company->company_id, t);
+            dbcard_apply_card(player_id, card_id, company->company_id);
+            break;
+
+        }
+
     }
 
 }
@@ -56,10 +69,9 @@ void ai_normal_attempt_positive_card_play(uint32_t player_id, uint32_t card_id, 
 
         float owned_percentage = portfolio_get_percentage(player_id, companies_temp[i].company_id);
         bool ai_owns_70_perc   = ai_normal_does_other_own_at_least_percent(player_id, companies_temp[i].company_id, 70.0f);
-        float random_chance    = shared_random_float();
         float chance           = owned_percentage/30.0f - 0.4f - ai_owns_70_perc == true ? 1.0f : 0.0f;
 
-        if (chance > random_chance) {
+        if (chance >= shared_random_float()) {
 
             simulation_apply_card(player_id, card_id, companies_temp[i].company_id, t);
             dbcard_apply_card(player_id, card_id, companies_temp[i].company_id);
