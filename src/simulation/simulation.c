@@ -296,10 +296,9 @@ void Simulation_LoadCompanies()
     companies = GetAllCompaniesVector();
     sim_data  = malloc(sizeof(Vector *) * companies->num_elements);
 
-    Vector_ForEach(idx, element, companies) {
-
-        Company *temp = element;
-        StockPrice stock_price = {temp->ipo, 0};
+    Vector_ForEach(idx, element, companies, Company *) {
+        
+        StockPrice stock_price = {element->ipo, 0};
         sim_data[idx] = Vector_Create(sizeof(StockPrice), 4096);
         Vector_PushBack(sim_data[idx], &stock_price);
 
