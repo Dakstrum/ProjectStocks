@@ -101,21 +101,21 @@ void Graph_DistanceReduction(DrawObject *object)
     Vector *points               = object->graph.points;
     Vector *new_point_vec        = Vector_Create(sizeof(Point), 512);
     Vector *new_stock_price_vec  = Vector_Create(sizeof(StockPrice), 512);
-    Point *new_point_vec_temp    = new_point_vec->elements;
-    StockPrice *stock_prices_arr = ((Vector *)object->graph.stock_prices)->elements;
 
-    Point *vector_points = points->elements; 
+    Point *vector_points         = points->elements; 
+    StockPrice *stock_prices_arr = object->graph.stock_prices->elements;
+
     Vector_PushBack(new_point_vec, &vector_points[0]);
     Vector_PushBack(new_stock_price_vec, &stock_prices_arr[0]);
-
 
     float dx = 0.0;
     float dy = 0.0;
     float d  = 0.0;
     for (size_t i = 1; i < points->num_elements;i++) {
 
-        dx = (float)new_point_vec_temp[new_point_vec->num_elements - 1].x - (float)vector_points[i].x;
-        dy = (float)new_point_vec_temp[new_point_vec->num_elements - 1].y - (float)vector_points[i].y;
+        Point *temp_point = Vector_Last(new_point_vec);
+        dx = (float)temp_point->x - (float)vector_points[i].x;
+        dy = (float)temp_point->y - (float)vector_points[i].y;
         d  = sqrt(dx * dx + dy * dy);
 
         if (d > 7.5) {
@@ -190,12 +190,8 @@ DrawObject *Graph_GetGraphDrawObject(char *company_name, TimeSpan timespan, int 
 
     DrawObject *graph_object = Graph_ConstructGraphDrawObject(company_name, (int)timespan, width, height);
 
-    if (graph_object != NULL) {
-
-        graph_object->graph.company  = company_name;
-        graph_object->graph.timespan = timespan;
-
-    }
+    graph_object->graph.company  = company_name;
+    graph_object->graph.timespan = timespan;
 
     return graph_object;
 

@@ -80,7 +80,7 @@ typedef struct Graph {
     TimeSpan timespan;
 
     Vector *points;
-    void *stock_prices;
+    Vector *stock_prices;
 
     ALLEGRO_COLOR color;
     unsigned char r;
