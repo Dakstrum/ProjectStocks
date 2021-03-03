@@ -17,7 +17,7 @@ static Vector *played_cards = NULL;
 static Queue *card_queue   = NULL;
 
 //Cards
-int GetCardId(char *card_title)
+int dbcard_get_card_id(char *card_title)
 {
 
 	assert(card_title != NULL);
@@ -30,7 +30,7 @@ int GetCardId(char *card_title)
 
 }
 
-char* GetCardTitle(unsigned int card_id)
+char *dbcard_get_card_name(unsigned int card_id)
 {
 
     Card *temp = cards->elements;

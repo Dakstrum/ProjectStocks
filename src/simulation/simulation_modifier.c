@@ -72,7 +72,7 @@ void simulation_apply_card(uint32_t player_id, uint32_t card_id, uint32_t compan
     uint32_t modifier_length = GetCardModifierLength(card_id);
 
     char buffer[128];
-    sprintf(buffer, "%s played card %s against company %s", Account_GetPlayerName(player_id), GetCardTitle(card_id), GetCompanyNameRef(company_id));
+    sprintf(buffer, "%s played card %s against company %s", Account_GetPlayerName(player_id), dbcard_get_card_name(card_id), GetCompanyNameRef(company_id));
     buffer[127] = '\0';
     simulation_modify_company(company_id, play_time, price_modifier, modifier_length, buffer);
 
