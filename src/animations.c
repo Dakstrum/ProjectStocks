@@ -49,10 +49,8 @@ void Animate_Initialize()
 unsigned int Animation_GetId() 
 {
 
-    unsigned int temp = id_counter;
     id_counter++;
-
-    return temp;
+    return id_counter - 1;
 
 }
 
@@ -97,7 +95,6 @@ unsigned int Animate_MoveDrawObject(DrawObject *object, float n_x, float n_y, lo
     anim.animation_length = (float)animation_length;
 
     Vector_PushBack(move_objects, &anim);
-    //assert(move_objects->num_elements < 4);
 
     return anim.id;
 
@@ -115,8 +112,15 @@ void Animate_MoveDrawObjects(double milli_diff)
         if (anims[i].animation_length < milli_diff)
             dt = anims[i].animation_length;
 
-        *anims[i].x += ((anims[i].n_x - *anims[i].x) / anims[i].animation_length) * dt;
-        *anims[i].y += ((anims[i].n_y - *anims[i].y) / anims[i].animation_length) * dt;
+        if (anims[i].animation_length == 0 || dt == 0)
+            continue;
+
+        if (anims[i].n_x != *anims[i].x)
+            *anims[i].x += ((anims[i].n_x - *anims[i].x) / anims[i].animation_length) * dt;
+
+        if (anims[i].n_y != *anims[i].y) 
+            *anims[i].y += ((anims[i].n_y - *anims[i].y) / anims[i].animation_length) * dt;
+
         anims[i].animation_length -= dt;
 
     }
@@ -170,11 +174,12 @@ void Animate_DisableGenByLayer(unsigned char layer_index, Vector *vec)
 bool Animate_FinishedGenGroupAnimation(unsigned int group_id, Vector *vec)
 {
 
-    Animation *anims = vec->elements;
-    for (size_t i = 0; i < vec->num_elements;i++) {
+    Vector_ForEach(i, anim, vec, void *) {
 
-        if (anims[i].group_id == group_id)
+        Animation *temp = anim;
+        if (temp->group_id == group_id)
             return false;
+
 
     }
 
@@ -185,11 +190,12 @@ bool Animate_FinishedGenGroupAnimation(unsigned int group_id, Vector *vec)
 bool Animate_FinishedGenAnimation(unsigned int id, Vector *vec)
 {
 
-    Animation *anims = vec->elements;
-    for (size_t i = 0; i < vec->num_elements;i++) {
+    Vector_ForEach(i, anim, vec, void *) {
 
-        if (anims[i].id == id)
+        Animation *temp = anim;
+        if (temp->id == id)
             return false;
+
 
     }
 
