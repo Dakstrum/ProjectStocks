@@ -288,6 +288,16 @@ void Simulation_SimulateUntil(time_t t)
 
 }
 
+void Simulation_LoadEachCompany(void *company, uint32_t i)
+{
+
+    Company *temp = company;
+    StockPrice stock_price = {temp->ipo, 0};
+    sim_data[i] = Vector_Create(sizeof(StockPrice), 4096);
+    Vector_PushBack(sim_data[i], &stock_price);
+
+}
+
 void Simulation_LoadCompanies()
 {
 
@@ -295,15 +305,8 @@ void Simulation_LoadCompanies()
 
     companies = GetAllCompaniesVector();
     sim_data  = malloc(sizeof(Vector *) * companies->num_elements);
-    Company *companies_temp = companies->elements;
 
-    for (size_t i = 0; i < companies->num_elements;i++) {
-
-        StockPrice stock_price = {companies_temp[i].ipo, 0};
-        sim_data[i] = Vector_Create(sizeof(StockPrice), 4096);
-        Vector_PushBack(sim_data[i], &stock_price);
-
-    }
+    Vector_ForEach(companies, Simulation_LoadEachCompany);
 
 }
 
@@ -328,14 +331,12 @@ void Simulation_Init(uint32_t new_game_seed)
 
 void Simulation_Reset_Companies()
 {
+
     if (companies == NULL)
         return;
 
-    for (size_t i = 0; i < companies->num_elements;i++) {
-
+    for (size_t i = 0; i < companies->num_elements;i++)
         Vector_Delete(sim_data[i]);
-
-    }
 
     free(sim_data);
 

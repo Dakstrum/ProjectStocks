@@ -2,6 +2,7 @@
 #define VECTOR_H
 
 #include <stddef.h>
+#include <stdint.h>
 
 typedef struct Vector {
 
@@ -34,4 +35,5 @@ void Vector_Reset(Vector *vector);
 void Vector_Delete(Vector *vector);
 void Vector_DeletePtrs(Vector *vector);
 
+void Vector_ForEach(Vector *vector, void *(callback)(void *, uint32_t i));
 #endif

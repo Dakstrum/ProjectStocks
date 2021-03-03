@@ -1,5 +1,4 @@
 #include <assert.h>
-#include <stdint.h>
 #include <stdlib.h>
 
 #include "vector.h"
@@ -222,5 +221,14 @@ void Vector_Delete(Vector *vector)
 
     free(vector->elements);
     free(vector);
+
+}
+
+void Vector_ForEach(Vector *vector, void *(callback)(void *, uint32_t i)) 
+{
+
+    assert(vector != NULL);
+    for (size_t i = 0; i < vector->num_elements;i++)
+        callback(vector->elements + i * vector->size_of_single_elem, i);
 
 }
