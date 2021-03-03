@@ -120,12 +120,11 @@ Vector *Simulation_GetStockPricesBetween(Vector *sim_prices, time_t start_time, 
 {
 
     Vector *prices = Vector_Create(sizeof(StockPrice), 128);
-    StockPrice *temp_prices = sim_prices->elements;
 
-    for (size_t i = 0; i < sim_prices->num_elements;i++) {
+    Vector_ForEach(idx, element, sim_prices, StockPrice *) {
 
-        if (temp_prices[i].date >= start_time && temp_prices[i].date <= end_time)
-            Vector_PushBack(prices, &temp_prices[i]);
+        if (element->date >= start_time && element->date <= end_time)
+            Vector_PushBack(prices, element);
 
     }
 
@@ -297,7 +296,7 @@ void Simulation_LoadCompanies()
     sim_data  = malloc(sizeof(Vector *) * companies->num_elements);
 
     Vector_ForEach(idx, element, companies, Company *) {
-        
+
         StockPrice stock_price = {element->ipo, 0};
         sim_data[idx] = Vector_Create(sizeof(StockPrice), 4096);
         Vector_PushBack(sim_data[idx], &stock_price);
