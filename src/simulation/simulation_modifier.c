@@ -71,8 +71,6 @@ void simulation_apply_card(uint32_t player_id, uint32_t card_id, uint32_t compan
     float price_modifier     = GetCardPriceModifier(card_id);
     uint32_t modifier_length = GetCardModifierLength(card_id);
 
-    LogF("%u", modifier_length);
-
     char buffer[128];
     sprintf(buffer, "%s played card %s against company %s", Account_GetPlayerName(player_id), GetCardTitle(card_id), GetCompanyNameRef(company_id));
     buffer[127] = '\0';
