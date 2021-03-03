@@ -42,11 +42,10 @@ char* dbcard_get_card_path(unsigned int card_id);
 float dbcard_get_card_modifier(unsigned int card_id);
 unsigned int dbcard_get_card_modifier_length(unsigned int card_id);
 char* dbcard_get_card_desc(unsigned int card_id);
-PlayerCard *GetAllPlayerCards();
+PlayerCard *dbcard_get_all_player_cards();
 char* dbcard_get_card_name(unsigned int card_id);
 int GetCardType(unsigned int card_id);
-int GetNumOfPlayerCards();
-int GetPlayerCardId(int temp_card_id);
+int dbcard_get_num_player_cards();
 void dbcard_save_cards();
 
 Vector *dbcard_get_player_cards(uint32_t player_id);

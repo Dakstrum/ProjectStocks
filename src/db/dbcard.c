@@ -152,23 +152,6 @@ int PlayerCard_Callback(void *card, int argc, char **argv, char **col_name)
 
 }
 
-int GetPlayerCardId(int temp_card_id)
-{
-
-    PlayerCard *temp = (PlayerCard *)player_cards->elements;
-    for (size_t i = 0; i < player_cards->num_elements; i++) {
-
-        if (temp[i].card_id == (unsigned int)temp_card_id) {
-
-            return temp[i].player_card_id;
-
-        }
-    }
-
-    return 0;
-
-}
-
 void dbcard_add_card_to_player(uint32_t player_id, uint32_t card_id)
 {
 
@@ -215,7 +198,7 @@ void dbcard_apply_card(uint32_t player_id, uint32_t card_id, uint32_t company_id
 }
 
 
-int GetNumOfPlayerCards()
+int dbcard_get_num_player_cards()
 {
 
     assert(player_cards != NULL);
@@ -224,7 +207,7 @@ int GetNumOfPlayerCards()
 }
 
 
-PlayerCard *GetAllPlayerCards()
+PlayerCard *dbcard_get_all_player_cards()
 {
 
     assert(player_cards != NULL);
