@@ -71,10 +71,19 @@ void simulation_apply_card(uint32_t player_id, uint32_t card_id, uint32_t compan
     float price_modifier     = GetCardPriceModifier(card_id);
     uint32_t modifier_length = GetCardModifierLength(card_id);
 
+    LogF("%u", modifier_length);
+
     char buffer[128];
     sprintf(buffer, "%s played card %s against company %s", Account_GetPlayerName(player_id), GetCardTitle(card_id), GetCompanyNameRef(company_id));
     buffer[127] = '\0';
     simulation_modify_company(company_id, play_time, price_modifier, modifier_length, buffer);
+
+}
+
+time_t simulation_modifier_get_endtime(SimulationModifier *modifier)
+{
+
+    return modifier->played_time + modifier->modifier_length * 86400;
 
 }
 
@@ -106,10 +115,10 @@ void simulation_modifiers_init(Vector *current_companies)
 void simuation_remove_old_modifiers(time_t t)
 {
 
-    PlayedCard *modifiers_temp = modifiers->elements;
+    SimulationModifier *modifiers_temp = modifiers->elements;
     for (size_t i = 0; i < modifiers->num_elements;i++) {
 
-        if (t < modifiers_temp[i].played_time + modifiers_temp[i].modifier_length * 86400)
+        if (t < simulation_modifier_get_endtime(&modifiers_temp[i]))
             continue;
 
         Vector_Remove(modifiers, i);

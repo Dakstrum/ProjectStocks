@@ -85,7 +85,7 @@ unsigned int GetCardModifierLength(unsigned int card_id)
 
     Card *temp = (Card *)cards->elements;
     for (size_t i = 0; i < cards->num_elements; i++)
-        if (temp[i].card_id == (unsigned int)card_id)
+        if (temp[i].card_id == card_id)
             return temp[i].modifier_length;
 
     return 0;

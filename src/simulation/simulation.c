@@ -189,14 +189,14 @@ float Simulation_GetNextValue(time_t t, size_t idx)
     float price_fluctuation = GenerateRandomPriceFluctuation(value);
 
     Vector *modifiers = simulation_get_modifiers();
-    PlayedCard *modifiers_temp = modifiers->elements;
+    SimulationModifier *modifiers_temp = modifiers->elements;
     Company *companies_temp = companies->elements;
     for (size_t i = 0; i < modifiers->num_elements;i++) {
 
         if (companies_temp[idx].company_id != modifiers_temp[i].company_id)
             continue;
 
-        if (t < modifiers_temp[i].played_time || t > modifiers_temp[i].played_time + modifiers_temp[i].modifier_length * 86400)
+        if (t < modifiers_temp[i].played_time || t > simulation_modifier_get_endtime(&modifiers_temp[i]))
             continue;
         
         value += value * modifiers_temp[i].price_modifier / ((float)modifiers_temp[i].modifier_length * 4.0f);
