@@ -36,8 +36,7 @@ void Vector_Delete(Vector *vector);
 void Vector_DeletePtrs(Vector *vector);
 
 #define Vector_ForEach(idx, element, vector_list, TYPE) \
-    size_t idx = 0; \
-    TYPE element = vector_list->elements; \
-    for (void **(__TEMP) = (void **)(&element); idx < vector_list->num_elements; *(__TEMP) += vector_list->size_of_single_elem, idx++)
+	for (size_t idx = 0; idx < vector_list->num_elements; idx += 0) \
+    for (TYPE element = vector_list->elements; idx < vector_list->num_elements; *((void **)&element) += vector_list->size_of_single_elem, idx++)
 
 #endif

@@ -94,13 +94,11 @@ void simulation_modifiers_init(Vector *current_companies)
     Vector *played_cards = dbcard_get_played_cards();
     Vector *transactions = dbaccount_get_all_transactions();
 
-    Transaction *temp = transactions->elements;
-    for (size_t i = 0; i < transactions->num_elements;i++)
-        simulation_apply_transaction(temp[i].shares_exchanged, temp[i].company_id, temp[i].transaction_date);
+    Vector_ForEach(idx, element, transactions, Transaction *)
+        simulation_apply_transaction(element->shares_exchanged, element->company_id, element->transaction_date);
 
-    PlayedCard *played_cards_temp = played_cards->elements;
-    for (size_t i = 0; i < played_cards->num_elements;i++)
-        simulation_apply_card(played_cards_temp[i].player_id, played_cards_temp[i].card_id, played_cards_temp[i].company_id, played_cards_temp[i].played_time);
+    Vector_ForEach(idx, element, played_cards, PlayedCard *)
+        simulation_apply_card(element->player_id, element->card_id, element->company_id, element->played_time);
 
 }
 
