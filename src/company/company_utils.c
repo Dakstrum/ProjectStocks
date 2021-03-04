@@ -23,14 +23,62 @@ Vector *company_utils_get_all_active()
 
 }
 
+void company_utils_sort_company_ids(uint32_t *company_ids, Vector *companies)
+{
+
+	Vector_ForEach(i, company, companies, Company *)
+		company_ids[i] = company->company_id;
+
+	for (size_t i = 0;i < companies->num_elements - 1;i++) {
+
+		uint32_t temp_idx = i;
+		for (size_t j = 1;i < companies->num_elements;i++) {
+
+			float temp_price  = Simulation_GetLastStockPriceByCompanyId(company_ids[temp_idx]);
+			float check_price = Simulation_GetLastStockPriceByCompanyId(company_ids[j]);
+
+			if (check_price < temp_price)
+				temp_idx = j;
+
+		}
+		if (temp_idx != i) {
+
+			uint32_t temp_company_id = company_ids[i];
+			company_ids[i] = company_ids[temp_idx];
+			company_ids[temp_idx] = temp_company_id;
+
+		}
+
+	}
+
+}
+
 Vector *company_utils_get_sorted()
 {
 
 	Vector *companies  = company_utils_get_all_active();
 	Vector *new_vector = Vector_Create(sizeof(Company), companies->num_elements);
 
+	uint32_t company_ids[companies->num_elements];
+	company_utils_sort_company_ids(company_ids, companies);
+
+	for (size_t i = 0; i <companies->num_elements;i++) {
+
+		Vector_ForEach(j, company, companies; Company *) {
+
+			if (company->company_id == company_ids[i]) {
+
+				Vector_PushBack(new_vector, company);
+				break;
+
+			}
+
+		}
+
+	}
+
 	Vector_Delete(companies);
-	return NULL;
+	return new_vector;
 
 }
 
