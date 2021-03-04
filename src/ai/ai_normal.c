@@ -13,7 +13,6 @@
 #include "vector.h"
 #include "shared.h"
 
-
 #include "simulation_modifier.h"
 
 bool ai_normal_does_other_own_at_least_percent(uint32_t player_id, uint32_t company_id, float percent)
@@ -110,8 +109,28 @@ void ai_normal_play_cards(uint32_t player_id, time_t t)
 
 }
 
+void ai_buy_shares(uint32_t player_id, time_t t)
+{
+
+    float money = Account_GetMoney(player_id);
+    if (money == 0.0f)
+        return;
+
+    
+
+}
+
+void ai_sell_shares(uint32_t player_id, time_t t)
+{
+
+
+
+}
+
 void ai_normal_conduct_transactions(uint32_t player_id, time_t t)
 {
 
+    ai_buy_shares(player_id, t);
+    ai_sell_shares(player_id, t);
 
 }
