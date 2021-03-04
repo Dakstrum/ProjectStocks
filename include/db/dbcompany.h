@@ -17,6 +17,7 @@ typedef struct Company {
 
 Company *GetAllCompanies();
 Vector *dbcompany_get_companies_vector();
+Vector *dbcompany_get_companies_vector_copy();
 
 char *GetCompanyName(unsigned int company_id);
 char *GetCompanyNameRef(unsigned int company_id);

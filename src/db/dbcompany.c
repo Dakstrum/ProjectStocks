@@ -34,6 +34,14 @@ Vector *dbcompany_get_companies_vector()
 
 }
 
+Vector *dbcompany_get_companies_vector_copy()
+{
+
+    assert(companies != NULL);
+    return Vector_GetCopy(companies);
+
+}
+
 Company *GetCompany(unsigned int company_id)
 {
 
