@@ -98,29 +98,17 @@ void SetTextContent(DrawObject *object, const char *str, ...)
 void SetTextContentWithCommaFormat(DrawObject *object, const char *str, ...) 
 {
 
-    if (object == NULL)
-        return;
-
-    assert(object->type == TEXT);
-
-    va_list args;
-    va_start(args, str);
-
     char *oldLocale = setlocale(LC_NUMERIC, NULL);
     setlocale(LC_NUMERIC, "");
     
-    if (object->bit_flags & TEXT_IS_DYNAMIC) {
-        
-        SetFormattedPointerVaList(object->text.content, str, args);
+    va_list args;
+    va_start(args, str);
+    char *buffer = GetFormattedPointerVaList(str, args);
 
-    } else { 
-
-        object->bit_flags   |= TEXT_IS_DYNAMIC;
-        object->text.content = GetFormattedPointerVaList(str, args);
-
-    }
+    SetTextContent(object, buffer, args);
 
     setlocale(LC_NUMERIC, oldLocale);
+    free(buffer);
 
 }
 
