@@ -64,7 +64,7 @@ Vector *company_utils_get_sorted()
 
 	for (size_t i = 0; i <companies->num_elements;i++) {
 
-		Vector_ForEach(j, company, companies; Company *) {
+		Vector_ForEach(j, company, companies, Company *) {
 
 			if (company->company_id == company_ids[i]) {
 
@@ -103,12 +103,19 @@ Vector *company_utils_get_random(uint32_t amount)
 Vector *company_utils_get_lowest(uint32_t amount)
 {
 
-	Vector *companies = company_utils_get_all_active();
+	Vector *companies = company_utils_get_sorted();
 	Vector *temp = Vector_Create(sizeof(Company), amount);
 
-	for (size_t i = 0; i < amount;i++) {
+	uint32_t real_amount = amount;
+	if (real_amount > companies->num_elements)
+		real_amount = companies->num_elements;
 
+	Vector_ForEach(i, company, companies, Company *) {
 
+		if (i >= real_amount)
+			break;
+
+		Vector_PushBack(temp, company);
 
 	}
 
