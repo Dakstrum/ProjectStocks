@@ -90,58 +90,6 @@ unsigned int GetSaveSeedWithSaveId(int save_id)
 
 }
 
-int GetSaveNameFromSaveIdCallback(void *save_name, int argc, char **argv, char **col_name)
-{
-
-    if (argc > 0) {
-
-        char *temp = *((char **)save_name);
-        strncpy(temp, argv[0], 127);
-        temp[127] = '\0';
-
-    }
-
-    return 0;
-
-}
-
-char *GetSaveNameFromSaveId(int save_id)
-{
-
-    char *save_name = malloc(sizeof(char) * 128);
-
-    ExecuteQueryF(&GetSaveNameFromSaveIdCallback, &save_name, "SELECT SaveName FROM Game_Saves WHERE SaveId = %d", save_id);
-
-    return save_name;
-
-}
-
-int GetPlayerNameFromSaveNameCallback(void *player_name, int argc, char **argv, char **col_name)
-{
-
-    if (argc > 0) {
-
-        char *temp = *((char **)player_name);
-        strncpy(temp, argv[0], 127);
-        temp[127] = '\0';
-
-    }
-
-    return 0;
-
-}
-
-char *GetPlayerNameFromSaveName(char *save_name)
-{
-
-    char *player_name = malloc(128);
-
-    ExecuteQueryF(&GetPlayerNameFromSaveNameCallback, &player_name, "SELECT PlayerName FROM Game_Saves WHERE SaveName = '%s'", save_name);
-
-    return player_name;
-
-}
-
 int GetAllSaves_Callback(void *saves, int argc, char **argv, char **col_name)
 {
 
