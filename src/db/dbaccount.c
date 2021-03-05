@@ -353,7 +353,7 @@ void InitVectors()
 
 }
 
-void InitializeAccountInformation()
+void dbaccount_init()
 {
 
     InitVectors();

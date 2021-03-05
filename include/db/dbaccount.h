@@ -39,7 +39,7 @@ Vector *dbaccount_get_all_transactions();
 void dbaccount_save_transactions();
 
 int dbaccount_get_owned_stock_amount(uint32_t player_id, uint32_t company_id);
-void InitializeAccountInformation();
+void dbaccount_init();
 
 bool dbaccount_can_sell_stock(uint32_t player_id, uint32_t company_id, int amount_to_subtract);
 

@@ -156,7 +156,7 @@ void LoadSave(int load_save_id)
     Game_SetSeed(current_save.game_seed);
     Game_SetGameTime(current_save.time_spent_in_game);
 
-    InitializeAccountInformation();
+    dbaccount_init();
     dbcard_init();
     Game_Init();
 
