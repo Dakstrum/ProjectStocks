@@ -21,5 +21,7 @@ void simulation_modify_category(uint32_t category_id, time_t play_time, float mo
 void simulation_modify_global(float modifier, time_t play_time, uint32_t days, char *event);
 void simulation_apply_transaction(int transaction_amount, uint32_t company_id, time_t transaction_time);
 void simulation_apply_card(uint32_t player_id, uint32_t card_id, uint32_t company_id, time_t play_time);
+bool simulation_negative_modifiers_active(uint32_t company_id, time_t t);
+bool simulation_positive_modifiers_active(uint32_t company_id, time_t t);
 
 #endif

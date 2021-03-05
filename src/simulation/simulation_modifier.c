@@ -134,6 +134,39 @@ Vector *simulation_get_modifiers()
 
 }
 
+bool simulation_negative_modifiers_active(uint32_t company_id, time_t t)
+{
+
+    Vector_ForEach(i, modifier, modifiers, SimulationModifier *) {
+
+        if (modifier->company_id != company_id)
+            continue;
+        if (modifier->price_modifier > 0.0f)
+            continue;
+        if (modifier->played_time >= t && t <= simulation_modifier_get_endtime(modifier))
+            return true;
+    }
+    return false;
+
+}
+
+bool simulation_positive_modifiers_active(uint32_t company_id, time_t t)
+{
+
+    Vector_ForEach(i, modifier, modifiers, SimulationModifier *) {
+
+        if (modifier->company_id != company_id)
+            continue;
+        if (modifier->price_modifier < 0.0f)
+            continue;
+        if (modifier->played_time >= t && t <= simulation_modifier_get_endtime(modifier))
+            return true;
+
+    }
+    return false;
+    
+}
+
 void simulation_reset_modifiers()
 {
 

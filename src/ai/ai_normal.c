@@ -40,7 +40,7 @@ bool ai_normal_does_other_own_at_least_percent(uint32_t player_id, uint32_t comp
 void ai_normal_attempt_negative_card_play(uint32_t player_id, uint32_t card_id, time_t t)
 {
 
-    if (shared_random_float() >= 0.5f)
+    if (shared_random_float() >= 0.75f)
         return;
 
     Vector *companies = company_utils_get_all_active();
@@ -67,7 +67,7 @@ void ai_normal_attempt_negative_card_play(uint32_t player_id, uint32_t card_id, 
 void ai_normal_attempt_positive_card_play(uint32_t player_id, uint32_t card_id, time_t t)
 {
 
-    if (shared_random_float() >= 0.5f)
+    if (shared_random_float() >= 0.75f)
         return;
 
     Vector *companies = company_utils_get_all_active();
@@ -115,11 +115,40 @@ void ai_normal_play_cards(uint32_t player_id, time_t t)
 void ai_buy_shares(uint32_t player_id, time_t t)
 {
 
+    if (shared_random_float() >= 0.5f)
+        return;
+
     float money = Account_GetMoney(player_id);
     if (money == 0.0f)
         return;
 
-    
+    Vector *random_companies = company_utils_get_random(3);
+    Vector *lowest_companies = company_utils_get_lowest(2);
+    Vector *companies = Vector_Concat(random_companies, lowest_companies);
+    Vector_Delete(random_companies);
+    Vector_Delete(lowest_companies);
+    company_utils_remove_duplicates(companies);
+
+    Vector_ForEach(i, company, companies, Company *) {
+
+        float quarter_money     = money * 0.25;
+        float others_own_chance = ai_normal_does_other_own_at_least_percent(player_id, company->company_id, 0.05f) == true ? 0.25f : 0.0f;
+        float random_chance     = shared_random_float() - 0.1;
+        float modifier_chance   = simulation_negative_modifiers_active(company->company_id, t) == true ? 1.0f : 0.0f;
+
+        if (others_own_chance + random_chance + modifier_chance >= shared_random_float()) {
+
+            //transaction_purchase_stocks(player_id, company_id, );
+
+        }
+
+        money = Account_GetMoney(player_id);
+        if (money == 0.0f)
+            break;
+
+    }
+
+    Vector_Delete(companies);
 
 }
 
