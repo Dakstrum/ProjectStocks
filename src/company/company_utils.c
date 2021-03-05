@@ -88,11 +88,13 @@ Vector *company_utils_get_random(uint32_t amount)
 	Vector *companies = company_utils_get_all_active();
 	Vector *temp = Vector_Create(sizeof(Company), amount);
 
-	for (size_t i = 0; i < amount;i++) {
+	uint32_t real_amount = amount;
+	if (real_amount > companies->num_elements)
+		real_amount = companies->num_elements;
 
-
-
-	}
+	Company *companies_temp = companies->elements;
+	for (size_t i = 0; i < real_amount;i++)
+		Vector_PushBack(temp, &companies_temp[rand()%companies->num_elements]);
 
 	Vector_Delete(companies);
 
