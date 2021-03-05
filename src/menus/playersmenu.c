@@ -23,6 +23,8 @@
 #include "drawlayerutils.h"
 #include "popup.h"
 #include "button.h"
+#include "dbsave.h"
+#include "portfolio.h"
 
 static MenuWithChilds *players_menu      = NULL;
 
@@ -123,36 +125,40 @@ void PlayersMenu_InitPlayerNames()
     DrawObject *playertwo_name_text   = GetDrawObjectFromJsonLayer("PlayersMenuname2TextObject");
     DrawObject *playerthree_name_text = GetDrawObjectFromJsonLayer("PlayersMenuname3TextObject");
 
-    DrawObject *player_names[3] = {playerone_name_text, playertwo_name_text, playerthree_name_text};
+    DrawObject *player_names_text[3] = {playerone_name_text, playertwo_name_text, playerthree_name_text};
+
+    Vector *players = Account_GetPlayers();
+    Player *players_temp = players->elements;
 
     for(int i = 0; i < 3; i++)
     {
 
-        player_names[i]->text.content   = "Kevin Shmider";
-        AddObjectToDrawLayer(player_names[i]);
+        SetTextContent(player_names_text[i],  "%s",   players_temp[i].name);
+        AddObjectToDrawLayer(player_names_text[i]);
     
     }
 
-
 }
-
-
 
 void PlayersMenu_InitPlayerNetworth()
 {
-
 
     playerone_networth_text   = GetDrawObjectFromJsonLayer("PlayersMenunetworth1TextObject");
     playertwo_networth_text   = GetDrawObjectFromJsonLayer("PlayersMenunetworth2TextObject");
     playerthree_networth_text = GetDrawObjectFromJsonLayer("PlayersMenunetworth3TextObject");
 
-    DrawObject *player_networth[3] = {playerone_networth_text, playertwo_networth_text, playerthree_networth_text};
+    DrawObject *player_networth_text[3] = {playerone_networth_text, playertwo_networth_text, playerthree_networth_text};
+
+    Vector *players = Account_GetPlayers();
+    Player *players_temp = players->elements;
 
     for(int i = 0; i < 3; i++)
     {
     
-        player_networth[i]->text.content   = "1,023,233";
-        AddObjectToDrawLayer(player_networth[i]);
+        SetTextContentWithCommaFormat(player_networth_text[i],  "%'.2f",  1231232.02);
+
+        //SetTextContent(player_networth_text[i],  "%.2f",   portfolio_get_networth(i)); // This function is brokey
+        AddObjectToDrawLayer(player_networth_text[i]);
     
     }
 

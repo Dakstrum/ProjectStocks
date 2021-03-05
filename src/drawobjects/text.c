@@ -1,6 +1,7 @@
 
 #include <math.h>
 #include <string.h>
+#include <locale.h>
 
 #include <allegro5/allegro.h>
 
@@ -91,6 +92,35 @@ void SetTextContent(DrawObject *object, const char *str, ...)
         object->text.content = GetFormattedPointerVaList(str, args);
 
     }
+
+}
+
+void SetTextContentWithCommaFormat(DrawObject *object, const char *str, ...) 
+{
+
+    if (object == NULL)
+        return;
+
+    assert(object->type == TEXT);
+
+    va_list args;
+    va_start(args, str);
+
+    char *oldLocale = setlocale(LC_NUMERIC, NULL);
+    setlocale(LC_NUMERIC, "");
+    
+    if (object->bit_flags & TEXT_IS_DYNAMIC) {
+        
+        SetFormattedPointerVaList(object->text.content, str, args);
+
+    } else { 
+
+        object->bit_flags   |= TEXT_IS_DYNAMIC;
+        object->text.content = GetFormattedPointerVaList(str, args);
+
+    }
+
+    setlocale(LC_NUMERIC, oldLocale);
 
 }
 
