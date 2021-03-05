@@ -363,21 +363,3 @@ void InitializeAccountInformation()
     transaction_queue = Queue_Create();
 
 }
-
-float GetAccountNetWorth(uint32_t player_id)
-{
-
-    float networth = 0;
-
-    uint32_t num_companies = GetNumCompanies();
-    for(size_t i = 0; i < num_companies; i++) {
-
-        char *company_name = GetCompanyName(i + 1);
-        float networth_of_specific_stock = dbaccount_get_owned_stock_amountByCompanyId(player_id, i + 1) * Simulation_GetLastStockPrice(company_name);
-        networth = networth + networth_of_specific_stock;
-
-    }
-
-    return networth;
-
-}

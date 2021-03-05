@@ -23,6 +23,8 @@
 #include "drawlayerutils.h"
 #include "menupersistence.h"
 
+#include "portfolio.h"
+
 #define DSP_NUM 5
 
 static MenuWithChilds *account_menu = NULL;
@@ -101,7 +103,7 @@ void AccountMenu_RenderLogic()
     SetTextContent(player_date_textobject,        "%s",   Game_GetDate());
     SetTextContent(stock_price_textobject,        "%.2f", Simulation_GetLastStockPrice(company_viewing));
     SetTextContent(owned_stock_amount_textobject, "%d",   dbaccount_get_owned_stock_amount(Account_GetPlayerId(), company_id));
-    SetTextContent(networth_textobject,           "%.2f", GetAccountNetWorth(Account_GetPlayerId()));
+    SetTextContent(networth_textobject,           "%.2f", portfolio_get_networth(Account_GetPlayerId()));
 
 }
 
