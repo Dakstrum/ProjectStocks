@@ -36,7 +36,7 @@ bool transaction_purchase_stock(uint32_t player_id, uint32_t company_id, float p
 {
 
     float current_stock_price = Simulation_GetLastStockPriceByCompanyId(company_id);
-    int stock_amount = floor(price/ current_stock_price);
+    int stock_amount = floor(price/current_stock_price);
     float real_price = current_stock_price * stock_amount;
 
     if (stock_amount == 0)
@@ -44,7 +44,7 @@ bool transaction_purchase_stock(uint32_t player_id, uint32_t company_id, float p
 
     if (Account_CanMakeTransaction(player_id, real_price)) {
 
-        dbaccount_buy_stocks(player_id, company_id, stock_amount, real_price);
+        dbaccount_buy_stocks(player_id, company_id, stock_amount, current_stock_price);
         Account_SubtractMoney(player_id, real_price);
         simulation_apply_transaction(stock_amount, company_id, Game_GetGameTime());
 
