@@ -320,7 +320,7 @@ void StocksMenu_SellMenu_Sell_BCB()
     uint32_t company_id   = GetCompanyId(company_viewing);
     uint32_t player_id    = Account_GetPlayerId();
 
-    if (transaction_sell_stocks(player_id, company_id, amount_in_text_box)) {
+    if (transaction_sell_stock_amount(player_id, company_id, amount_in_text_box)) {
 
         StocksMenu_SellMenu_BCB();
 
@@ -347,7 +347,7 @@ void StocksMenu_BuyMenu_Buy_BCB()
     char *company_viewing = GetCompanyNameViewing();
     uint32_t company_id   = GetCompanyId(company_viewing);
 
-    if (transaction_purchase_stocks(player_id, company_id, amount_in_text_box)) {
+    if (transaction_purchase_stock_amount(player_id, company_id, amount_in_text_box)) {
 
         StocksMenu_BuyMenu_BCB();
         char str[50];

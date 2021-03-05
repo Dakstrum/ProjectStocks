@@ -1,6 +1,8 @@
 
 #include "simulation.h"
 
+#include "log.h"
+
 #include "dbcompany.h"
 #include "company_utils.h"
 
@@ -48,26 +50,33 @@ bool company_utils_is_active(uint32_t company_id)
 void company_utils_sort_company_ids(uint32_t *company_ids, Vector *companies)
 {
 
-	Vector_ForEach(i, company, companies, Company *)
+	float prices[companies->num_elements];
+	Vector_ForEach(i, company, companies, Company *) {
+
 		company_ids[i] = company->company_id;
+		prices[i] = Simulation_GetLastStockPriceByCompanyId(company->company_id);
+
+	}
 
 	for (size_t i = 0;i < companies->num_elements - 1;i++) {
 
 		uint32_t temp_idx = i;
-		for (size_t j = 1;i < companies->num_elements;i++) {
+		for (size_t j = i + 1;i < companies->num_elements;i++) {
 
-			float temp_price  = Simulation_GetLastStockPriceByCompanyId(company_ids[temp_idx]);
-			float check_price = Simulation_GetLastStockPriceByCompanyId(company_ids[j]);
-
-			if (check_price < temp_price)
+			if (prices[j] < prices[temp_idx])
 				temp_idx = j;
 
 		}
 		if (temp_idx != i) {
 
 			uint32_t temp_company_id = company_ids[i];
+			float price_temp         = prices[i];
+
 			company_ids[i] = company_ids[temp_idx];
 			company_ids[temp_idx] = temp_company_id;
+
+			prices[i] = prices[temp_idx];
+			prices[temp_idx] = price_temp;
 
 		}
 
@@ -134,14 +143,9 @@ Vector *company_utils_get_lowest(uint32_t amount)
 	if (real_amount > companies->num_elements)
 		real_amount = companies->num_elements;
 
-	Vector_ForEach(i, company, companies, Company *) {
-
-		if (i >= real_amount)
-			break;
-
-		Vector_PushBack(temp, company);
-
-	}
+	Company *companies_temp = companies->elements;
+	for (size_t i = 0; i < real_amount;i++)
+		Vector_PushBack(temp, &companies_temp[i]);
 
 	Vector_Delete(companies);
 
