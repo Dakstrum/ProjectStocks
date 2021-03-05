@@ -156,6 +156,8 @@ Vector *Vector_Concat(Vector *vec_1, Vector *vec_2)
 
     Vector *vector = Vector_Create(size_of_single_elem, vec_1_num_elem + vec_2_num_elem + 1);
 
+    vector->num_elements = vec_1_num_elem + vec_2_num_elem;
+    
     uint8_t *vector_elem = vector->elements;
     uint8_t *vec_1_elem  = vec_1->elements;
     uint8_t *vec_2_elem  = vec_2->elements;
