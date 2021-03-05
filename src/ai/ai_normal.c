@@ -9,6 +9,8 @@
 #include "portfolio.h"
 #include "transaction.h"
 
+#include "company_utils.h"
+
 #include "log.h"
 #include "vector.h"
 #include "shared.h"
@@ -41,7 +43,7 @@ void ai_normal_attempt_negative_card_play(uint32_t player_id, uint32_t card_id, 
     if (shared_random_float() >= 0.5f)
         return;
 
-    Vector *companies = dbcompany_get_companies_vector();
+    Vector *companies = company_utils_get_all_active();
 
     Vector_ForEach(i, company, companies, Company *) {
 
@@ -58,6 +60,7 @@ void ai_normal_attempt_negative_card_play(uint32_t player_id, uint32_t card_id, 
         }
 
     }
+    Vector_Delete(companies);
 
 }
 
@@ -67,24 +70,24 @@ void ai_normal_attempt_positive_card_play(uint32_t player_id, uint32_t card_id, 
     if (shared_random_float() >= 0.5f)
         return;
 
-    Vector *companies = dbcompany_get_companies_vector();
-    Company *companies_temp = companies->elements;
+    Vector *companies = company_utils_get_all_active();
 
-    for (size_t i = 0; i < companies->num_elements;i++) {
+    Vector_ForEach(i, company, companies, Company *) {
 
-        float owned_percentage = portfolio_get_percentage(player_id, companies_temp[i].company_id);
-        bool ai_owns_70_perc   = ai_normal_does_other_own_at_least_percent(player_id, companies_temp[i].company_id, 0.70f);
+        float owned_percentage = portfolio_get_percentage(player_id, company->company_id);
+        bool ai_owns_70_perc   = ai_normal_does_other_own_at_least_percent(player_id, company->company_id, 0.70f);
         float chance           = owned_percentage/0.30f - ai_owns_70_perc == true ? 1.0f : 0.0f;
 
         if (chance >= shared_random_float()) {
 
-            simulation_apply_card(player_id, card_id, companies_temp[i].company_id, t);
-            dbcard_apply_card(player_id, card_id, companies_temp[i].company_id);
+            simulation_apply_card(player_id, card_id, company->company_id, t);
+            dbcard_apply_card(player_id, card_id, company->company_id);
             break;
 
         }
 
     }
+    Vector_Delete(companies);
 
 }
 
