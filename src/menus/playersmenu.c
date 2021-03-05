@@ -82,7 +82,7 @@ void PlayersMenu_RenderLogic()
     if (player_money_textobject == NULL)
         return;
     
-    SetTextContent(player_money_textobject, "%.2f", Account_GetMoney(Account_GetPlayerId()));
+    SetTextContentWithCommaFormat(player_money_textobject, "%'.2f", Account_GetMoney(Account_GetPlayerId()));
     SetTextContent(player_date_textobject,  "%s",   Game_GetDate());
 
 }
@@ -155,7 +155,7 @@ void PlayersMenu_InitPlayerNetworth()
     for(int i = 0; i < 3; i++)
     {
     
-        SetTextContentWithCommaFormat(player_networth_text[i],  "%'.2f",  1231232.02);
+        SetTextContentWithCommaFormat(player_networth_text[i],  "%'.2f",  players_temp[i].money);
 
         //SetTextContent(player_networth_text[i],  "%.2f",   portfolio_get_networth(i)); // This function is brokey
         AddObjectToDrawLayer(player_networth_text[i]);
