@@ -23,6 +23,28 @@ Vector *company_utils_get_all_active()
 
 }
 
+bool company_utils_is_active(uint32_t company_id)
+{
+
+	Vector *companies = company_utils_get_all_active();
+	bool active = false;
+
+	Vector_ForEach(i, company, companies, Company *) {
+
+		if (company->company_id == company_id) {
+
+			active = true;
+			break;
+			
+		}
+
+	}
+
+	Vector_Delete(companies);
+	return active;
+
+}
+
 void company_utils_sort_company_ids(uint32_t *company_ids, Vector *companies)
 {
 
