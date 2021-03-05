@@ -128,6 +128,9 @@ void ai_buy_shares(uint32_t player_id, time_t t)
 
     Vector_ForEach(i, company, companies, Company *) {
 
+        if (shared_random_float() >= 0.5f)
+            continue;
+
         float quarter_money     = money * 0.25;
         float others_own_chance = ai_normal_does_other_own_at_least_percent(player_id, company->company_id, 0.05f) == true ? 0.25f : 0.0f;
         float random_chance     = shared_random_float() - 0.1;
@@ -151,14 +154,32 @@ void ai_buy_shares(uint32_t player_id, time_t t)
 void ai_sell_shares(uint32_t player_id, time_t t)
 {
 
+    if (shared_random_float() >= 0.5f)
+        return;
 
+    Vector *companies = company_utils_get_all_active();
+
+    Vector_ForEach(i, company, companies, Company *) {
+
+        float modifier_positive_chance = simulation_positive_modifiers_active(company->company_id, t) == true ? -2.0f : 0.0f;
+        float random_chance = shared_random_float() - 0.1;
+
+        if (random_chance + modifier_positive_chance >= shared_random_float()) {
+
+
+
+        }
+
+    }
+
+    Vector_Delete(companies);
 
 }
 
 void ai_normal_conduct_transactions(uint32_t player_id, time_t t)
 {
 
-    //ai_buy_shares(player_id, t);
+    ai_buy_shares(player_id, t);
     //ai_sell_shares(player_id, t);
 
 }
