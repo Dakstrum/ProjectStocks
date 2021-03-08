@@ -64,7 +64,7 @@ int dbsave_insert_save(char *save_name, unsigned int game_seed)
 void dbsave_delete_save(int save_id)
 {
 
-    ExecuteQueryF(NULL, NULL, "DELETE FROM Game_Players WHERE SaveId = %d; DELETE FROM Saves WHERE SaveId = %d;", save_id, save_id);
+    ExecuteQueryF(NULL, NULL, "UPDATE Game_Saves SET Deleted = 1 WHERE SaveId = %d;", save_id);
 
 }
 
@@ -120,7 +120,7 @@ Vector *GetAllSaves()
     Vector *saves = Vector_Create(sizeof(PlayerSave), 16);
     char *query   = "SELECT S.SaveId, S.SaveName, S.TimeSpentInGame, S.RandomSeed, P.PlayerId, P.PlayerName, P.Money FROM Game_Saves S "
                     "INNER JOIN Game_Players P ON P.SaveId = S.SaveId "
-                    "WHERE P.SaveOwner = 1";
+                    "WHERE S.Deleted = 0 AND P.SaveOwner = 1";
 
     ExecuteQueryF(&GetAllSaves_Callback, saves, query);
     return saves;
