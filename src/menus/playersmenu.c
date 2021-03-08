@@ -147,7 +147,7 @@ void PlayersMenu_InitPlayerNetworth()
     Player *players_temp = players->elements;
 
     for(int i = 0; i < 3; i++)
-        SetTextContentWithCommaFormat(player_networth_text[i],  "%'.2f",  players_temp[i + 1].money);
+        SetTextContentWithCommaFormat(player_networth_text[i],  "%'.2f",  portfolio_get_networth(players_temp[i + 1].player_id));
 
 
 }

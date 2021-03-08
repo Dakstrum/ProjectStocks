@@ -33,6 +33,7 @@ float portfolio_get_asset_worth(uint32_t player_id)
 float portfolio_get_networth(uint32_t player_id) 
 {
 
+	LogF("portfolio worth %u, %f", player_id, portfolio_get_asset_worth(player_id));
 	return Account_GetMoney(player_id) + portfolio_get_asset_worth(player_id);
 
 }
