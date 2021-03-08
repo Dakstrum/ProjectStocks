@@ -200,7 +200,9 @@ float Simulation_GetNextValue(time_t t, size_t idx)
             continue;
         
         value += value * modifiers_temp[i].price_modifier / ((float)modifiers_temp[i].modifier_length * 4.0f);
-
+        
+        if (value < 0.0)
+            value = 0.0;
     }
 
     return value + price_fluctuation;

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 #include "dbcard.h"
 #include "dbcompany.h"
@@ -60,7 +61,16 @@ void simulation_modify_global(float modifier, time_t play_time, uint32_t days, c
 void simulation_apply_transaction(int transaction_amount, uint32_t company_id, time_t transaction_time)
 {
 
-    float modifier = transaction_amount/100000.0;
+    float modifier = (float)transaction_amount/10000.0;
+
+    if (modifier < 0.0)
+        modifier /= 2.0;
+
+    if (modifier > 2.0)
+        modifier = 2.0;
+    else if (modifier < -1.5)
+        modifier = -1.5;
+
     simulation_modify_company(company_id, transaction_time, modifier, 7, NULL);
 
 }
