@@ -45,7 +45,7 @@ float GetPricePerShare(int shares_exchanged, float transaction_amount)
 
 }
 
-int dbaccount_get_owned_stock_amountByCompanyId(uint32_t player_id, uint32_t company_id)
+uint32_t dbaccount_get_owned_stock_amount(uint32_t player_id, uint32_t company_id)
 {
 
     uint32_t *company_ids = owned_company_ids->elements;
@@ -62,13 +62,6 @@ int dbaccount_get_owned_stock_amountByCompanyId(uint32_t player_id, uint32_t com
     }
 
     return 0;
-
-}
-
-int dbaccount_get_owned_stock_amount(uint32_t player_id, uint32_t company_id) 
-{
-
-    return dbaccount_get_owned_stock_amountByCompanyId(player_id, company_id);
 
 }
 
@@ -116,7 +109,7 @@ void dbaccount_buy_stocks(uint32_t player_id, uint32_t company_id, int amount_to
 
 }
 
-bool dbaccount_can_sell_stock(uint32_t player_id, uint32_t company_id, int amount_to_subtract)
+bool dbaccount_can_sell_stock(uint32_t player_id, uint32_t company_id, uint32_t amount_to_subtract)
 {
 
     return dbaccount_get_owned_stock_amount(player_id, company_id) >= amount_to_subtract;

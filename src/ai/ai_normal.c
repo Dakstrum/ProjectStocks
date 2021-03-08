@@ -4,6 +4,7 @@
 #include "dbsave.h"
 #include "dbcard.h"
 #include "dbcompany.h"
+#include "dbaccount.h"
 
 #include "account.h"
 #include "portfolio.h"
@@ -160,6 +161,8 @@ void ai_sell_shares(uint32_t player_id, time_t t)
     Vector *companies = company_utils_get_all_active();
 
     Vector_ForEach(i, company, companies, Company *) {
+
+        dbaccount_get_owned_stock_amount(player_id, company->company_id);
 
         float modifier_positive_chance = simulation_positive_modifiers_active(company->company_id, t) == true ? -2.0f : 0.0f;
         float random_chance = shared_random_float() - 0.1;
