@@ -88,9 +88,9 @@ INSERT INTO "System_AILastNames" ("LastNameId","LastName") VALUES (1,'Muffin'),
  (12,'Cummings'),
  (13,'Apple'),
  (14,'Orange');
-INSERT INTO "System_Cards" ("CardId","CardName","CardDesc","CardPath","PriceModifier","ModifierLength") VALUES (1,'Deadly Product','Spread false narrative about a deadly product from this company.','assets/images/cards/deadlyproduct.png',-5.0,10),
- (2,'Fake Positive Earnings','Show positive company earnings','assets/images/cards/Temp.png',3.0,5),
- (3,'Fake News','Hire a fake news studio to push out positive articles about this company','assets/images/cards/fakenews.png',4.0,2);
+INSERT INTO "System_Cards" ("CardId","CardName","CardDesc","CardPath","PriceModifier","ModifierLength") VALUES (1,'Deadly Product','Spread false narrative about a deadly product from this company.','assets/images/cards/deadlyproduct.png',-0.5,10),
+ (2,'Fake Positive Earnings','Show positive company earnings','assets/images/cards/Temp.png',0.3,5),
+ (3,'Fake News','Hire a fake news studio to push out positive articles about this company','assets/images/cards/fakenews.png',0.4,2);
 INSERT INTO "System_Category" ("CategoryId","CategoryName") VALUES (1,'Video Games'),
  (2,'Aerospace'),
  (3,'Software'),
