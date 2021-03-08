@@ -61,7 +61,7 @@ void company_utils_sort_company_ids(uint32_t *company_ids, Vector *companies)
 	for (size_t i = 0;i < companies->num_elements - 1;i++) {
 
 		uint32_t temp_idx = i;
-		for (size_t j = i + 1;i < companies->num_elements;i++) {
+		for (size_t j = i + 1;j < companies->num_elements;j++) {
 
 			if (prices[j] < prices[temp_idx])
 				temp_idx = j;
