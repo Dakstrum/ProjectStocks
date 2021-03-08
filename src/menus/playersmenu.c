@@ -6,24 +6,23 @@
 
 #include <allegro5/allegro.h>
 
+#include "game.h"
+#include "account.h"
+
+#include "dbsave.h"
+
 #include "jsonlayer.h"
 #include "drawlayers.h"
 #include "log.h"
-#include "cache.h"
-#include "graph.h"
-#include "startup.h"
-#include "dbcompany.h"
-#include "dbaccount.h"
-#include "account.h"
-#include "game.h"
-#include "simulation.h"
-#include "scrollbox.h"
+
 #include "text.h"
+#include "button.h"
+#include "scrollbox.h"
+#include "popup.h"
+
 #include "generalpurposemenus.h"
 #include "drawlayerutils.h"
-#include "popup.h"
-#include "button.h"
-#include "dbsave.h"
+
 #include "portfolio.h"
 
 static MenuWithChilds *players_menu      = NULL;
