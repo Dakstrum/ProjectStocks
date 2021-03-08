@@ -23,6 +23,8 @@
 #include "drawlayerutils.h"
 #include "popup.h"
 #include "button.h"
+#include "dbsave.h"
+#include "portfolio.h"
 
 static MenuWithChilds *players_menu      = NULL;
 
@@ -54,7 +56,6 @@ void PlayersMenu_InitPlayerNames();
 void PlayersMenu_InitPlayerScrollBox();
 void PlayersMenu_InitPlayerNetworth();
 
-
 void PlayersMenu_Init() 
 {
 
@@ -70,7 +71,6 @@ void PlayersMenu_Init()
     PlayersMenu_InitTextAndButtons();
     PlayersMenu_InitPlayerNames();
     PlayersMenu_InitPlayerScrollBox();
-    PlayersMenu_InitPlayerNetworth();
 
 }
 
@@ -80,16 +80,26 @@ void PlayersMenu_RenderLogic()
     if (player_money_textobject == NULL)
         return;
     
-    SetTextContent(player_money_textobject, "%.2f", Account_GetMoney(Account_GetPlayerId()));
+    SetTextContentWithCommaFormat(player_money_textobject, "%'.2f", Account_GetMoney(Account_GetPlayerId()));
     SetTextContent(player_date_textobject,  "%s",   Game_GetDate());
+
+    PlayersMenu_InitPlayerNetworth();
 
 }
 
 void PlayersMenu_InitTextAndButtons()
 {
 
-    player_money_textobject  = GetJSONObjectAndAddToDrawLayer("PlayersMenuAccountMoneyTextObject");
-    player_date_textobject   = GetJSONObjectAndAddToDrawLayer("PlayersMenuAccountDateTextObject");
+    player_money_textobject   = GetJSONObjectAndAddToDrawLayer("PlayersMenuAccountMoneyTextObject");
+    player_date_textobject    = GetJSONObjectAndAddToDrawLayer("PlayersMenuAccountDateTextObject");
+
+    playerone_networth_text   = GetJSONObjectAndAddToDrawLayer("PlayersMenunetworth1TextObject");
+    playertwo_networth_text   = GetJSONObjectAndAddToDrawLayer("PlayersMenunetworth2TextObject");
+    playerthree_networth_text = GetJSONObjectAndAddToDrawLayer("PlayersMenunetworth3TextObject");
+
+    playerone_name_text       = GetJSONObjectAndAddToDrawLayer("PlayersMenuname1TextObject");
+    playertwo_name_text       = GetJSONObjectAndAddToDrawLayer("PlayersMenuname2TextObject");
+    playerthree_name_text     = GetJSONObjectAndAddToDrawLayer("PlayersMenuname3TextObject");
 
 }
 
@@ -115,46 +125,30 @@ void PlayersMenu_InitPlayerScrollBox()
 
 }
 
-
 void PlayersMenu_InitPlayerNames()
 {
 
-    DrawObject *playerone_name_text   = GetDrawObjectFromJsonLayer("PlayersMenuname1TextObject");
-    DrawObject *playertwo_name_text   = GetDrawObjectFromJsonLayer("PlayersMenuname2TextObject");
-    DrawObject *playerthree_name_text = GetDrawObjectFromJsonLayer("PlayersMenuname3TextObject");
+    DrawObject *player_names_text[3] = {playerone_name_text, playertwo_name_text, playerthree_name_text};
 
-    DrawObject *player_names[3] = {playerone_name_text, playertwo_name_text, playerthree_name_text};
+    Vector *players = Account_GetPlayers();
+    Player *players_temp = players->elements;
 
     for(int i = 0; i < 3; i++)
-    {
-
-        player_names[i]->text.content   = "Kevin Shmider";
-        AddObjectToDrawLayer(player_names[i]);
-    
-    }
-
+        SetTextContent(player_names_text[i],  "%s",   players_temp[i + 1].name);
 
 }
-
-
 
 void PlayersMenu_InitPlayerNetworth()
 {
 
+    DrawObject *player_networth_text[3] = {playerone_networth_text, playertwo_networth_text, playerthree_networth_text};
 
-    playerone_networth_text   = GetDrawObjectFromJsonLayer("PlayersMenunetworth1TextObject");
-    playertwo_networth_text   = GetDrawObjectFromJsonLayer("PlayersMenunetworth2TextObject");
-    playerthree_networth_text = GetDrawObjectFromJsonLayer("PlayersMenunetworth3TextObject");
-
-    DrawObject *player_networth[3] = {playerone_networth_text, playertwo_networth_text, playerthree_networth_text};
+    Vector *players = Account_GetPlayers();
+    Player *players_temp = players->elements;
 
     for(int i = 0; i < 3; i++)
-    {
-    
-        player_networth[i]->text.content   = "1,023,233";
-        AddObjectToDrawLayer(player_networth[i]);
-    
-    }
+        SetTextContentWithCommaFormat(player_networth_text[i],  "%'.2f",  players_temp[i + 1].money);
+
 
 }
 

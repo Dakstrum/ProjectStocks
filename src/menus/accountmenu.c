@@ -99,11 +99,11 @@ void AccountMenu_RenderLogic()
     char *company_viewing = GetCompanyNameViewing();
     uint32_t company_id   = GetCompanyId(company_viewing);
     
-    SetTextContent(player_money_textobject,       "%.2f", Account_GetMoney(Account_GetPlayerId()));
-    SetTextContent(player_date_textobject,        "%s",   Game_GetDate());
-    SetTextContent(stock_price_textobject,        "%.2f", Simulation_GetLastStockPrice(company_viewing));
-    SetTextContent(owned_stock_amount_textobject, "%d",   dbaccount_get_owned_stock_amount(Account_GetPlayerId(), company_id));
-    SetTextContent(networth_textobject,           "%.2f", portfolio_get_networth(Account_GetPlayerId()));
+    SetTextContentWithCommaFormat(player_money_textobject, "%'.2f", Account_GetMoney(Account_GetPlayerId()));
+    SetTextContent(player_date_textobject,                    "%s",   Game_GetDate());
+    SetTextContentWithCommaFormat(stock_price_textobject,        "%'.2f", Simulation_GetLastStockPrice(company_viewing));
+    SetTextContentWithCommaFormat(owned_stock_amount_textobject, "%'d",   dbaccount_get_owned_stock_amount(Account_GetPlayerId(), company_id));
+    //SetTextContentWithCommaFormat(networth_textobject,           "%'.2f", GetAccountNetWorth(Account_GetPlayerId()));
 
 }
 
@@ -171,9 +171,9 @@ void AccountMenu_PopulateSelectedCompanyHistoryDisplay(char* company)
 
         SetTextContent(selected_action_objects[i],       "%s",   AccountMenu_GetTransactionActionType(temp[off_idx].type));
         SetTextContent(selected_date_objects[i],         "%s",   transaction_time);
-        SetTextContent(selected_share_amount_objects[i], "%d",   temp[off_idx].shares_exchanged);
-        SetTextContent(selected_share_price_objects[i],  "%.2f", temp[off_idx].price_per_share);
-        SetTextContent(selected_transaction_objects[i],  "%.2f", temp[off_idx].transaction_amount);
+        SetTextContentWithCommaFormat(selected_share_amount_objects[i], "%'d",   temp[off_idx].shares_exchanged);
+        SetTextContentWithCommaFormat(selected_share_price_objects[i],  "%'.2f", temp[off_idx].price_per_share);
+        SetTextContentWithCommaFormat(selected_transaction_objects[i],  "%'.2f", temp[off_idx].transaction_amount);
 
         
     }
@@ -229,7 +229,7 @@ void AccountMenu_PopulateAllStocksHistoryDisplay()
             SetTextContent(all_name_objects[i],         "%s", GetCompanyAbbreviation(temp[i].company_id));
             SetTextContent(all_action_objects[i],       "%s", AccountMenu_GetTransactionActionType(temp[i].type));
             SetTextContent(all_date_objects[i],         "%s", transaction_time);
-            SetTextContent(all_share_amount_objects[i], "%d", temp[i].shares_exchanged);
+            SetTextContentWithCommaFormat(all_share_amount_objects[i], "%'d", temp[i].shares_exchanged);
 
         }
         
