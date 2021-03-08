@@ -50,7 +50,9 @@ bool company_utils_is_active(uint32_t company_id)
 void company_utils_sort_company_ids(uint32_t *company_ids, Vector *companies)
 {
 
-	float prices[companies->num_elements];
+	const size_t num_elements = companies->num_elements;
+
+	float prices[num_elements];
 	Vector_ForEach(i, company, companies, Company *) {
 
 		company_ids[i] = company->company_id;
@@ -58,10 +60,10 @@ void company_utils_sort_company_ids(uint32_t *company_ids, Vector *companies)
 
 	}
 
-	for (size_t i = 0;i < companies->num_elements - 1;i++) {
+	for (size_t i = 0;i < num_elements-1;i++) {
 
 		uint32_t temp_idx = i;
-		for (size_t j = i + 1;j < companies->num_elements;j++) {
+		for (size_t j = i + 1;j < num_elements;j++) {
 
 			if (prices[j] < prices[temp_idx])
 				temp_idx = j;
@@ -93,16 +95,17 @@ Vector *company_utils_get_sorted()
 	uint32_t company_ids[companies->num_elements];
 	company_utils_sort_company_ids(company_ids, companies);
 
-	for (size_t i = 0; i <companies->num_elements;i++) {
+	Company *companies_temp = companies->elements;
+	for (size_t i = 0; i < companies->num_elements;i++) {
 
-		Vector_ForEach(j, company, companies, Company *) {
+		for (size_t j = 0; j < companies->num_elements;j++) {
 
-			if (company->company_id == company_ids[i]) {
+			if (companies_temp[j].company_id == company_ids[i]) {
 
-				Vector_PushBack(new_vector, company);
+				Vector_PushBack(new_vector, &companies_temp[j]);
 				break;
 
-			}
+			}			
 
 		}
 
