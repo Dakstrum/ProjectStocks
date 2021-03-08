@@ -127,7 +127,7 @@ void ai_buy_shares(uint32_t player_id, time_t t)
 
     Vector *random_companies = company_utils_get_random(3);
     Vector *lowest_companies = company_utils_get_lowest(2);
-    Vector *companies = Vector_Concat(random_companies, lowest_companies);
+    Vector *companies = Vector_Concat(lowest_companies, random_companies);
 
     Vector_ForEach(i, company, companies, Company *) {
 
@@ -136,10 +136,10 @@ void ai_buy_shares(uint32_t player_id, time_t t)
 
         float quarter_money     = money * 0.25;
         float others_own_chance = ai_normal_does_other_own_at_least_percent(player_id, company->company_id, 0.05f) == true ? 0.25f : 0.0f;
-        float random_chance     = shared_random_float() - 0.1;
+        float random_chance     = shared_random_float() - 0.2f;
         float modifier_chance   = simulation_negative_modifiers_active(company->company_id, t) == true ? 1.0f : 0.0f;
 
-        if (others_own_chance + random_chance + modifier_chance >= shared_random_float())
+        if (others_own_chance + random_chance + modifier_chance >= 0.60f)
             transaction_purchase_stock(player_id, company->company_id, quarter_money);
 
         money = Account_GetMoney(player_id);
@@ -171,7 +171,7 @@ void ai_sell_shares(uint32_t player_id, time_t t)
         uint32_t amount_selling = 1 + (amount/4) + rand() % (amount - (amount)/400);
 
         float modifier_chance        = simulation_positive_modifiers_active(company->company_id, t) == true ? -2.0f : 0.0f;
-        float random_chance          = shared_random_float() - 0.1;
+        float random_chance          = shared_random_float()/2.0f;
         float mean_purchase_price    = portfolio_get_mean_purchase_price(player_id, company->company_id);
         float current_purchase_price = Simulation_GetLastStockPriceByCompanyId(company->company_id);
 
@@ -185,7 +185,7 @@ void ai_sell_shares(uint32_t player_id, time_t t)
         else if (amount > 10000)
             sell_chance = percent_change >= 0.05f ? 1.0 : percent_change;
 
-        if (random_chance + modifier_chance + sell_chance >= shared_random_float())
+        if (random_chance + modifier_chance + sell_chance >= 0.50f)
             transaction_sell_stock_amount(player_id, company->company_id, amount_selling);
 
 
