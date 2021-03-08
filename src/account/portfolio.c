@@ -61,3 +61,26 @@ float portfolio_get_percentage(uint32_t player_id, uint32_t company_id)
 	return specific_amount_owned/total_stocks_owned;
 
 }
+
+float portfolio_get_mean_purchase_price(uint32_t player_id, uint32_t company_id)
+{
+
+	Vector *transactions = dbaccount_get_company_transactions(player_id, company_id);
+
+	uint32_t stocks_owned = 0;
+	float total_transaction_amount = 0.0f;
+	Vector_ForEach(i, transaction, transactions, Transaction *) {
+
+		stocks_owned += transaction->shares_exchanged;
+		total_transaction_amount += transaction->transaction_amount;
+
+	}
+
+	Vector_Delete(transactions);
+
+	if (total_transaction_amount == 0.0f)
+		return 0.0f;
+
+	return stocks_owned/total_transaction_amount;
+
+}

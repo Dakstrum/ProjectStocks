@@ -33,7 +33,7 @@ typedef struct Transaction
 bool dbaccount_sell_stocks(uint32_t player_id, uint32_t company_id, int amount_to_subtract, float price_per_stock);
 void dbaccount_buy_stocks(uint32_t player_id, uint32_t company_id, int amount_to_add, float price_per_stock);
 
-Vector *GetCompanyTransactions(uint32_t player_id, char *company);
+Vector *dbaccount_get_company_transactions(uint32_t player_id, uint32_t company_id);
 Vector *dbaccount_get_player_transactions(uint32_t player_id);
 Vector *dbaccount_get_all_transactions();
 void dbaccount_save_transactions();

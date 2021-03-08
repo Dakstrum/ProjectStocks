@@ -152,10 +152,8 @@ int SetTransactionCallback(void *transaction, int argc, char **argv, char **col_
 
 }
 
-Vector *GetCompanyTransactions(uint32_t player_id, char *company)
+Vector *dbaccount_get_company_transactions(uint32_t player_id, uint32_t company_id)
 {
-
-    uint32_t company_id = GetCompanyId(company);
 
     uint32_t *company_ids = transaction_company_ids->elements;
     uint32_t *player_ids = transaction_player_ids->elements;

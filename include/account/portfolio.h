@@ -5,5 +5,6 @@
 
 float portfolio_get_networth(uint32_t player_id);
 float portfolio_get_percentage(uint32_t player_id, uint32_t company_id);
+float portfolio_get_mean_purchase_price(uint32_t player_id, uint32_t company_id);
 
 #endif

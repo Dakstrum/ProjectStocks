@@ -16,7 +16,9 @@
 #include "vector.h"
 #include "shared.h"
 
+#include "simulation.h"
 #include "simulation_modifier.h"
+
 
 bool ai_normal_does_other_own_at_least_percent(uint32_t player_id, uint32_t company_id, float percent)
 {
@@ -162,16 +164,30 @@ void ai_sell_shares(uint32_t player_id, time_t t)
 
     Vector_ForEach(i, company, companies, Company *) {
 
-        dbaccount_get_owned_stock_amount(player_id, company->company_id);
+        uint32_t amount = dbaccount_get_owned_stock_amount(player_id, company->company_id);
+        if (amount == 0)
+            continue;
 
-        float modifier_positive_chance = simulation_positive_modifiers_active(company->company_id, t) == true ? -2.0f : 0.0f;
-        float random_chance = shared_random_float() - 0.1;
+        uint32_t amount_selling = 1 + (amount/4) + rand() % (amount - (amount)/400);
 
-        if (random_chance + modifier_positive_chance >= shared_random_float()) {
+        float modifier_chance        = simulation_positive_modifiers_active(company->company_id, t) == true ? -2.0f : 0.0f;
+        float random_chance          = shared_random_float() - 0.1;
+        float mean_purchase_price    = portfolio_get_mean_purchase_price(player_id, company->company_id);
+        float current_purchase_price = Simulation_GetLastStockPriceByCompanyId(company->company_id);
 
+        float percent_change = mean_purchase_price/current_purchase_price;
+        float sell_chance = 0.0f;
 
+        if (amount <= 1000)
+            sell_chance = percent_change >= 0.30f ? 1.0 : percent_change;
+        else if (amount <= 10000)
+            sell_chance = percent_change >= 0.15f ? 1.0 : percent_change;
+        else if (amount > 10000)
+            sell_chance = percent_change >= 0.05f ? 1.0 : percent_change;
 
-        }
+        if (random_chance + modifier_chance + sell_chance >= shared_random_float())
+            transaction_sell_stock_amount(player_id, company->company_id, amount_selling);
+
 
     }
 
@@ -183,6 +199,6 @@ void ai_normal_conduct_transactions(uint32_t player_id, time_t t)
 {
 
     ai_buy_shares(player_id, t);
-    //ai_sell_shares(player_id, t);
+    ai_sell_shares(player_id, t);
 
 }

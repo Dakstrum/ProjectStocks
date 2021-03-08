@@ -154,7 +154,7 @@ void AccountMenu_PopulateSelectedCompanyHistoryDisplay(char* company)
 {
     
 
-    Vector *transactions = GetCompanyTransactions(Account_GetPlayerId(), company);
+    Vector *transactions = dbaccount_get_company_transactions(Account_GetPlayerId(), GetCompanyId(company));
     Transaction *temp    = transactions->elements;
 
     AccountMenu_SetHistoryDisplayPageNumber(transactions->num_elements);
