@@ -8,6 +8,7 @@
 #include "log.h"
 #include "draw.h"
 #include "cache.h"
+#include "vector.h"
 #include "drawobject.h"
 
 void InitText(DrawObject *object)
@@ -37,27 +38,28 @@ void CleanUpText(DrawObject *object)
 
 void DrawWrappedText(DrawObject *object)
 {
+    float object_width = object->width - object->text.x_offset;
 
-    float actual_width = object->width - object->text.x_offset;
-    float ratio = al_get_text_width(object->text.font, object->text.content)/actual_width;
-    if (ratio <= 1.0) {
+    float used_width   = 0;
+    float space_width  = al_get_text_width(object->text.font, " ");
+    int line           = 0;
+    char *str          = strdup(object->text.content);
+    char *word         = strtok(str, " ");
+    while (word != NULL) {
 
-        al_draw_text(object->text.font, object->text.color, object->x + object->text.x_offset, object->y + object->text.y_offset, 0, object->text.content);
-        return;
+        float word_width = al_get_text_width(object->text.font, word);
+        if (word_width + space_width + used_width + object->text.x_offset > object_width) {
+
+            used_width = 0;
+            line++;
+
+        }
+        al_draw_text(object->text.font, object->text.color, object->x + object->text.x_offset + used_width, object->y + object->text.y_offset + (line * object->text.font_size), 0, word);
+        used_width += word_width + space_width;
+        word = strtok(NULL, " ");
 
     }
-    size_t max_chars_in_line = (size_t)(strlen(object->text.content)/ratio);
-    size_t num_lines = (size_t)ceil(ratio);
-
-    char buffer[max_chars_in_line+1];
-    for (size_t i = 0; i < num_lines;i++) {
-
-        strncpy(buffer, object->text.content + (i * max_chars_in_line), max_chars_in_line);
-        buffer[max_chars_in_line] = '\0';
-        al_draw_text(object->text.font, object->text.color, object->x + object->text.x_offset, object->y + object->text.y_offset + (i * object->text.font_size), 0, buffer);
-
-    }
-
+    free(str);
 
 }
 
@@ -104,8 +106,9 @@ void SetTextContentWithCommaFormat(DrawObject *object, const char *str, ...)
     va_list args;
     va_start(args, str);
     char *buffer = GetFormattedPointerVaList(str, args);
+    va_end(args);
 
-    SetTextContent(object, buffer, args);
+    SetTextContent(object, buffer);
 
     setlocale(LC_NUMERIC, oldLocale);
     free(buffer);

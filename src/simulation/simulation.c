@@ -131,7 +131,6 @@ Vector *Simulation_GetStockPricesBetween(Vector *sim_prices, time_t start_time, 
 
     return prices;
 
-
 }
 
 Vector *Simulation_GetStockPrices(char *company_name, time_t current_time, time_t span)
@@ -200,7 +199,7 @@ float Simulation_GetNextValue(time_t t, size_t idx)
             continue;
         
         value += value * modifiers_temp[i].price_modifier / ((float)modifiers_temp[i].modifier_length * 4.0f);
-        
+
         if (value < 0.0)
             value = 0.0;
     }
