@@ -1,3 +1,8 @@
+
+# Notice
+
+This repository contains the original version of the game written in C. It is less feature-rich than the rust version and is no longer supported.
+
 # Project stocks
 
 Project stocks is a whacky and simple trading game. In it, you can buy and sell stocks, invest in portfolio's and predict market fluctuactions. Do you have what it takes to become a millionaire? How about a zintillionaire? 
